@@ -1,0 +1,48 @@
+https://github.com/mahditaharb-maker 
+mahditaharb@gmail.com
+
+git config --global user.name "mahditaharb-maker"
+git config --global user.email "mahditaharb@gmail.com"
+git config --global init.defaultBranch main
+
+
+
+mkdir D:\latex-project
+cd /d D:\latex-project
+
+
+
+git config --global init.defaultBranch main
+notepad main.tex
+
+
+dir
+
+
+D:\latex-project>dir
+Le volume dans le lecteur D n?a pas de nom.
+Le numéro de série du volume est 64F4-D1E6
+
+Répertoire de D:\latex-project
+
+09/10/2026  22:32    <REP>          .
+09/10/2026  22:32    <REP>          ..
+09/10/2026  20:58            96 911 main.tex
+1 fichier(s)           96 911 octets
+2 Rép(s)  19 220 742 144 octets libres
+
+D:\latex-project>
+
+
+git init
+git add .
+git commit -m "Initial LaTeX document"
+git branch -M main
+
+
+git remote add origin https://github.com/mahditaharb-maker/latex-project.git
+git push -u origin main
+
+
+git remote set-url origin https://mahditaharb-maker:YOUR_TOKEN@github.com/mahditaharb-maker/latex-project.git
+git push -u origin main
