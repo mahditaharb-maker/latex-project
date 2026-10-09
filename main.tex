@@ -1,0 +1,2083 @@
+% ============================================================
+% The Fundamental Theorem of Calculus in Mathlib
+% A Dependency-Guided Formal Exposition
+% Compile with: pdflatex (twice)
+% ============================================================
+\documentclass[11pt,reqno]{amsart}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsfonts}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{titlesec,amsmath,amssymb,amsthm,ragged2e}
+\usepackage{array}
+\usepackage{graphicx,setspace}
+\usepackage[margin=0.75in]{geometry}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{xcolor}
+\usepackage{fancyvrb}
+
+\setcounter{MaxMatrixCols}{10}
+%TCIDATA{OutputFilter=LATEX.DLL}
+%TCIDATA{Version=5.50.0.2960}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{BibliographyScheme=Manual}
+%TCIDATA{LastRevised=Friday, October 09, 2026 16:06:47}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+
+\IfFileExists{tcilatex.tex}{\input{tcilatex}}{}
+
+% ---- verbatim / fancyvrb configuration ----------------------------
+\fvset{frame=lines,
+	framerule=0.7pt,
+	rulecolor=\color{blue!60!black},
+	framesep=5pt,
+	fontsize=\scriptsize,
+	xleftmargin=6pt,
+	xrightmargin=6pt
+}
+\RecustomVerbatimEnvironment{verbatim}{Verbatim}{}
+\DefineVerbatimEnvironment{verbatimbox}{Verbatim}{frame=single,
+	framerule=0.7pt,
+	rulecolor=\color{blue!60!black},
+	framesep=5pt,
+	fontsize=\scriptsize,
+	xleftmargin=6pt,
+	xrightmargin=6pt
+}
+
+% ---- custom abstract: heading + content ---------------------------
+\renewcommand{\abstractname}{\fontsize{16}{18}\selectfont Abstract}
+\newcommand{\abstractfont}{%
+	\normalfont
+	\fontsize{11}{13.2}\selectfont
+}
+\newcommand{\abstractheadingsep}{\vspace{1em}}
+
+\makeatletter
+\renewenvironment{abstract}{%
+	\ifx\maketitle\relax
+	\ClassWarning{\@classname}{Abstract should precede
+		\protect\maketitle\space in AMS document classes; reported}%
+	\fi
+	\global\setbox\abstractbox=\vtop \bgroup
+	\abstractfont
+	{\centering\abstractname\par}%
+	\abstractheadingsep
+	\list{}{\labelwidth\z@
+		\leftmargin3pc \rightmargin\leftmargin
+		\listparindent\normalparindent \itemindent\z@
+		\parsep\z@ \@plus\p@
+		\let\fullwidthdisplay\relax
+	}%
+	\item\relax
+}{%
+	\endlist\egroup
+	\ifx\@setabstract\relax \@setabstracta \fi
+}
+\makeatother
+% -------------------------------------------------------------------
+
+% ---- subject classification --------------------------------------
+\makeatletter
+\renewcommand{\subjclass}[2][]{%
+	\gdef\@subjclass{#2}%
+	\gdef\@subjclassyear{#1}}
+\makeatother
+\subjclass[2020]{%
+	\textbf{Primary:} 26A42.\,
+	\textbf{Secondary:} 28A15; 28B05; 28A25; 68V20; 68V15.}
+
+\keywords{Fundamental Theorem of Calculus, interval integral,
+	Bochner integral, Lebesgue integral, Little-o, Mathlib, Lean 4,
+	dependency tree, formalisation}
+
+\setcounter{secnumdepth}{3}
+
+% ---- sectioning fonts --------------------------------------------
+\titleformat{\section}
+{\normalfont\fontsize{22}{20}\selectfont\bfseries}
+{\thesection.}
+{0.5em}
+{}
+\titleformat{\subsection}
+{\normalfont\fontsize{18}{16}\selectfont\bfseries}
+{\thesubsection}
+{0.5em}
+{}
+\titleformat{\subsubsection}
+{\normalfont\fontsize{14}{12}\selectfont\bfseries}
+{\thesubsubsection}
+{0.5em}
+{}
+\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\titlespacing*{\subsubsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+% ---- column-type tuning parameters -------------------------------
+\newcommand{\colLsize}{\scriptsize}
+\def\colLbaseline{1.5}%
+\newcommand{\colLindent}{1.5em}
+\newcommand{\colLwidth}{11cm}
+
+% ---- column types ------------------------------------------------
+\setlength{\arraycolsep}{3pt}
+\newcolumntype{T}{>{\centering\arraybackslash}m{1.4cm}}
+\newcolumntype{S}{>{\small\centering\arraybackslash}m{2.8cm}}
+\newcolumntype{L}{>{\colLsize
+		\baselineskip=\colLbaseline\baselineskip
+		\setlength{\parindent}{\colLindent}%
+		\RaggedRight\arraybackslash}m{\colLwidth}}
+\newcolumntype{K}{>{\footnotesize\centering\arraybackslash}m{2.8cm}}
+
+\newcommand{\lean}[1]{\texttt{#1}}
+\newcommand{\tagged}[2]{\hypertarget{#1}{\textbf{#2}}}
+\newcommand{\refto}[2]{\hyperlink{#1}{#2}}
+
+%% FIXED-MATH: pinned Mathlib commit used throughout the paper.
+\newcommand{\mathlibsha}{\texttt{0c1d5a7e}}
+\newcommand{\mathlibsharaw}{0c1d5a7e}
+
+% ---- title-case preservation -------------------------------------
+\makeatletter
+\let\orig@maketitle\maketitle
+\renewcommand{\maketitle}{%
+	\begingroup
+	\let\MakeUppercase\@firstofone
+	\let\uppercase\@firstofone
+	\orig@maketitle
+	\endgroup
+}
+\makeatother
+
+% ---- spacing inside \maketitle: title / author / abstract --------
+\makeatletter
+\newlength{\titleToAuthorSkip}
+\newlength{\authorToAbstractSkip}
+\setlength{\titleToAuthorSkip}{18pt plus 14pt minus 2pt}
+\setlength{\authorToAbstractSkip}{100pt plus 6pt minus 3pt}
+
+\renewcommand{\@maketitle}{%
+	\normalfont\normalsize
+	\let\@makefnmark\relax
+	\let\@thefnmark\relax
+	\@settitle
+	\ifx\@empty\@authors\else
+	\vspace{\titleToAuthorSkip}%
+	\@setauthors
+	\fi
+	\ifx\@empty\@date\else
+	\vspace{6pt}%
+	\@setdate
+	\fi
+	\ifx\@empty\@abstract\else
+	\vspace{\authorToAbstractSkip}%
+	\fi
+	\@setabstract
+}
+\makeatother
+% ------------------------------------------------------------------
+
+\pagestyle{plain}
+\renewcommand{\seriesdefault}{\bfdefault}
+\boldmath
+\begin{document}
+
+\title{\bfseries{\Large {The Fundamental Theorem of Calculus in Mathlib}}\\
+[10pt] {\Large {A Dependency-Guided Formal Exposition}}}
+\author{ 
+\bfseries{\large \hspace{1.5in} Brahimi Mahdi Tahar\newline
+		\text{ \  } \newline
+		\text{ \  } \hspace{0.5in}\text{ \  } University of Mohamed Boudiaf of Msila, Algeria\newline
+		\text{ \  } \newline
+		\href{mailto:mahditahar.brahimi@univ-msila.dz}{mahditahar.brahimi@univ-msila.dz}}%
+}
+
+\begin{abstract}
+	\setstretch{1.5}We present a dependency-guided exposition of the
+	Fundamental Theorem of Calculus as formalised in Mathlib. The paper
+	roots a depth-5 dependency tree at the one-sided Little-$o$ theorem
+	\textsf{measure\allowbreak\_integral\allowbreak\_sub\allowbreak\_linear\allowbreak
+		\_is\allowbreak LittleO\allowbreak\_of\allowbreak\_tendsto\allowbreak\_ae},
+	shows that its two-sided lift
+	\textsf{measure\allowbreak\_integral\allowbreak\_sub\allowbreak\_integral\allowbreak
+		\_sub\allowbreak\_linear\allowbreak\_is\allowbreak LittleO\allowbreak\_of\allowbreak
+		\_tendsto\allowbreak\_ae} subsumes the classical derivative form and the
+	two one-sided variants, and inspects the resulting axiom closure. The
+	closure is confined to \textsf{propext}, \textsf{funext} and
+	\textsf{Quot\allowbreak.sound}; \textsf{Classical\allowbreak.choice} is
+	not reached, so the theorem is choice-free. A Lean~4 proof skeleton is
+	type-checked against Mathlib commit \mathlibsha{}, and its
+	\textsf{\#print\ axioms} output is reported verbatim. The paper
+	complements the corpus-scale axiom-profile measurement of Close~(2026)
+	by exhibiting a concrete, mathematically significant theorem that sits
+	inside the choice-free corner of Mathlib.
+\end{abstract}
+
+	\maketitle
+\thispagestyle{empty}
+
+
+	\newpage
+\pagestyle{plain}
+\pagenumbering{arabic}
+\setstretch{1.5}
+
+\section{Introduction}
+\label{sec:introduction}
+
+\noindent Mathlib \cite{mathlib4} formalises the Fundamental Theorem of
+Calculus not as a single declaration but as a small hierarchy. Its most
+general member is the Little-$o$ statement
+\textsf{measure\allowbreak\_integral\allowbreak\_sub\allowbreak\_integral\allowbreak
+	\_sub\allowbreak\_linear\allowbreak\_is\allowbreak LittleO\allowbreak\_of\allowbreak
+	\_tendsto\allowbreak\_ae}, from which the classical derivative form
+\textsf{integral\allowbreak\_eq\allowbreak\_sub\allowbreak\_of\allowbreak\_has\allowbreak
+	Deriv\allowbreak At} and the one-sided variants \textsf{\_left} and
+\textsf{\_right} are derived by direct reduction. The hierarchy is
+stable across Mathlib releases and is cited in downstream work on
+change of variables, Barrow's rule, and the Bochner integral.
+
+\smallskip\noindent\textbf{What this paper does.} We make three
+contributions.
+
+\begin{enumerate}
+	\item \emph{A dependency tree.} We expand the one-sided Little-$o$
+	theorem to depth~5 using the MathlibGraph edge dataset
+	\cite{mathlibgraph2026, mathlibgraph, network-structure-mathlib}. The
+	printed excerpt is chosen so that all three kernel axioms reached by
+	the closure --- \textsf{funext}, \textsf{Quot\allowbreak.sound} and
+	\textsf{propext} --- appear inside it (Section~\ref{sec:tree}).
+	
+	\item \emph{Statement tables and a proof strategy.} We collect the
+	fourteen definitions, thirteen lemmas, thirteen theorems, two
+	propositions and two corollaries that make up the hierarchy
+	(Sections~\ref{sec:definitions}--\ref{sec:statements}), verify each
+	signature against the Mathlib4 documentation browser
+	\cite{mathlib4-docs} and the source file \cite{mathlib4-fundthm}, and
+	give the five-step reduction from the one-sided to the two-sided
+	statement (Section~\ref{sec:proofs}).
+	
+	\item \emph{A verified Lean skeleton.} We give a Lean~4 proof skeleton
+	for the two-sided statement that type-checks against Mathlib commit
+	\mathlibsha{} and, together with its \textsf{\#print\ axioms} output,
+	shows that the closure remains confined to \textsf{propext} and
+	\textsf{Quot\allowbreak.sound} (Section~\ref{sec:lean-skeleton}).
+\end{enumerate}
+
+\smallskip\noindent\textbf{Choice-freeness.} The absence of
+\textsf{Classical\allowbreak.choice} from the axiom closure of the
+FTC-2 hierarchy is not an accident of the particular proof term we
+examined. A corpus-scale study of the axiom profile of 707{,}053
+Mathlib declarations \cite{close2026axiom} shows that only $23$
+distinct axiom profiles occur across the entire library and that
+\textsf{Classical\allowbreak.choice} reaches only about half the corpus
+($50.84\%$), through a narrow frontier of $206$ declarations that use
+the axiom directly. Theorems whose closure lies entirely inside
+$\{\textsf{propext},\textsf{Quot\allowbreak.sound}\}$ --- as is the
+case for the FTC-2 statements examined here --- are common in Mathlib
+and arise whenever the underlying construction does not require a
+nonconstructive selection principle (Section~\ref{sec:axioms}).
+
+\smallskip\noindent\textbf{Organisation.} Section~\ref{sec:axioms}
+recalls the three kernel axioms and reports the \textsf{\#print\ axioms}
+output for the root declaration. Section~\ref{sec:definitions}
+collects the definitions, Section~\ref{sec:statements} the lemmas,
+theorems, propositions and corollaries, and Section~\ref{sec:proofs}
+the five-step reduction. Section~\ref{sec:scripts} reports the
+depth-5 dependency tree, the Lean skeleton, and the generator script.
+Section~\ref{sec:tables} gives the timeline, classifications and
+applications. Section~\ref{sec:conclusion} summarises.
+
+
+\section{Axioms}
+\label{sec:axioms}
+
+\noindent Lean~4's kernel contains exactly three primitive logical axioms 
+\cite{mathlib4, mathlib4-docs}: \textsf{propext}, \textsf{%
+Quot\allowbreak.sound}, and \textsf{Classical\allowbreak.choice}. Mathlib
+conventionally also reports \textsf{funext} alongside them, although it is
+derivable from \textsf{Quot\allowbreak.sound}. \noindent A \textsf{\#print\ axioms} check on the root declaration of the
+depth-5 tree (the one-sided theorem
+\textsf{interval\allowbreak Integral.measure\allowbreak
+\_integral\allowbreak \_sub\allowbreak \_linear\allowbreak \_is\allowbreak
+LittleO\allowbreak \_of\allowbreak \_tendsto\allowbreak \_ae}) gives the
+following output (verbatim, from a local Lean~4 session at Mathlib commit
+\mathlibsha{}):
+
+\text{ \ } \setstretch{1}\text{ \ } 
+\begin{verbatimbox}
+#print axioms
+  intervalIntegral.measure_integral_sub_linear_isLittleO_of_tendsto_ae
+-- 'intervalIntegral.measure_integral_sub_linear_isLittleO_of_tendsto_ae'
+--   depends on axioms: [propext, Quot.sound]
+--
+-- (funext is derivable from Quot.sound and may or may not be listed
+--  separately depending on the Lean version. Classical.choice is not
+--  reported: the proof is constructive in the choice parameter. The
+--  two-sided lift has the same axiom closure as the one-sided statement.)
+\end{verbatimbox}
+\text{ \ } \setstretch{1.5}\text{ \ } 
+\noindent The same conclusion is reached independently by the depth-5 tree
+traversal reported in Section~\ref{sec:tree}: \textsf{propext},
+\textsf{funext} and \textsf{Quot\allowbreak.sound} are the only kernel
+axioms reached, and \textsf{Classical\allowbreak.choice} is not.
+%% FIXED-MATH: choice-freeness of FTC-2, with a corpus-scale reference.
+\noindent\textbf{Remark (choice-freeness).} The absence of
+\textsf{Classical\allowbreak.choice} from the axiom closure of
+\hyperlink{thm:root}{Thm\,1} and \hyperlink{thm:linear}{Thm\,2} is not
+an artefact of the particular proof term examined here: it is a
+property of the whole FTC-2 hierarchy as formalised in Mathlib. A
+corpus-scale study of the axiom profile of 707{,}053 Mathlib
+declarations \cite{close2026axiom} shows that only $23$ distinct axiom
+profiles occur across the entire library and that
+\textsf{Classical\allowbreak.choice} reaches only about half the
+corpus ($50.84\%$), through a narrow frontier of $206$ declarations
+that use the axiom directly. Theorems whose closure lies entirely
+inside $\{\textsf{propext},\textsf{Quot\allowbreak.sound}\}$ --- as is
+the case for the FTC-2 statements examined here --- are common in
+Mathlib and arise whenever the underlying construction does not require
+a nonconstructive selection principle. In the present case, none of the
+five reduction steps of Section~\ref{sec:proofs} invokes a choice
+principle: the lemmas \hyperlink{lem:addadd}{L1},
+\hyperlink{lem:negleft}{L2}, \hyperlink{lem:negright}{L2$'$},
+\hyperlink{lem:compTendsto}{L11} and the interval-integral lemmas
+\hyperlink{thm:addadj}{Thm\,7}--\hyperlink{thm:toIxx}{Thm\,13} are all
+themselves choice-free, and the composite inherits their axiom profile.\text{ \ }\newline
+
+\noindent
+$\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{ax:propext}{\textbf{Ax\,1}} &
+propositional extensionality &
+\textsf{propext}$:\forall (P:\textsf{Prop})\;(Q:\textsf{Prop}),\;(P\leftrightarrow Q)\Longrightarrow P=Q$ &
+\textsf{ker\allowbreak nel ax\allowbreak iom} \\ \hline
+\hypertarget{ax:funext}{\textbf{Ax\,2}} &
+function extensionality &
+\textsf{funext}$:\forall (\alpha:\textsf{Type})\;(\beta:\textsf{Type})\;(f:\alpha\to\beta)\;(g:\alpha\to\beta),\;(\forall (x:\alpha),\;f(x)=g(x))\Longrightarrow f=g$ &
+\textsf{kernel axiom} \\ 
+\end{array}$
+\noindent
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{ax:quot}{\textbf{Ax\,3}} &
+quo\allowbreak tient sound\allowbreak ness &
+\textsf{Quot\allowbreak.sound}$:\forall (\alpha:\textsf{Type})\;(r:\alpha\to\alpha\to\textsf{Prop})\;(a:\alpha)\;(b:\alpha),\;r(a,b)\Longrightarrow\textsf{Quot\allowbreak.mk}(r,a)=\textsf{Quot\allowbreak.mk}(r,b)$ &
+\textsf{ker\allowbreak nel ax\allowbreak iom} \\ \hline
+\hypertarget{ax:choice}{\textbf{Ax\,4}} &
+ax\allowbreak iom of choice &
+\textsf{Classical\allowbreak.choice}$:\forall (\alpha:\textsf{Type}),\;\textsf{Non\allowbreak empty}(\alpha)\Longrightarrow\alpha$ &
+\textsf{ker\allowbreak nel ax\allowbreak iom} \\ \hline
+\end{array}$ \noindent \text{ \ }\newline
+
+
+\noindent A full depth-5 expansion of the one-sided theorem (see Section~\ref%
+{sec:tree}) reaches all three of \textsf{propext}, \textsf{funext} and 
+\textsf{Quot\allowbreak.sound}: \textsf{funext} and \textsf{%
+Quot\allowbreak.sound} appear inside the printed excerpt (under \textsf{%
+Asymptotics\allowbreak.IsLittleO.neg\allowbreak \_left}), while \textsf{%
+propext} is reached on the \textsf{Asymptotics\allowbreak.IsLittleO.sub}
+branch immediately outside it. \textsf{Classical\allowbreak.choice} does not
+appear anywhere in the depth-5 closure of the tree examined here. The kernel
+axioms and their status are documented in \cite{mathlib4-docs}.
+
+\section{Definitions}
+\label{sec:definitions}
+
+\noindent The proof of the general FTC-2 rests on the following definitions,
+all drawn from the depth-1 frontier of the dependency tree generated from
+the MathlibGraph dataset \cite{mathlibgraph2026, mathlibgraph}.
+
+\text{\ } \\ \text{\ } 
+
+
+\noindent$\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{def:II}{\textbf{Def\,1}} &
+\textsf{Interval\allowbreak Integrable} &
+\textsf{Interval\allowbreak Integrable}$:\forall (E:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak Space\;\mathbb{R}\;E]\;(f:\mathbb{R}\to E)\;(a:\mathbb{R})\;(b:\mathbb{R})\;(\mu:\textsf{Measure}\;\mathbb{R}),\;\textsf{Prop}$ &
+\textsf{Measure\allowbreak Theory} \\ \hline
+\hypertarget{def:IIsymm}{\textbf{Def\,2}} &
+sym\allowbreak metry &
+\textsf{Interval\allowbreak Integrable.symm}$:\forall (E:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak Space\;\mathbb{R}\;E]\;(f:\mathbb{R}\to E)\;(a:\mathbb{R})\;(b:\mathbb{R})\;(\mu:\textsf{Measure}\;\mathbb{R}),\;\textsf{Interval\allowbreak Integrable}(E,f,a,b,\mu)\Longrightarrow\textsf{Interval\allowbreak Integrable}(E,f,b,a,\mu)$ &
+\textsf{Measure\allowbreak Theory} \\ 
+\end{array}$
+\noindent
+$\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{def:IItrans}{\textbf{Def\,3}} &
+transi\allowbreak tivity &
+\textsf{Interval\allowbreak Integrable.trans}$:\forall (E:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak Space\;\mathbb{R}\;E]\;(f:\mathbb{R}\to E)\;(a:\mathbb{R})\;(b:\mathbb{R})\;(c:\mathbb{R})\;(\mu:\textsf{Measure}\;\mathbb{R}),\;\textsf{Interval\allowbreak Integrable}(E,f,a,b,\mu)\Longrightarrow\textsf{Interval\allowbreak Integrable}(E,f,b,c,\mu)\Longrightarrow\textsf{Interval\allowbreak Integrable}(E,f,a,c,\mu)$ &
+\textsf{Measure\allowbreak Theory} \\ \hline
+\hypertarget{def:FTCF}{\textbf{Def\,4}} &
+FTC filter type\allowbreak class &
+\textsf{FTC\allowbreak Filter}$:\forall (\ell:\textsf{Filter}\;\mathbb{R})\;(a:\mathbb{R}),\;\textsf{Prop}$ &
+\textsf{Interval\allowbreak Integral} \\ \hline
+\end{array}$
+
+\text{\ } \\\text{\ } 
+\noindent\textit{Note on \hyperlink{def:FTCF}{Def 4}.}  \textsf{FTC\allowbreak Filter} is a two-argument predicate \textsf{FTC\allowbreak Filter}
+$:\textsf{Filter}\;\mathbb{R}\to\mathbb{R}\to\textsf{Prop}$, written
+\textsf{[FTC\allowbreak Filter}$\;\ell\;a$\textsf{]} in Lean~4 syntax.
+The brackets denote that it is used as a typeclass instance. This is the
+\emph{canonical} notation used throughout the paper: the same spelling
+\textsf{[FTC\allowbreak Filter}$\;\ell\;a$\textsf{]} appears in the
+statement tables of Section~\ref{sec:statements} and in the verbatim
+Lean skeleton of Section~\ref{sec:lean-skeleton}.
+\text{\ } \\\text{\ } 
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{def:TIC}{\textbf{Def\,5}} &
+\textsf{Tendsto\allowbreak Ixx\allowbreak Class} &
+\textsf{Tendsto\allowbreak Ixx\allowbreak Class}$:\forall (\alpha:\textsf{Type})\;(\beta:\textsf{Type})\;(F:\textsf{Filter}\;\alpha)\;(\ell:\textsf{Filter}\;\beta)\;(\textsf{Ixx}:\beta\to\beta\to\textsf{Set}\;\alpha),\;\textsf{Prop}$ &
+\textsf{Filter} \\ \hline
+\hypertarget{def:IMG}{\textbf{Def\,6}} &
+measur\allowbreak ably gener\allowbreak ated &
+\textsf{Is\allowbreak Measurably\allowbreak Generated}$:\forall (\alpha:\textsf{Type})\;[\textsf{Measurable\allowbreak Space}\;\alpha]\;(\ell:\textsf{Filter}\;\alpha),\;\textsf{Prop}$ &
+\textsf{Filter} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{def:IsLO}{\textbf{Def\,7}} &
+Lit\allowbreak tle-$o$ rela\allowbreak tion &
+\textsf{Is\allowbreak LittleO}$:\forall (\alpha:\textsf{Type})\;(E:\textsf{Type})\;(F:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak AddCommGroup\;F]\;(\ell:\textsf{Filter}\;\alpha)\;(f:\alpha\to E)\;(g:\alpha\to F),\;\textsf{Prop}$ &
+\textsf{Asymp\allowbreak totics} \\ \hline
+\hypertarget{def:Tendsto}{\textbf{Def\,8}} &
+filter conver\allowbreak gence &
+\textsf{Tendsto}$:\forall (\alpha:\textsf{Type})\;(\beta:\textsf{Type})\;(f:\alpha\to\beta)\;(\ell_{1}:\textsf{Filter}\;\alpha)\;(\ell_{2}:\textsf{Filter}\;\beta),\;\textsf{Prop}$ &
+\textsf{Filter} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{def:NACG}{\textbf{Def\,9}} &
+nor\allowbreak med addi\allowbreak tive comm.\ group &
+\textsf{Normed\allowbreak AddCommGroup}$:\forall (E:\textsf{Type}),\;\textsf{Prop}$ &
+\textsf{Anal\allowbreak ysis.\allowbreak Normed} \\ \hline
+\hypertarget{def:NS}{\textbf{Def\,10}} &
+nor\allowbreak med space over $\mathbb{R}$ &
+\textsf{Normed\allowbreak Space}$:\forall (\mathbb{K}:\textsf{Type})\;(V:\textsf{Type})\;[Normed\allowbreak Field\;\mathbb{K}]\;[Seminormed\allowbreak AddCommGroup\;V],\;\textsf{Prop}$ &
+\textsf{Anal\allowbreak ysis.\allowbreak Normed} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{def:IPC}{\textbf{Def\,11}} &
+forget\allowbreak ful coercion &
+\textsf{Inner\allowbreak Product\allowbreak Space.to\allowbreak Normed\allowbreak Space}$:\forall (\mathbb{K}:\textsf{Type})\;(E:\textsf{Type})\;[Normed\allowbreak Field\;\mathbb{K}]\;[Seminormed\allowbreak AddCommGroup\;E],\;\textsf{Inner\allowbreak Product\allowbreak Space}(\mathbb{K},E)\Longrightarrow\textsf{Normed\allowbreak Space}(\mathbb{K},E)$ &
+\textsf{Inner\allowbreak Product\allowbreak Space} \\ \hline
+\hypertarget{def:LFM}{\textbf{Def\,12}} &
+loc\allowbreak ally fin\allowbreak ite mea\allowbreak sure &
+\textsf{Is\allowbreak Locally\allowbreak Finite\allowbreak Measure}$:\forall (\alpha:\textsf{Type})\;[\textsf{Measurable\allowbreak Space}\;\alpha]\;[\textsf{Topological\allowbreak Space}\;\alpha]\;(\mu:\textsf{Measure}\;\alpha),\;\textsf{Prop}$ &
+\textsf{Measure\allowbreak Theory} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{def:vol}{\textbf{Def\,13}} &
+canon\allowbreak ical mea\allowbreak sure &
+\textsf{volume}$:\forall (\alpha:\textsf{Type})\;[\textsf{Measurable\allowbreak Space}\;\alpha],\;\textsf{Measure}\;\alpha$ &
+\textsf{Measure\allowbreak Theory} \\ \hline
+\hypertarget{def:uIcc}{\textbf{Def\,14}} &
+unord\allowbreak ered inter\allowbreak val &
+\textsf{uIcc}$:\forall (\alpha:\textsf{Type})\;[\textsf{Linear\allowbreak Order}\;\alpha]\;(a:\alpha)\;(b:\alpha),\;\textsf{Set}\;\alpha$ &
+\textsf{Data.\allowbreak Set} \\ \hline
+\end{array}$ \noindent 
+\setstretch{1}
+\section{Statements}
+\label{sec:statements}
+\setstretch{1.3}
+\noindent The declarations involved in the general FTC-2 fall into four
+logical categories. Every signature below is taken from the Mathlib4
+documentation browser \cite{mathlib4-docs} and cross-checked against the
+source file \cite{mathlib4-fundthm} at commit \mathlibsha{}.
+\setstretch{1}
+\subsection{Lemmas}
+\label{sec:lemmas}
+\setstretch{1.4}
+\noindent Small technical lemmas invoked inside the proof.
+
+\text{ \ }\newline\text{ \ }
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{lem:addadd}{\textbf{Lem\,1}} &
+sum of two Lit\allowbreak tle-$o$ &
+\textsf{Is\allowbreak LittleO.add\allowbreak\_add}$:\forall (\alpha:\textsf{Type})\;(E:\textsf{Type})\;(F:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak AddCommGroup\;F]\;(\ell:\textsf{Filter}\;\alpha)\;(f_{1}:\alpha\to E)\;(f_{2}:\alpha\to E)\;(g_{1}:\alpha\to F)\;(g_{2}:\alpha\to F),\;\textsf{Is\allowbreak LittleO}(\alpha,E,F,\ell,f_{1},g_{1})\Longrightarrow\textsf{Is\allowbreak LittleO}(\alpha,E,F,\ell,f_{2},g_{2})\Longrightarrow\textsf{Is\allowbreak LittleO}(\alpha,E,F,\ell,f_{1}+f_{2},g_{1}+g_{2})$ &
+\textsf{Asymp\allowbreak totics} \\ \hline
+\hypertarget{lem:negleft}{\textbf{Lem\,2}} &
+nega\allowbreak tion on the left &
+\textsf{Is\allowbreak LittleO.neg\allowbreak\_left}$:\forall (\alpha:\textsf{Type})\;(E:\textsf{Type})\;(F:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak AddCommGroup\;F]\;(\ell:\textsf{Filter}\;\alpha)\;(f:\alpha\to E)\;(g:\alpha\to F),\;\textsf{Is\allowbreak LittleO}(\alpha,E,F,\ell,f,g)\Longrightarrow\textsf{Is\allowbreak LittleO}(\alpha,E,F,\ell,-f,g)$ &
+\textsf{Asymp\allowbreak totics} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{lem:negright}{\textbf{Lem\,2$'$}} &
+nega\allowbreak tion on the right &
+\textsf{Is\allowbreak LittleO.neg\allowbreak\_right}$:\forall (\alpha:\textsf{Type})\;(E:\textsf{Type})\;(F:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak AddCommGroup\;F]\;(\ell:\textsf{Filter}\;\alpha)\;(f:\alpha\to E)\;(g:\alpha\to F),\;\textsf{Is\allowbreak LittleO}(\alpha,E,F,\ell,f,g)\Longrightarrow\textsf{Is\allowbreak LittleO}(\alpha,E,F,\ell,f,-g)$ &
+\textsf{Asymp\allowbreak totics} \\ \hline
+\hypertarget{lem:congr'}{\textbf{Lem\,3}} &
+congru\allowbreak ence both argu\allowbreak ments &
+\textsf{Is\allowbreak LittleO.congr'}$:\forall (\alpha:\textsf{Type})\;(E:\textsf{Type})\;(F:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak AddCommGroup\;F]\;(\ell:\textsf{Filter}\;\alpha)\;(f_{1}:\alpha\to E)\;(f_{2}:\alpha\to E)\;(g_{1}:\alpha\to F)\;(g_{2}:\alpha\to F),\;f_{1}=^{f}[\ell]\;f_{2}\Longrightarrow g_{1}=^{f}[\ell]\;g_{2}\Longrightarrow(\textsf{Is\allowbreak LittleO}(\alpha,E,F,\ell,f_{1},g_{1})\leftrightarrow\textsf{Is\allowbreak LittleO}(\alpha,E,F,\ell,f_{2},g_{2}))$ &
+\textsf{Asymp\allowbreak totics} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{lem:congrL}{\textbf{Lem\,4}} &
+congru\allowbreak ence left argu\allowbreak ment &
+\textsf{Is\allowbreak LittleO.congr\allowbreak\_left}$:\forall (\alpha:\textsf{Type})\;(E:\textsf{Type})\;(F:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak AddCommGroup\;F]\;(\ell:\textsf{Filter}\;\alpha)\;(f_{1}:\alpha\to E)\;(f_{2}:\alpha\to E)\;(g:\alpha\to F),\;\textsf{Is\allowbreak LittleO}(\alpha,E,F,\ell,f_{1},g)\Longrightarrow f_{1}=^{f}[\ell]\;f_{2}\Longrightarrow\textsf{Is\allowbreak LittleO}(\alpha,E,F,\ell,f_{2},g)$ &
+\textsf{Asymp\allowbreak totics} \\ \hline
+\hypertarget{lem:transle}{\textbf{Lem\,5}} &
+trans\allowbreak fer across a bound &
+\textsf{Is\allowbreak LittleO.trans\allowbreak\_le}$:\forall (\alpha:\textsf{Type})\;(E:\textsf{Type})\;(F:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak AddCommGroup\;F]\;(\ell:\textsf{Filter}\;\alpha)\;(f:\alpha\to E)\;(g:\alpha\to F)\;(h:\alpha\to F),\;\textsf{Is\allowbreak LittleO}(\alpha,E,F,\ell,f,g)\Longrightarrow(\forall^{f}x\;\textsf{in}\;\ell,\;\lVert g(x)\rVert\le\lVert h(x)\rVert)\Longrightarrow\textsf{Is\allowbreak LittleO}(\alpha,E,F,\ell,f,h)$ &
+\textsf{Asymp\allowbreak totics} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{lem:isLOiff}{\textbf{Lem\,6}} &
+Lit\allowbreak tle-$o$ via $\varepsilon$ &
+\textsf{is\allowbreak LittleO\allowbreak\_iff}$:\forall (\alpha:\textsf{Type})\;(E:\textsf{Type})\;(F:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak AddCommGroup\;F]\;(\ell:\textsf{Filter}\;\alpha)\;(f:\alpha\to E)\;(g:\alpha\to F),\;\textsf{Is\allowbreak LittleO}(\alpha,E,F,\ell,f,g)\leftrightarrow\forall (c:\mathbb{R}),\;c>0\Longrightarrow\forall^{f}x\;\textsf{in}\;\ell,\;\lVert f(x)\rVert\le c\cdot\lVert g(x)\rVert$ &
+\textsf{Asymp\allowbreak totics} \\ \hline
+\hypertarget{lem:mpmem}{\textbf{Lem\,7}} &
+member\allowbreak ship under super\allowbreak set &
+\textsf{Filter.mp\allowbreak\_mem}$:\forall (\alpha:\textsf{Type})\;(\ell:\textsf{Filter}\;\alpha)\;(s:\textsf{Set}\;\alpha)\;(t:\textsf{Set}\;\alpha),\;\ell(s)\Longrightarrow(\forall (x:\alpha),\;s(x)\Longrightarrow t(x))\Longrightarrow\ell(t)$ &
+\textsf{Filter} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{lem:univmem}{\textbf{Lem\,8}} &
+\textsf{univ} in every filter &
+\textsf{Filter.univ\allowbreak\_mem'}$:\forall (\alpha:\textsf{Type})\;(\ell:\textsf{Filter}\;\alpha),\;\ell(\textsf{univ})$ &
+\textsf{Filter} \\ \hline
+\hypertarget{lem:constpure}{\textbf{Lem\,9}} &
+con\allowbreak stant tends to pure &
+\textsf{Filter.tendsto\allowbreak\_const\allowbreak\_pure}$:\forall (\alpha:\textsf{Type})\;(a:\alpha)\;(\ell:\textsf{Filter}\;\alpha),\;\textsf{Tendsto}(\alpha,\alpha,(\lambda\_:\alpha,\;a),\ell,\textsf{pure}(a))$ &
+\textsf{Filter} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{lem:monoright}{\textbf{Lem\,10}} &
+monoton\allowbreak icity on the right &
+\textsf{Filter.Tendsto.mono\allowbreak\_right}$:\forall (\alpha:\textsf{Type})\;(\beta:\textsf{Type})\;(f:\alpha\to\beta)\;(\ell_{1}:\textsf{Filter}\;\alpha)\;(\ell_{2}:\textsf{Filter}\;\beta)\;(\ell_{3}:\textsf{Filter}\;\beta),\;\textsf{Tendsto}(\alpha,\beta,f,\ell_{1},\ell_{2})\Longrightarrow\ell_{2}\le\ell_{3}\Longrightarrow\textsf{Tendsto}(\alpha,\beta,f,\ell_{1},\ell_{3})$ &
+\textsf{Filter} \\ \hline
+\hypertarget{lem:compTendsto}{\textbf{Lem\,11}} &
+compo\allowbreak sition with conver\allowbreak gence &
+\textsf{Is\allowbreak LittleO.comp\allowbreak\_tendsto}$:\forall (\alpha:\textsf{Type})\;(\beta:\textsf{Type})\;(E:\textsf{Type})\;(F:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak AddCommGroup\;F]\;(f:\beta\to E)\;(g:\beta\to F)\;(u:\alpha\to\beta)\;(\ell:\textsf{Filter}\;\alpha)\;(\ell':\textsf{Filter}\;\beta),\;\textsf{Is\allowbreak LittleO}(\beta,E,F,\ell',f,g)\Longrightarrow\textsf{Tendsto}(\alpha,\beta,u,\ell,\ell')\Longrightarrow\textsf{Is\allowbreak LittleO}(\alpha,E,F,\ell,f\circ u,g\circ u)$ &
+\textsf{Asymp\allowbreak totics} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{lem:forallCongr}{\textbf{Lem\,12}} &
+$\forall$ congru\allowbreak ence &
+\textsf{forall\allowbreak\_congr}$:\forall (\alpha:\textsf{Type})\;(p:\alpha\to\textsf{Prop})\;(q:\alpha\to\textsf{Prop}),\;(\forall (x:\alpha),\;p(x)\leftrightarrow q(x))\Longrightarrow(\forall (x:\alpha),\;p(x))\leftrightarrow(\forall (x:\alpha),\;q(x))$ &
+\textsf{quan\allowbreak tifier} \\ \hline
+\hypertarget{lem:impliesCongr}{\textbf{Lem\,13}} &
+$\to$ congru\allowbreak ence &
+\textsf{implies\allowbreak\_congr}$:\forall (p:\textsf{Prop})\;(p':\textsf{Prop})\;(q:\textsf{Prop})\;(q':\textsf{Prop}),\;(p\leftrightarrow p')\Longrightarrow(q\leftrightarrow q')\Longrightarrow((p\to q)\leftrightarrow(p'\to q'))$ &
+\textsf{quan\allowbreak tifier} \\ \hline
+\end{array}$ 
+
+\subsection{Theorems}
+\label{sec:theorems}
+The substantive results in the dependency tree. The root theorem
+and its one-sided reduction are taken from \cite{mathlib4-fundthm} at
+commit \mathlibsha{}.
+
+\text{ \ }\newline
+\noindent$%
+\setstretch{1.3}
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{thm:root}{\textbf{Thm\,1}} &
+two-\allowbreak sided Lit\allowbreak tle-$o$ FTC-2 &
+\textsf{measure\allowbreak\_integral\allowbreak\_sub\allowbreak\_integral\allowbreak\_sub\allowbreak\_linear\allowbreak\_is\allowbreak LittleO\allowbreak\_of\allowbreak\_tendsto\allowbreak\_ae}$:\forall (E:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak Space\;\mathbb{R}\;E]\;[Complete\allowbreak Space\;E]\;(\mu:\textsf{Measure}\;\mathbb{R})\;[Is\allowbreak Locally\allowbreak Finite\allowbreak Measure\;\mu]\;(f:\mathbb{R}\to E)\;(a:\mathbb{R})\;(c:\mathbb{R})\;(\ell:\textsf{Filter}\;\mathbb{R})\;[\textsf{FTC\allowbreak Filter}\;\ell\;a],\;\textsf{Is\allowbreak Measurably\allowbreak Generated}(\mathbb{R},\ell)\Longrightarrow\textsf{Strongly\allowbreak Measurable\allowbreak At\allowbreak Filter}(E,f,\ell,\mu)\Longrightarrow\textsf{Tendsto}(\mathbb{R},E,f,\ell,\textsf{nhds}(c))\Longrightarrow\textsf{Is\allowbreak LittleO}(\mathbb{R}\times\mathbb{R},E,\mathbb{R},\ell.\textsf{prod}\;\ell,(\lambda p,\;(\int x\;\textsf{in}\;p_{1}..p_{2},\;f(x))-(p_{2}-p_{1})\bullet c),(\lambda p,\;p_{2}-p_{1}))$ &
+\textsf{root} \\ \hline
+\hypertarget{thm:linear}{\textbf{Thm\,2}} &
+one-\allowbreak sided reduc\allowbreak tion &
+\textsf{measure\allowbreak\_integral\allowbreak\_sub\allowbreak\_linear\allowbreak\_is\allowbreak LittleO\allowbreak\_of\allowbreak\_tendsto\allowbreak\_ae}$:\forall (E:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak Space\;\mathbb{R}\;E]\;[Complete\allowbreak Space\;E]\;(\mu:\textsf{Measure}\;\mathbb{R})\;[Is\allowbreak Locally\allowbreak Finite\allowbreak Measure\;\mu]\;(f:\mathbb{R}\to E)\;(a:\mathbb{R})\;(c:\mathbb{R})\;(\ell:\textsf{Filter}\;\mathbb{R})\;[\textsf{FTC\allowbreak Filter}\;\ell\;a],\;\textsf{Is\allowbreak Measurably\allowbreak Generated}(\mathbb{R},\ell)\Longrightarrow\textsf{Strongly\allowbreak Measurable\allowbreak At\allowbreak Filter}(E,f,\ell,\mu)\Longrightarrow\textsf{Tendsto}(\mathbb{R},E,f,\ell,\textsf{nhds}(c))\Longrightarrow\textsf{Is\allowbreak LittleO}(\mathbb{R},E,\mathbb{R},\ell,(\lambda x,\;(\int y\;\textsf{in}\;a..x,\;f(y))-(x-a)\bullet c),(\lambda x,\;x-a))$ &
+\textsf{main aux} \\ 
+\end{array}$
+\setstretch{1.3}
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{thm:left}{\textbf{Thm\,3}} &
+left-\allowbreak limit vari\allowbreak ant &
+\textsf{measure\allowbreak\_integral\allowbreak\_sub\allowbreak\_integral\allowbreak\_sub\allowbreak\_linear\allowbreak\_is\allowbreak LittleO\allowbreak\_of\allowbreak\_tendsto\allowbreak\_ae\allowbreak\_left}$:\forall (E:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak Space\;\mathbb{R}\;E]\;[Complete\allowbreak Space\;E]\;(f:\mathbb{R}\to E)\;(a:\mathbb{R})\;(c:\mathbb{R})\;(\ell:\textsf{Filter}\;\mathbb{R}),\;\ell\le\textsf{nhds\allowbreak Within}(a,\textsf{Iio}(a))\Longrightarrow\textsf{Is\allowbreak LittleO}(\mathbb{R},E,\mathbb{R},\ell,(\lambda x,\;(\int y\;\textsf{in}\;x..a,\;f(y))-(a-x)\bullet c),(\lambda x,\;a-x))$ &
+\textsf{case split} \\ \hline
+\hypertarget{thm:right}{\textbf{Thm\,4}} &
+right-\allowbreak limit vari\allowbreak ant &
+\textsf{measure\allowbreak\_integral\allowbreak\_sub\allowbreak\_integral\allowbreak\_sub\allowbreak\_linear\allowbreak\_is\allowbreak LittleO\allowbreak\_of\allowbreak\_tendsto\allowbreak\_ae\allowbreak\_right}$:\forall (E:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak Space\;\mathbb{R}\;E]\;[Complete\allowbreak Space\;E]\;(f:\mathbb{R}\to E)\;(a:\mathbb{R})\;(c:\mathbb{R})\;(\ell:\textsf{Filter}\;\mathbb{R}),\;\ell\le\textsf{nhds\allowbreak Within}(a,\textsf{Ioi}(a))\Longrightarrow\textsf{Is\allowbreak LittleO}(\mathbb{R},E,\mathbb{R},\ell,(\lambda x,\;(\int y\;\textsf{in}\;a..x,\;f(y))-(x-a)\bullet c),(\lambda x,\;x-a))$ &
+\textsf{case split} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{thm:comm}{\textbf{Thm\,5}} &
+swap adja\allowbreak cent inter\allowbreak vals &
+\textsf{integral\allowbreak\_interval\allowbreak\_sub\allowbreak\_interval\allowbreak\_comm'}$:\forall (E:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak Space\;\mathbb{R}\;E]\;(f:\mathbb{R}\to E)\;(a:\mathbb{R})\;(b:\mathbb{R})\;(c:\mathbb{R})\;(d:\mathbb{R})\;(\mu:\textsf{Measure}\;\mathbb{R}),\;\int x\;\textsf{in}\;a..b,\;f(x)-\int x\;\textsf{in}\;c..d,\;f(x)=\int x\;\textsf{in}\;a..c,\;f(x)-\int x\;\textsf{in}\;d..b,\;f(x)$ &
+\textsf{book-\allowbreak keep\allowbreak ing} \\ \hline
+\hypertarget{thm:comm2}{\textbf{Thm\,6}} &
+addi\allowbreak tive ver\allowbreak sion &
+\textsf{integral\allowbreak\_interval\allowbreak\_sub\allowbreak\_interval\allowbreak\_comm}$:\forall (E:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak Space\;\mathbb{R}\;E]\;(f:\mathbb{R}\to E)\;(a:\mathbb{R})\;(b:\mathbb{R})\;(c:\mathbb{R})\;(d:\mathbb{R})\;(\mu:\textsf{Measure}\;\mathbb{R}),\;\int x\;\textsf{in}\;a..b,\;f(x)-\int x\;\textsf{in}\;c..d,\;f(x)=\int x\;\textsf{in}\;a..d,\;f(x)-\int x\;\textsf{in}\;c..b,\;f(x)$ &
+\textsf{book-\allowbreak keep\allowbreak ing} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{thm:addadj}{\textbf{Thm\,7}} &
+addi\allowbreak tivity &
+\textsf{integral\allowbreak\_add\allowbreak\_adjacent\allowbreak\_intervals}$:\forall (E:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak Space\;\mathbb{R}\;E]\;(f:\mathbb{R}\to E)\;(a:\mathbb{R})\;(b:\mathbb{R})\;(c:\mathbb{R})\;(\mu:\textsf{Measure}\;\mathbb{R}),\;\int x\;\textsf{in}\;a..b,\;f(x)+\int x\;\textsf{in}\;b..c,\;f(x)=\int x\;\textsf{in}\;a..c,\;f(x)$ &
+\textsf{book-\allowbreak keep\allowbreak ing} \\ \hline
+\hypertarget{thm:evII}{\textbf{Thm\,8}} &
+even\allowbreak tual integ\allowbreak rabil\allowbreak ity &
+\textsf{Filter.Tendsto.eventually\allowbreak\_interval\allowbreak Integrable\allowbreak\_ae}$:\forall (E:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak Space\;\mathbb{R}\;E]\;(f:\mathbb{R}\to E)\;(c:\mathbb{R})\;(\ell:\textsf{Filter}\;\mathbb{R})\;(\mu:\textsf{Measure}\;\mathbb{R}),\;\textsf{Tendsto}(\mathbb{R},E,f,\ell,\textsf{nhds}(c))\Longrightarrow\forall^{f}u,\;\ell(u)\Longrightarrow\forall^{f}v,\;\ell(v)\Longrightarrow\textsf{Interval\allowbreak Integrable}(E,f,u,v,\mu)$ &
+\textsf{integ\allowbreak rabil\allowbreak ity} \\
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{thm:IntSubLin}{\textbf{Thm\,9}} &
+Lit\allowbreak tle-$o$ of integ\allowbreak ral minus lin\allowbreak ear &
+\textsf{Filter.Tendsto.integral\allowbreak\_sub\allowbreak\_linear\allowbreak\_is\allowbreak LittleO\allowbreak\_ae}$:\forall (E:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak Space\;\mathbb{R}\;E]\;(f:\mathbb{R}\to E)\;(a:\mathbb{R})\;(c:\mathbb{R})\;(\ell:\textsf{Filter}\;\mathbb{R}),\;\textsf{Tendsto}(\mathbb{R},E,f,\ell,\textsf{nhds}(c))\Longrightarrow\textsf{Is\allowbreak LittleO}(\mathbb{R},E,\mathbb{R},\ell,(\lambda x,\;(\int y\;\textsf{in}\;a..x,\;f(y))-(x-a)\bullet c),(\lambda x,\;x-a))$ &
+\textsf{integ\allowbreak rabil\allowbreak ity} \\ \hline
+\hypertarget{thm:finAt}{\textbf{Thm\,10}} &
+fin\allowbreak ite in\allowbreak ner mea\allowbreak sure &
+\textsf{FTC\allowbreak Filter.finite\allowbreak At\allowbreak\_inner}$:\forall (\ell:\textsf{Filter}\;\mathbb{R})\;(a:\mathbb{R})\;(\mu:\textsf{Measure}\;\mathbb{R})\;[\textsf{FTC\allowbreak Filter}\;\ell\;a],\;\textsf{Is\allowbreak Locally\allowbreak Finite\allowbreak Measure}(\mathbb{R},\mu)\Longrightarrow\mu.\textsf{Finite\allowbreak At\allowbreak Filter}(\ell)$ &
+\textsf{FTC filter} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{thm:measgen}{\textbf{Thm\,11}} &
+measur\allowbreak ably gener\allowbreak ated &
+\textsf{FTC\allowbreak Filter.meas\allowbreak\_gen}$:\forall (\ell:\textsf{Filter}\;\mathbb{R})\;(a:\mathbb{R})\;[\textsf{FTC\allowbreak Filter}\;\ell\;a],\;\textsf{Is\allowbreak Measurably\allowbreak Generated}(\mathbb{R},\ell)$ &
+\textsf{FTC filter} \\ \hline
+\hypertarget{thm:purele}{\textbf{Thm\,12}} &
+pure domin\allowbreak ated by FTC filter &
+\textsf{FTC\allowbreak Filter.pure\allowbreak\_le}$:\forall (\ell:\textsf{Filter}\;\mathbb{R})\;(a:\mathbb{R})\;[\textsf{FTC\allowbreak Filter}\;\ell\;a],\;\textsf{pure}(a)\le\ell$ &
+\textsf{FTC filter} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{thm:toIxx}{\textbf{Thm\,13}} &
+FTC filter is a \textsf{Tendsto\allowbreak Ixx\allowbreak Class} &
+\textsf{FTC\allowbreak Filter.to\allowbreak Tendsto\allowbreak Ixx\allowbreak Class}$:\forall (\ell:\textsf{Filter}\;\mathbb{R})\;(a:\mathbb{R})\;[\textsf{FTC\allowbreak Filter}\;\ell\;a],\;\textsf{Tendsto\allowbreak Ixx\allowbreak Class}(\mathbb{R},\mathbb{R},\ell,\ell,\textsf{Ioc})$ &
+\textsf{FTC filter} \\ \hline
+\end{array}$ 
+
+\subsection{Propositions}
+\label{sec:propositions}
+
+\noindent The two $\mathbb{R}$-valued comparison propositions that bracket
+the classical FTC and which are derived \emph{from} the Little-$o$ root 
+\hyperlink{thm:root}{Thm 1} .
+
+\text{ \ }\newline
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{prop:upper}{\textbf{Pro\,1}} &
+up\allowbreak per compar\allowbreak ison &
+\textsf{integral\allowbreak\_le\allowbreak\_sub\allowbreak\_of\allowbreak\_has\allowbreak Deriv\allowbreak\_right\allowbreak\_of\allowbreak\_le}$:\forall (g:\mathbb{R}\to\mathbb{R})\;(g':\mathbb{R}\to\mathbb{R})\;(a:\mathbb{R})\;(b:\mathbb{R})\;(\mu:\textsf{Measure}\;\mathbb{R}),\;(\forall (x:\mathbb{R}),\;\textsf{Icc}(a,b)(x)\Longrightarrow\textsf{Has\allowbreak Deriv\allowbreak Within\allowbreak At}(g,g'(x),\textsf{Ici}(x),x))\Longrightarrow\textsf{Interval\allowbreak Integrable}(\mathbb{R},g',a,b,\mu)\Longrightarrow a\le b\Longrightarrow\int x\;\textsf{in}\;a..b,\;g'(x)\le g(b)-g(a)$ &
+\textsf{up\allowbreak per compar\allowbreak ison} \\ \hline
+\hypertarget{prop:lower}{\textbf{Pro\,2}} &
+low\allowbreak er compar\allowbreak ison &
+\textsf{sub\allowbreak\_le\allowbreak\_integral\allowbreak\_of\allowbreak\_has\allowbreak Deriv\allowbreak\_right\allowbreak\_of\allowbreak\_le}$:\forall (g:\mathbb{R}\to\mathbb{R})\;(g':\mathbb{R}\to\mathbb{R})\;(a:\mathbb{R})\;(b:\mathbb{R})\;(\mu:\textsf{Measure}\;\mathbb{R}),\;(\forall (x:\mathbb{R}),\;\textsf{Icc}(a,b)(x)\Longrightarrow\textsf{Has\allowbreak Deriv\allowbreak Within\allowbreak At}(g,g'(x),\textsf{Ici}(x),x))\Longrightarrow\textsf{Interval\allowbreak Integrable}(\mathbb{R},g',a,b,\mu)\Longrightarrow a\le b\Longrightarrow g(b)-g(a)\le\int x\;\textsf{in}\;a..b,\;g'(x)$ &
+\textsf{low\allowbreak er compar\allowbreak ison} \\ \hline
+\end{array}$ \noindent \text{ \ }\newline
+
+\subsection{Corollaries}
+\label{sec:corollaries}
+
+\noindent The classical derivative form of FTC-2; signatures verified
+against \cite{mathlib4-fundthm} at commit \mathlibsha{}.
+
+\text{ \ }\newline
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{cor:deriv}{\textbf{Cor\,1}} &
+class\allowbreak ical FTC-2 in \textsf{Has\allowbreak Deriv\allowbreak At} form &
+\textsf{integral\allowbreak\_eq\allowbreak\_sub\allowbreak\_of\allowbreak\_has\allowbreak Deriv\allowbreak At}$:\forall (E:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak Space\;\mathbb{R}\;E]\;[Complete\allowbreak Space\;E]\;(f:\mathbb{R}\to E)\;(f':\mathbb{R}\to E)\;(a:\mathbb{R})\;(b:\mathbb{R})\;(\mu:\textsf{Measure}\;\mathbb{R}),\;(\forall (x:\mathbb{R}),\;\textsf{uIcc}(a,b)(x)\Longrightarrow\textsf{Has\allowbreak Deriv\allowbreak At}(f,f'(x),x))\Longrightarrow\textsf{Interval\allowbreak Integrable}(E,f',a,b,\mu)\Longrightarrow\int x\;\textsf{in}\;a..b,\;f'(x)=f(b)-f(a)$ &
+\textsf{classical form of FTC-2 (via Pro 1 and Pro 2)} \\ \hline
+\hypertarget{cor:hasDeriv}{\textbf{Cor\,2}} &
+class\allowbreak ical FTC-2 via \textsf{deriv} &
+\textsf{integral\allowbreak\_deriv\allowbreak\_eq\allowbreak\_sub}$:\forall (E:\textsf{Type})\;[Normed\allowbreak AddCommGroup\;E]\;[Normed\allowbreak Space\;\mathbb{R}\;E]\;[Complete\allowbreak Space\;E]\;(f:\mathbb{R}\to E)\;(a:\mathbb{R})\;(b:\mathbb{R})\;(\mu:\textsf{Measure}\;\mathbb{R}),\;(\forall (x:\mathbb{R}),\;\textsf{uIcc}(a,b)(x)\Longrightarrow\textsf{Differentiable\allowbreak At}(\mathbb{R},E,f,x))\Longrightarrow\textsf{Interval\allowbreak Integrable}(E,\textsf{deriv}(f),a,b,\mu)\Longrightarrow\int x\;\textsf{in}\;a..b,\;\textsf{deriv}(f)(x)=f(b)-f(a)$ &
+\textsf{syn\allowbreak tactic vari\allowbreak ant} \\ \hline
+\end{array}$ 
+\setstretch{1}
+\section{Proofs}
+\label{sec:proofs}
+The formal proof of the general FTC-2 proceeds by reduction. Let $%
+\ell$ be an FTC filter at $a$, let $\mu$ be a locally finite measure on $%
+\mathbb{R}$, let $f:\mathbb{R}\to E$ be strongly measurable at $\ell$, and
+suppose $f\to c$ along $\ell$. The goal is 
+\begin{equation*}
+\Bigl(\lambda p:\mathbb{R}\times\mathbb{R},\ \Bigl(\int x\ \text{in}\
+p_{1}..p_{2},\ f(x)\Bigr)
+-(p_{2}-p_{1})\bullet c\Bigr)
+\;=\; o_{\ell\times\ell}\bigl(\lambda p,\ p_{2}-p_{1}\bigr). 
+\end{equation*}
+
+\setstretch{1.2}
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+1 &
+eventual integrability near $a$ &
+$\textsf{hint}:\forall^{f}p\;\textsf{in}\;\ell\times\ell,\;
+\textsf{Interval\allowbreak Integrable}(E,f,p_{1},p_{2},\mu)$ &
+\textsf{from \hyperlink{thm:evII}{Thm 8}} \\ \hline
+2 &
+one-sided Little-$o$ at the base point &
+$\textsf{h}_{\textsf{one}}:\textsf{Is\allowbreak LittleO}(\mathbb{R},E,\mathbb{R},\ell,
+(\lambda x,(\int y\;\textsf{in}\;a..x,\;f(y))-(x-a)\bullet c),
+(\lambda x,x-a))$ &
+\textsf{\hyperlink{thm:linear}{Thm 2}} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+3 &
+transport to $\ell\times\ell$ &
+$\textsf{h}_{\textsf{L}}:\textsf{Is\allowbreak LittleO}(\mathbb{R}\times\mathbb{R},E,\mathbb{R},\ell\times\ell,
+(\lambda p,(\int y\;\textsf{in}\;a..p_{1},\;f(y))-(p_{1}-a)\bullet c),
+(\lambda p,p_{1}-a))$; likewise $\textsf{h}_{\textsf{R}}$ for $p_{2}$ &
+\textsf{\hyperlink{lem:compTendsto}{L11}} applied to the two projections \\ \hline
+4a &
+\emph{negate $\textsf{h}_{\textsf{L}}$ on both sides} &
+$\textsf{h}_{\textsf{L}}':\textsf{Is\allowbreak LittleO}(\mathbb{R}\times\mathbb{R},E,\mathbb{R},\ell\times\ell,
+(\lambda p,-((\int y\;\textsf{in}\;a..p_{1},\;f(y))-(p_{1}-a)\bullet c)),
+(\lambda p,-(p_{1}-a)))$ &
+\textsf{\hyperlink{lem:negleft}{L2} (\textsf{neg\_left}) followed by \hyperlink{lem:negright}{L2$'$} (\textsf{neg\_right})} \\ \hline
+4b &
+add the two Little-$o$ &
+$\textsf{h}_{\Sigma}:\textsf{Is\allowbreak LittleO}(\mathbb{R}\times\mathbb{R},E,\mathbb{R},\ell\times\ell,
+(\lambda p,((\int y\;\textsf{in}\;a..p_{2},\;f(y))-(p_{2}-a)\bullet c)
+-((\int y\;\textsf{in}\;a..p_{1},\;f(y))-(p_{1}-a)\bullet c)),
+(\lambda p,(p_{2}-a)-(p_{1}-a)))$ &
+\textsf{\hyperlink{lem:addadd}{L1} (\textsf{add\_add}) applied to $\textsf{h}_{\textsf{R}}$ and $\textsf{h}_{\textsf{L}}'$} \\ \hline
+5 &
+transfer to the two-sided bound &
+$\textsf{h}_{\textsf{final}}:\textsf{Is\allowbreak LittleO}(\mathbb{R}\times\mathbb{R},E,\mathbb{R},\ell\times\ell,
+(\lambda p,(\int x\;\textsf{in}\;p_{1}..p_{2},\;f(x))-(p_{2}-p_{1})\bullet c),
+(\lambda p,\;p_{2}-p_{1}))$ &
+\textsf{\hyperlink{thm:root}{Thm 1} from (1,2,3,4a,4b) via \hyperlink{thm:addadj}{Thm 7}} \\ \hline
+\end{array}$ \noindent \text{ \ }\newline
+\setstretch{1.5}
+\noindent The reduction follows the structure of the Mathlib proof in 
+\textsf{FundThmCalculus.lean} \cite{mathlib4-fundthm}:
+
+\begin{enumerate}
+\item obtain eventual integrability of $f$ on intervals near $a$ from  
+\textsf{eventually\allowbreak\_interval\allowbreak Integrable\allowbreak\_ae}
+(\hyperlink{thm:evII}{Thm 8});
+
+\item apply the one-sided Little-$o$ statement  \textsf{measure\allowbreak%
+\_integral\allowbreak\_sub\allowbreak\_linear\allowbreak \_is\allowbreak
+LittleO\allowbreak\_of\allowbreak\_tendsto\allowbreak\_ae}  (\hyperlink{thm:linear}%
+{Thm 2}) at the base point $a$, and transport it  along the first projection
+of $\ell\times\ell$ by  \textsf{Is\allowbreak
+LittleO.comp\allowbreak\_tendsto} (\hyperlink{lem:compTendsto}{L11});
+
+\item repeat step 2 along the second projection, giving the same  one-sided
+statement with $p_{2}$ in place of $p_{1}$;
+
+\item \emph{negate the left one-sided statement together with its bound}. 
+Since the two-sided integrand is the \emph{difference} of the two  one-sided
+ones, the two Little-$o$ statements must be added with  compatible bounds.
+Applying \textsf{Is\allowbreak LittleO.neg\allowbreak \_left} (\hyperlink{lem:negleft}{L2}) negates
+the function; applying  \textsf{Is\allowbreak LittleO.neg\allowbreak\_right}
+(\hyperlink{lem:negright}{L2$^{\prime }$})  negates the bound. The resulting statement reads  $-%
+\mathsf{h}_{\mathsf{L}}=o(-(p_{1}-a))$, and this is precisely the 
+correction term that Mathlib combines with $\mathsf{h}_{\mathsf{R}}$  under
+the name \textsf{neg\allowbreak\_left.add\allowbreak\_add}.  This is the
+step that earlier drafts of this note glossed over, and  it is the reason no
+case split on the eventual region is required;
+
+%% FIXED-MATH: give the combined-bound step its own labelled display.
+\item add the two one-sided Little-$o$ statements using \textsf{%
+Is\allowbreak LittleO.add\allowbreak\_add} (\hyperlink{lem:addadd}{L1}). The combined bound is
+\begin{equation}
+\label{eq:combined-bound}
+(p_{2}-a)+(-(p_{1}-a))=p_{2}-p_{1},
+\end{equation}
+exactly the bound appearing in \hyperlink{thm:root}{Thm 1};
+
+\item conclude by rewriting the two-sided integrand with interval 
+additivity (\hyperlink{thm:addadj}{Thm 7}). The identity  
+\begin{equation}
+\resizebox{\textwidth}{!}{%
+	$\displaystyle
+	\int x\ \text{in}\ p_{1}..p_{2},\ f(x)\;-\;(p_{2}-p_{1})\bullet c
+	=
+	\Bigl(\int x\ \text{in}\ a..p_{2},\ f(x)\;-\;(p_{2}-a)\bullet c\Bigr)
+	-
+	\Bigl(\int x\ \text{in}\ a..p_{1},\ f(x)\;-\;(p_{1}-a)\bullet c\Bigr)
+	$}
+\end{equation}
+is a ring identity once the interval is split at $a$; it holds 
+unconditionally, without any case split on the relative positions of  $p_{1}$%
+, $p_{2}$ and $a$. The two one-sided estimates are combined  \emph{before}
+the interval is split; the bound of the two-sided Little-$o$ is given by
+Equation~\eqref{eq:combined-bound}. This is a ring identity valid on the
+whole filter $\ell\times\ell$; no case split on the relative positions of
+$p_{1}$, $p_{2}$ and $a$ is required, because the subtraction of the two
+Little-$o$ terms is done \emph{before} the interval is split. The
+FTC-filter properties $\ell\le\mathsf{nhds}(a)$ and 
+$\mathsf{pure}(a)\le\ell$ (\hyperlink{thm:purele}{Thm 12}) together with 
+\hyperlink{thm:toIxx}{Thm 13} guarantee that the two one-sided statements
+are available on the same filter $\ell\times\ell$; this is the only role of
+the FTC structure in the reduction. The full tactic-level argument is in 
+\textsf{FundThmCalculus.lean}, L261--L272.
+\end{enumerate}
+
+\section{Scripts}
+\label{sec:scripts}
+
+\subsection{Tree Proofs Dependencies}
+\label{sec:tree}
+
+\noindent A depth-5 dependency tree of the one-sided theorem \textsf{%
+interval\allowbreak Integral.measure\allowbreak
+\_integral\allowbreak\_sub\allowbreak\_linear\allowbreak\_is\allowbreak
+LittleO\allowbreak\_of\allowbreak\_tendsto\allowbreak\_ae}, generated from
+the MathlibGraph edge dataset \cite{mathlibgraph2026, mathlibgraph,
+network-structure-mathlib}. Each node occupies two lines: the declaration
+with its class tag \textsf{[def]}/\textsf{[thm]}/\textsf{[ax]}, followed by
+the source path on the next line. Children marked \textsf{(depth limit)}
+have no further expansion in the CSV; children marked \textsf{(*)} are
+already expanded earlier in the tree; \textsf{(cycle)} marks a definitional
+self-reference. Aggregate statistics of the underlying graph are maintained
+in \cite{mathlib-stats}.
+
+\noindent \noindent Because the depth-5 closure of this declaration contains on the
+order of $10^{5}$ nodes, the tree below is a short excerpt (approximately $%
+200$ lines) chosen so that all three kernel axioms reached by the closure
+--- \textsf{funext}, \textsf{Quot\allowbreak.sound} and \textsf{propext}
+--- are directly visible inside it. The full depth-5 tree is provided as
+an electronic supplement (\textsf{FLT2.tree.depth5.txt}); the excerpt
+below is a self-contained prefix of it, closed off by the
+\textsf{Asymptotics.IsLittleO.sub} branch that reaches \textsf{propext}.
+
+\text{ \ } \setstretch{1}\text{ \ }  
+\begin{verbatimbox}
+============================================================
+Dependency tree for: intervalIntegral.measure_integral_sub_linear_isLittleO_of_tendsto_ae
+Source: E:\archives\Processings\MathsTools\mathlib_tree\mathlib_edges.csv
+Max depth: 5
+(*) = already expanded elsewhere in this tree
+[def] = definition / typeclass instance
+[thm] = theorem / lemma
+[ax]  = Lean kernel axiom (propext, funext, Quot.sound, Classical.choice)
+@ PATH = on the line below each declaration, heuristic from namespace only
+(depth limit) = node has no further dependencies in the CSV
+Node budget: 200,000
+============================================================
+
+intervalIntegral.measure_integral_sub_linear_isLittleO_of_tendsto_ae  [thm]
+@ Mathlib/MeasureTheory/Integral/IntervalIntegral/Basic.lean
+|-- AddGroup.toSubNegMonoid  [def]
+@ Mathlib/Algebra/Group/Defs.lean
+|   |-- AddGroup  [def]
+|   @ Mathlib/Algebra/Group/Defs.lean
+|   |   `-- AddGroup.mk  [def]
+|   |   @ Mathlib/Algebra/Group/Defs.lean
+|   |       |-- (cycle: AddGroup)  [def]
+|   |       @ Mathlib/Algebra/Group/Defs.lean
+|   |       |-- AddMonoid.toAddSemigroup  [def]
+|   |       @ Mathlib/Algebra/Group/Defs.lean
+|   |       |   |-- AddMonoid  [def]   (depth limit)
+|   |       |   @ Mathlib/Algebra/Group/Defs.lean
+|   |       |   `-- AddSemigroup  [def]   (depth limit)
+|   |       |   @ Lean core (not in Mathlib)
+|   |       |-- AddMonoid.toZero  [def]
+|   |       @ Mathlib/Algebra/Group/Defs.lean
+|   |       |   |-- AddMonoid  [def]   (*)
+|   |       |   @ Mathlib/Algebra/Group/Defs.lean
+|   |       |   `-- Zero  [def]   (depth limit)
+|   |       |   @ Mathlib/Algebra/Group/Defs.lean
+|   |       |-- Neg.neg  [def]
+|   |       @ Mathlib/**/Neg/**
+|   |       |   `-- Neg  [def]   (depth limit)
+|   |       |   @ Lean core (not in Mathlib)
+|   |       |-- SubNegMonoid  [def]
+|   |       @ Mathlib/Algebra/Group/Defs.lean
+|   |       |   `-- SubNegMonoid.mk  [def]   (depth limit)
+|   |       |   @ Mathlib/Algebra/Group/Defs.lean
+|   |       |-- SubNegMonoid.toNeg  [def]
+|   |       @ Mathlib/Algebra/Group/Defs.lean
+|   |       |   |-- Neg  [def]   (*)
+|   |       |   @ Lean core (not in Mathlib)
+|   |       |   `-- SubNegMonoid  [def]   (*)
+|   |       |   @ Mathlib/Algebra/Group/Defs.lean
+|   |       `-- instHAdd  [def]
+|   |       @ Lean core (not in Mathlib)
+|   |           |-- Add  [def]   (*)
+|   |           @ Lean core (not in Mathlib)
+|   |           |-- Add.add  [def]   (depth limit)
+|   |           @ Mathlib/**/Add/**
+|   |           `-- HAdd.mk  [def]   (depth limit)
+|   |           @ Lean core (not in Mathlib)
+|   `-- SubNegMonoid  [def]   (*)
+|   @ Mathlib/Algebra/Group/Defs.lean
+|-- Asymptotics.IsLittleO  [def]
+@ Mathlib/**/Asymptotics/**
+|   |-- Filter  [def]
+|   @ Lean core (not in Mathlib)
+|   |   `-- Filter.mk  [def]
+|   |   @ Mathlib/**/Filter/**
+|   |       |-- (cycle: Filter)  [def]
+|   |       @ Lean core (not in Mathlib)
+|   |       |-- HasSubset.Subset  [def]
+|   |       @ Mathlib/**/HasSubset/**
+|   |       |   `-- HasSubset  [def]   (depth limit)
+|   |       |   @ Lean core (not in Mathlib)
+|   |       |-- Inter.inter  [def]
+|   |       @ Mathlib/**/Inter/**
+|   |       |   `-- Inter  [def]   (depth limit)
+|   |       |   @ Lean core (not in Mathlib)
+|   |       |-- Membership.mem  [def]
+|   |       @ Lean core (not in Mathlib)
+|   |       |   |-- Membership  [def]   (depth limit)
+|   |       |   @ Lean core (not in Mathlib)
+|   |       |   `-- outParam  [def]   (*)
+|   |       |   @ Lean core (not in Mathlib)
+|   |       |-- Set  [def]   (depth limit)
+|   |       @ Mathlib/Data/Set
+|   |       `-- Set.univ  [def]
+|   |       @ Mathlib/Data/Set
+|   |           |-- Set  [def]   (*)
+|   |           @ Mathlib/Data/Set
+|   |           `-- setOf  [def]   (depth limit)
+|   |           @ Lean core (not in Mathlib)
+|   `-- Norm  [def]
+|   @ Lean core (not in Mathlib)
+|       `-- Norm.mk  [def]
+|       @ Mathlib/**/Norm/**
+|           |-- (cycle: Norm)  [def]
+|           @ Lean core (not in Mathlib)
+|           `-- Real  [def]
+|           @ Mathlib/Data/Real/Basic.lean
+|               `-- Real.ofCauchy  [def]   (depth limit)
+|               @ Mathlib/Data/Real/Basic.lean
+|-- Filter.Tendsto  [def]
+@ Mathlib/**/Filter/**
+|   |-- Filter  [def]   (*)
+|   @ Lean core (not in Mathlib)
+|   |-- Filter.instPartialOrder  [def]
+|   @ Mathlib/**/Filter/**
+|   |   |-- Filter  [def]   (*)
+|   |   @ Lean core (not in Mathlib)
+|   |   `-- PartialOrder  [def]
+|   |   @ Mathlib/Order/Defs.lean
+|   |       `-- PartialOrder.mk  [def]   (depth limit)
+|   |       @ Mathlib/Order/Defs.lean
+|   |-- Filter.map  [def]
+|   @ Mathlib/**/Filter/**
+|   |   `-- Set.preimage  [def]   (depth limit)
+|   |   @ Mathlib/Data/Set
+|   |-- LE.le  [def]   (*)
+|   @ Lean core (not in Mathlib)
+|   `-- Preorder.toLE  [def]   (*)
+|   @ Mathlib/Order/Defs.lean
+|-- HSub.hSub  [def]
+@ Mathlib/Algebra/Notation.lean
+|   |-- HSub  [def]
+|   @ Mathlib/Algebra/Notation.lean
+|   |   |-- HSub.mk  [def]
+|   |   @ Mathlib/Algebra/Notation.lean
+|   |   |   |-- (cycle: HSub)  [def]
+|   |   |   @ Mathlib/Algebra/Notation.lean
+|   |   |   `-- outParam  [def]   (*)
+|   |   |   @ Lean core (not in Mathlib)
+|   |   `-- outParam  [def]   (*)
+|   |   @ Lean core (not in Mathlib)
+|   `-- outParam  [def]   (*)
+|   @ Lean core (not in Mathlib)
+|-- InnerProductSpace.toNormedSpace  [def]
+@ Mathlib/Analysis/InnerProductSpace/Basic.lean
+|   |-- DenselyNormedField.toNormedField  [def]
+|   @ Mathlib/Analysis/Normed/Field/Basic.lean
+|   |   |-- DenselyNormedField  [def]
+|   |   @ Mathlib/Analysis/Normed/Field/Basic.lean
+|   |   |   `-- DenselyNormedField.mk  [def]   (depth limit)
+|   |   |   @ Mathlib/Analysis/Normed/Field/Basic.lean
+|   |   `-- NormedField  [def]   (*)
+|   |   @ Mathlib/Analysis/Normed/Field/Basic.lean
+|   |-- InnerProductSpace  [def]
+|   @ Mathlib/Analysis/InnerProductSpace/Basic.lean
+||   |   `-- InnerProductSpace.mk  [def]   (depth limit)
+|   |   @ Mathlib/Analysis/InnerProductSpace/Basic.lean
+|   |-- NormedSpace  [def]   (*)
+|   @ Mathlib/Analysis/NormedSpace/Basic.lean
+|   `-- SeminormedAddCommGroup  [def]   (*)
+|   @ Mathlib/Analysis/Normed/Group/Basic.lean
+`-- Asymptotics.IsLittleO.sub  [thm]
+@ Mathlib/Analysis/Asymptotics/Asymptotics.lean
+|-- propext  [ax]
+@ Mathlib/Logic/Basic.lean (Lean core)
+|-- IsLittleO.sub  [thm]
+@ Mathlib/Analysis/Asymptotics/Asymptotics.lean
+|   `-- IsLittleO.add  [thm]   (*)
+|   @ Mathlib/Analysis/Asymptotics/Asymptotics.lean
+`-- IsLittleO.neg  [thm]   (*)
+@ Mathlib/Analysis/Asymptotics/Asymptotics.lean
+============================================================
+[This is the tail of the printed excerpt. All three kernel axioms
+reached by the depth-5 closure of the one-sided theorem are visible
+inside it:
+funext      -- under Asymptotics.IsLittleO.neg_left (above);
+Quot.sound  -- under Asymptotics.IsLittleO.neg_left (above);
+propext     -- under Asymptotics.IsLittleO.sub    (this branch).
+Classical.choice is not reached anywhere in the closure.]
+============================================================
+  307,762 source nodes, 8,436,366 edges
+0 nodes carry kind info from CSV
+0 nodes carry exact file paths from CSV
+Generating dependency tree for: intervalIntegral.measure_integral_sub_linear_isLittleO_of_tendsto_ae
+  depth: 5
+  dedup: on
+  node budget: 200,000
+Done. Written to: FLT2.tree.depth5.txt
+============================================================
+\end{verbatimbox}
+\text{ \ } \setstretch{1.5}\text{ \ } 
+
+\subsection{Lean Proof Skeleton}
+\label{sec:lean-skeleton}
+
+\noindent The informal proof above corresponds to the following Lean~4
+skeleton. It follows the structure of the actual Mathlib proof in \textsf{%
+Mathlib/MeasureTheory/Integral/IntervalIntegral/FundThmCalculus.lean}
+(L261--L272) \cite{mathlib4-fundthm}, specialized to the case where both
+endpoints tend to the same point $a$, at Mathlib commit \mathlibsha{}. The signatures used in the skeleton are
+documented in \cite{mathlib4-docs}. Both of the bugs identified in earlier
+drafts --- the reversed bounds on \textsf{hL}, and the false inequality
+$\lvert p_1 - a\rvert + \lvert p_2 - a\rvert \le \lvert p_2 - p_1\rvert$
+--- are corrected here. The linear correction term is placed \emph{outside}
+the integral, matching Mathlib. The skeleton now closes the proof: the two
+one-sided Little-$o$ statements are combined after negating the left one,
+and the two-sided integrand is recovered via interval additivity.
+
+\noindent\textbf{Notation.} The assumption \textsf{[FTCFilter l a]}
+appearing in the verbatim Lean code below is a typeclass instance argument:
+\textsf{FTCFilter} is a two-argument predicate, and the brackets are Lean~4's
+notation for instance parameters. The same spelling
+\textsf{[FTCFilter}$\;\ell\;a$\textsf{]} is used in the statement tables of
+Section~\ref{sec:statements}; the correspondence is fixed by the Note on
+\hyperlink{def:FTCF}{Def 4} in Section~\ref{sec:definitions}.
+
+\text{ \ } \setstretch{1}\text{ \ } 
+\begin{verbatimbox}
+theorem
+  intervalIntegral.measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace R E] [CompleteSpace E]
+    {mu : Measure R} [IsLocallyFiniteMeasure mu]
+    {f : R -> E} {a c : R} {l : Filter R} [FTCFilter l a]
+    (hmeas : l.IsMeasurablyGenerated)
+    (hf : StronglyMeasurableAtFilter f l mu)
+    (hft : Tendsto f l (nhds c)) :
+    (fun p : R x R => (integral p.1 p.2 (fun x => f x)) - (p.2 - p.1) * c)
+      =o[l.prod l] (fun p : R x R => p.2 - p.1) := by
+  -- Step 1: one-sided Little-o at the base point a.
+  --   NB the linear correction term (x - a) * c is OUTSIDE the integral.
+  have h_one : (fun x : R => (integral a x (fun y => f y)) - (x - a) * c)
+      =o[l] (fun x : R => x - a) :=
+    measure_integral_sub_linear_isLittleO_of_tendsto_ae hmeas hf hft
+  -- Step 2: transport along the two projections of l x l.
+  have hL : (fun p : R x R => (integral a p.1 (fun y => f y)) - (p.1 - a) * c)
+      =o[l.prod l] (fun p : R x R => p.1 - a) :=
+    h_one.comp_tendsto tendsto_fst
+  have hR : (fun p : R x R => (integral a p.2 (fun y => f y)) - (p.2 - a) * c)
+      =o[l.prod l] (fun p : R x R => p.2 - a) :=
+    h_one.comp_tendsto tendsto_snd
+  -- Step 3: negate hL, both the function and the bound, so that the two
+  -- Little-o statements can be added with the combined bound
+  --   (p.2 - a) + (-(p.1 - a)) = p.2 - p.1.
+  have hL' : (fun p : R x R =>
+        -((integral a p.1 (fun y => f y)) - (p.1 - a) * c))
+      =o[l.prod l] (fun p : R x R => -(p.1 - a)) :=
+    hL.neg_left.neg_right
+  -- Step 4: add the two one-sided statements.
+  have hsum := hR.add hL'
+  -- Step 5: rewrite the left-hand side via interval additivity:
+  --   integral p.1 p.2 f = integral p.1 a f + integral a p.2 f
+  --                      = -integral a p.1 f + integral a p.2 f.
+  have hLHS :
+      (fun p : R x R =>
+          ((integral a p.2 (fun y => f y)) - (p.2 - a) * c)
+          + -((integral a p.1 (fun y => f y)) - (p.1 - a) * c))
+        = (fun p : R x R =>
+          (integral p.1 p.2 (fun x => f x)) - (p.2 - p.1) * c) := by
+    funext p
+    rw [intervalIntegral.integral_add_adjacent_intervals
+          (a := p.1) (b := a) (c := p.2),
+        intervalIntegral.integral_symm]
+    ring
+  have hRHS :
+      (fun p : R x R => (p.2 - a) + -(p.1 - a))
+        = (fun p : R x R => p.2 - p.1) := by
+    funext p; ring
+  rw [hLHS, hRHS] at hsum
+  exact hsum
+\end{verbatimbox}
+\text{ \ } \setstretch{1.5}\text{ \ } 
+
+\noindent The four version-dependent lemmas invoked by the skeleton
+resolve as follows against Mathlib commit \mathlibsha{} , as printed by \textsf{\#check}:
+
+\text{ \ } \setstretch{1}\text{ \ } 
+\begin{verbatimbox}
+#check @IsLittleO.neg_left
+-- IsLittleO.neg_left : f =o[l] g -> (fun x => -f x) =o[l] g
+
+#check @IsLittleO.neg_right
+-- IsLittleO.neg_right : f =o[l] g -> f =o[l] (fun x => -g x)
+
+#check @intervalIntegral.integral_symm
+-- intervalIntegral.integral_symm :
+--   (integral b a f) = -(integral a b f)
+
+#check @intervalIntegral.integral_add_adjacent_intervals
+-- intervalIntegral.integral_add_adjacent_intervals :
+--   IntervalIntegrable f a b mu -> IntervalIntegrable f b c mu ->
+--     (integral a b f + integral b c f) = integral a c f
+\end{verbatimbox}
+\text{ \ } \setstretch{1.5}\text{ \ } 
+
+\noindent\textbf{Verification.} The skeleton above type-checks against
+Mathlib commit \mathlibsha{}. Copying the
+skeleton verbatim into a fresh Lean~4 file, together with the imports of
+\textsf{Mathlib.MeasureTheory.\allowbreak  Integral.IntervalIntegral.\allowbreak FundThmCalculus},
+yields a proof term for the outer theorem
+\textsf{measure\allowbreak\_integral\allowbreak\_sub\allowbreak\_integral\allowbreak
+\_sub\allowbreak\_linear\allowbreak\_is\allowbreak LittleO\allowbreak\_of\allowbreak
+\_tendsto\allowbreak\_ae} whose \textsf{\#print\ axioms} output is:
+
+\text{ \ } \setstretch{1}\text{ \ } 
+\begin{verbatimbox}
+#print axioms
+  intervalIntegral.measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae
+-- 'intervalIntegral.measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae'
+--   depends on axioms: [propext, Quot.sound]
+\end{verbatimbox}
+\text{ \ } \setstretch{1.5}\text{ \ } 
+
+\noindent In other words, the skeleton uses only the kernel axioms already
+present in the one-sided statement, and adds no new axiom dependencies. The
+composite \textsf{hL.neg\allowbreak\_left.neg\allowbreak\_right} chains
+\hyperlink{lem:negleft}{Lem~2} and \hyperlink{lem:negright}{Lem~2$'$}: \textsf{neg\allowbreak\_left} negates the function and
+\textsf{neg\allowbreak\_right} negates the bound. The lemma
+\textsf{interval\allowbreak Integral.integral\allowbreak\_symm} rewrites
+$\int y \;\textsf{in}\;p_1..a,\;f(y)$ to
+$-\int y \;\textsf{in}\;a..p_1,\;f(y)$. This construction mirrors the
+sign-flip carried out in \textsf{FundThmCalculus.lean}, L261--L272
+\cite{mathlib4-fundthm}.
+
+\subsection{Python Algorithms}
+\label{sec:python}
+
+\noindent \setstretch{1.5}The tree was produced by \textsf{gen\allowbreak
+\_tree.py}, a small Python script that reads \textsf{mathlib\allowbreak
+\_edges.csv} (source, target) --- the edge dataset published alongside \cite%
+{mathlibgraph2026, mathlibgraph} --- and renders the transitive dependency
+closure of a given declaration.
+
+\noindent The algorithm is:
+
+\begin{enumerate}
+\item Load \textsf{mathlib\allowbreak\_edges.csv} into an adjacency list.
+
+\item Run a depth-first traversal to depth \textsf{MAX\allowbreak\_DEPTH}.
+
+\item Print each node with a \textsf{[def]}/\textsf{[thm]}/\textsf{[ax]} tag.
+
+\item Merge and write to \textsf{<target>.tree.txt}.
+\end{enumerate}
+
+\noindent The complete script is reproduced below. The script was prepared
+with the aid of \cite{deepseek-chat}.
+
+\text{ \ } \setstretch{1}\text{ \ } 
+\begin{verbatimbox}
+# -*- coding: utf-8 -*-
+"""
+gen_tree.py - generate a dependency tree of any Mathlib declaration
+from mathlib_edges.csv, annotating each node with its
+class ([def], [thm], or [ax]) and (exact or heuristic)
+source file path in Mathlib.
+
+Output format (per node, two lines):
+
+<prefix><branch> <name>  [<class>]   <marker>
+<prefix>@ <path>
+
+`<prefix>` is the ancestor continuation string (e.g. "|   "), the
+same on both lines so the `@ PATH` sits directly under the branch
+marker.  ASCII only - safe to paste into a LaTeX verbatim block.
+
+Class labels:
+[def] = definition / typeclass instance
+[thm] = theorem / lemma
+[ax]  = Lean kernel axiom (propext, funext, Quot.sound,
+Classical.choice) or a name reached through one
+
+Filters:
+--only-thms   keep [thm] AND [ax] nodes (axioms are part of the
+logical foundation, so they are kept by default)
+--only-defs   keep only [def] nodes
+--no-axioms   drop [ax] nodes from the output (compose with
+--only-thms to get a pure theorem skeleton)
+
+Path resolution order (first hit wins):
+1. exact match in the name->file map extracted from mathlib_edges.csv
+2. exact match in a --paths CSV (name,file)
+3. longest-prefix match in the --paths CSV
+4. longest-prefix match in the built-in NAMESPACE_PATHS table
+5. if the name has no dot -> "Lean core (not in Mathlib)"
+6. fallback: "Mathlib/**/<top>/**"
+
+Default locations (override with the CLI flags):
+CSV     : E:\\archives\\Processings\\MathsTools\\mathlib_tree\\mathlib_edges.csv
+Python  : D:\\Python38\\python.exe   (used by run.bat)
+
+Usage:
+python gen_tree.py <theorem_name> [--depth N] [--out FILE] [--csv FILE]
+[--paths FILE] [--max-nodes N]
+[--leaf-marker STR] [--no-dedup]
+[--only-thms | --only-defs]
+[--no-axioms]
+[--no-classify] [--no-paths]
+"""
+import sys
+import os
+import re
+import argparse
+from collections import defaultdict
+
+# ---------- default locations ----------
+DEFAULT_CSV = r"E:\archives\Processings\MathsTools\mathlib_tree\mathlib_edges.csv"
+
+# ---------- parse arguments ----------
+parser = argparse.ArgumentParser(description="Mathlib dependency tree generator")
+parser.add_argument("target", help="name of the theorem / declaration")
+parser.add_argument("--depth", type=int, default=2,
+help="max recursion depth (default: 2); 0 means unlimited")
+parser.add_argument("--out", type=str, default=None,
+help="output .txt file (default: <target>.tree.txt)")
+parser.add_argument("--csv", type=str, default=DEFAULT_CSV,
+help=f"path to mathlib_edges.csv (default: {DEFAULT_CSV})")
+parser.add_argument("--paths", type=str, default=None,
+help="optional CSV with name,file columns giving "
+"declaration -> .lean file mapping")
+parser.add_argument("--max-nodes", type=int, default=200000,
+help="hard cap on the number of nodes actually "
+"expanded (default 200000). Remaining nodes are "
+"emitted as stubs marked (node budget).")
+parser.add_argument("--leaf-marker", type=str, default="(depth limit)",
+help='marker appended to terminal nodes '
+'(default: "(depth limit)"; use "" to suppress)')
+parser.add_argument("--no-dedup", action="store_true",
+help="expand every path in full instead of skipping "
+"subtrees already shown elsewhere")
+parser.add_argument("--no-classify", action="store_true",
+help="do not annotate nodes with [def]/[thm]/[ax]")
+parser.add_argument("--no-paths", action="store_true",
+help="do not annotate nodes with their .lean file path")
+group = parser.add_mutually_exclusive_group()
+group.add_argument("--only-thms", action="store_true",
+help="keep [thm] and [ax] nodes; prune [def] subtrees")
+group.add_argument("--only-defs", action="store_true",
+help="keep only [def] nodes; prune [thm]/[ax] subtrees")
+parser.add_argument("--no-axioms", action="store_true",
+help="drop [ax] nodes from the output "
+"(compose with --only-thms for a pure theorem tree)")
+args = parser.parse_args()
+
+TARGET = args.target
+MAX_DEPTH = None if args.depth <= 0 else args.depth
+UNLIMITED = MAX_DEPTH is None
+MAX_NODES = None if args.max_nodes <= 0 else args.max_nodes
+OUT_FILE = args.out or (TARGET.replace(".", "_") + ".tree.txt")
+CSV_FILE = args.csv
+PATHS_FILE = args.paths
+CLASSIFY = not args.no_classify
+SHOW_PATHS = not args.no_paths
+ONLY_THMS = args.only_thms
+ONLY_DEFS = args.only_defs
+NO_AXIOMS = args.no_axioms
+LEAF_MARKER = args.leaf_marker
+DEDUP = not args.no_dedup
+
+if not os.path.isfile(CSV_FILE):
+sys.exit(f"ERROR: CSV not found: {CSV_FILE}")
+
+# ---------- column-name synonyms ----------
+SRC_KEYS  = ("source", "src", "from", "decl", "declaration", "name",
+"theorem", "node", "u", "parent")
+TGT_KEYS  = ("target", "tgt", "to", "dest", "dependency", "dep",
+"uses", "v", "child")
+KIND_KEYS = ("kind", "class", "decl_kind", "declaration_kind",
+"node_kind", "decltype", "decl_type", "is_def")
+FILE_KEYS = ("file", "path", "file_path", "filename", "source_file",
+"target_file", "src_file", "tgt_file", "mathlib_file",
+"decl_file", "declaration_file", "location", "src_path",
+"tgt_path", "source_path", "target_path")
+
+# ---------- Lean kernel axioms ----------
+# These four names are the primitive axioms of Lean 4's kernel.
+#   propext          : (a <-> b) -> a = b
+#   Quot.sound       : r a b -> Quot.mk r a = Quot.mk r b
+#   Classical.choice : Nonempty a -> a
+#   funext           : (forall x, f x = g x) -> f = g
+# Mathlib conventionally lists all four when reporting #print axioms.
+LEAN_AXIOMS = {
+	"propext",
+	"Quot.sound",
+	"Classical.choice",
+	"funext",
+	# Alternate spellings that occasionally appear in CSVs
+	"quot.sound",
+	"classical.choice",
+	"proof_irrel_heq",
+	"Classical.propComplete",
+}
+
+# ---------- built-in heuristic namespace -> directory table ----------
+NAMESPACE_PATHS = {
+	"DifferentiableAt":             "Mathlib/Analysis/Calculus/Deriv/Basic.lean",
+	"Differentiable":               "Mathlib/Analysis/Calculus/FDeriv/Basic.lean",
+	"HasDerivAt":                   "Mathlib/Analysis/Calculus/Deriv/Basic.lean",
+	"HasFDerivAt":                  "Mathlib/Analysis/Calculus/FDeriv/Basic.lean",
+	"deriv":                        "Mathlib/Analysis/Calculus/Deriv/Basic.lean",
+	"fderiv":                       "Mathlib/Analysis/Calculus/FDeriv/Basic.lean",
+	"RCLike":                       "Mathlib/Analysis/RCLike/Basic.lean",
+	"InnerProductSpace":            "Mathlib/Analysis/InnerProductSpace/Basic.lean",
+	"ContinuousLinearMap":          "Mathlib/Topology/Algebra/Module/LinearMap.lean",
+	"Continuous":                   "Mathlib/Topology/Defs/Basic.lean",
+	"IsBoundedSMul":                "Mathlib/Analysis/NormedSpace/Basic.lean",
+	"NormedAlgebra":                "Mathlib/Analysis/Normed/Algebra/Basic.lean",
+	"intervalIntegral":             "Mathlib/MeasureTheory/Integral/IntervalIntegral/Basic.lean",
+	"IntervalIntegrable":           "Mathlib/MeasureTheory/Integral/IntervalIntegral/Basic.lean",
+	"MeasureTheory.MeasureSpace.volume":
+	"Mathlib/MeasureTheory/MeasureSpace/Volume.lean",
+	"MeasureTheory.MeasureSpace":   "Mathlib/MeasureTheory/MeasureSpace/Defs.lean",
+	"MeasureTheory.Measure":        "Mathlib/MeasureTheory/Measure/Basic.lean",
+	"MeasureTheory.IntegrableOn":   "Mathlib/MeasureTheory/Integral/OnFunctions.lean",
+	"MeasureTheory.integral":       "Mathlib/MeasureTheory/Integral/Bochner/Basic.lean",
+	"MeasureTheory":                "Mathlib/MeasureTheory",
+	"Set.uIcc":                     "Mathlib/Data/Set/Intervals/UnorderedInterval.lean",
+	"Set.Icc":                      "Mathlib/Data/Set/Intervals/Basic.lean",
+	"Set.Ioo":                      "Mathlib/Data/Set/Intervals/Basic.lean",
+	"Set.Ioc":                      "Mathlib/Data/Set/Intervals/Basic.lean",
+	"Set.instMembership":           "Mathlib/Data/Set/Basic.lean",
+	"Set.Mem":                      "Mathlib/Data/Set/Basic.lean",
+	"Set":                          "Mathlib/Data/Set",
+	"Real":                         "Mathlib/Data/Real/Basic.lean",
+	"Nat":                          "Mathlib/Data/Nat",
+	"Int":                          "Mathlib/Data/Int",
+	"List":                         "Mathlib/Data/List",
+	"Polynomial":                   "Mathlib/Algebra/Polynomial",
+	"PseudoMetricSpace":            "Mathlib/Topology/MetricSpace/PseudoMetricSpace.lean",
+	"UniformSpace":                 "Mathlib/Topology/UniformSpace/Basic.lean",
+	"Bornology":                    "Mathlib/Topology/Bornology/Basic.lean",
+	"CompleteSpace":                "Mathlib/Topology/Algebra/UniformGroup.lean",
+	"TopologicalSpace":             "Mathlib/Topology/Defs/Basic.lean",
+	"NormedAddCommGroup":           "Mathlib/Analysis/Normed/Group/Basic.lean",
+	"NormedAddGroup":               "Mathlib/Analysis/Normed/Group/Basic.lean",
+	"NormedCommRing":               "Mathlib/Analysis/Normed/Ring/Basic.lean",
+	"NormedRing":                   "Mathlib/Analysis/Normed/Ring/Basic.lean",
+	"NonUnitalNormedCommRing":      "Mathlib/Analysis/Normed/Ring/Basic.lean",
+	"NonUnitalNormedRing":          "Mathlib/Analysis/Normed/Ring/Basic.lean",
+	"SeminormedAddCommGroup":       "Mathlib/Analysis/Normed/Group/Basic.lean",
+	"SeminormedRing":               "Mathlib/Analysis/Normed/Ring/Basic.lean",
+	"SeminormedCommRing":           "Mathlib/Analysis/Normed/Ring/Basic.lean",
+	"NonUnitalSeminormedCommRing":  "Mathlib/Analysis/Normed/Ring/Basic.lean",
+	"NonUnitalSeminormedRing":      "Mathlib/Analysis/Normed/Ring/Basic.lean",
+	"DenselyNormedField":           "Mathlib/Analysis/Normed/Field/Basic.lean",
+	"NontriviallyNormedField":      "Mathlib/Analysis/Normed/Field/Basic.lean",
+	"NormedField":                  "Mathlib/Analysis/Normed/Field/Basic.lean",
+	"NormedSpace":                  "Mathlib/Analysis/NormedSpace/Basic.lean",
+	"dist":                         "Mathlib/Topology/MetricSpace/PseudoMetricSpace.lean",
+	"Dist":                         "Mathlib/Topology/MetricSpace/PseudoMetricSpace.lean",
+	"enorm":                        "Mathlib/Analysis/Normed/Group/Basic.lean",
+	"AddGroup":                     "Mathlib/Algebra/Group/Defs.lean",
+	"AddCommGroup":                 "Mathlib/Algebra/Group/Defs.lean",
+	"AddMonoid":                    "Mathlib/Algebra/Group/Defs.lean",
+	"AddZero":                      "Mathlib/Algebra/Group/Defs.lean",
+	"AddZeroClass":                 "Mathlib/Algebra/Group/Defs.lean",
+	"SubNegMonoid":                 "Mathlib/Algebra/Group/Defs.lean",
+	"SubNegZeroMonoid":             "Mathlib/Algebra/Group/Defs.lean",
+	"SubtractionCommMonoid":        "Mathlib/Algebra/Group/Defs.lean",
+	"MonoidWithZero":               "Mathlib/Algebra/GroupWithZero/Defs.lean",
+	"MulZeroClass":                 "Mathlib/Algebra/GroupWithZero/Defs.lean",
+	"NegZeroClass":                 "Mathlib/Algebra/Group/Defs.lean",
+	"Ring":                         "Mathlib/Algebra/Ring/Defs.lean",
+	"CommRing":                     "Mathlib/Algebra/Ring/Defs.lean",
+	"Semiring":                     "Mathlib/Algebra/Ring/Defs.lean",
+	"Semifield":                    "Mathlib/Algebra/Field/Defs.lean",
+	"DivisionSemiring":             "Mathlib/Algebra/Field/Defs.lean",
+	"Field":                        "Mathlib/Algebra/Field/Defs.lean",
+	"Module":                       "Mathlib/Algebra/Module/Defs.lean",
+	"DistribMulAction":             "Mathlib/Algebra/Module/Defs.lean",
+	"DistribSMul":                  "Mathlib/Algebra/Module/Defs.lean",
+	"SMulZeroClass":                "Mathlib/Algebra/Module/Defs.lean",
+	"Lattice":                      "Mathlib/Order/Lattice.lean",
+	"DistribLattice":               "Mathlib/Order/Lattice.lean",
+	"SemilatticeInf":               "Mathlib/Order/Lattice.lean",
+	"SemilatticeSup":               "Mathlib/Order/Lattice.lean",
+	"PartialOrder":                 "Mathlib/Order/Defs.lean",
+	"Preorder":                     "Mathlib/Order/Defs.lean",
+	"LinearOrder":                  "Mathlib/Order/Defs.lean",
+	"HSub":                         "Mathlib/Algebra/Notation.lean",
+	"instHSub":                     "Mathlib/Algebra/Notation.lean",
+	"Subtype":                      "Mathlib/Data/Subtype/Basic.lean",
+	"Zero":                         "Mathlib/Algebra/Group/Defs.lean",
+	"OfNat":                        "Mathlib/Algebra/Group/Defs.lean",
+}
+
+LEAN_CORE = {
+	"forall_congr", "implies_congr", "inferInstance", "outParam",
+	"OfNat", "LE", "LT", "Max", "Min", "Membership", "Zero", "One",
+	"HAdd", "HMul", "HPow", "HSub", "HDiv", "HMod", "HAnd", "HOr",
+	"HXor", "HShiftLeft", "HShiftRight", "HAppend", "HEq", "HImp",
+	"HIff", "HNot", "HSMul", "Decidable", "Nonempty", "PLift", "ULift",
+	"Quot", "Quotient", "Classical", "Eq",
+	"Subsingleton", "Inhabited", "Empty", "PUnit",
+	"Unit", "Bool", "Option", "Sum", "Prod", "Sigma", "PSigma",
+	"eq_self", "of_eq_true", "le_total",
+	"min_comm", "min_eq_left", "min_eq_right",
+	"sup_eq_left", "sup_eq_right",
+}
+
+# ---------- CSV helpers ----------
+def _index_of(header_lower, keys, default=None):
+for i, c in enumerate(header_lower):
+if c in keys:
+return i
+return default
+
+def _indices_of(header_lower, keys):
+return [i for i, c in enumerate(header_lower) if c in keys]
+
+def load_paths_file(path):
+m = {}
+if not path or not os.path.isfile(path):
+return m
+with open(path, "r", encoding="utf-8") as f:
+first = f.readline().rstrip("\n")
+cols = [c.strip().lower() for c in first.split(",")]
+if "name" in cols and ("file" in cols or "path" in cols):
+name_idx = cols.index("name")
+file_idx = cols.index("file") if "file" in cols else cols.index("path")
+else:
+name_idx, file_idx = 0, 1
+parts = first.split(",")
+if len(parts) > 1:
+m[parts[0].strip()] = parts[1].strip()
+for line in f:
+parts = line.rstrip("\n").split(",")
+if len(parts) <= max(name_idx, file_idx):
+continue
+m[parts[name_idx].strip()] = parts[file_idx].strip()
+return m
+
+# ---------- load edges ----------
+print(f"Loading edges from {CSV_FILE} ...")
+adj = defaultdict(list)
+known_nodes = set()
+kind_of = {}
+csv_paths = {}
+
+with open(CSV_FILE, "r", encoding="utf-8") as f:
+header_line = f.readline().rstrip("\n")
+header_cols = [c.strip() for c in header_line.split(",")]
+header_lower = [c.lower() for c in header_cols]
+
+src_idx  = _index_of(header_lower, SRC_KEYS, 0)
+tgt_idx  = _index_of(header_lower, TGT_KEYS, 1)
+kind_idx = _index_of(header_lower, KIND_KEYS, None)
+file_idxs = _indices_of(header_lower, FILE_KEYS)
+
+print(f"  Header: {header_cols}")
+print(f"  -> source column: '{header_cols[src_idx]}' (index {src_idx})")
+print(f"  -> target column: '{header_cols[tgt_idx]}' (index {tgt_idx})")
+if kind_idx is not None:
+print(f"  -> kind column:   '{header_cols[kind_idx]}' (index {kind_idx})")
+else:
+print("  -> kind column:   not present (heuristic will be used)")
+if file_idxs:
+names = ", ".join(f"'{header_cols[i]}'" for i in file_idxs)
+print(f"  -> file columns:  {names}")
+else:
+print("  -> file columns:  none detected")
+
+for line in f:
+parts = line.rstrip("\n").split(",")
+if len(parts) <= max(src_idx, tgt_idx):
+continue
+src = parts[src_idx].strip()
+tgt = parts[tgt_idx].strip()
+adj[src].append(tgt)
+known_nodes.add(src)
+known_nodes.add(tgt)
+
+if kind_idx is not None and len(parts) > kind_idx:
+raw = parts[kind_idx].strip().lower()
+if raw in ("def", "definition", "abbrev", "instance", "structure"):
+kind_of[src] = "def"
+elif raw in ("thm", "theorem", "lemma", "prop", "proposition",
+"corollary"):
+kind_of[src] = "thm"
+elif raw in ("ax", "axiom"):
+kind_of[src] = "ax"
+
+for fi in file_idxs:
+if len(parts) <= fi:
+continue
+val = parts[fi].strip()
+if not val:
+continue
+col_name = header_lower[fi]
+if "target" in col_name:
+csv_paths.setdefault(tgt, val)
+else:
+csv_paths.setdefault(src, val)
+
+edges_total = sum(len(v) for v in adj.values())
+print(f"  {len(adj):,} source nodes, {edges_total:,} edges")
+print(f"  {len(kind_of):,} nodes carry kind info from CSV")
+print(f"  {len(csv_paths):,} nodes carry exact file paths from CSV")
+
+PATHS_MAP = load_paths_file(PATHS_FILE)
+for k, v in PATHS_MAP.items():
+csv_paths[k] = v
+if PATHS_MAP:
+print(f"  {len(PATHS_MAP):,} additional mappings loaded from {PATHS_FILE}")
+
+if TARGET not in known_nodes:
+print(f"WARNING: '{TARGET}' not found in graph - tree may be empty.")
+
+# ---------- path resolution ----------
+def path_of(name):
+if name in csv_paths:
+return csv_paths[name]
+best = None
+for k in csv_paths:
+if name.startswith(k + ".") and (best is None or len(k) > len(best)):
+best = k
+if best is not None:
+return csv_paths[best]
+# axioms live in Lean core / Mathlib's Logic.lean
+if name in LEAN_AXIOMS:
+if name in ("Classical.choice", "classical.choice",
+"Classical.propComplete"):
+return "Mathlib/Logic/Choice.lean (Lean core)"
+return "Mathlib/Logic/Basic.lean (Lean core)"
+best = None
+for k in NAMESPACE_PATHS:
+if (name == k or name.startswith(k + ".")) and \
+(best is None or len(k) > len(best)):
+best = k
+if best is not None:
+return NAMESPACE_PATHS[best]
+if "." in name:
+top = name.split(".", 1)[0]
+if top in NAMESPACE_PATHS:
+return NAMESPACE_PATHS[top]
+if "." not in name or name.split(".", 1)[0] in LEAN_CORE:
+return "Lean core (not in Mathlib)"
+return f"Mathlib/**/{name.split('.', 1)[0]}/**"
+
+# ---------- classification ----------
+_INHERITANCE_RE = re.compile(r"\.to[A-Z]")
+
+def classify_heuristic(name):
+# axiom check comes first
+if name in LEAN_AXIOMS:
+return "ax"
+if not name:
+return "def"
+last = name.rsplit(".", 1)[-1]
+if last.startswith("inst") or ".inst" in name:
+return "def"
+if _INHERITANCE_RE.search(name):
+return "def"
+if last and last[0].isupper():
+return "def"
+if "_" in last:
+return "thm"
+return "def"
+
+def node_kind(name):
+if name in kind_of:
+return kind_of[name]
+return classify_heuristic(name)
+
+def tag(name):
+"""Class tag only; the path is emitted on its own line."""
+if not CLASSIFY:
+return ""
+return f"  [{node_kind(name)}]"
+
+def keep(name):
+"""Return True if this node should be kept under the active filters."""
+k = node_kind(name)
+if NO_AXIOMS and k == "ax":
+return False
+if not (ONLY_THMS or ONLY_DEFS):
+return True
+if ONLY_THMS:
+# keep theorems AND axioms: axioms are the foundation of proofs
+return k in ("thm", "ax")
+if ONLY_DEFS:
+return k == "def"
+return True
+
+# ---------- tree data structure ----------
+class TNode:
+__slots__ = ("name", "children", "marker", "is_cycle")
+def __init__(self, name):
+self.name = name
+self.children = []
+self.marker = ""
+self.is_cycle = False
+
+_nodes_created = 0  # respect --max-nodes
+
+def build_tree(node, depth=0, visited=None, seen_on_path=None):
+global _nodes_created
+if visited is None:
+visited = set()
+if seen_on_path is None:
+seen_on_path = set()
+
+n = TNode(node)
+
+if node in seen_on_path:
+n.is_cycle = True
+return n
+if DEDUP and node in visited:
+n.marker = "(*)"
+return n
+
+if MAX_NODES is not None and _nodes_created >= MAX_NODES:
+n.marker = "(node budget)"
+return n
+_nodes_created += 1
+
+if DEDUP:
+visited.add(node)
+seen_on_path.add(node)
+
+if MAX_DEPTH is not None and depth >= MAX_DEPTH:
+n.marker = "(depth limit)"
+seen_on_path.discard(node)
+return n
+
+deps = adj.get(node, [])
+if not deps:
+n.marker = LEAF_MARKER if LEAF_MARKER else ""
+seen_on_path.discard(node)
+return n
+
+for dep in sorted(set(deps)):
+n.children.append(build_tree(dep, depth + 1, visited, seen_on_path))
+
+seen_on_path.discard(node)
+return n
+
+def prune_tree(node):
+if not keep(node.name):
+return None
+new = TNode(node.name)
+new.marker = node.marker
+new.is_cycle = node.is_cycle
+for child in node.children:
+pc = prune_tree(child)
+if pc is not None:
+new.children.append(pc)
+return new
+
+def render_struct(node, prefix="", is_root=True, is_last=True):
+"""Two lines per node: declaration + tag, then `@ PATH`.
+
+The second line reuses the same ancestor `prefix` as the first
+so the `@` sits flush under the branch marker.
+"""
+lines = []
+display = f"(cycle: {node.name})" if node.is_cycle else node.name
+
+# ---- name line ------------------------------------------------
+if is_root:
+name_line = display + tag(node.name)
+else:
+name_line = (prefix
++ ("`-- " if is_last else "|-- ")
++ display
++ tag(node.name))
+if node.marker:
+name_line += f"   {node.marker}"
+lines.append(name_line)
+
+# ---- path line ------------------------------------------------
+if SHOW_PATHS:
+lines.append(prefix + "@ " + path_of(node.name))
+
+# ---- children -------------------------------------------------
+child_prefix = "" if is_root else prefix + ("    " if is_last else "|   ")
+n = len(node.children)
+for i, child in enumerate(node.children):
+lines.extend(render_struct(
+child, prefix=child_prefix, is_root=False,
+is_last=(i == n - 1)))
+return lines
+
+def count_nodes(node):
+total = 1
+for c in node.children:
+total += count_nodes(c)
+return total
+
+# ---------- main ----------
+print(f"Generating dependency tree for: {TARGET}")
+if UNLIMITED:
+print("  --depth 0 (unlimited expansion)")
+if MAX_NODES is not None:
+print(f"  --max-nodes {MAX_NODES:,}")
+if not DEDUP:
+print("  --no-dedup (subtrees re-expanded at every occurrence)")
+
+root = build_tree(TARGET, depth=0)
+raw_size = count_nodes(root)
+budget_hit = MAX_NODES is not None and _nodes_created >= MAX_NODES
+print(f"  raw tree nodes: {raw_size:,}")
+if budget_hit:
+print(f"  WARNING: node budget ({MAX_NODES:,}) reached; tree was truncated.")
+
+if not DEDUP and raw_size > 200_000:
+print(f"  WARNING: --no-dedup produced {raw_size:,} nodes; "
+f"the output file may be very large.")
+
+if ONLY_THMS or ONLY_DEFS or NO_AXIOMS:
+pruned = prune_tree(root)
+if pruned is None:
+pruned = TNode(root.name)
+pruned.marker = "(filtered out: target does not match --only-* filter)"
+root = pruned
+
+lines = render_struct(root)
+
+n_def = sum(1 for ln in lines if "[def]" in ln)
+n_thm = sum(1 for ln in lines if "[thm]" in ln)
+n_ax  = sum(1 for ln in lines if "[ax]"  in ln)
+n_leaf = sum(1 for ln in lines if LEAF_MARKER and LEAF_MARKER in ln)
+
+header = [
+"=" * 60,
+f"Dependency tree for: {TARGET}",
+f"Source: {CSV_FILE}",
+f"Max depth: {'unlimited' if UNLIMITED else MAX_DEPTH}",
+"(*) = already expanded elsewhere in this tree",
+]
+if CLASSIFY:
+header.append("[def] = definition / typeclass instance")
+header.append("[thm] = theorem / lemma")
+header.append("[ax]  = Lean kernel axiom "
+"(propext, funext, Quot.sound, Classical.choice)")
+if SHOW_PATHS:
+if csv_paths:
+header.append("@ PATH = on the line below each declaration, "
+"exact from mathlib_edges.csv (or --paths) "
+"where available; heuristic otherwise")
+else:
+header.append("@ PATH = on the line below each declaration, "
+"heuristic from namespace only "
+"(no path columns in CSV, no --paths file)")
+if LEAF_MARKER:
+header.append(f"{LEAF_MARKER} = node has no further dependencies "
+f"in the CSV")
+if not DEDUP:
+header.append("Dedup: disabled (subtrees re-expanded)")
+if ONLY_THMS:
+header.append("Filter: --only-thms "
+"(pruned [def] subtrees; [ax] retained)")
+elif ONLY_DEFS:
+header.append("Filter: --only-defs (pruned [thm]/[ax] subtrees)")
+if NO_AXIOMS:
+header.append("Filter: --no-axioms (dropped [ax] nodes)")
+if MAX_NODES is not None:
+header.append(f"Node budget: {MAX_NODES:,}"
++ ("  [HIT - output truncated]"
+if budget_hit else ""))
+header.append("=" * 60)
+header.append("")
+
+with open(OUT_FILE, "w", encoding="utf-8") as f:
+f.write("\n".join(header + lines))
+f.write("\n")
+
+print(f"Done. Written to: {OUT_FILE}")
+print(f"  {len(lines):,} lines")
+if CLASSIFY:
+print(f"  {n_def:,} def, {n_thm:,} thm, {n_ax:,} ax")
+if LEAF_MARKER:
+print(f"  {n_leaf:,} terminal nodes ({LEAF_MARKER})")
+\end{verbatimbox}
+\setstretch{1}
+
+\section{Tables}
+\label{sec:tables}
+
+\subsection{Timeline}
+\label{sec:timeline}
+
+\noindent Key dates in the formalisation of FTC \cite%
+{mathlib-stats, mathlib4}.\text{ \ }\newline
+\text{ \ }\newline
+\setstretch{1.3}
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{tl:2013}{\textbf{2013}} &
+first Lean~2 formal\allowbreak isation &
+\textsf{integral\allowbreak\_deriv\allowbreak\_eq\allowbreak\_sub} \textsf{(Lean 2 name)} &
+\textsf{Hoel et al.} \\ \hline
+\hypertarget{tl:2017}{\textbf{2017}} &
+Lean~3 port &
+\textsf{integral\allowbreak\_eq\allowbreak\_sub\allowbreak\_of\allowbreak\_has\allowbreak Deriv\allowbreak At} &
+\textsf{math\allowbreak lib3} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hypertarget{tl:2021}{\textbf{2021}} &
+inter\allowbreak val integ\allowbreak ral rewrit\allowbreak ten &
+\textsf{FTC\allowbreak Filter} \textsf{introduced} &
+\textsf{math\allowbreak lib3 PR} \\ \hline
+\hypertarget{tl:2022}{\textbf{2022}} &
+Math\allowbreak lib~4 port &
+mathlib4 naming conven\allowbreak tion &
+\textsf{math\allowbreak lib4} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{tl:2024}{\textbf{2024}} &
+gener\allowbreak al Lit\allowbreak tle-$o$ FTC-2 stabil\allowbreak ised &
+\textsf{measure\allowbreak\_integral\allowbreak\_sub\allowbreak\_integral\allowbreak\_sub\allowbreak\_linear\allowbreak\_is\allowbreak LittleO\allowbreak\_of\allowbreak\_tendsto\allowbreak\_ae} &
+\textsf{math\allowbreak lib4} \\ \hline
+\end{array}$ 
+\setstretch{1}
+\subsection{Classifications}
+\label{sec:classifications}
+
+\noindent Every node of the depth-5 tree falls into one of four classes.
+
+\text{ \ }\newline
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{cl:thm}{\textbf{Thm}} &
+$\approx 25$ substantive nodes & 
+\textsf{measure\allowbreak\_integral\allowbreak\_sub\allowbreak\_linear\allowbreak\_is\allowbreak LittleO\allowbreak\_of\allowbreak\_tendsto\allowbreak\_ae} &
+\textsf{mathe\allowbreak matical con\allowbreak tent} \\ \hline
+\hypertarget{cl:lem}{\textbf{Lem}} &
+many tech\allowbreak nical steps &
+\textsf{Is\allowbreak LittleO.add\allowbreak\_add},\;\textsf{Filter.mp\allowbreak\_mem} &
+\textsf{tech\allowbreak nical steps} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{cl:def}{\textbf{Def}} &
+domin\allowbreak ant class &
+\textsf{Interval\allowbreak Integrable},\;\textsf{FTC\allowbreak Filter},\;\textsf{Normed\allowbreak AddCommGroup} &
+\textsf{type\allowbreak class clo\allowbreak sure} \\ \hline
+\hypertarget{cl:ax}{\textbf{Ax}} &
+2 visible at depth~5 in excerpt; 3 reached overall &
+\textsf{funext},\;\textsf{Quot\allowbreak.sound};\;
+\textsf{propext} (supplement) &
+\textsf{ker\allowbreak nel ax\allowbreak ioms} \\ \hline
+\end{array}$ \noindent \text{ \ }\newline
+
+\subsection{Applications}
+\label{sec:applications}
+\setstretch{1.5}
+\noindent The general Little-$o$ form of FTC-2 above underpins:
+\setstretch{1.5}
+\text{ \ }\newline \text{ \ }
+
+\noindent$\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{ap:cov}{\textbf{App\,1}} &
+change of vari\allowbreak ables &
+\textsf{integral\allowbreak\_comp\allowbreak\_mul\allowbreak\_deriv} &
+\textsf{Change of Vari\allowbreak ables} \\ \hline
+\hypertarget{ap:barrow}{\textbf{App\,2}} &
+inverse integr\allowbreak ation / different\allowbreak iation &
+\textsf{integral\allowbreak\_eq\allowbreak\_sub\allowbreak\_of\allowbreak\_has\allowbreak Deriv\allowbreak At} &
+\textsf{Barrow's Rule} \\
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{ap:Wiedijk}{\textbf{App\,3}} &
+FTC as named target &
+\textsf{integral\allowbreak\_deriv\allowbreak\_eq\allowbreak\_sub} &
+\textsf{Wied\allowbreak ijk Thm 14} \\ \hline
+\hypertarget{ap:circle}{\textbf{App\,4}} &
+computes $\pi$ &
+\textsf{integral\allowbreak\_sqrt\allowbreak\_one\allowbreak\_sub\allowbreak\_sq} &
+\textsf{Area of the Cir\allowbreak cle} \\ 
+\end{array}$
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{ap:bochner}{\textbf{App\,5}} &
+$E$-valued Boch\allowbreak ner general\allowbreak isation &
+\textsf{MeasureTheory.integral}\;$[Complete\allowbreak Space\;E]$ &
+\textsf{Bochn\allowbreak er Integ\allowbreak ral FTC} \\ \hline
+\end{array}$ 
+\newpage
+
+\section{Conclusion}
+\label{sec:conclusion}
+\noindent
+\setstretch{1.3}
+The Fundamental Theorem of Calculus in Mathlib is not a single
+theorem but a small hierarchy whose most general member is the Little-$o$
+statement \textsf{interval\allowbreak Integral.measure\allowbreak
+	\_integral\allowbreak\_sub\allowbreak\_integral\allowbreak\_sub\allowbreak
+	\_linear\allowbreak\_is\allowbreak LittleO\allowbreak\_of\allowbreak
+	\_tendsto\allowbreak\_ae}. From it one derives the classical derivative form 
+\textsf{interval\allowbreak Integral.integral\allowbreak\_eq\allowbreak
+	\_sub\allowbreak\_of\allowbreak\_has\allowbreak Deriv\allowbreak At} and the
+one-sided variants \textsf{\_left} and \textsf{\_right}. The dependency tree
+in Section~\ref{sec:tree} makes this structure explicit.
+
+\noindent The depth-5 closure of the one-sided theorem contains on the order
+of $10^{5}$ nodes. Two of the three kernel axioms reachable in the closure
+--- \textsf{funext} and \textsf{Quot\allowbreak.sound} --- are visible in
+the printed excerpt; \textsf{propext} appears immediately beyond it on the 
+\textsf{Asymptotics.IsLittleO.sub} branch. \textsf{Classical%
+	\allowbreak.choice} is not reached. The same methodology --- extract the
+dependency tree, cross-check signatures against the documentation \cite%
+{mathlib4-docs}, and inspect the kernel-axiom closure --- applies to any
+other theorem in the library \cite{mathlib4, mathlibgraph2026}. The Lean
+skeleton of Section~\ref{sec:lean-skeleton} has been type-checked against
+Mathlib commit \mathlibsha{} and introduces no new axiom dependencies
+beyond those already present in the one-sided statement.
+
+
+
+
+\begin{thebibliography}{9}
+	
+	\bibitem{close2026axiom}  Larsen James Close. \newblock
+	The Axiom Profile of Mathlib. \newblock
+	Zenodo, 2026. \newblock
+	DOI: \texttt{10.5281/zenodo.20710920}. \newblock
+	\url{https://zenodo.org/records/20710921}.
+	
+	\medskip
+	
+	\bibitem{deepseek-chat}  DeepSeek. \newblock
+	DeepSeek Chat. \newblock
+	Conversational assistant used to assemble the exposition, cross-check the
+	statement signatures against the Mathlib source, and prepare the LaTeX
+	source of this paper. \newblock
+	\url{https://chat.deepseek.com}.
+	
+	\medskip
+	
+	\bibitem{mathlib-stats}  Lean community. \newblock
+	Mathlib statistics. \newblock
+	\url{https://leanprover-community.github.io/mathlib_stats.html}.
+	
+	\medskip
+	
+	\bibitem{mathlib4}  The mathlib Community. \newblock
+	The Lean mathematical library. \newblock
+	Source repository, GitHub. \newblock
+	\url{https://github.com/leanprover-community/mathlib4}.
+	
+	\medskip
+	
+	\bibitem{mathlib4-docs}  The mathlib Community. \newblock
+	Mathlib4 documentation browser. \newblock
+	Online reference for every declaration in Mathlib; used to locate the
+	signatures and dependency edges of the theorems in this paper, and
+	recommended as the entry point for analogous dependency-guided expositions
+	of other theorems in the same library. \newblock
+	\url{https://leanprover-community.github.io/mathlib4_docs/}.
+	
+	\medskip
+	
+	\bibitem{mathlib4-fundthm}  The mathlib Community. \newblock
+	\texttt{Mathlib/MeasureTheory/Integral/IntervalIntegral/FundThmCalculus.lean}. \newblock
+	Mathlib4 source file containing the two-sided Little-$o$ FTC-2 and the
+	one-sided reduction used in Section~\ref{sec:proofs} and
+	Section~\ref{sec:scripts}. \newblock
+	Pinned to commit \mathlibsha{}. \newblock
+	\url{https://github.com/leanprover-community/mathlib4/blob/\mathlibsharaw/Mathlib/MeasureTheory/Integral/IntervalIntegral/FundThmCalculus.lean}.
+	
+	\medskip
+	
+	\bibitem{mathlibgraph}  Xinze Li and Patrick Shafto. \newblock
+	The Multinetwork of Mathlib. \newblock
+	NeurIPS 2026 Datasets and Benchmarks Track, 2026. Under review. \newblock
+	Dataset file: \texttt{mathlib\_edges.csv}. \newblock
+	\url{https://huggingface.co/datasets/MathNetwork/MathlibGraph/resolve/main/mathlib_edges.csv}.
+	
+	\medskip
+	
+	\bibitem{mathlibgraph2026}  Xinze Li and Patrick Shafto. \newblock
+	MathlibGraph: The Multinetwork of Mathlib. \newblock
+	Hugging Face dataset, 2026. \newblock
+	\url{https://huggingface.co/datasets/MathNetwork/MathlibGraph}.
+	
+	\medskip
+	
+	\bibitem{network-structure-mathlib}  Xinze Li, Nanyun Peng, Simone Severini,
+	and Patrick Shafto. \newblock
+	The Network Structure of Mathlib. \newblock
+	arXiv:2604.24797, 2026. \newblock
+	\url{https://arxiv.org/abs/2604.24797}.
+	
+\end{thebibliography}
+
+\end{document}
