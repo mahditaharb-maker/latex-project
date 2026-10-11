@@ -31,3 +31,10 @@ jobs:
           git add document/The-Fundamental-Theorem-of-Calculus-in-Mathlib-26A42.pdf
           git diff --staged --quiet || git commit -m "Update compiled PDF [skip ci]"
           git push
+                - name: Commit PDF to repository
+          run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add document/The-Fundamental-Theorem-of-Calculus-in-Mathlib-26A42.pdf
+          git diff --staged --quiet || git commit -m "Update compiled PDF [skip ci]"
+          git push
