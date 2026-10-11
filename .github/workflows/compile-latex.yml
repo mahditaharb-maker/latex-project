@@ -19,14 +19,14 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: document/The-Fundamental-Theorem-of-Calculus-in-Mathlib-26A42.tex
-          out_dir: document
+          working_directory: document
+          root_file: The-Fundamental-Theorem-of-Calculus-in-Mathlib-26A42.tex
 
       - name: Commit PDF to repository
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add document/The-Fundamental-Theorem-of-Calculus-in-Mathlib-26A42.pdf
+          git add -A
           git diff --staged --quiet || git commit -m "Update compiled PDF [skip ci]"
           git push
 
