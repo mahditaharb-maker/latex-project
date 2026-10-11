@@ -1,0 +1,37 @@
+name: Build LaTeX Document
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: document/The-Fundamental-Theorem-of-Calculus-in-Mathlib-26A42.tex
+          out_dir: document
+
+      - name: Commit PDF to repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add document/The-Fundamental-Theorem-of-Calculus-in-Mathlib-26A42.pdf
+          git diff --staged --quiet || git commit -m "Update compiled PDF [skip ci]"
+          git push
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PDF
+          path: document/The-Fundamental-Theorem-of-Calculus-in-Mathlib-26A42.pdf
