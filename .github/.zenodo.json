@@ -1,0 +1,13 @@
+{
+  "title": "Your LaTeX Project Title",
+  "description": "A brief abstract or description of your work.",
+  "creators": [
+    {
+      "name": "Your Name",
+      "affiliation": "Your University",
+      "orcid": "0000-0000-0000-0000"
+    }
+  ],
+  "license": "MIT",
+  "keywords": ["LaTeX", "manuscript", "your-topic"]
+}
