@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+title: "The Fundamental Theorem of Calculus in Mathlib"
+message: "If you use this work, please cite it as below."
+type: software
+authors:
+  - family-names: Tahar
+    given-names: Mahdi
+license: MIT
+version: 1.0.0
+date-released: 2026-10-12
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23328201
+    description: "Zenodo DOI for v1.0.0"
