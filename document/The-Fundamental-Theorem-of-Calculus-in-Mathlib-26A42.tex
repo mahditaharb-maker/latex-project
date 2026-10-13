@@ -3,21 +3,8 @@
 % A Dependency-Guided Formal Exposition
 % Compile with: pdflatex (twice)
 % ============================================================
-% ---- verbatim / fancyvrb configuration ----------------------------
-% ---- custom abstract: heading + content ---------------------------
-% -------------------------------------------------------------------
-% ---- subject classification --------------------------------------
-% ---- sectioning fonts --------------------------------------------
-% ---- column-type tuning parameters -------------------------------
-% ---- column types ------------------------------------------------
-%% FIXED-MATH: pinned Mathlib commit used throughout the paper.
-% ---- title-case preservation -------------------------------------
-% ---- spacing inside \maketitle: title / author / abstract --------
-% ------------------------------------------------------------------
-
-
 \documentclass[11pt,reqno]{amsart}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{amsfonts}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -38,6 +25,28 @@
 %TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
 
 \IfFileExists{tcilatex.tex}{\input{tcilatex}}{}
+
+% ---- UTF-8 characters inside verbatim -----------------------------
+% Defensive declarations for SWP5's old inputenc, in case a future
+% edit introduces any of these inside a verbatim / verbatimbox.
+\DeclareUnicodeCharacter{03B9}{\ensuremath{\iota}}
+\DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
+\DeclareUnicodeCharacter{2203}{\ensuremath{\exists}}
+\DeclareUnicodeCharacter{2208}{\ensuremath{\in}}
+\DeclareUnicodeCharacter{2209}{\ensuremath{\notin}}
+\DeclareUnicodeCharacter{2218}{\ensuremath{\circ}}
+\DeclareUnicodeCharacter{2264}{\ensuremath{\leq}}
+\DeclareUnicodeCharacter{2265}{\ensuremath{\geq}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\to}}
+\DeclareUnicodeCharacter{21A6}{\ensuremath{\mapsto}}
+\DeclareUnicodeCharacter{2260}{\ensuremath{\neq}}
+\DeclareUnicodeCharacter{00D7}{\ensuremath{\times}}
+\DeclareUnicodeCharacter{2115}{\ensuremath{\mathbb{N}}}
+\DeclareUnicodeCharacter{211D}{\ensuremath{\mathbb{R}}}
+\DeclareUnicodeCharacter{27E8}{\ensuremath{\langle}}
+\DeclareUnicodeCharacter{27E9}{\ensuremath{\rangle}}
+
+% ---- verbatim / fancyvrb configuration ----------------------------
 \fvset{frame=lines,
 	framerule=0.7pt,
 	rulecolor=\color{blue!60!black},
@@ -55,6 +64,8 @@
 	xleftmargin=6pt,
 	xrightmargin=6pt
 }
+
+% ---- custom abstract: heading + content ---------------------------
 \renewcommand{\abstractname}{\fontsize{16}{18}\selectfont Abstract}
 \newcommand{\abstractfont}{	\normalfont
 	\fontsize{11}{13.2}\selectfont
@@ -77,15 +88,37 @@
 	\ifx\@setabstract\relax \@setabstracta \fi
 }
 \makeatother
+
+% ---- subject classification --------------------------------------
+% No optional argument is passed, because SWP5's amsart (v2.20, 2004)
+% only knows MSC editions 1991 and 2000; passing [2020] triggers
+% "Unknown edition (2020) ... using '1991'" and would print the wrong
+% year.  The year is placed in the text instead.  The redefinition of
+% \@setsubjclass below removes the automatic "(1991)" prefix that the
+% class would otherwise prepend in parentheses.
+\subjclass{\textbf{2020 Mathematics Subject Classification.}\,
+	Primary 26A42.\,
+	Secondary 28A15; 28B05; 28A25; 68V20; 68V15.}
+
+% Override the class-provided \@setsubjclass so that only the text
+% of \@subjclass is printed, without the year prefix.  The custom
+% \@maketitle below still wraps the result in \@footnotetext{...},
+% so the classification appears as an unmarked footnote on page 1.
 \makeatletter
-\renewcommand{\subjclass}[2][]{	\gdef\@subjclass{#2}	\gdef\@subjclassyear{#1}}
+\def\@setsubjclass{%
+	\ifx\@subjclass\@empty\else
+	\@subjclass
+	\fi
+}
 \makeatother
-\subjclass[2020]{	\textbf{Primary:} 26A42.\,
-	\textbf{Secondary:} 28A15; 28B05; 28A25; 68V20; 68V15.}
+
 \keywords{Fundamental Theorem of Calculus, interval integral,
 	Bochner integral, Lebesgue integral, Little-o, Mathlib, Lean 4,
 	dependency tree, formalisation}
+
 \setcounter{secnumdepth}{3}
+
+% ---- sectioning fonts --------------------------------------------
 \titleformat{\section}
 {\normalfont\fontsize{22}{20}\selectfont\bfseries}
 {\thesection.}
@@ -104,10 +137,14 @@
 \titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
 \titlespacing*{\subsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 \titlespacing*{\subsubsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+% ---- column-type tuning parameters -------------------------------
 \newcommand{\colLsize}{\scriptsize}
 \def\colLbaseline{1.5}
 \newcommand{\colLindent}{1.5em}
 \newcommand{\colLwidth}{11cm}
+
+% ---- column types ------------------------------------------------
 \setlength{\arraycolsep}{3pt}
 \newcolumntype{T}{>{\centering\arraybackslash}m{1.4cm}}
 \newcolumntype{S}{>{\small\centering\arraybackslash}m{2.8cm}}
@@ -115,11 +152,21 @@
 		\baselineskip=\colLbaseline\baselineskip
 		\setlength{\parindent}{\colLindent}		\RaggedRight\arraybackslash}m{\colLwidth}}
 \newcolumntype{K}{>{\footnotesize\centering\arraybackslash}m{2.8cm}}
+
 \newcommand{\lean}[1]{\texttt{#1}}
-\newcommand{\tagged}[2]{\hypertarget{#1}{\textbf{#2}}}
+% \tagged wraps \hypertarget in \mbox so that the destination anchor
+% survives inside math-mode arrays ($...$).  In the body, whenever a
+% row uses  \hypertarget{KEY}{\textbf{LABEL}}  inside a math array,
+% prefer  \tagged{KEY}{LABEL}  so that the anchor is registered by
+% the PDF backend (avoids the "dest: name{...} does not exist" warnings).
+\newcommand{\tagged}[2]{\hypertarget{#1}{\mbox{\textbf{#2}}}}
 \newcommand{\refto}[2]{\hyperlink{#1}{#2}}
+
+%% FIXED-MATH: pinned Mathlib commit used throughout the paper.
 \newcommand{\mathlibsha}{\texttt{0c1d5a7e}}
 \newcommand{\mathlibsharaw}{0c1d5a7e}
+
+% ---- title-case preservation -------------------------------------
 \makeatletter
 \let\orig@maketitle\maketitle
 \renewcommand{\maketitle}{	\begingroup
@@ -129,14 +176,34 @@
 	\endgroup
 }
 \makeatother
+
+% ---- spacing inside \maketitle: title / author / abstract --------
 \makeatletter
 \newlength{\titleToAuthorSkip}
 \newlength{\authorToAbstractSkip}
 \setlength{\titleToAuthorSkip}{18pt plus 14pt minus 2pt}
 \setlength{\authorToAbstractSkip}{100pt plus 6pt minus 3pt}
+
+% Custom layout.  The subject classification, the keywords and the
+% \thanks text (if any) are emitted as UNMARKED FOOTNOTES on page 1
+% by wrapping them in \@footnotetext{...}, exactly as amsart's own
+% \@maketitle does.  Without the \@footnotetext{} wrapper the
+% classification is printed inline in the title block instead of at
+% the bottom of the page.
 \renewcommand{\@maketitle}{	\normalfont\normalsize
 	\let\@makefnmark\relax
 	\let\@thefnmark\relax
+	% --- unmarked footnotes on page 1 -------------------------
+	\ifx\@empty\@subjclass\else
+	\@footnotetext{\@setsubjclass}%
+	\fi
+	\ifx\@empty\@keywords\else
+	\@footnotetext{\@setkeywords}%
+	\fi
+	\ifx\@empty\@thanks\else
+	\@footnotetext{\@setthanks}%
+	\fi
+	% --- title block ------------------------------------------
 	\@settitle
 	\ifx\@empty\@authors\else
 	\vspace{\titleToAuthorSkip}	\@setauthors
@@ -149,10 +216,10 @@
 	\@setabstract
 }
 \makeatother
+
 \pagestyle{plain}
 \renewcommand{\seriesdefault}{\bfdefault}
 \boldmath
-
 \begin{document}
 \title{\bfseries{\Large {The Fundamental Theorem of Calculus in Mathlib}}\\
 [10pt] {\Large {A Dependency-Guided Formal Exposition}}}
