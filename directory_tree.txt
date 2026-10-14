@@ -1,0 +1,275 @@
+============================================
+ DIRECTORY + FILE TREE REPORT
+ Root: E:\archives\Processings\Repositors\GitHubSync\repos\latex-project
+ Generated: 14/10/2026 15:41:19,70
+============================================
+
+latex-project\
+├── .git\
+│   ├── hooks\
+│   │   ├── applypatch-msg.sample
+│   │   ├── commit-msg.sample
+│   │   ├── fsmonitor-watchman.sample
+│   │   ├── post-update.sample
+│   │   ├── pre-applypatch.sample
+│   │   ├── pre-commit.sample
+│   │   ├── pre-merge-commit.sample
+│   │   ├── prepare-commit-msg.sample
+│   │   ├── pre-push.sample
+│   │   ├── pre-rebase.sample
+│   │   ├── pre-receive.sample
+│   │   ├── push-to-checkout.sample
+│   │   ├── sendemail-validate.sample
+│   │   └── update.sample
+│   ├── info\
+│   │   └── exclude
+│   ├── logs\
+│   │   ├── refs\
+│   │   │   ├── heads\
+│   │   │   │   └── main
+│   │   │   └── remotes\
+│   │   │       └── origin\
+│   │   │           ├── HEAD
+│   │   │           └── main
+│   │   └── HEAD
+│   ├── objects\
+│   │   ├── 04\
+│   │   │   └── db35f56d76927d63221e9e1fbee9f2d4752617
+│   │   ├── 08\
+│   │   │   └── 51bca4985ae9ac5580ea144b409e1022ec48e1
+│   │   ├── 0a\
+│   │   │   └── 36b627765cf26f79a351c0437a4d67c62796f7
+│   │   ├── 0e\
+│   │   │   └── 82bfb27cacb27ecde7c642cfc8b959287e6f71
+│   │   ├── 11\
+│   │   │   └── 7b326ed5ed273cce18ff1af0a7d09759966266
+│   │   ├── 12\
+│   │   │   └── a6067168497fa11835215f9ce93254d1e9cf47
+│   │   ├── 1b\
+│   │   │   ├── 8018188ee79325037d54355a2fca319ca4a809
+│   │   │   └── ee380f084e263b0a3e14886ec4679eda54a6b4
+│   │   ├── 26\
+│   │   │   └── dff17d767d2a469de381ec8d124c5d89b09a46
+│   │   ├── 27\
+│   │   │   └── 6300cb8d579cc967284e41319dfb8482995ccb
+│   │   ├── 2b\
+│   │   │   └── 8f11ab77338def29384867717d3de6fff6bff3
+│   │   ├── 2d\
+│   │   │   ├── 20133c43acbd2f8419f451b515d007487415ee
+│   │   │   └── e7a8b62374d27297c4463401b17a7c94caa8d4
+│   │   ├── 2e\
+│   │   │   ├── 398c53b7ee993d6595710a50ce977c52b5f519
+│   │   │   └── 931ff9e5dbf6cea2a03b360a08ca3ccf887920
+│   │   ├── 32\
+│   │   │   └── d31be06d717c8161806d6b086351c48cb5c10e
+│   │   ├── 35\
+│   │   │   ├── 3d655affb5886d54a05085b420e68726b8f077
+│   │   │   └── d8d41962718e27dec9f0ad31082a588afe96dc
+│   │   ├── 38\
+│   │   │   └── f23ce7897dfedb51fa1d8420d7956cb45a74ca
+│   │   ├── 39\
+│   │   │   └── 109733cebfa7e93dfc17438ce8ea7b75888ad1
+│   │   ├── 3c\
+│   │   │   └── 3f381cb0ebc1dd92d65e156a40241cb7abe9e7
+│   │   ├── 3d\
+│   │   │   └── eb6f61f180fc0fc8d659598adab7a5610a315b
+│   │   ├── 43\
+│   │   │   └── 5641b37164643c9697a9164bb4da5595268b3e
+│   │   ├── 44\
+│   │   │   └── f219f9deb6bb72677d0b0bb9b0f9042b424b00
+│   │   ├── 48\
+│   │   │   └── 81272a2aeef72311ac442cc5684da8e0bf42bb
+│   │   ├── 4a\
+│   │   │   └── 5f73225e1b6e84b0611eb38331325fd0e18742
+│   │   ├── 53\
+│   │   │   └── 808bc87b3859ec3370dad14200e0b4aec50314
+│   │   ├── 54\
+│   │   │   ├── 3d5ae6825bbd09cf5ca2f1e70748405d86effd
+│   │   │   └── f56b1446d1b2049c27838514a80ebdc91e6465
+│   │   ├── 57\
+│   │   │   └── 9eada1c8505df839b8281066827146696d40a5
+│   │   ├── 59\
+│   │   │   └── df5e7dd2a03a908689961fe13ba53df61bddf1
+│   │   ├── 5d\
+│   │   │   └── 8fa110a5ee10af21bda5d9ddf8069e18168dae
+│   │   ├── 60\
+│   │   │   ├── 38c00a95c8625444333d1b381377e6c491b249
+│   │   │   ├── 66dad7b44c7d9629f4a1fb400ae56251deabae
+│   │   │   └── e78b4e187b48019d70962a959f4e7d8fe4f54d
+│   │   ├── 62\
+│   │   │   ├── 0db9fcfde9a543ec86e4cf280078ee239b83bf
+│   │   │   └── 61f4991447dfbc81234e4ac203d7661f8ccc61
+│   │   ├── 63\
+│   │   │   └── 490dc8d2ff3f8c6291a2f38c889e96888cbdbe
+│   │   ├── 66\
+│   │   │   └── de9d18e24ea7ded65874f819624dea7073c37c
+│   │   ├── 67\
+│   │   │   └── 34cf764103867343b524e45dd5c79bb9cce7e3
+│   │   ├── 68\
+│   │   │   ├── 7ffdd494f74887b61f1d9bb555efb6179237ed
+│   │   │   └── 9e9416534d05fc8eaff4d74af73b48772d974d
+│   │   ├── 6d\
+│   │   │   └── 7d608a2fd8f5c8ae167b7519d99ce82f6c54ee
+│   │   ├── 70\
+│   │   │   └── 7da150bd6ff4f3a36d1b2a23d88e3b85da25e4
+│   │   ├── 74\
+│   │   │   └── 6f6712f3d653e0cb50806ae1277b4736858d6c
+│   │   ├── 7e\
+│   │   │   └── 79b5a53c5dc1af2cd71b750a9c1af44d050b10
+│   │   ├── 81\
+│   │   │   ├── 290bd4b3af75d37fc174c82243163283d355e8
+│   │   │   └── 33ab13e56583ab8f8ff60a0f6dbd824dfdfb97
+│   │   ├── 83\
+│   │   │   └── 8d813c9de9e8ba02dd99c562ad300e08311d8f
+│   │   ├── 84\
+│   │   │   └── 91811198d48d3a434e2a044a042c63417a082f
+│   │   ├── 85\
+│   │   │   └── 8be67245c8d008a55f28e9919e6009fcf52c80
+│   │   ├── 8b\
+│   │   │   └── 0e4bf7cedcce5e3aa618f3a2bbbc76454f3587
+│   │   ├── 93\
+│   │   │   └── c27ba94bed613084a598878a831ef2c1bdf193
+│   │   ├── 97\
+│   │   │   └── 501f3dce737f1eadf91130e7445397128efdd7
+│   │   ├── 9b\
+│   │   │   └── d9d41e9f779dd82b80f0c6ab09875521b66a04
+│   │   ├── a2\
+│   │   │   └── 630a170de490e0a3cb636c2e6a214b8ba0715f
+│   │   ├── a7\
+│   │   │   ├── 523fb26df927b89c005e90fcb81b1ace58abf2
+│   │   │   └── 8bb5bbde103b8dc555bc3bd615a31cbe313817
+│   │   ├── aa\
+│   │   │   └── 08f9faeab39772c603bc7ceb7eec980889c3f9
+│   │   ├── ac\
+│   │   │   ├── bb631fd90f182860d679e9435d62bd59270bcc
+│   │   │   └── bc7cf84c6f51ebdf7c06cf47ac26a07e0b3096
+│   │   ├── af\
+│   │   │   └── 4c37a52ce4bab25473a6ff6761e46d2813ac56
+│   │   ├── b3\
+│   │   │   └── c35e52e18a45dcb849e1591cd8c6634dba24b4
+│   │   ├── b4\
+│   │   │   ├── 11551fb411488818de40837d7a43c27e2f717a
+│   │   │   └── d7c07b762b1c4dc12c8e08cd35ed6471480f27
+│   │   ├── b5\
+│   │   │   ├── 3447bf01842e32ffaf8b2ba2d1ed003dd771b3
+│   │   │   └── f0132f54bc5b78defb06491ae471488b0e4bfe
+│   │   ├── b7\
+│   │   │   └── e324f52e98175ba440a2a852cda6f208b7ac67
+│   │   ├── b9\
+│   │   │   └── 6de8bd09feea7030e884943469503a42b19e48
+│   │   ├── bc\
+│   │   │   └── 93c6133f9034a4cdb9fa008ae210bdbd9b883a
+│   │   ├── bf\
+│   │   │   └── efc7c92baae0afe0d4895085ba50a4b0670603
+│   │   ├── c0\
+│   │   │   └── 0ceb388757e689e54974a9cee99cc1a25b2cae
+│   │   ├── c1\
+│   │   │   ├── 2b395708439dd6dce7705f8264dfa5b5f2e8b3
+│   │   │   └── a24334e95686d0a8c74a881b1698b5a54defda
+│   │   ├── c5\
+│   │   │   └── 800b0b9e143833f1d888ca036d9f4a2be28ece
+│   │   ├── c6\
+│   │   │   └── 5a06a53958c374486594a036ce7aae39d88e77
+│   │   ├── c7\
+│   │   │   └── f97be9238676d782a23177c6a5c3a20bfcea5e
+│   │   ├── c8\
+│   │   │   └── f580091cf900e7cf75b2c7cfd82e6b10947cb5
+│   │   ├── cc\
+│   │   │   └── a00c2b206fad9e701f6ed7802205db9d0cd643
+│   │   ├── d3\
+│   │   │   └── 518237f3ef98eb6a4b123bf9396ff449daf25a
+│   │   ├── d4\
+│   │   │   └── 1bcf96766d766db1eade2a6b2d8308a2c7edfa
+│   │   ├── d7\
+│   │   │   └── 72d3329cc5529ee8671ff50b1d650f6542b428
+│   │   ├── d9\
+│   │   │   └── 48f36c3435b767d54f69afa91fc248ff15281f
+│   │   ├── da\
+│   │   │   └── 3fb228f8adbc82f68f45ab80afa72ffd0dbf05
+│   │   ├── dd\
+│   │   │   └── 7b5a67cc5f97ade0b3e61c83cd2b11088c647d
+│   │   ├── de\
+│   │   │   └── c8e4145d9fa99d177ce59876594e9930fe0d80
+│   │   ├── df\
+│   │   │   └── 2cad9a1f038cfefdad9a775f3cb8be069c35b6
+│   │   ├── e3\
+│   │   │   └── 1d7290979e4152f9616c24a62ea1d0d636ed70
+│   │   ├── e4\
+│   │   │   └── ff9061b4ea3a83bfbaa37c57cefb0b156ab4a2
+│   │   ├── e6\
+│   │   │   ├── 3e7c8da29c5f1776d1008aa80b4cb34d1f4d5a
+│   │   │   └── 9de29bb2d1d6434b8b29ae775ad8c2e48c5391
+│   │   ├── e7\
+│   │   │   └── cc52a32cf4eb9866f885288b8200f5b9dbf7ac
+│   │   ├── eb\
+│   │   │   └── 2ee306e75983647ded007eecbbe2cdac91ac1a
+│   │   ├── ee\
+│   │   │   └── 756d3450e44decb45e999f17c690a0de25d925
+│   │   ├── f1\
+│   │   │   ├── b94dbd52856a435082c9228eded8abc88b9fce
+│   │   │   └── f53a9edee515362fbb346b1d3cbd28b485ee2f
+│   │   ├── f3\
+│   │   │   └── 4d299d60a921a084922478c9204ccb729ab4f0
+│   │   ├── f7\
+│   │   │   └── f11e5f532dd673314ee5f748b38d350cc1a7fd
+│   │   ├── f8\
+│   │   │   └── b897b95bfc365242283afbd1a5cd4be153b363
+│   │   ├── f9\
+│   │   │   └── d4f16662fd84a526e6d22917963c23f66e6c8e
+│   │   ├── fa\
+│   │   │   └── e31d90bf17dde9cba35522c469af99f994e58f
+│   │   ├── fc\
+│   │   │   └── a7902ba097e9fa1ce224cd8640642ed72052ae
+│   │   ├── fe\
+│   │   │   ├── 78a334615df94d38b8da996d2de6d47b41169d
+│   │   │   └── adac58b41c36443005ba2e37a2ea597314b460
+│   │   ├── info\
+│   │   └── pack\
+│   │       ├── pack-345824f4e19d53c8d4bd94326b3fe75097837fdc.idx
+│   │       ├── pack-345824f4e19d53c8d4bd94326b3fe75097837fdc.pack
+│   │       └── pack-345824f4e19d53c8d4bd94326b3fe75097837fdc.rev
+│   ├── refs\
+│   │   ├── heads\
+│   │   │   └── main
+│   │   ├── remotes\
+│   │   │   └── origin\
+│   │   │       ├── HEAD
+│   │   │       └── main
+│   │   └── tags\
+│   │       ├── v1.0.0
+│   │       └── v1.0.1
+│   ├── COMMIT_EDITMSG
+│   ├── config
+│   ├── description
+│   ├── FETCH_HEAD
+│   ├── HEAD
+│   ├── index
+│   ├── ORIG_HEAD
+│   └── packed-refs
+├── .github\
+│   ├── workflows\
+│   │   └── compile-latex.yml
+│   ├── .zenodo.json
+│   └── README.md
+├── document\
+│   ├── Taylor-s-Theorem-with-Lagrange-Remainder-in-Mathlib-26A06\
+│   │   ├── trees\
+│   │   │   ├── taylor_all.txt
+│   │   │   ├── taylor_mean_remainder_lagrange.tree.txt
+│   │   │   └── taylor_mean_remainder_lagrange_iteratedDeriv.tree.depth5.txt
+│   │   ├── Taylor-s-Theorem-with-Lagrange-Remainder-in-Mathlib-26A06.pdf
+│   │   └── Taylor-s-Theorem-with-Lagrange-Remainder-in-Mathlib-26A06.tex
+│   ├── The-Dependency-Ordered-Formal-Exposition-of-PDE\
+│   │   ├── The-Dependency-Ordered-Formal-Exposition-of-PDE.pdf
+│   │   └── The-Dependency-Ordered-Formal-Exposition-of-PDE.tex
+│   ├── The-Fundamental-Theorem-of-Calculus-in-Mathlib-26A42\
+│   │   ├── The-Fundamental-Theorem-of-Calculus-in-Mathlib-26A42.pdf
+│   │   └── The-Fundamental-Theorem-of-Calculus-in-Mathlib-26A42.tex
+│   └── .gitignore
+├── .gitignore
+├── CITATION.cff
+├── directory_tree.txt
+├── help.txt
+├── LICENSE
+├── README.md
+└── tree_files_2.bat
