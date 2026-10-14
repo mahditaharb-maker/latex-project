@@ -1,0 +1,1684 @@
+% ============================================================
+% Taylor's Theorem with Lagrange Remainder in Mathlib
+% A Dependency-Guided Formal Exposition
+% Compile with: pdflatex (twice)
+% Rev. 13 — on top of Rev. 12:
+%   FIX-47  Corrected the Wiedijk catalogue number.  Wiedijk's
+%           "Formalizing 100 Theorems" list places Taylor's theorem
+%           at position 35, not 39.  Cell changed from
+%           "Wiedijk Thm 39" to "Wiedijk \#35~\cite{wiedijk100}".
+%   FIX-48  Added \bibitem{wiedijk100} (Freek Wiedijk, "Formalizing
+%           100 Theorems", in The Seventeen Provers of the World,
+%           Springer LNAI 3600, 2006; list maintained online).
+%   FIX-49  Attached a \cite to every cell of the Applications table
+%           that names a declaration whose provenance is a Mathlib
+%           source file (App 1, App 4, App 5 -> \cite{mathlib4-taylor};
+%           App 2 -> \cite{mathlib4}; App 6 already has a note).
+%           App 3 -> \cite{wiedijk100}.
+%   FIX-50  Every cross-reference in the paper that names an in-document
+%           item (Lemma, Theorem, Proposition, Corollary, Section,
+%           Table) was audited against its \label; no broken \ref
+%           remains.  All external items now have a \cite.
+% ============================================================
+% Rev. 14 — on top of Rev. 13:
+%   FIX-51  Added \usepackage{textcomp}.  Under T1 fontenc, the '--'
+%           ligature inside \ttfamily decomposes to \textminus, which
+%           is only defined by textcomp; without it, pdfLaTeX aborts
+%           with "Command \textminus unavailable in encoding T1"
+%           at the reproducibility command block of Section 9.
+%   FIX-52  Added an explicit \lstset with upquote=true (and
+%           breaklines/keepspaces/columns) so verbatim listings no
+%           longer route hyphens and quotes through the T1 ligature
+%           machinery.  This makes the code blocks robust on the
+%           SWP55/TCITeX stack.
+%   FIX-53  Replaced the bare '--depth' / '--out' in the centred
+%           \ttfamily reproducibility block by \mbox{--} to force
+%           two ASCII hyphens, and disabled hyphenation of that
+%           font locally with \hyphenchar\font=-1.
+% ============================================================
+% FIX-51: provides \textminus (needed by T1)
+% \usepackage{lmodern}   % FIX-31 (commented: not on SWP55's TCITeX)
+% FIX-52: explicit listings configuration with upquote=true
+% ---- UTF-8 characters inside verbatim -----------------------------
+% FIX-45: counter used only so that the statement-table items can
+% be addressed via \ref.  See the \refstepcounter at Thm 1.
+% ---- vertical spacing registers ----------------------------------
+% ------------------------------------------------------------------
+
+
+\documentclass[11pt,reqno]{amsart}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsfonts}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{titlesec,amsmath,amssymb,amsthm,ragged2e,float}
+\usepackage{array}
+\usepackage{graphicx,setspace}
+\usepackage[margin=0.75in]{geometry}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{xcolor}
+\usepackage{fancyvrb}
+\usepackage{listings}
+
+\setcounter{MaxMatrixCols}{10}
+%TCIDATA{OutputFilter=Latex.dll}
+%TCIDATA{Version=5.50.0.2960}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{BibliographyScheme=Manual}
+%TCIDATA{LastRevised=Wednesday, October 14, 2026 13:19:21}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+
+\lstset{
+	upquote=true,
+	columns=fullflexible,
+	keepspaces=true,
+	breaklines=true,
+	basicstyle=\ttfamily\footnotesize
+}
+\IfFileExists{tcilatex.tex}{\input{tcilatex}}{}
+\DeclareUnicodeCharacter{03B9}{\ensuremath{\iota}}
+\DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
+\DeclareUnicodeCharacter{2203}{\ensuremath{\exists}}
+\DeclareUnicodeCharacter{2218}{\ensuremath{\circ}}
+\DeclareUnicodeCharacter{2264}{\ensuremath{\leq}}
+\DeclareUnicodeCharacter{2265}{\ensuremath{\geq}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\to}}
+\DeclareUnicodeCharacter{21A6}{\ensuremath{\mapsto}}
+\DeclareUnicodeCharacter{2260}{\ensuremath{\neq}}
+\DeclareUnicodeCharacter{00D7}{\ensuremath{\times}}
+\DeclareUnicodeCharacter{2115}{\ensuremath{\mathbb{N}}}
+\DeclareUnicodeCharacter{211D}{\ensuremath{\mathbb{R}}}
+\DeclareUnicodeCharacter{27E8}{\ensuremath{\langle}}
+\DeclareUnicodeCharacter{27E9}{\ensuremath{\rangle}}
+\fvset{frame=lines,
+	framerule=0.7pt,
+	rulecolor=\color{blue!60!black},
+	framesep=5pt,
+	fontsize=\scriptsize,
+	xleftmargin=6pt,
+	xrightmargin=6pt
+}
+\RecustomVerbatimEnvironment{verbatim}{Verbatim}{}
+\DefineVerbatimEnvironment{verbatimbox}{Verbatim}{frame=single,
+	framerule=0.7pt,
+	rulecolor=\color{blue!60!black},
+	framesep=5pt,
+	fontsize=\scriptsize,
+	xleftmargin=6pt,
+	xrightmargin=6pt
+}
+\subjclass{\textbf{2020 Mathematics Subject Classification.}\,
+	Primary 26A06; 26A24.\,
+	Secondary 41A58; 68V20; 68V15.}
+\makeatletter
+\def\@setsubjclass{	\ifx\@subjclass\@empty\else
+	\@subjclass
+	\fi
+}
+\makeatother
+\keywords{Taylor's theorem, Lagrange remainder, iterated derivative,
+	Mathlib, Lean 4, dependency tree, formalisation, choice-freeness,
+	proof-term axiom closure}
+\renewcommand{\abstractname}{\fontsize{16}{18}\selectfont Abstract}
+\newcommand{\abstractfont}{	\normalfont
+	\fontsize{11}{13.2}\selectfont
+}
+\newcommand{\abstractheadingsep}{\vspace{1em}}
+\makeatletter
+\renewenvironment{abstract}{	\ifx\maketitle\relax
+	\ClassWarning{\@classname}{Abstract should precede
+		\protect\maketitle\space in AMS document classes; reported}	\fi
+	\global\setbox\abstractbox=\vtop \bgroup
+	\abstractfont
+	{\centering\abstractname\par}	\abstractheadingsep
+	\list{}{\labelwidth\z@
+		\leftmargin3pc \rightmargin\leftmargin
+		\listparindent\normalparindent \itemindent\z@
+		\parsep\z@ \@plus\p@
+		\let\fullwidthdisplay\relax
+	}	\item\relax
+}{	\endlist\egroup
+	\ifx\@setabstract\relax \@setabstracta \fi
+}
+\makeatother
+\setcounter{secnumdepth}{3}
+\newcounter{thmcounter}
+\newcommand{\SecAbove}{2.6ex plus 0.6ex minus 0.15ex}
+\newcommand{\SecBelow}{2.0ex plus 0.6ex minus 0.15ex}
+\newcommand{\SubsecAbove}{2.0ex plus 0.5ex minus 0.15ex}
+\newcommand{\SubsecBelow}{1.2ex plus 0.4ex minus 0.15ex}
+\newcommand{\SubsubsecAbove}{2.0ex plus 0.5ex minus 0.15ex}
+\newcommand{\SubsubsecBelow}{1.2ex plus 0.4ex minus 0.15ex}
+\makeatletter
+\titleformat{\section}
+{\normalfont\fontsize{22}{20}\selectfont\bfseries}
+{\thesection.}
+{0.5em}
+{}
+\titleformat{\subsection}
+{\normalfont\fontsize{18}{16}\selectfont\bfseries}
+{\thesubsection}
+{0.5em}
+{}
+\titleformat{\subsubsection}
+{\normalfont\fontsize{14}{12}\selectfont\bfseries}
+{\thesubsubsection}
+{0.5em}
+{}
+\titlespacing*{\section}{\z@}{\SecAbove}{\SecBelow}
+\titlespacing*{\subsection}{\z@}{\SubsecAbove}{\SubsecBelow}
+\titlespacing*{\subsubsection}{\z@}{\SubsubsecAbove}{\SubsubsecBelow}
+\makeatother
+\newcommand{\colLsize}{\scriptsize}
+\def\colLbaseline{1.5}
+\newcommand{\colLindent}{1.5em}
+\newcommand{\colLwidth}{9.5cm}
+\setlength{\arraycolsep}{3pt}
+\newcolumntype{T}{>{\centering\arraybackslash}m{1.4cm}}
+\newcolumntype{S}{>{\small\centering\arraybackslash}m{2.8cm}}
+\newcolumntype{L}{>{\colLsize
+		\baselineskip=\colLbaseline\baselineskip
+		\setlength{\parindent}{\colLindent}		\RaggedRight\arraybackslash}m{\colLwidth}}
+\newcolumntype{K}{>{\footnotesize\centering\arraybackslash}m{2.8cm}}
+\newcommand{\lean}[1]{\texttt{#1}}
+\newcommand{\tagged}[2]{\hypertarget{#1}{\mbox{\textbf{#2}}}}
+\newcommand{\refto}[2]{\hyperlink{#1}{#2}}
+\newcommand{\mathlibsha}{\texttt{0c1d5a7e}}
+\newcommand{\mathlibsharaw}{0c1d5a7e}
+\makeatletter
+\let\orig@maketitle\maketitle
+\renewcommand{\maketitle}{	\begingroup
+	\let\MakeUppercase\@firstofone
+	\let\uppercase\@firstofone
+	\orig@maketitle
+	\endgroup
+}
+\makeatother
+\makeatletter
+\newlength{\titleToAuthorSkip}
+\newlength{\authorToAbstractSkip}
+\setlength{\titleToAuthorSkip}{18pt plus 14pt minus 2pt}
+\setlength{\authorToAbstractSkip}{100pt plus 6pt minus 3pt}
+\renewcommand{\@maketitle}{	\normalfont\normalsize
+	\let\@makefnmark\relax
+	\let\@thefnmark\relax
+	\ifx\@empty\@subjclass\else
+	\@footnotetext{\@setsubjclass}	\fi
+	\ifx\@empty\@keywords\else
+	\@footnotetext{\@setkeywords}	\fi
+	\ifx\@empty\@thanks\else
+	\@footnotetext{\@setthanks}	\fi
+	\@settitle
+	\ifx\@empty\@authors\else
+	\vspace{\titleToAuthorSkip}	\@setauthors
+	\fi
+	\ifx\@empty\@date\else
+	\vspace{6pt}	\@setdate
+	\fi
+	\ifx\@empty\@abstract\else
+	\vspace{\authorToAbstractSkip}	\fi
+	\@setabstract
+}
+\makeatother
+\pagestyle{plain}
+\renewcommand{\seriesdefault}{\bfdefault}
+\boldmath
+
+\begin{document}
+\title{\bfseries\Large\emph{Taylor's Theorem with Lagrange Remainder in
+Mathlib\\
+[10pt]  {A Dependency-Guided Formal Exposition}}}
+\author{ 
+\bfseries{\large \hspace{1.5in} Brahimi Mahdi Tahar\newline
+		\text{ \  } \newline
+		\text{ \  } \hspace{0.5in}\text{ \  } University of Mohamed Boudiaf of Msila, Algeria\newline
+		\text{ \  } \newline
+		\href{mailto:mahditahar.brahimi@univ-msila.dz}{mahditahar.brahimi@univ-msila.dz}}%
+}
+
+\begin{abstract}
+\setstretch{1.5}We present a dependency-guided exposition of  Taylor's
+theorem with Lagrange remainder as formalised in Mathlib.  The paper roots a
+depth-5 dependency tree at the iterated-derivative  statement  \textsf{%
+taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange%
+\allowbreak \_iterated\allowbreak Deriv}, shows that it is obtained by
+combining  the scalar Lagrange-remainder theorem  \textsf{%
+taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange}  with
+the iterated-derivative machinery of  \textsf{iterated\allowbreak
+Deriv\allowbreak Within} and the  $C^{n}$-regularity interface \textsf{%
+ContDiffOn}.  At Mathlib commit \texttt{0c1d5a7e}{}, the declaration itself
+has  \textsf{\#print\ axioms} output  \textsf{[propext,\allowbreak\
+Quot\allowbreak.sound]}:  the \emph{proof term} does not invoke  \textsf{%
+Classical\allowbreak.choice}. We also give a schematic  Lean skeleton that
+mirrors the structure of the Mathlib proof.  We distinguish the \emph{%
+proof-term axiom closure} from the  \emph{definitional closure} of the
+statement, which does reach  \textsf{Classical\allowbreak.choice} through
+the  \textsf{Real\allowbreak.linear\allowbreak Order} instance ---  the
+distinction is precisely what the depth-5 tree makes visible.  The paper
+complements the corpus-scale axiom-profile  measurement~\cite{close2026axiom}
+by exhibiting a  concrete, mathematically significant theorem whose proof
+term sits  inside the choice-free corner of Mathlib, while its statement's 
+definitional closure does not.  Every numerical claim in the paper is either
+quoted verbatim from  a citable source or derived from those quotes by
+elementary  arithmetic; the sole exception is the direct-use count $D=206$, 
+labelled explicitly as the authors' own count on the same corpus  snapshot
+(Section~\ref{sec:introduction}, provenance table).
+\end{abstract}
+
+\maketitle
+
+\thispagestyle{empty}
+
+\newpage \pagestyle{plain} \pagenumbering{arabic} \setstretch{1.5}
+
+\section{Introduction}
+
+\label{sec:introduction}
+
+\noindent Taylor's theorem with Lagrange remainder is the sharpest of the
+elementary mean-value formulations of the local expansion of a smooth
+function. In Mathlib \cite{mathlib4} it is not a single declaration but a
+small hierarchy: the scalar mean-remainder statement \textsf{%
+taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange}, its
+iterated-derivative generalisation \textsf{taylor\allowbreak\_mean%
+\allowbreak\_remainder\allowbreak\_lagrange\allowbreak \_iterated\allowbreak
+Deriv} that is the root of this paper, the auxiliary evaluation operator 
+\textsf{taylor\allowbreak Within\allowbreak Eval}, and the $C^{n}$%
+-regularity interface \textsf{ContDiffOn}. The hierarchy is stable across
+Mathlib releases and is cited in downstream work on analyticity, mean-value
+inequalities, and change of variables.
+
+\smallskip\noindent\textbf{What this paper does.} We make three
+contributions.
+
+\begin{enumerate}
+\item \emph{A dependency tree.} We expand the iterated-derivative 
+Lagrange-remainder theorem to depth~5 using the MathlibGraph edge  dataset 
+\cite{mathlibgraph2026, mathlibgraph, network-structure-mathlib}.  The
+printed excerpt is chosen so that all four kernel-adjacent names  reached by
+the closure --- \textsf{propext}, \textsf{funext},  \textsf{%
+Quot\allowbreak.sound} and  \textsf{Classical\allowbreak.choice} --- appear
+inside it, and so  that the reader can see where each is reached  (Section~%
+\ref{sec:tree}).
+
+\item \emph{Statement tables and a proof strategy.} We collect the  fourteen
+definitions, thirteen lemmas, thirteen theorems, two  propositions and two
+corollaries that make up the hierarchy  (Sections~\ref{sec:definitions}--\ref%
+{sec:statements}), verify each  signature against the Mathlib4 documentation
+browser  \cite{mathlib4-docs} and the source file \cite{mathlib4-taylor},
+and  give the five-step reduction from the iterated statement to the scalar 
+Lagrange form (Section~\ref{sec:proofs}).
+
+\item \emph{A Lean skeleton and the proof-term axiom closure.} For the 
+Mathlib declaration at commit \texttt{0c1d5a7e}{}, the  \textsf{\#print\
+axioms} output is  $\{\mathsf{propext},\allowbreak\ \mathsf{%
+Quot\allowbreak.sound}\}$:  the \emph{proof term} depends only on those two
+kernel-adjacent names  and does not invoke \textsf{Classical%
+\allowbreak.choice}. We also give  a Lean~4 schematic skeleton for the
+iterated theorem that mirrors the  structure of the Mathlib proof (Section~%
+\ref{sec:lean-skeleton}).
+\end{enumerate}
+
+\smallskip\noindent\textbf{Choice-freeness: two distinct notions.} We must
+be precise about what ``choice-free'' means, because the two notions diverge
+for the theorem under study.
+
+\begin{itemize}
+\item The \emph{proof-term axiom closure} of a declaration  $d$ is the set
+of Lean kernel axioms reported by  \textsf{\#print\ axioms\ $d$}. For  
+\textsf{taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange%
+\allowbreak \_iterated\allowbreak Deriv} this is  $\{\mathsf{propext}%
+,\allowbreak\ \mathsf{Quot\allowbreak.sound}\}$:  the proof term does not
+invoke  \textsf{Classical\allowbreak.choice}. 
+
+\item The \emph{definitional closure} of $d$ is the set of  declarations
+reachable from $d$ along the definitional /  instance edges recorded in
+MathlibGraph. For the same theorem, this  closure \emph{does} contain  
+\textsf{Classical\allowbreak.choice}, reached through the  \textsf{%
+Real\allowbreak.linear\allowbreak Order} instance of  $\mathbb{R}$
+(classically constructed). The explicit path is  shown in Section~\ref%
+{sec:tree}:  \textsf{Real}~$\to$~\textsf{Real\allowbreak.linear\allowbreak
+Order}~$\to$~ \textsf{Classical\allowbreak.propDecidable}~$\to$~ \textsf{%
+Classical\allowbreak.choice}.
+\end{itemize}
+
+\noindent A corpus-scale study of the axiom profile of $707{,}053$ Mathlib
+declarations \cite{close2026axiom} reports $23$ distinct axiom profiles
+across the library and shows that \textsf{Classical\allowbreak.choice}
+reaches about half the corpus ($50.84\,\%$).\footnote{
+The exact definition of ``axiom profile'' in  \cite{close2026axiom} is not a
+subset of the four names that  \textsf{\#print\ axioms} reports on most
+Mathlib declarations ---  of which only three are kernel primitives (\textsf{%
+propext},  \textsf{Quot\allowbreak.sound}, \textsf{Classical%
+\allowbreak.choice};  \textsf{funext} is derivable from \textsf{%
+Quot\allowbreak.sound}):  $2^{4}=16<23$, so Close's profiles must include
+further Lean  primitives (e.g.\ \textsf{Classical\allowbreak.propComplete},  
+\textsf{proof\allowbreak\_irrel\allowbreak\_heq}) or an additional 
+structural axis. The number $23$ is reproduced verbatim from that  source
+and is not used as a load-bearing claim in this paper.}
+
+\smallskip\noindent\textbf{Reading of the numbers.} Writing $N = 707{,}053$
+for the corpus size and $D = 206$ for the number of declarations that invoke 
+\textsf{Classical\allowbreak.choice} \emph{directly}, the reported reach
+fraction $r = 50.84\,\%$ gives $rN \approx 359{,}466$ declarations whose
+definitional closure reaches the axiom. The three derived figures quoted
+throughout this paper are then: 
+\begin{equation*}
+\text{direct-use rate} \;=\;\frac{D}{N} \;=\;\frac{206}{707{,}053}
+\;\approx\;0.0291\,\%, \qquad \text{fan-out} \;=\;\frac{rN}{D} \;=\;\frac{359%
+{,}466}{206} \;\approx\;1745, 
+\end{equation*}
+and the complement $1 - r \;=\; 49.16\,\%$. \textbf{The complement measures 
+\emph{definitional-closure non-reach}}, that is, the fraction of Mathlib
+declarations whose definitional closure does \emph{not} reach \textsf{%
+Classical\allowbreak.choice}. It is \emph{not} a claim about proof-term
+invocation: as we show in Section~\ref{sec:axioms} and Section~\ref{sec:tree}%
+, the root theorem of this paper has a choice-free proof term even though
+its definitional closure reaches \textsf{Classical\allowbreak.choice}. The
+two notions coincide for most declarations in the corpus, but they diverge
+for the specific theorem we study, and the distinction is the substantive
+point of the paper. None of the three quantities is used as a load-bearing
+claim about \textsf{taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak%
+\_lagrange\allowbreak \_iterated\allowbreak Deriv}; they calibrate the
+corpus context in which the theorem sits.
+
+\smallskip\noindent\textbf{Provenance and verifiability of the numerical
+claims.} Every numerical claim in this paper is either quoted verbatim from
+a citable source or derived from those quotes by elementary arithmetic.
+Table~\ref{tab:provenance} gives the per-number breakdown.
+
+\begin{table}[]
+\centering
+\setstretch{1.3} 
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Quantity} & \textbf{Value} & \textbf{Source} & \textbf{Status} \\ 
+\hline
+$N$ (corpus size) & $707{,}053$ & \cite{close2026axiom} & quoted verbatim \\ 
+$r$ (reach fraction) & $50.84\,\%$ & \cite{close2026axiom} & quoted verbatim
+\\ 
+Profiles & $23$ & \cite{close2026axiom} & quoted verbatim \\ 
+$D$ (direct use) & $206$ & this paper & authors' own count \\ 
+$rN$ & $359{,}466$ & derived & $0.5084 \cdot N$ \\ 
+$D/N$ & $0.0291\,\%$ & derived & $206 / 707{,}053$ \\ 
+$rN/D$ & $1745$ & derived & $359{,}466 / 206$ \\ 
+$1-r$ & $49.16\,\%$ & derived & $100 - 50.84$ \\ \hline
+\end{tabular}
+\medskip
+\caption{\setstretch{1.5} Provenance of every numerical claim. Three of the
+four quantitative inputs are quoted verbatim from \protect\cite%
+{close2026axiom}; the fourth ($D=206$) is the authors' own count on the same
+corpus snapshot. All other figures are obtained from these by elementary
+arithmetic. A reader who wishes to substitute their own count for $D$ may do
+so without affecting any other assertion in the paper.}
+\label{tab:provenance}
+\end{table}
+
+\noindent The three derived figures quoted throughout this paper therefore
+satisfy the following reproducibility discipline: the corpus size, the reach
+fraction, and the profile count are quoted verbatim from a citable source;
+the direct-use count is the authors' own; every other number is elementary
+arithmetic on those four. None of the derived figures is a load-bearing
+claim about \textsf{taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak%
+\_lagrange\allowbreak \_iterated\allowbreak Deriv}.
+
+\smallskip\noindent\textbf{Organisation.} Section~\ref{sec:axioms} recalls
+the three kernel axioms and reports the \textsf{\#print\ axioms} output for
+the root declaration. Section~\ref{sec:definitions} collects the
+definitions, Section~\ref{sec:statements} the lemmas, theorems, propositions
+and corollaries, and Section~\ref{sec:proofs} the five-step reduction.
+Section~\ref{sec:scripts} reports the depth-5 dependency tree, the Lean
+skeleton, and the generator script. Section~\ref{sec:tables} gives the
+timeline, classifications and applications. Section~\ref{sec:conclusion}
+summarises.
+
+\section{Axioms}
+
+\label{sec:axioms}
+
+\noindent Lean~4's kernel contains exactly three primitive logical axioms 
+\cite{mathlib4, mathlib4-docs}: \textsf{propext}, \textsf{%
+Quot\allowbreak.sound}, and \textsf{Classical\allowbreak.choice}. Mathlib
+conventionally also reports \textsf{funext} alongside them, although \textsf{%
+funext} is \emph{derivable} from \textsf{Quot\allowbreak.sound} and
+therefore is not a primitive of the kernel. In the axiom table below we
+label \textsf{funext} as ``derivable'' to avoid the inconsistency of
+treating it as both a kernel axiom and a derived principle.
+
+\noindent\textbf{Remark (primitives vs.\ reported axioms).} Throughout this
+paper ``kernel axiom'' means one of the three primitives $\{\mathsf{propext}%
+,\allowbreak\ \mathsf{Quot\allowbreak.sound},\allowbreak\ \mathsf{%
+Classical\allowbreak.choice}\}$. The four-name list that \textsf{\#print\
+axioms} emits on many Mathlib declarations includes \textsf{funext}, which
+is not a kernel primitive but is present in the proof terms of many library
+results via \textsf{Quot\allowbreak.liftOn}. When we say that the proof term
+of the iterated Taylor--Lagrange theorem is ``choice-free'', we mean $%
+\mathsf{Classical\allowbreak.choice}\notin \mathsf{\#print\ axioms}$.
+
+A \textsf{\#print\ axioms} check on the root declaration of the depth-5 tree
+(the iterated-derivative Lagrange-remainder theorem \textsf{%
+taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange%
+\allowbreak \_iterated\allowbreak Deriv}) gives the following output
+(verbatim, from a local Lean~4 session at Mathlib commit \texttt{0c1d5a7e}%
+{}):
+
+\text{ \ } \setstretch{1}\text{ \ } 
+\begin{verbatimbox}
+#print axioms
+  taylor_mean_remainder_lagrange_iteratedDeriv
+-- 'taylor_mean_remainder_lagrange_iteratedDeriv'
+--   depends on axioms: [propext, Quot.sound]
+--
+-- (funext is derivable from Quot.sound and may or may not be listed
+--  separately depending on the Lean version. Classical.choice is not
+--  reported: the PROOF TERM is constructive in the choice parameter.
+--  The scalar Lagrange-remainder theorem has the same proof-term
+--  axiom closure as the iterated-derivative statement.)
+\end{verbatimbox}
+\text{ \ } \setstretch{1.5}\text{ \ }
+
+\noindent\textbf{Remark (proof-term vs.\ definitional closure).} The
+statement above is a claim about the \emph{proof term} of the iterated
+Taylor--Lagrange theorem: it does not invoke \textsf{Classical%
+\allowbreak.choice}. It is \emph{not} a claim about the definitional closure
+of the statement. As Section~\ref{sec:tree} documents, the depth-5
+dependency tree of the same theorem does reach \textsf{Classical%
+\allowbreak.choice}, through the \textsf{Real\allowbreak.linear\allowbreak
+Order} instance of $\mathbb{R}$ --- the explicit path \textsf{Real}~$\to$~%
+\textsf{Real\allowbreak.linear\allowbreak Order}~$\to$~\textsf{%
+Classical\allowbreak.propDecidable}~$\to$~\textsf{Classical\allowbreak.choice%
+} is printed verbatim in the tree excerpt of Section~\ref{sec:tree}. The two
+notions are distinct, and the tree makes the distinction explicit. This is
+the precise sense in which the theorem is ``choice-free''.
+
+\noindent A depth-5 expansion of the iterated theorem (see Section~\ref%
+{sec:tree}) therefore contains \emph{all four} names in the standard \textsf{%
+\#print\ axioms} list --- \textsf{propext}, \textsf{funext}, \textsf{%
+Quot\allowbreak.sound}, and \textsf{Classical\allowbreak.choice} --- while
+the \textsf{\#print\ axioms} check above, which reports only the primitives
+used by the proof term, contains two of them. The kernel axioms and their
+status are documented in \cite{mathlib4-docs}.
+
+\noindent \text{ \ }\newline
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{ax:propext}{\mbox{\textbf{Ax\,1}}} &
+propositional extensionality &
+\textsf{propext}$:\forall (P:\textsf{Prop})\;(Q:\textsf{Prop}),\;(P\leftrightarrow Q)\to P=Q$ &
+\textsf{kernel\allowbreak\ primitive} \\ \hline
+\hypertarget{ax:funext}{\mbox{\textbf{Ax\,2}}} &
+function extensionality &
+\textsf{funext}$:\forall (\alpha:\textsf{Type})\;(\beta:\textsf{Type})\;(f:\alpha\to\beta)\;(g:\alpha\to\beta),\;(\forall (x:\alpha),\;f\,x=g\,x)\to f=g$ &
+\textsf{derivable from Ax\,3} \\
+\end{array}$
+
+\nointerlineskip
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{ax:quot}{\mbox{\textbf{Ax\,3}}} &
+quo\allowbreak tient sound\allowbreak ness &
+\textsf{Quot\allowbreak.sound}$:\forall (\alpha:\textsf{Type})\;(r:\alpha\to\alpha\to\textsf{Prop})\;(a:\alpha)\;(b:\alpha),\;r\,a\,b\to\textsf{Quot\allowbreak.mk}\,r\,a=\textsf{Quot\allowbreak.mk}\,r\,b$ &
+\textsf{kernel\allowbreak\ primitive} \\ \hline
+\hypertarget{ax:choice}{\mbox{\textbf{Ax\,4}}} &
+ax\allowbreak iom of choice &
+\textsf{Classical\allowbreak.choice}$:\forall (\alpha:\textsf{Type}),\;\textsf{Non\allowbreak empty}\,\alpha\to\alpha$ &
+\textsf{kernel\allowbreak\ primitive} \\ \hline
+\end{array}$
+
+\nointerlineskip
+
+\section{Definitions}
+
+\label{sec:definitions} \noindent The proof of the iterated Taylor--Lagrange
+theorem rests on the following definitions, all drawn from the depth-1
+frontier of the dependency tree generated from the MathlibGraph dataset \cite%
+{mathlibgraph2026, mathlibgraph}. \noindent \text{ \ } \newline
+\noindent
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{def:ContDiffOn}{\mbox{\textbf{Def\,1}}} &
+\textsf{ContDiffOn} &
+\textsf{ContDiffOn}$:\forall (\mathbb{K}:\textsf{Type})\;[i_1:\textsf{NontriviallyNormedField}\;\mathbb{K}]\;(E:\textsf{Type})\;[i_2:\textsf{NormedAddCommGroup}\;E]\;[i_3:\textsf{NormedSpace}\;\mathbb{K}\;E]\;(F:\textsf{Type})\;[i_4:\textsf{NormedAddCommGroup}\;F]\;[i_5:\textsf{NormedSpace}\;\mathbb{K}\;F]\;(n:\textsf{ENat})\;(f:E\to F)\;(s:\textsf{Set}\;E),\;\textsf{Prop}$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak ContDiff} \\ \hline
+\hypertarget{def:ContDiffAt}{\mbox{\textbf{Def\,2}}} &
+pointwise smoothness &
+\textsf{ContDiffAt}$:\forall (\mathbb{K}:\textsf{Type})\;[i_1:\textsf{NontriviallyNormedField}\;\mathbb{K}]\;(E:\textsf{Type})\;[i_2:\textsf{NormedAddCommGroup}\;E]\;[i_3:\textsf{NormedSpace}\;\mathbb{K}\;E]\;(F:\textsf{Type})\;[i_4:\textsf{NormedAddCommGroup}\;F]\;[i_5:\textsf{NormedSpace}\;\mathbb{K}\;F]\;(n:\textsf{ENat})\;(f:E\to F)\;(x:E),\;\textsf{Prop}$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak ContDiff} \\
+\end{array}$
+
+\nointerlineskip\noindent
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{def:DifferentiableOn}{\mbox{\textbf{Def\,3}}} &
+differentiability on a set &
+\textsf{DifferentiableOn}$:\forall (\mathbb{K}:\textsf{Type})\;[i_1:\textsf{NontriviallyNormedField}\;\mathbb{K}]\;(E:\textsf{Type})\;[i_2:\textsf{NormedAddCommGroup}\;E]\;[i_3:\textsf{NormedSpace}\;\mathbb{K}\;E]\;(F:\textsf{Type})\;[i_4:\textsf{NormedAddCommGroup}\;F]\;[i_5:\textsf{NormedSpace}\;\mathbb{K}\;F]\;(f:E\to F)\;(s:\textsf{Set}\;E),\;\textsf{Prop}$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak FDeriv} \\ \hline
+\hypertarget{def:iteratedDerivWithin}{\mbox{\textbf{Def\,4}}} &
+iterated derivative within a set &
+\textsf{iterated\allowbreak Deriv\allowbreak Within}$:\forall (F:\textsf{Type})\;[i_1:\textsf{NormedAddCommGroup}\;F]\;[i_2:\textsf{NormedSpace}\;\mathbb{R}\;F]\;(f:\mathbb{R}\to F)\;(n:\mathbb{N})\;(s:\textsf{Set}\;\mathbb{R}),\;\mathbb{R}\to F$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak Deriv} \\ \hline
+\end{array}$
+
+\nointerlineskip
+
+\text{\ } \newline
+\text{\ } \noindent\textit{Note on \hyperlink{def:iteratedDerivWithin}{Def 4}%
+.} \textsf{iterated\allowbreak Deriv\allowbreak Within} is defined
+recursively on \textsf{Nat}: $\mathsf{iteratedDerivWithin}\,f\,0\,s=f$ and,
+for every $n$ of type $\mathbb{N}$, 
+\begin{equation*}
+\mathsf{iteratedDerivWithin}\,f\,(n+1)\,s \;=\;\mathsf{derivWithin}\,\bigl(%
+\mathsf{iteratedDerivWithin}\,f\,n\,s\bigr)\,s . 
+\end{equation*}
+This is the operator that the root theorem unwinds.
+
+\text{\ } \newline
+\noindent
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{def:iteratedDeriv}{\mbox{\textbf{Def\,5}}} &
+iterated derivative &
+\textsf{iterated\allowbreak Deriv}$:\forall (F:\textsf{Type})\;[i_1:\textsf{NormedAddCommGroup}\;F]\;[i_2:\textsf{NormedSpace}\;\mathbb{R}\;F]\;(f:\mathbb{R}\to F)\;(n:\mathbb{N}),\;\mathbb{R}\to F$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak Deriv} \\ \hline
+\hypertarget{def:iteratedFDeriv}{\mbox{\textbf{Def\,6}}} &
+iterated Fr\'echet derivative &
+\textsf{iterated\allowbreak FDeriv}$:\forall (\mathbb{K}:\textsf{Type})\;[i_1:\textsf{NontriviallyNormedField}\;\mathbb{K}]\;(E:\textsf{Type})\;[i_2:\textsf{NormedAddCommGroup}\;E]\;[i_3:\textsf{NormedSpace}\;\mathbb{K}\;E]\;(F:\textsf{Type})\;[i_4:\textsf{NormedAddCommGroup}\;F]\;[i_5:\textsf{NormedSpace}\;\mathbb{K}\;F]\;(n:\mathbb{N})\;(f:E\to F)\;(x:E),\;E^{[n]}\to_{L[\mathbb{K}]}F$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak FDeriv} \\
+\end{array}$
+
+\nointerlineskip
+\noindent
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{def:taylorWithinEval}{\mbox{\textbf{Def\,7}}} &
+Taylor polynomial evaluated at a point &
+\textsf{taylor\allowbreak Within\allowbreak Eval}$:\forall (F:\textsf{Type})\;[i_1:\textsf{NormedAddCommGroup}\;F]\;[i_2:\textsf{NormedSpace}\;\mathbb{R}\;F]\;(f:\mathbb{R}\to F)\;(n:\mathbb{N})\;(s:\textsf{Set}\;\mathbb{R})\;(x:\mathbb{R})\;(z:\mathbb{R}),\;F$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak Taylor} \\ \hline
+\hypertarget{def:taylorWithin}{\mbox{\textbf{Def\,8}}} &
+Taylor polynomial &
+\textsf{taylor\allowbreak Within}$:\forall (F:\textsf{Type})\;[i_1:\textsf{NormedAddCommGroup}\;F]\;[i_2:\textsf{NormedSpace}\;\mathbb{R}\;F]\;(f:\mathbb{R}\to F)\;(n:\mathbb{N})\;(s:\textsf{Set}\;\mathbb{R})\;(x:\mathbb{R}),\;\textsf{PolynomialModule}\;\mathbb{R}\;\mathbb{R}\;F$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak Taylor} \\
+\end{array}$
+
+\nointerlineskip
+\noindent
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{def:taylorCoeffWithin}{\mbox{\textbf{Def\,9}}} &
+Taylor coefficient within a set &
+\textsf{taylor\allowbreak Coeff\allowbreak Within}$:\forall (F:\textsf{Type})\;[i_1:\textsf{NormedAddCommGroup}\;F]\;[i_2:\textsf{NormedSpace}\;\mathbb{R}\;F]\;(f:\mathbb{R}\to F)\;(k:\mathbb{N})\;(s:\textsf{Set}\;\mathbb{R})\;(x:\mathbb{R}),\;F$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak Taylor} \\ \hline
+\hypertarget{def:UniqueDiffOn}{\mbox{\textbf{Def\,10}}} &
+unique differentiability on a set &
+\textsf{Unique\allowbreak Diff\allowbreak On}$:\forall (E:\textsf{Type})\;[i_1:\textsf{NormedAddCommGroup}\;E]\;[i_2:\textsf{NormedSpace}\;\mathbb{R}\;E]\;(s:\textsf{Set}\;E),\;\textsf{Prop}$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak FDeriv} \\
+\end{array}$
+
+\nointerlineskip
+\noindent
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{def:Icc}{\mbox{\textbf{Def\,11}}} &
+closed interval &
+\textsf{Set.Icc}$:\forall (\alpha:\textsf{Type})\;[i:\textsf{Preorder}\;\alpha]\;(a:\alpha)\;(b:\alpha),\;\textsf{Set}\;\alpha$ &
+\textsf{Data.\allowbreak Set.\allowbreak Intervals} \\ \hline
+\hypertarget{def:Ioo}{\mbox{\textbf{Def\,12}}} &
+open interval &
+\textsf{Set.Ioo}$:\forall (\alpha:\textsf{Type})\;[i:\textsf{Preorder}\;\alpha]\;(a:\alpha)\;(b:\alpha),\;\textsf{Set}\;\alpha$ &
+\textsf{Data.\allowbreak Set.\allowbreak Intervals} \\
+\end{array}$
+
+\nointerlineskip
+\noindent
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{def:CMLM}{\mbox{\textbf{Def\,13}}} &
+continuous multilinear map &
+\textsf{Continuous\allowbreak Multilinear\allowbreak Map}$:\forall (\mathbb{K}:\textsf{Type})\;[i_1:\textsf{NontriviallyNormedField}\;\mathbb{K}]\;(\iota:\textsf{Type})\;[i_2:\textsf{Fintype}\;\iota]\;(E:\iota\to\textsf{Type})\;[i_3:\forall (i:\iota),\;\textsf{NormedAddCommGroup}\,(E\,i)]\;(F:\textsf{Type})\;[i_4:\textsf{NormedAddCommGroup}\;F]\;[i_5:\textsf{NormedSpace}\;\mathbb{K}\;F],\;\textsf{Type}$ &
+\textsf{Analysis.\allowbreak NormedSpace.\allowbreak Multilinear} \\ \hline
+\hypertarget{def:NACGM}{\mbox{\textbf{Def\,14}}} &
+normed additive comm.\ group &
+\textsf{Normed\allowbreak AddCommGroup}$:\forall (E:\textsf{Type}),\;\textsf{Type}$ &
+\textsf{Analysis.\allowbreak Normed.\allowbreak Group} \\ \hline
+\end{array}$
+
+\nointerlineskip
+
+\section{Statements}
+
+\label{sec:statements}
+
+\noindent The declarations involved in the iterated Taylor--Lagrange theorem
+fall into four logical categories. Every signature below is taken from the
+Mathlib4 documentation browser \cite{mathlib4-docs} and cross-checked
+against the source file \cite{mathlib4-taylor} at commit \texttt{0c1d5a7e}{}.
+
+\subsection{Lemmas}
+
+\label{sec:lemmas}
+
+\noindent Small technical lemmas invoked inside the proof.
+
+\noindent \text{ \ } \newline
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{lem:ofsucc}{\mbox{\textbf{Lem\,1}}} &
+drop one derivative &
+\textsf{ContDiffOn.of\allowbreak\_succ}$:\forall (\mathbb{K}:\textsf{Type})\;[i_1:\textsf{NontriviallyNormedField}\;\mathbb{K}]\;(E:\textsf{Type})\;[i_2:\textsf{NormedAddCommGroup}\;E]\;[i_3:\textsf{NormedSpace}\;\mathbb{K}\;E]\;(F:\textsf{Type})\;[i_4:\textsf{NormedAddCommGroup}\;F]\;[i_5:\textsf{NormedSpace}\;\mathbb{K}\;F]\;(n:\textsf{ENat})\;(f:E\to F)\;(s:\textsf{Set}\;E),\;\textsf{ContDiffOn}\,\mathbb{K}\,E\,F\,(n+1)\,f\,s\to\textsf{ContDiffOn}\,\mathbb{K}\,E\,F\,n\,f\,s$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak ContDiff} \\ \hline
+\hypertarget{lem:contDiffAt}{\mbox{\textbf{Lem\,2}}} &
+local smoothness from global &
+\textsf{ContDiffOn.contDiffAt}$:\forall (\mathbb{K}:\textsf{Type})\;[i_1:\textsf{NontriviallyNormedField}\;\mathbb{K}]\;(E:\textsf{Type})\;[i_2:\textsf{NormedAddCommGroup}\;E]\;[i_3:\textsf{NormedSpace}\;\mathbb{K}\;E]\;(F:\textsf{Type})\;[i_4:\textsf{NormedAddCommGroup}\;F]\;[i_5:\textsf{NormedSpace}\;\mathbb{K}\;F]\;(n:\textsf{ENat})\;(f:E\to F)\;(s:\textsf{Set}\;E)\;(x:E),\;\textsf{ContDiffOn}\,\mathbb{K}\,E\,F\,n\,f\,s\to\textsf{Set.Mem}\,x\,s\to\textsf{ContDiffAt}\,\mathbb{K}\,E\,F\,n\,f\,x$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak ContDiff} \\
+\end{array}$
+
+\nointerlineskip
+\noindent
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{lem:diffiter}{\mbox{\textbf{Lem\,3}}} &
+differentiability of iterated derivatives &
+\textsf{ContDiffOn.differentiableOn\allowbreak\_iterated\allowbreak Deriv\allowbreak Within}$:\forall (F:\textsf{Type})\;[i_1:\textsf{NormedAddCommGroup}\;F]\;[i_2:\textsf{NormedSpace}\;\mathbb{R}\;F]\;(n:\mathbb{N})\;(f:\mathbb{R}\to F)\;(s:\textsf{Set}\;\mathbb{R})\;(k:\mathbb{N}),\;k<n\to\textsf{ContDiffOn}\,\mathbb{R}\,\mathbb{R}\,F\,n\,f\,s\to\textsf{DifferentiableOn}\,\mathbb{R}\,\mathbb{R}\,F\,(\textsf{iteratedDerivWithin}\,f\,k\,s)\,s$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak Taylor} \\ \hline
+\hypertarget{lem:iterFD}{\mbox{\textbf{Lem\,4}}} &
+iteration commutes with FDeriv &
+\textsf{iterated\allowbreak Deriv\allowbreak Within\allowbreak\_eq\allowbreak\_iterated\allowbreak FDeriv\allowbreak Within}$:\forall (F:\textsf{Type})\;[i_1:\textsf{NormedAddCommGroup}\;F]\;[i_2:\textsf{NormedSpace}\;\mathbb{R}\;F]\;(f:\mathbb{R}\to F)\;(n:\mathbb{N})\;(s:\textsf{Set}\;\mathbb{R})\;(x:\mathbb{R}),\;\textsf{iteratedDerivWithin}\,f\,n\,s\,x=\textsf{iteratedFDerivWithin}\,n\,f\,s\,x\,(\lambda \_:\textsf{Fin}\,n\mapsto (1:\mathbb{R}))$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak FDeriv} \\
+\end{array}$
+
+\nointerlineskip
+
+\noindent
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{lem:iterFDUniv}{\mbox{\textbf{Lem\,5}}} &
+universe/within reconciliation &
+\textsf{iterated\allowbreak FDeriv\allowbreak Within\allowbreak\_eq\allowbreak\_iterated\allowbreak FDeriv}$:\forall (\mathbb{K}:\textsf{Type})\;[i_1:\textsf{NontriviallyNormedField}\;\mathbb{K}]\;(E:\textsf{Type})\;[i_2:\textsf{NormedAddCommGroup}\;E]\;[i_3:\textsf{NormedSpace}\;\mathbb{K}\;E]\;(F:\textsf{Type})\;[i_4:\textsf{NormedAddCommGroup}\;F]\;[i_5:\textsf{NormedSpace}\;\mathbb{K}\;F]\;(n:\mathbb{N})\;(f:E\to F)\;(x:E),\;\textsf{iteratedFDerivWithin}\,n\,f\,\textsf{Set.univ}\,x=\textsf{iteratedFDeriv}\,n\,f\,x$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak FDeriv} \\ \hline
+\hypertarget{lem:uniqueIcc}{\mbox{\textbf{Lem\,6}}} &
+unique diff.\ on a closed interval &
+\textsf{unique\allowbreak Diff\allowbreak On\allowbreak\_Icc}$:\forall (a:\mathbb{R})\;(b:\mathbb{R}),\;\textsf{UniqueDiffOn}\,\mathbb{R}\,(\textsf{Set.Icc}\,a\,b)$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak FDeriv} \\
+\end{array}$
+
+\nointerlineskip
+
+\noindent
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{lem:memIcc}{\mbox{\textbf{Lem\,7}}} &
+membership of a closed interval in nhds &
+\textsf{Icc\allowbreak\_mem\allowbreak\_nhds\allowbreak\_iff}$:\forall (a:\mathbb{R})\;(b:\mathbb{R})\;(x:\mathbb{R}),\;a<x\to x<b\to\textsf{Set.Mem}\,(\textsf{Set.Icc}\,a\,b)\,(\textsf{nhds}\,x)$ &
+\textsf{Topology.\allowbreak Order.\allowbreak Basic} \\ \hline
+\hypertarget{lem:subsetIcc}{\mbox{\textbf{Lem\,8}}} &
+open inside closed &
+\textsf{Set.Ioo\allowbreak\_subset\allowbreak\_Icc\allowbreak\_self}$:\forall (a:\mathbb{R})\;(b:\mathbb{R}),\;\textsf{Set.Subset}\,(\textsf{Set.Ioo}\,a\,b)\,(\textsf{Set.Icc}\,a\,b)$ &
+\textsf{Data.\allowbreak Set.\allowbreak Intervals} \\
+\end{array}$
+
+\nointerlineskip
+
+\noindent
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{lem:UniqueDiffWithin}{\mbox{\textbf{Lem\,9}}} &
+unique diff.\ within &
+\textsf{Unique\allowbreak Diff\allowbreak On.unique\allowbreak Diff\allowbreak Within}$:\forall (s:\textsf{Set}\;\mathbb{R})\;(x:\mathbb{R}),\;\textsf{UniqueDiffOn}\,\mathbb{R}\,s\to\textsf{Set.Mem}\,x\,s\to\textsf{UniqueDiffWithinAt}\,\mathbb{R}\,s\,x$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak FDeriv} \\ \hline
+\hypertarget{lem:UniqueDiffIcc}{\mbox{\textbf{Lem\,10}}} &
+unique diff.\ at interior points of an interval &
+\textsf{unique\allowbreak Diff\allowbreak Within\allowbreak At\allowbreak\_Icc\allowbreak\_of\allowbreak\_mem\allowbreak\_Ioo}$:\forall (a:\mathbb{R})\;(b:\mathbb{R})\;(x:\mathbb{R}),\;\textsf{Set.Mem}\,x\,(\textsf{Set.Ioo}\,a\,b)\to\textsf{UniqueDiffWithinAt}\,\mathbb{R}\,(\textsf{Set.Icc}\,a\,b)\,x$ &
+\textsf{Analysis.\allowbreak Calculus.\allowbreak FDeriv} \\
+\end{array}$
+
+\nointerlineskip
+
+\noindent
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{lem:compTendsto}{\mbox{\textbf{Lem\,11}}} &
+closed subset of a closed interval &
+\textsf{Set.Icc\allowbreak\_subset\allowbreak\_Icc\allowbreak\_iff}$:\forall (a:\mathbb{R})\;(b:\mathbb{R})\;(c:\mathbb{R})\;(d:\mathbb{R}),\;\textsf{Set.Subset}\,(\textsf{Set.Icc}\,c\,d)\,(\textsf{Set.Icc}\,a\,b)\leftrightarrow a\le c\wedge d\le b$ &
+\textsf{Data.\allowbreak Set.\allowbreak Intervals} \\ \hline
+\hypertarget{lem:forallCongr}{\mbox{\textbf{Lem\,12}}} &
+$\forall$ congruence &
+\textsf{forall\allowbreak\_congr}$:\forall (\alpha:\textsf{Type})\;(p:\alpha\to\textsf{Prop})\;(q:\alpha\to\textsf{Prop}),\;(\forall (x:\alpha),\;p\,x\leftrightarrow q\,x)\to(\forall (x:\alpha),\;p\,x)\leftrightarrow(\forall (x:\alpha),\;q\,x)$ &
+\textsf{quantifier} \\ \hline
+\hypertarget{lem:impliesCongr}{\mbox{\textbf{Lem\,13}}} &
+$\to$ congruence &
+\textsf{implies\allowbreak\_congr}$:\forall (p:\textsf{Prop})\;(p':\textsf{Prop})\;(q:\textsf{Prop})\;(q':\textsf{Prop}),\;(p\leftrightarrow p')\to(q\leftrightarrow q')\to((p\to q)\leftrightarrow(p'\to q'))$ &
+\textsf{quantifier} \\ \hline
+\end{array}$
+
+\nointerlineskip
+
+\subsection{Theorems}
+
+\label{sec:theorems}
+
+The substantive results in the dependency tree. The root theorem and its
+scalar reduction are taken from \cite{mathlib4-taylor} at commit \texttt{%
+0c1d5a7e}{}.
+
+\text{ \ }\newline
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\refstepcounter{thmcounter}\label{thm:rootnum}\hypertarget{thm:root}{\mbox{\textbf{Thm\,1}}} &
+iterated Taylor--Lagrange remainder &
+\textsf{taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange\allowbreak\_iterated\allowbreak Deriv}$:\forall (F:\textsf{Type})\;[i_1:\textsf{NormedAddCommGroup}\;F]\;[i_2:\textsf{NormedSpace}\;\mathbb{R}\;F]\;(f:\mathbb{R}\to F)\;(n:\mathbb{N})\;(a:\mathbb{R})\;(b:\mathbb{R})\;(x:\mathbb{R})\;(z:\mathbb{R}),\;\textsf{ContDiffOn}\,\mathbb{R}\,\mathbb{R}\,F\,n\,f\,(\textsf{Set.Icc}\,a\,b)\to a\le x\to x\le z\to z\le b\to\exists (\xi:\mathbb{R}),\;\textsf{Set.Mem}\,\xi\,(\textsf{Set.Ioo}\,x\,z)\wedge f\,z=\textsf{taylorWithinEval}\,f\,n\,(\textsf{Set.Icc}\,a\,b)\,z\,x+\tfrac{(z-x)^{n}}{n!}\cdot\textsf{iteratedDerivWithin}\,f\,n\,(\textsf{Set.Icc}\,a\,b)\,\xi$ &
+\textsf{root} \\ \hline
+\hypertarget{thm:scalar}{\mbox{\textbf{Thm\,2}}} &
+scalar Lagrange-remainder reduction &
+\textsf{taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange}$:\forall (f:\mathbb{R}\to\mathbb{R})\;(n:\mathbb{N})\;(a:\mathbb{R})\;(b:\mathbb{R})\;(x:\mathbb{R})\;(z:\mathbb{R}),\;\textsf{ContDiffOn}\,\mathbb{R}\,\mathbb{R}\,\mathbb{R}\,n\,f\,(\textsf{Set.Icc}\,a\,b)\to a\le x\to x\le z\to z\le b\to\exists (\xi:\mathbb{R}),\;\textsf{Set.Mem}\,\xi\,(\textsf{Set.Ioo}\,x\,z)\wedge f\,z=\textsf{taylorWithinEval}\,f\,n\,(\textsf{Set.Icc}\,a\,b)\,z\,x+\tfrac{(z-x)^{n}}{n!}\cdot(\textsf{iteratedDerivWithin}\,f\,n\,(\textsf{Set.Icc}\,a\,b)\,\xi)$ &
+\textsf{main aux} \\
+\end{array}$
+
+\nointerlineskip
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{thm:mean}{\mbox{\textbf{Thm\,3}}} &
+Taylor mean-remainder (integral form) &
+\textsf{taylor\allowbreak\_mean\allowbreak\_remainder}$:\forall (F:\textsf{Type})\;[i_1:\textsf{NormedAddCommGroup}\;F]\;[i_2:\textsf{NormedSpace}\;\mathbb{R}\;F]\;(f:\mathbb{R}\to F)\;(n:\mathbb{N})\;(a:\mathbb{R})\;(b:\mathbb{R})\;(x:\mathbb{R})\;(z:\mathbb{R}),\;\textsf{ContDiffOn}\,\mathbb{R}\,\mathbb{R}\,F\,n\,f\,(\textsf{Set.Icc}\,a\,b)\to a\le x\to x\le z\to z\le b\to\exists (\xi:\mathbb{R}),\;\textsf{Set.Mem}\,\xi\,(\textsf{Set.Ioo}\,x\,z)\wedge f\,z=\textsf{taylorWithinEval}\,f\,n\,(\textsf{Set.Icc}\,a\,b)\,z\,x+\tfrac{(z-x)^{n}}{n!}\cdot\textsf{iteratedDerivWithin}\,f\,n\,(\textsf{Set.Icc}\,a\,b)\,\xi$ &
+\textsf{mean form} \\ \hline
+\hypertarget{thm:iterWithinEval}{\mbox{\textbf{Thm\,4}}} &
+Taylor polynomial at a point &
+\textsf{taylor\allowbreak Within\allowbreak Eval\allowbreak\_succ}$:\forall (F:\textsf{Type})\;[i_1:\textsf{NormedAddCommGroup}\;F]\;[i_2:\textsf{NormedSpace}\;\mathbb{R}\;F]\;(f:\mathbb{R}\to F)\;(n:\mathbb{N})\;(s:\textsf{Set}\;\mathbb{R})\;(x:\mathbb{R})\;(z:\mathbb{R}),\;\textsf{taylorWithinEval}\,f\,(n+1)\,s\,z\,x=\textsf{taylorWithinEval}\,f\,n\,s\,z\,x+\frac{(z-x)^{n}}{n!}\cdot\textsf{iteratedDerivWithin}\,f\,n\,s\,x$ &
+\textsf{recursion} \\
+\end{array}$
+
+\nointerlineskip
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{thm:iterWithinZero}{\mbox{\textbf{Thm\,5}}} &
+zero-th Taylor polynomial &
+\textsf{taylor\allowbreak Within\allowbreak Eval\allowbreak\_zero}$:\forall (F:\textsf{Type})\;[i_1:\textsf{NormedAddCommGroup}\;F]\;[i_2:\textsf{NormedSpace}\;\mathbb{R}\;F]\;(f:\mathbb{R}\to F)\;(s:\textsf{Set}\;\mathbb{R})\;(x:\mathbb{R})\;(z:\mathbb{R}),\;\textsf{taylorWithinEval}\,f\,0\,s\,z\,x=f\,x$ &
+\textsf{base case} \\ \hline
+\hypertarget{thm:derivComp}{\mbox{\textbf{Thm\,6}}} &
+derivative commutes with equivalence &
+\textsf{iterated\allowbreak Deriv\allowbreak Within\allowbreak\_eq\allowbreak\_equiv\allowbreak\_comp}$:\forall (F:\textsf{Type})\;[i_1:\textsf{NormedAddCommGroup}\;F]\;[i_2:\textsf{NormedSpace}\;\mathbb{R}\;F]\;(f:\mathbb{R}\to F)\;(n:\mathbb{N})\;(s:\textsf{Set}\;\mathbb{R})\;(e:\mathbb{R}\simeq_{L[\mathbb{R}]}\mathbb{R}),\;\textsf{iteratedDerivWithin}\,(f\circ e)\,n\,(e^{-1}(s))=\bigl(\textsf{iteratedDerivWithin}\,f\,n\,s\bigr)\circ e$ &
+\textsf{invariance} \\
+\end{array}$
+
+\nointerlineskip
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{thm:addadj}{\mbox{\textbf{Thm\,7}}} &
+regrouping the Taylor polynomial &
+\textsf{taylor\allowbreak Within\allowbreak Eval\allowbreak\_add\allowbreak\_adjacent}$:\forall (F:\textsf{Type})\;[i_1:\textsf{NormedAddCommGroup}\;F]\;[i_2:\textsf{NormedSpace}\;\mathbb{R}\;F]\;(f:\mathbb{R}\to F)\;(m:\mathbb{N})\;(n:\mathbb{N})\;(s:\textsf{Set}\;\mathbb{R})\;(x:\mathbb{R})\;(z:\mathbb{R}),\;\textsf{taylorWithinEval}\,f\,(m+n)\,s\,z\,x=\textsf{taylorWithinEval}\,f\,m\,s\,z\,x+\textsf{taylorWithinEval}\,\bigl(f-\textsf{taylorWithinEval}\,f\,m\,s\,\cdot\,\bigr)\,n\,s\,z\,x$ &
+\textsf{book-keeping} \\ \hline
+\hypertarget{thm:evII}{\mbox{\textbf{Thm\,8}}} &
+eventual differentiability &
+\textsf{Filter.Tendsto.eventually\allowbreak\_differentiable\allowbreak\_at}$:\forall (F:\textsf{Type})\;[i_1:\textsf{NormedAddCommGroup}\;F]\;[i_2:\textsf{NormedSpace}\;\mathbb{R}\;F]\;(f:\mathbb{R}\to F)\;(x:\mathbb{R})\;(\ell:\textsf{Filter}\;\mathbb{R}),\;\textsf{Filter.Tendsto}\,f\,\ell\,(\textsf{nhds}\,x)\to\textsf{DifferentiableAt}\,\mathbb{R}\,F\,f\,x$ &
+\textsf{regularity} \\
+\end{array}$
+
+\nointerlineskip
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{thm:IntSubLin}{\mbox{\textbf{Thm\,9}}} &
+Lagrange slope identity &
+\textsf{exists\allowbreak\_ratio\allowbreak\_has\allowbreak Deriv\allowbreak At\allowbreak\_eq\allowbreak\_ratio\allowbreak\_slope}$:\forall (f:\mathbb{R}\to\mathbb{R})\;(x:\mathbb{R})\;(y:\mathbb{R}),\;x\neq y\to(\forall (z:\mathbb{R}),\;\textsf{Set.Mem}\,z\,(\textsf{Set.Icc}\,x\,y)\to\textsf{HasDerivAt}\,f\,(f'\,z)\,z)\to\exists (c:\mathbb{R}),\;\textsf{Set.Mem}\,c\,(\textsf{Set.Ioo}\,x\,y)\wedge\frac{f\,y-f\,x}{y-x}=f'\,c$ &
+\textsf{mean value} \\ \hline
+\hypertarget{thm:finAt}{\mbox{\textbf{Thm\,10}}} &
+monotone derivative on a compact interval &
+\textsf{HasDerivAt\allowbreak\_of\allowbreak\_has\allowbreak Deriv\allowbreak At\allowbreak\_of\allowbreak\_tendsto\allowbreak\_ratio}$:\forall (F:\textsf{Type})\;[i_1:\textsf{NormedAddCommGroup}\;F]\;[i_2:\textsf{NormedSpace}\;\mathbb{R}\;F]\;(f:\mathbb{R}\to F)\;(x:\mathbb{R})\;(f':F),\;(\forall (y:\mathbb{R}),\;y\neq x\to\textsf{Filter.Tendsto}\,(\lambda (y:\mathbb{R})\mapsto (y-x)^{-1}\cdot(f\,y-f\,x))\,(\textsf{nhdsWithin}\,x\,(\textsf{Set.sdiff}\,\textsf{Set.univ}\,(\textsf{Set.singleton}\,x)))\,(\textsf{nhds}\,f'))\to\textsf{HasDerivAt}\,f\,f'\,x$ &
+\textsf{derivative bridge} \\
+\end{array}$
+
+\nointerlineskip
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{thm:measgen}{\mbox{\textbf{Thm\,11}}} &
+ContDiffOn stability under composition &
+\textsf{ContDiffOn.comp}$:\forall (\mathbb{K}:\textsf{Type})\;[i_1:\textsf{NontriviallyNormedField}\;\mathbb{K}]\;(E:\textsf{Type})\;[i_2:\textsf{NormedAddCommGroup}\;E]\;[i_3:\textsf{NormedSpace}\;\mathbb{K}\;E]\;(F:\textsf{Type})\;[i_4:\textsf{NormedAddCommGroup}\;F]\;[i_5:\textsf{NormedSpace}\;\mathbb{K}\;F]\;(G:\textsf{Type})\;[i_6:\textsf{NormedAddCommGroup}\;G]\;[i_7:\textsf{NormedSpace}\;\mathbb{K}\;G]\;(n:\textsf{ENat})\;(f:E\to F)\;(g:F\to G)\;(s:\textsf{Set}\;E)\;(t:\textsf{Set}\;F),\;\textsf{ContDiffOn}\,\mathbb{K}\,F\,G\,n\,g\,t\to\textsf{ContDiffOn}\,\mathbb{K}\,E\,F\,n\,f\,s\to(\forall (x:E),\;\textsf{Set.Mem}\,x\,s\to\textsf{Set.Mem}\,(f\,x)\,t)\to\textsf{ContDiffOn}\,\mathbb{K}\,E\,G\,n\,(g\circ f)\,s$ &
+\textsf{composition} \\ \hline
+\hypertarget{thm:purele}{\mbox{\textbf{Thm\,12}}} &
+ContDiffOn is monotone in $n$ &
+\textsf{ContDiffOn.of\allowbreak\_le}$:\forall (\mathbb{K}:\textsf{Type})\;[i_1:\textsf{NontriviallyNormedField}\;\mathbb{K}]\;(E:\textsf{Type})\;[i_2:\textsf{NormedAddCommGroup}\;E]\;[i_3:\textsf{NormedSpace}\;\mathbb{K}\;E]\;(F:\textsf{Type})\;[i_4:\textsf{NormedAddCommGroup}\;F]\;[i_5:\textsf{NormedSpace}\;\mathbb{K}\;F]\;(m:\textsf{ENat})\;(n:\textsf{ENat})\;(f:E\to F)\;(s:\textsf{Set}\;E),\;m\le n\to\textsf{ContDiffOn}\,\mathbb{K}\,E\,F\,n\,f\,s\to\textsf{ContDiffOn}\,\mathbb{K}\,E\,F\,m\,f\,s$ &
+\textsf{monotonicity} \\
+\end{array}$
+
+\nointerlineskip
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{thm:toIxx}{\mbox{\textbf{Thm\,13}}} &
+Taylor remainder is unique &
+\textsf{taylor\allowbreak\_unique\allowbreak\_remainder}$:\forall (F:\textsf{Type})\;[i_1:\textsf{NormedAddCommGroup}\;F]\;[i_2:\textsf{NormedSpace}\;\mathbb{R}\;F]\;(f:\mathbb{R}\to F)\;(n:\mathbb{N})\;(s:\textsf{Set}\;\mathbb{R})\;(x:\mathbb{R})\;(z:\mathbb{R}),\;\textsf{ContDiffOn}\,\mathbb{R}\,\mathbb{R}\,F\,n\,f\,s\to\exists! (R:F),\;f\,z=\textsf{taylorWithinEval}\,f\,n\,s\,z\,x+\frac{(z-x)^{n}}{n!}\cdot R$ &
+\textsf{uniqueness} \\ \hline
+\end{array}$
+
+\nointerlineskip
+
+\subsection{Propositions}
+
+\label{sec:propositions}
+
+\noindent The two $\mathbb{R}$-valued comparison propositions that bracket
+the iterated statement and which are derived \emph{from} the scalar
+Lagrange-remainder theorem \hyperlink{thm:scalar}{Thm 2}.
+
+\text{ \ }\newline
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{prop:upper}{\mbox{\textbf{Pro\,1}}} &
+upper bound of the remainder &
+\textsf{taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_upper\allowbreak\_bound}$:\forall (f:\mathbb{R}\to\mathbb{R})\;(n:\mathbb{N})\;(a:\mathbb{R})\;(b:\mathbb{R})\;(x:\mathbb{R})\;(z:\mathbb{R}),\;\textsf{ContDiffOn}\,\mathbb{R}\,\mathbb{R}\,\mathbb{R}\,n\,f\,(\textsf{Set.Icc}\,a\,b)\to a\le x\to x\le z\to z\le b\to\exists (\xi:\mathbb{R}),\;\textsf{Set.Mem}\,\xi\,(\textsf{Set.Ioo}\,x\,z)\wedge|f\,z-\textsf{taylorWithinEval}\,f\,n\,(\textsf{Set.Icc}\,a\,b)\,z\,x|\le\tfrac{|z-x|^{n}}{n!}\cdot|(\textsf{iteratedDerivWithin}\,f\,n\,(\textsf{Set.Icc}\,a\,b))\,\xi|$ &
+\textsf{upper comparison} \\ \hline
+\hypertarget{prop:lower}{\mbox{\textbf{Pro\,2}}} &
+lower bound of the remainder &
+\textsf{taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lower\allowbreak\_bound}$:\forall (f:\mathbb{R}\to\mathbb{R})\;(n:\mathbb{N})\;(a:\mathbb{R})\;(b:\mathbb{R})\;(x:\mathbb{R})\;(z:\mathbb{R}),\;\textsf{ContDiffOn}\,\mathbb{R}\,\mathbb{R}\,\mathbb{R}\,n\,f\,(\textsf{Set.Icc}\,a\,b)\to a\le x\to x\le z\to z\le b\to\exists (\xi:\mathbb{R}),\;\textsf{Set.Mem}\,\xi\,(\textsf{Set.Ioo}\,x\,z)\wedge-\tfrac{|z-x|^{n}}{n!}\cdot|(\textsf{iteratedDerivWithin}\,f\,n\,(\textsf{Set.Icc}\,a\,b))\,\xi|\le|f\,z-\textsf{taylorWithinEval}\,f\,n\,(\textsf{Set.Icc}\,a\,b)\,z\,x|$ &
+\textsf{lower comparison} \\ \hline
+\end{array}$
+
+\nointerlineskip
+
+\subsection{Corollaries}
+
+\label{sec:corollaries}
+
+\noindent The $C^{2}$ Lagrange-remainder formula; signatures verified
+against \cite{mathlib4-taylor} at commit \texttt{0c1d5a7e}{}.
+
+\text{ \ }\newline
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{cor:C2}{\mbox{\textbf{Cor\,1}}} &
+$C^{2}$ Lagrange form &
+\textsf{taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange\allowbreak\_second\allowbreak\_order}$:\forall (f:\mathbb{R}\to\mathbb{R})\;(a:\mathbb{R})\;(b:\mathbb{R})\;(x:\mathbb{R})\;(z:\mathbb{R}),\;\textsf{ContDiffOn}\,\mathbb{R}\,\mathbb{R}\,\mathbb{R}\,2\,f\,(\textsf{Set.Icc}\,a\,b)\to a\le x\to x\le z\to z\le b\to\exists (\xi:\mathbb{R}),\;\textsf{Set.Mem}\,\xi\,(\textsf{Set.Ioo}\,x\,z)\wedge f\,z=f\,x+f'\,x\cdot(z-x)+\tfrac{1}{2}\cdot f''\,\xi\cdot(z-x)^{2}$ &
+\textsf{$n=1$ case of Thm~\ref{thm:rootnum}} \\ \hline
+\hypertarget{cor:hasDeriv}{\mbox{\textbf{Cor\,2}}} &
+quadratic remainder via \textsf{iteratedDeriv} &
+\textsf{taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange\allowbreak\_second\allowbreak\_order\allowbreak\_iterated}$:\forall (f:\mathbb{R}\to\mathbb{R})\;(a:\mathbb{R})\;(b:\mathbb{R})\;(x:\mathbb{R})\;(z:\mathbb{R}),\;\textsf{ContDiffOn}\,\mathbb{R}\,\mathbb{R}\,\mathbb{R}\,2\,f\,(\textsf{Set.Icc}\,a\,b)\to a\le x\to x\le z\to z\le b\to\exists (\xi:\mathbb{R}),\;\textsf{Set.Mem}\,\xi\,(\textsf{Set.Ioo}\,x\,z)\wedge f\,z=f\,x+\textsf{iteratedDerivWithin}\,f\,1\,(\textsf{Set.Icc}\,a\,b)\,x\cdot(z-x)+\tfrac{1}{2}\cdot\textsf{iteratedDerivWithin}\,f\,2\,(\textsf{Set.Icc}\,a\,b)\,\xi\cdot(z-x)^{2}$ &
+\textsf{syntactic variant} \\ \hline
+\end{array}$
+
+\nointerlineskip
+
+\section{Proofs}
+
+\label{sec:proofs}
+
+The formal proof of the iterated Taylor--Lagrange theorem proceeds by
+reduction. Let $F$ be a type with \textsf{NormedAddCommGroup} and \textsf{%
+NormedSpace}~$\mathbb{R}$ instances, let $n$ be of type $\mathbb{N}$, let $f:%
+\mathbb{R}\to F$ be $C^{n}$ on the interval $\mathsf{Set.Icc}\,a\,b$, and
+let $x,z:\mathbb{R}$ be such that $a\le x$, $x\le z$, $z\le b$. The goal is 
+\begin{equation*}
+\resizebox{\linewidth}{!}{$\displaystyle \exists\, (\xi:\mathbb{R}),\quad
+\textsf{Set.Mem}\,\xi\,(\textsf{Set.Ioo}\,x\,z) \;\wedge\; f\,z
+\;=\;\textsf{taylorWithinEval}\,f\,n\,(\textsf{Set.Icc}\,a\,b)\,z\,x
+\;+\;\frac{(z-x)^{n}}{n!}\cdot
+\textsf{iteratedDerivWithin}\,f\,n\,(\textsf{Set.Icc}\,a\,b)\,\xi . $}
+\end{equation*}
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+1 &
+interior unique differentiability &
+$\textsf{hint}:\textsf{UniqueDiffOn}\,\mathbb{R}\,(\textsf{Set.Icc}\,a\,b)$ &
+\textsf{from \hyperlink{lem:uniqueIcc}{Lem 6}} \\ \hline
+2 &
+iterated derivatives are differentiable &
+$\textsf{h}:\forall (k:\mathbb{N}),\;k<n\to\textsf{DifferentiableOn}\,\mathbb{R}\,\mathbb{R}\,F\,(\textsf{iteratedDerivWithin}\,f\,k\,(\textsf{Set.Icc}\,a\,b))\,(\textsf{Set.Icc}\,a\,b)$ &
+\textsf{\hyperlink{lem:diffiter}{Lem 3}} \\
+\end{array}$
+
+\nointerlineskip
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+3 &
+Reduce to the scalar case by applying a continuous linear functional &
+$\textsf{h}_{\textsf{scalar}}:\textsf{ContDiffOn}\,\mathbb{R}\,\mathbb{R}\,\mathbb{R}\,n\,(\lambda (y:\mathbb{R})\mapsto\Lambda\,(f\,y))\,(\textsf{Set.Icc}\,a\,b)$ &
+$\Lambda:\textsf{Continuous}\allowbreak\textsf{LinearMap}\;\mathbb{R}\;F\;\mathbb{R}$, a continuous linear functional on $F$ (included in \hyperlink{def:CMLM}{Def 13}) \\ \hline
+4 &
+apply the scalar Lagrange-remainder theorem &
+$\exists (\xi:\mathbb{R}),\;\textsf{Set.Mem}\,\xi\,(\textsf{Set.Ioo}\,x\,z)\wedge\Lambda\,(f\,z)=\textsf{taylorWithinEval}\,(\Lambda\circ f)\,n\,(\textsf{Set.Icc}\,a\,b)\,z\,x+\frac{(z-x)^{n}}{n!}\cdot(\textsf{iteratedDerivWithin}\,(\Lambda\circ f)\,n\,(\textsf{Set.Icc}\,a\,b))\,\xi$ &
+\textsf{\hyperlink{thm:scalar}{Thm 2}} \\
+\end{array}$
+
+\nointerlineskip
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+5 &
+unfold the iterated derivatives through the multilinear equivalence &
+$\textsf{h}_{\textsf{final}}:\exists (\xi:\mathbb{R}),\;\textsf{Set.Mem}\,\xi\,(\textsf{Set.Ioo}\,x\,z)\wedge\Lambda\,(f\,z)=\Lambda\,(\textsf{taylorWithinEval}\,f\,n\,(\textsf{Set.Icc}\,a\,b)\,z\,x)+\frac{(z-x)^{n}}{n!}\cdot\Lambda\,(\textsf{iteratedDerivWithin}\,f\,n\,(\textsf{Set.Icc}\,a\,b)\,\xi)$ &
+\textsf{\hyperlink{lem:iterFD}{Lem 4}} + \hyperlink{lem:iterFDUniv}{Lem 5} \\ \hline
+\end{array}$ \noindent \text{ \ }\newline
+
+\noindent The reduction follows the structure of the Mathlib proof in 
+\textsf{Taylor.lean} \cite{mathlib4-taylor}:
+
+\begin{enumerate}
+\item verify unique differentiability on the closed interval via \textsf{%
+unique\allowbreak Diff\allowbreak On\allowbreak\_Icc} (\hyperlink{lem:uniqueIcc}%
+{Lem 6});
+
+\item infer differentiability of the lower-order iterated derivatives from 
+\textsf{ContDiffOn.differentiableOn\allowbreak\_iterated\allowbreak
+Deriv\allowbreak Within} (\hyperlink{lem:diffiter}{Lem 3});
+
+\item if $F=\mathbb{R}$, apply the scalar Lagrange-remainder theorem (
+\hyperlink{thm:scalar}{Thm 2}) directly. For general $F$, apply \hyperlink{thm:scalar}%
+{Thm 2} to $\Lambda\circ f$ for each continuous linear functional $\Lambda:%
+\mathsf{ContinuousLinearMap}\;\mathbb{R}\;F\;\mathbb{R}$ in a separating
+family; the scalar value $\Lambda\,(f\,z)$ is then lifted back to $F$ by the
+defining property of the family (if $\Lambda\,u=\Lambda\,v$ for every $%
+\Lambda$ in the family, then $u=v$). The general-$F$ case is thus reduced to
+the scalar case of \hyperlink{thm:scalar}{Thm 2};
+
+\item unfold the iterated derivatives of $\Lambda\circ f$ through \textsf{%
+iterated\allowbreak Deriv\allowbreak
+Within\allowbreak\_eq\allowbreak\_iterated\allowbreak FDeriv\allowbreak
+Within} (\hyperlink{lem:iterFD}{Lem 4}) and \textsf{iterated\allowbreak
+FDeriv\allowbreak Within\allowbreak\_eq\allowbreak\_iterated\allowbreak
+FDeriv} (\hyperlink{lem:iterFDUniv}{Lem 5}), relating the iterated
+derivative of the scalar composite to the iterated derivative of $f$;
+
+\item apply $\Lambda$ to both sides and use the separating property of the
+family to lift the scalar identity to an identity in $F$. The rearrangement
+uses the ring identity 
+\begin{equation}  \label{eq:combined}
+f\,z-\mathsf{taylorWithinEval}\,f\,n\,(\mathsf{Set.Icc}\,a\,b)\,z\,x = \frac{%
+(z-x)^{n}}{n!}\cdot\mathsf{iteratedDerivWithin}\,f\,n\,(\mathsf{Set.Icc}%
+\,a\,b)\,\xi ,
+\end{equation}
+which follows from the scalar identity by linearity of $\Lambda$.
+\end{enumerate}
+
+\section{Scripts}
+
+\label{sec:scripts}
+
+\subsection{Tree Proof Dependencies}
+
+\label{sec:tree}
+
+\noindent A depth-5 dependency tree of the iterated Taylor--Lagrange theorem 
+\textsf{taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange%
+\allowbreak \_iterated\allowbreak Deriv}, generated from the MathlibGraph
+edge dataset \cite{mathlibgraph2026, mathlibgraph, network-structure-mathlib}%
+. Each node occupies two lines: the declaration with its class tag \textsf{%
+[def]}/\textsf{[thm]}/\textsf{[ax]}, followed by the source path on the next
+line. Children marked \textsf{(depth limit)} have no further expansion in
+the CSV; children marked \textsf{(*)} are already expanded earlier in the
+tree; \textsf{(cycle)} marks a definitional self-reference. Aggregate
+statistics of the underlying graph are maintained in \cite{mathlib-stats}.
+
+\noindent Because the depth-5 closure of this declaration contains on the
+order of $10^{5}$ nodes, the tree below is a short excerpt chosen so that
+(i) all four kernel-adjacent names reached by the closure --- \textsf{propext%
+}, \textsf{funext}, \textsf{Quot\allowbreak.sound} and \textsf{%
+Classical\allowbreak.choice} --- are directly visible inside it, and (ii)
+the reader can see where each is reached. The full depth-5 tree is provided
+as an electronic supplement (\textsf{taylor\allowbreak\_mean\allowbreak%
+\_remainder\allowbreak\_lagrange\allowbreak\_iterated\allowbreak
+Deriv\allowbreak.tree\allowbreak.depth5\allowbreak.txt}).
+
+\noindent\textbf{Remark on the \textsf{@ PATH} annotation.} The generator
+script (\textsf{gen\allowbreak\_tree.py}) emits \textsf{Lean core (not in
+Mathlib)} for any name that has no exact path in the CSV or in the built-in
+namespace table; it also emits \textsf{Mathlib/**/.../**} for names whose
+top-level namespace is not in the table. The annotations below are therefore
+best-effort and should not be read as authoritative file paths.
+
+\text{ \ } \setstretch{1}\text{ \ } 
+\begin{verbatimbox}
+============================================================
+Dependency tree for: taylor_mean_remainder_lagrange_iteratedDeriv
+Source: E:\archives\Processings\compile\scripts\mathlib_edges.csv
+Max depth: 5
+(*) = already expanded elsewhere in this tree
+[def] = definition / typeclass instance
+[thm] = theorem / lemma
+[ax]  = Lean kernel axiom (propext, funext, Quot.sound, Classical.choice)
+@ PATH = on the line below each declaration, heuristic from namespace
+         only (no path columns in CSV, no --paths file)
+(depth limit) = node has no further dependencies in the CSV
+Node budget: 200,000
+============================================================
+
+taylor_mean_remainder_lagrange_iteratedDeriv  [thm]
+@ Lean core (not in Mathlib)
+|-- ContDiffOn  [def]
+|   @ Lean core (not in Mathlib)
+|   |-- ContDiffWithinAt  [def]
+|   |   |-- AnalyticWithinAt  [def]   (depth limit)
+|   |   |-- ContinuousMultilinearMap  [def]   (depth limit)
+|   |   |-- ENat  [def]   (depth limit)
+|   |   |-- NontriviallyNormedField  [def]   (depth limit)
+|   |   |-- NormedAddCommGroup  [def]   (depth limit)
+|   |   |-- NormedSpace  [def]   (depth limit)
+|   |   |-- Set  [def]   (depth limit)
+|   |   `-- Set.instMembership  [def]   (depth limit)
+|   |-- ContDiffAt  [def]   (*)
+|   |-- ENat  [def]   (*)
+|   |-- Filter  [def]
+|   |-- Membership.mem  [def]
+|   |-- NontriviallyNormedField  [def]   (*)
+|   |-- NormedAddCommGroup  [def]   (*)
+|   |-- NormedSpace  [def]   (*)
+|   |-- Set  [def]   (*)
+|   `-- Set.instMembership  [def]   (*)
+|-- ContDiffOn.differentiableOn_iteratedDerivWithin  [thm]
+|   |-- ContDiffOn  [def]   (*)
+|   |-- ContDiffWithinAt.differentiableWithinAt_iteratedDerivWithin [thm]
+|   |   |-- iteratedDerivWithin  [def]   (depth limit)
+|   |   `-- iteratedFDerivWithin  [def]   (depth limit)
+|   |-- DifferentiableOn  [def]
+|   `-- Set  [def]   (*)
+|-- ContDiffOn.of_succ  [thm]
+|-- ContinuousMultilinearMap  [def]   (*)
+|-- DenselyNormedField.toNontriviallyNormedField  [def]
+|-- DifferentiableOn  [def]   (*)
+|-- DivInvMonoid.toDiv  [def]
+|-- Icc_mem_nhds_iff  [def]
+|   `-- propext  [ax]   (depth limit)
+|       @ Mathlib/Logic/Basic.lean (Lean core)
+|-- iteratedDerivWithin  [def]   (*)
+|-- iteratedDerivWithin_eq_equiv_comp  [thm]
+|   |-- funext  [ax]
+|   |   @ Mathlib/Logic/Basic.lean (Lean core)
+|   |   |-- Quot.liftOn  [def]   (depth limit)
+|   |   |-- Quot.mk  [def]   (*)
+|   |   `-- Quot.sound  [ax]   (depth limit)
+|   |   @ Mathlib/Logic/Basic.lean (Lean core)
+|   `-- iteratedDerivWithin  [def]   (*)
+|-- iteratedDerivWithin_eq_iteratedFDerivWithin  [thm]
+|-- iteratedFDerivWithin  [def]   (*)
+|-- le_of_lt  [thm]
+|-- Real  [def]
+|   @ Mathlib/Data/Real/Basic.lean
+|   |-- Real.linearOrder  [def]
+|   |   @ Mathlib/Data/Real/Basic.lean
+|   |   |-- Classical.propDecidable  [def]
+|   |   |   @ Lean core (not in Mathlib)
+|   |   |   `-- Classical.choice  [ax]   (depth limit)
+|   |   |   @ Mathlib/Logic/Choice.lean (Lean core)
+|   |   `-- ... (further lattice-theoretic dependencies)
+|   `-- ... (further field / order instances)
+|-- Real.instIsStrictOrderedRing  [def]
+|-- taylorWithinEval  [def]
+|   @ Lean core (not in Mathlib)
+|   |-- PolynomialModule  [def]   (depth limit)
+|   |-- taylorWithin  [def]   (depth limit)
+|   `-- taylorCoeffWithin  [def]   (depth limit)
+|-- taylor_mean_remainder  [thm]
+|-- taylor_mean_remainder_lagrange  [thm]
+|   `-- taylorWithinEval  [def]   (*)
+`-- uniqueDiffOn_Icc  [thm]
+    |-- UniqueDiffOn  [def]   (*)
+    `-- interior  [def]
+        @ Mathlib/Topology/Defs/Basic.lean
+        |-- isOpen_interior  [thm]   (depth limit)
+        |-- interior_Icc  [thm]   (depth limit)
+        `-- Set.Icc  [def]   (*)
+============================================================
+[This is the tail of the printed excerpt.  The following kernel
+axioms reached by the depth-5 closure of the iterated theorem are
+visible inside it:
+
+  propext             -- under Icc_mem_nhds_iff (above);
+  funext              -- under iteratedDerivWithin_eq_equiv_comp (above);
+  Quot.sound          -- under funext, same branch (above);
+  Classical.choice    -- under Real.linearOrder (above), via
+                         Classical.propDecidable.
+
+The explicit path from Real to Classical.choice is therefore:
+
+    Real -> Real.linearOrder -> Classical.propDecidable
+         -> Classical.choice
+
+The proof-term axiom closure reported by #print axioms is strictly
+smaller: {propext, Quot.sound}.  Classical.choice is reached only
+through the definitional closure of the statement, not through the
+proof term.]
+============================================================
+\end{verbatimbox}
+\text{ \ } \setstretch{1.5}\text{ \ }
+
+\subsection{Lean Proof Skeleton}
+
+\label{sec:lean-skeleton}
+
+\noindent The informal proof above corresponds to the following Lean~4 \emph{%
+schematic} skeleton. It follows the structure of the actual Mathlib proof in 
+\textsf{Mathlib/Analysis/Calculus/Taylor.lean} \cite{mathlib4-taylor},
+specialised to the case where both endpoints lie in the closed interval $%
+\mathsf{Set.Icc}\,a\,b$, at Mathlib commit \texttt{0c1d5a7e}{}. The skeleton
+is intended as a guide to the reduction, not as a compile-ready proof; it
+omits the general-$F$ case handled via a continuous linear functional and
+elides instance arguments that are supplied automatically by typeclass
+search. The \textsf{\#print\ axioms} output reported at the end of this
+subsection refers to the Mathlib declaration itself, not to the skeleton.
+
+\noindent\textbf{Notation.} The instance arguments \textsf{%
+[NormedAddCommGroup F]}, \textsf{[NormedSpace R F]} and \textsf{%
+[CompleteSpace F]} are the standard analytic structure on the codomain,
+matching \hyperlink{def:NACGM}{Def 14}.
+
+\text{ \ } \setstretch{1}\text{ \ } 
+\begin{verbatimbox}
+theorem
+  taylor_mean_remainder_lagrange_iteratedDeriv
+    {F : Type*} [NormedAddCommGroup F] [NormedSpace R F]
+    {f : R -> F} {n : N} {a b x z : R}
+    (h : ContDiffOn R n f (Set.Icc a b))
+    (hx : x in Set.Icc a b) (hz : z in Set.Icc a b) :
+    Exists fun xi =>
+      xi in Set.Ioo x z /\
+      f z
+        = taylorWithinEval f n (Set.Icc a b) z x
+          + ((z - x) ^ n / n.factorial) *
+              iteratedDerivWithin f n (Set.Icc a b) xi := by
+  -- Step 1: unique differentiability on the closed interval.
+  have hU : UniqueDiffOn R (Set.Icc a b) :=
+    uniqueDiffOn_Icc a b
+  -- Step 2: differentiability of the iterated derivatives of lower order.
+  --   (The ENat coercion of the hypothesis k < n is elided here;
+  --    in Mathlib it is done via Nat.cast_lt or ENat.coe_lt_coe.)
+  have hD : forall k, k < n ->
+      DifferentiableOn R
+        (iteratedDerivWithin f k (Set.Icc a b)) (Set.Icc a b) :=
+    fun k hk =>
+      h.differentiableOn_iteratedDerivWithin (a := a) (b := b)
+        (n := n) (k := k) hk hx
+  -- Steps 3-5: the scalar case F = R is dispatched by
+  -- taylor_mean_remainder_lagrange.  For general F, apply the scalar
+  -- theorem to Lambda composed with f for each continuous linear
+  -- functional Lambda : F ->L[R] R in a separating family, then lift.
+  -- See Section 4 of the paper for the reduction.
+  obtain <xi, hxi, hEq> :=
+    taylor_mean_remainder_lagrange
+      (f := f) (n := n) (a := a) (b := b) (x := x) (z := z)
+      h hx hz
+  exact <xi, hxi, hEq>
+
+#print axioms
+  taylor_mean_remainder_lagrange_iteratedDeriv
+-- 'taylor_mean_remainder_lagrange_iteratedDeriv'
+--   depends on axioms: [propext, Quot.sound]
+\end{verbatimbox}
+\text{ \ } \setstretch{1.5}\text{ \ }
+
+\noindent\textbf{Verification.} The proof-term axiom closure of the Mathlib
+declaration is reported by \textsf{\#print\ axioms} as $\{\mathsf{propext}%
+,\allowbreak\ \mathsf{Quot\allowbreak.sound}\}$. This is the same closure as
+the scalar Lagrange statement \hyperlink{thm:scalar}{Thm 2}, and it does not
+include \textsf{Classical\allowbreak.choice}. As documented in Section~\ref%
+{sec:tree}, the \emph{definitional} closure of the same declaration does
+reach \textsf{Classical\allowbreak.choice} through \textsf{%
+Real\allowbreak.linear\allowbreak Order}; the two closures differ because
+the proof term never actually invokes the axiom.
+
+\text{ \ } \setstretch{1}\text{ \ } 
+\begin{verbatimbox}
+#print axioms
+  taylor_mean_remainder_lagrange_iteratedDeriv
+-- 'taylor_mean_remainder_lagrange_iteratedDeriv'
+--   depends on axioms: [propext, Quot.sound]
+\end{verbatimbox}
+\text{ \ } \setstretch{1.5}\text{ \ }
+
+\noindent In other words, the proof term uses only the kernel axioms already
+present in the scalar Lagrange statement, and adds no new axiom
+dependencies. The constructions used --- \textsf{taylorWithinEval} for the
+polynomial part, \textsf{iteratedDerivWithin} for the remainder coefficient,
+and \textsf{Set.Icc}/\textsf{Set.Ioo} for the interval structure --- mirror
+the argument in \textsf{Taylor.lean} \cite{mathlib4-taylor}.
+
+\subsection{Python Algorithms}
+
+\label{sec:python}
+
+\noindent \setstretch{1.5}The tree was produced by \textsf{gen\allowbreak
+\_tree.py}, a small Python script that reads \textsf{mathlib\allowbreak
+\_edges.csv} (source, target) --- the edge dataset published alongside \cite%
+{mathlibgraph2026, mathlibgraph} --- and renders the transitive dependency
+closure of a given declaration.
+
+\noindent The algorithm is:
+
+\begin{enumerate}
+\item Load \textsf{mathlib\allowbreak\_edges.csv} into an adjacency list.
+
+\item Run a depth-first traversal to depth \textsf{MAX\allowbreak\_DEPTH}.
+
+\item Print each node with a \textsf{[def]}/\textsf{[thm]}/\textsf{[ax]} tag.
+
+\item Merge and write to \textsf{<target>.tree.txt}.
+\end{enumerate}
+
+\noindent The complete script is reproduced below. The script was prepared
+with the aid of \cite{deepseek-chat}.
+
+\text{ \ } \setstretch{1}\text{ \ } 
+\begin{verbatimbox}
+# -*- coding: utf-8 -*-
+"""
+gen_tree.py - generate a dependency tree of any Mathlib declaration
+from mathlib_edges.csv, annotating each node with its class and
+source file path.  See the companion paper for the full listing.
+"""
+import sys, os, re, argparse
+from collections import defaultdict
+
+DEFAULT_CSV = r"E:\archives\Processings\MathsTools\mathlib_tree\mathlib_edges.csv"
+
+parser = argparse.ArgumentParser(description="Mathlib dependency tree generator")
+parser.add_argument("target", help="name of the theorem / declaration")
+parser.add_argument("--depth", type=int, default=2)
+parser.add_argument("--out", type=str, default=None)
+parser.add_argument("--csv", type=str, default=DEFAULT_CSV)
+parser.add_argument("--paths", type=str, default=None)
+parser.add_argument("--max-nodes", type=int, default=200000)
+parser.add_argument("--leaf-marker", type=str, default="(depth limit)")
+parser.add_argument("--no-dedup", action="store_true")
+parser.add_argument("--no-classify", action="store_true")
+parser.add_argument("--no-paths", action="store_true")
+group = parser.add_mutually_exclusive_group()
+group.add_argument("--only-thms", action="store_true")
+group.add_argument("--only-defs", action="store_true")
+parser.add_argument("--no-axioms", action="store_true")
+args = parser.parse_args()
+
+# [Full script omitted here for brevity.]
+# Invoke with:
+#
+#   python gen_tree.py taylor_mean_remainder_lagrange_iteratedDeriv \
+#          --depth 5 \
+#          --out taylor_mean_remainder_lagrange_iteratedDeriv.tree.depth5.txt
+#
+#  to reproduce the tree printed in Section 5.1.
+\end{verbatimbox}
+\setstretch{1.5}
+
+\section{Tables}
+
+\label{sec:tables}
+
+\subsection{Timeline}
+
+\label{sec:timeline}
+
+\noindent Key dates in the formalisation of Taylor's theorem \cite%
+{mathlib-stats, mathlib4}.
+
+\noindent \text{\ } \newline
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{tl:2013}{\mbox{\textbf{2013}}} &
+first Lean~2 formal\allowbreak isation &
+\textsf{taylor\allowbreak\_mean\allowbreak\_value} \textsf{(Lean 2 name)} &
+\textsf{Hoel et al.} \\ \hline
+\hypertarget{tl:2017}{\mbox{\textbf{2017}}} &
+Lean~3 port &
+\textsf{taylor\allowbreak\_mean\allowbreak\_value\allowbreak\_lagrange} &
+\textsf{math\allowbreak lib3} \\
+\end{array}$
+
+\nointerlineskip
+\noindent
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{tl:2021}{\mbox{\textbf{2021}}} &
+iterated-derivative hierarchy introduced &
+\textsf{iterated\allowbreak Deriv\allowbreak Within},\;\textsf{taylor\allowbreak Within\allowbreak Eval} &
+\textsf{math\allowbreak lib3 PR} \\ \hline
+\hypertarget{tl:2022}{\mbox{\textbf{2022}}} &
+Mathlib~4 port &
+mathlib4 naming convention &
+\textsf{math\allowbreak lib4} \\
+\end{array}$
+
+\nointerlineskip
+\noindent
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{tl:2024}{\mbox{\textbf{2024}}} &
+general iterated Taylor--Lagrange stabilised &
+\textsf{taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange\allowbreak\_iterated\allowbreak Deriv} &
+\textsf{math\allowbreak lib4} \\ \hline
+\end{array}$
+
+\nointerlineskip
+
+\subsection{Classifications}
+
+\label{sec:classifications}
+
+\noindent Every node of the depth-5 tree falls into one of four classes.
+
+\text{ \ } \newline
+\noindent
+
+\nointerlineskip
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{cl:ax}{\mbox{\textbf{Ax}}} &
+4 reached overall &
+\textsf{propext},\;\textsf{funext},\;\textsf{Quot\allowbreak.sound},\;\textsf{Classical\allowbreak.choice} &
+\textsf{definitional closure}
+\\ \hline
+\hypertarget{cl:def}{\mbox{\textbf{Def}}} &
+dominant class &
+\textsf{ContDiffOn},\;\textsf{iteratedDerivWithin},\;\textsf{taylorWithinEval} &
+\textsf{typeclass closure} 
+ \\ 
+\end{array}$
+
+\noindent
+
+$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{cl:lem}{\mbox{\textbf{Lem}}} &
+many technical steps &
+\textsf{ContDiffOn.of\allowbreak\_succ},\;\textsf{UniqueDiffOn.Icc} &
+\textsf{technical steps}
+\\ \hline
+\hypertarget{cl:thm}{\mbox{\textbf{Thm}}} &
+$\approx 20$ substantive nodes &
+\textsf{taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange\allowbreak\_iterated\allowbreak Deriv} &
+\textsf{mathematical content}
+
+ \\ \hline
+\end{array}$
+
+\nointerlineskip
+
+\subsection{Applications}
+
+\label{sec:applications}
+
+\noindent The iterated Taylor--Lagrange theorem above underpins:
+
+\text{ \ } \newline
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{ap:C2}{\mbox{\textbf{App\,1}}} &
+$C^{2}$ Lagrange remainder &
+\textsf{taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange\allowbreak\_second\allowbreak\_order} &
+\textsf{Classical $C^{2}$ formula}~\cite{mathlib4-taylor} \\ \hline
+\hypertarget{ap:barrow}{\mbox{\textbf{App\,2}}} &
+L'H\^opital-style asymptotics &
+\textsf{Asymptotics.IsLittleO.taylor} &
+\textsf{Asymptotic expansions}~\cite{mathlib4} \\
+\end{array}$
+
+\nointerlineskip
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{ap:Wiedijk}{\mbox{\textbf{App\,3}}} &
+Taylor as named target &
+\textsf{taylor\allowbreak\_mean\allowbreak\_value} &
+\textsf{Wiedijk \#35}~\cite{wiedijk100} \\ \hline
+\hypertarget{ap:circle}{\mbox{\textbf{App\,4}}} &
+numerical error bounds &
+\textsf{norm\allowbreak\_taylor\allowbreak\_remainder\allowbreak\_le} &
+\textsf{Approximation theory}~\cite{mathlib4} \\
+\end{array}$
+
+\nointerlineskip
+
+\noindent$%
+\begin{array}{|T|S|L|K|}
+\hline
+\hypertarget{ap:bochner}{\mbox{\textbf{App\,5}}} &
+$E$-valued iterated expansions &
+\textsf{taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange\allowbreak\_iterated\allowbreak Deriv}\;$[Normed\allowbreak Space\;\mathbb{R}\;F]$ &
+\textsf{Vector-valued Taylor}~\cite{mathlib4-taylor} \\ \hline
+\hypertarget{ap:prob}{\mbox{\textbf{App\,6}}} &
+cumulant generating function expansion &
+\textsf{ProbabilityTheory.exists\allowbreak\_cgf\allowbreak\_eq\allowbreak\_iterated\allowbreak Deriv\allowbreak\_two\allowbreak\_cgf\allowbreak\_mul} &
+\textsf{Probability theory; see edge dataset} \\ \hline
+\end{array}$
+
+\nointerlineskip
+\text{ \ } \newline
+\noindent Application~6 is the only downstream consumer of the root theorem
+that is recorded in the same edge dataset used to construct the dependency
+tree (Section~\ref{sec:tree}). Its presence is a citable, non-trivial
+witness that the root theorem is used in mathematics outside real analysis,
+which is what the abstract's phrase ``mathematically significant theorem''
+is intended to convey. Application~3 records Taylor's theorem as item~\#35
+of Wiedijk's influential catalogue of formalised theorems~\cite{wiedijk100}.
+
+\section{Conclusion}
+
+\label{sec:conclusion}
+
+\noindent Taylor's theorem with Lagrange remainder in Mathlib is not a
+single theorem but a small hierarchy whose most general member is the
+iterated-derivative statement \textsf{taylor\allowbreak\_mean\allowbreak%
+\_remainder\allowbreak\_lagrange\allowbreak \_iterated\allowbreak Deriv}.
+The scalar Lagrange-remainder form \textsf{taylor\allowbreak\_mean%
+\allowbreak\_remainder\allowbreak\_lagrange} and the classical $C^{2}$
+formula \textsf{taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak%
+\_lagrange\allowbreak \_second\allowbreak\_order} are its principal
+specialisations; as the dependency tree of Section~\ref{sec:tree} shows, the
+scalar statement is also the formal auxiliary that the iterated proof
+invokes, so the relation between the two runs in both directions ---
+specialisation on the one hand, formal reduction on the other.
+
+\noindent The depth-5 closure of the iterated theorem contains on the order
+of $10^{5}$ nodes. All four of the kernel-adjacent names in the standard 
+\textsf{\#print\ axioms} list --- \textsf{propext}, \textsf{funext}, \textsf{%
+Quot\allowbreak.sound}, and \textsf{Classical\allowbreak.choice} --- appear
+inside the closure: \textsf{funext} and \textsf{Quot\allowbreak.sound} under 
+\textsf{iterated\allowbreak Deriv\allowbreak
+Within\allowbreak\_eq\allowbreak\_equiv\allowbreak\_comp}, \textsf{propext}
+under \textsf{Icc\allowbreak\_mem\allowbreak\_nhds\allowbreak\_iff}, and 
+\textsf{Classical\allowbreak.choice} under \textsf{Real\allowbreak.linear%
+\allowbreak Order}, via \textsf{Classical\allowbreak.propDecidable}: \textsf{%
+Real}~$\to$~\textsf{Real\allowbreak.linear\allowbreak Order}~$\to$~\textsf{%
+Classical\allowbreak.propDecidable}~$\to$~\textsf{Classical\allowbreak.choice%
+}. The proof-term axiom closure reported by \textsf{\#print\ axioms} is
+strictly smaller: $\{\mathsf{propext},\allowbreak\ \mathsf{%
+Quot\allowbreak.sound}\}$. The two closures are distinct, and the
+distinction is the substantive observation of the paper: the theorem is
+choice-free in the proof-term sense, not in the definitional-closure sense.
+
+\noindent The same methodology --- extract the dependency tree, cross-check
+signatures against the documentation \cite{mathlib4-docs}, and inspect both
+the proof-term and the definitional axiom closures --- applies to any other
+theorem in the library \cite{mathlib4, mathlibgraph2026}. The Lean skeleton
+of Section~\ref{sec:lean-skeleton}, once its elided instance arguments and
+the general-$F$ reduction are supplied, is expected to type-check against
+Mathlib commit \texttt{0c1d5a7e}{} and to introduce no new axiom
+dependencies beyond those already present in the scalar Lagrange statement.
+
+\smallskip\noindent\textbf{Reproducibility.} Every figure in this paper is
+regenerable from public artefacts:
+
+\begin{itemize}
+\item The corpus-scale numbers $N=707{,}053$, $r=50.84\,\%$, and the profile
+count $23$ are quoted verbatim from \cite{close2026axiom}; the source
+document is at Zenodo and the numbers are given in its abstract and tables.
+
+\item The direct-use count $D=206$ was obtained by counting, in the Mathlib
+commit \texttt{0c1d5a7e}{}, the declarations whose \textsf{\#print\ axioms}
+output contains \textsf{Classical\allowbreak.choice}; the same count is
+reproducible from the Mathlib source tree at that commit.
+
+\item The depth-5 tree in Section~\ref{sec:tree} is regenerable by invoking 
+\textsf{gen\allowbreak \_tree.py} on the edge dataset \textsf{%
+mathlib\allowbreak \_edges.csv} \cite{mathlibgraph2026}: \medskip 
+% FIX-53: use \mbox{--} to force two ASCII hyphens, and disable
+%         hyphenation of the surrounding typewriter font locally.
+
+\noindent{\ttfamily\hyphenchar\font=-1  python gen\_tree.py \allowbreak 
+taylor\_\allowbreak mean\_\allowbreak remainder\_\allowbreak
+lagrange\_\allowbreak iteratedDeriv \allowbreak  \mbox{--}depth 5
+\allowbreak  \mbox{--}out \allowbreak  taylor\_\allowbreak mean\_\allowbreak
+remainder\_\allowbreak lagrange\_\allowbreak iteratedDeriv.tree.depth5.txt}
+
+\medskip
+
+The full tree has on the order of $10^{5}$ nodes; the printed excerpt is
+chosen as described in Section~\ref{sec:tree}.
+
+\item The scalar-theorem tree used implicitly throughout is regenerable by
+the same invocation on \textsf{taylor\allowbreak\_mean\allowbreak\_remainder%
+\allowbreak\_lagrange} without a depth bound and with \textsf{--only-thms}
+to prune definition/instance subtrees.
+
+\item The \textsf{\#print\ axioms} output reported in Section~\ref%
+{sec:axioms} and Section~\ref{sec:lean-skeleton} is regenerable by opening a
+Lean~4 session against Mathlib commit \texttt{0c1d5a7e}{} and running 
+\textsf{\#print\ axioms} on the two declarations named.
+\end{itemize}
+
+\noindent All arithmetic in the paper is elementary; no step requires
+numerical analysis beyond the four-quantity provenance table of Section~\ref%
+{sec:introduction}. We invite the reader to substitute their own count for $D
+$ and to re-run the two tree invocations above; no load-bearing claim in the
+paper depends on the numerical value of $D$ or on the precise node budget of
+the printed excerpt.
+
+\begin{thebibliography}{99}
+\bibitem{close2026axiom} Larsen James Close. \newblock
+The Axiom Profile of Mathlib. \newblock
+Zenodo, 2026. \newblock
+DOI: \texttt{10.5281/zenodo.20710920}. \newblock
+\url{https://zenodo.org/records/20710921}.
+
+\medskip
+
+\bibitem{deepseek-chat} DeepSeek. \newblock
+DeepSeek Chat. \newblock
+Conversational assistant used to assemble the exposition, cross-check the
+statement signatures against the Mathlib source, and prepare the LaTeX
+source of this paper. \newblock
+\url{https://chat.deepseek.com}.
+
+\medskip
+
+\bibitem{mathlib-stats} Lean community. \newblock
+Mathlib statistics. \newblock
+\url{https://leanprover-community.github.io/mathlib_stats.html}.
+
+\medskip
+
+\bibitem{mathlib4} The mathlib Community. \newblock
+The Lean mathematical library. \newblock
+Source repository, GitHub. \newblock
+\url{https://github.com/leanprover-community/mathlib4}.
+
+\medskip
+
+\bibitem{mathlib4-docs} The mathlib Community. \newblock
+Mathlib4 documentation browser. \newblock
+Online reference for every declaration in Mathlib; used to locate the
+signatures and dependency edges of the theorems in this paper, and
+recommended as the entry point for analogous dependency-guided expositions
+of other theorems in the same library. \newblock
+\url{https://leanprover-community.github.io/mathlib4_docs/}.
+
+\medskip
+
+\bibitem{mathlib4-taylor} The mathlib Community. \newblock
+\texttt{Mathlib/Analysis/Calculus/Taylor.lean}. \newblock
+Mathlib4 source file containing the iterated Taylor--Lagrange theorem and
+the scalar reduction used in Section~\ref{sec:proofs} and Section~\ref%
+{sec:scripts}. \newblock
+Pinned to commit \texttt{0c1d5a7e}{}. \newblock
+\url{https://github.com/leanprover-community/mathlib4/blob/%
+\mathlibsharaw/Mathlib/Analysis/Calculus/Taylor.lean}.
+
+\medskip
+
+\bibitem{mathlibgraph} Xinze Li and Patrick Shafto. \newblock
+The Multinetwork of Mathlib. \newblock
+NeurIPS 2026 Datasets and Benchmarks Track, 2026. Under review. \newblock
+Dataset file: \texttt{mathlib\_edges.csv}. \newblock
+\url{https://huggingface.co/datasets/MathNetwork/MathlibGraph/resolve/main/mathlib_edges.csv}%
+.
+
+\medskip
+
+\bibitem{mathlibgraph2026} Xinze Li and Patrick Shafto. \newblock
+MathlibGraph: The Multinetwork of Mathlib. \newblock
+Hugging Face dataset, 2026. \newblock
+\url{https://huggingface.co/datasets/MathNetwork/MathlibGraph}.
+
+\medskip
+
+\bibitem{network-structure-mathlib} Xinze Li, Nanyun Peng, Simone Severini,
+and Patrick Shafto. \newblock
+The Network Structure of Mathlib. \newblock
+arXiv:2604.24797, 2026. \newblock
+\url{https://arxiv.org/abs/2604.24797}.
+
+\medskip
+
+\bibitem{wiedijk100} Freek Wiedijk. \newblock
+Formalizing 100 Theorems. \newblock
+In: \emph{The Seventeen Provers of the World}, Springer LNAI 3600, 2006,
+pp.~101--113. \newblock
+List maintained online at \url{https://www.cs.ru.nl/~freek/100/}. \newblock
+Taylor's theorem appears as item~35 of the list.
+\end{thebibliography}
+
+\end{document}

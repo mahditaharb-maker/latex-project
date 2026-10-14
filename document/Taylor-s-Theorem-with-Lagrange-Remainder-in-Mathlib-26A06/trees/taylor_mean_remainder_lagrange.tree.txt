@@ -1,0 +1,917 @@
+============================================================
+Dependency tree for: taylor_mean_remainder_lagrange
+Source: E:\archives\Processings\compile\scripts\mathlib_edges.csv
+Max depth: unlimited
+(*) = already expanded elsewhere in this tree
+[def] = definition / typeclass instance
+[thm] = theorem / lemma
+[ax]  = Lean kernel axiom (propext, funext, Quot.sound, Classical.choice)
+(depth limit) = node has no further dependencies in the CSV
+Filter: --only-thms (pruned [def] subtrees; [ax] retained)
+Node budget: 300,000
+============================================================
+
+taylor_mean_remainder_lagrange  [thm]
+|-- Mathlib.Meta.NormNum.isNat_ofNat  [thm]   (*)
+|-- Mathlib.Meta.Positivity.pos_of_isNat  [thm]   (*)
+|-- Nat.cast_add  [thm]   (*)
+|-- Nat.cast_add_one_ne_zero  [thm]
+|   |-- Nat.cast_one  [thm]   (*)
+|   |-- Nat.cast_zero  [thm]   (*)
+|   |-- Nat.succ_ne_zero  [thm]   (*)
+|   |-- eq_false'  [thm]   (*)
+|   `-- noConfusion_of_Nat  [thm]   (*)
+|-- Nat.cast_mul  [thm]   (*)
+|-- Nat.cast_nonneg'  [thm]   (*)
+|-- Nat.cast_one  [thm]   (*)
+|-- Nat.cast_pos'  [thm]   (*)
+|-- Nat.factorial_pos  [thm]
+|   |-- Nat.mul_pos  [thm]   (*)
+|   |-- Nat.succ_pos  [thm]   (*)
+|   `-- Nat.zero_lt_one  [thm]   (*)
+|-- NeZero.charZero_one  [thm]   (*)
+|-- RCLike.charZero_rclike  [thm]
+|   `-- RingHom.charZero_iff  [thm]
+|       |-- Function.Injective.eq_iff  [thm]   (*)
+|       |-- Nat.cast_inj  [thm]   (*)
+|       |-- map_natCast  [thm]   (*)
+|       `-- propext  [ax]   (*)
+|-- Set.mem_Ioo  [thm]
+|-- congr_arg₂  [thm]   (*)
+|-- continuousOn_const  [thm]
+|   `-- continuous_const  [thm]   (*)
+|-- continuousOn_id'  [thm]
+|   `-- continuousOn_id  [thm]
+|       `-- continuous_id  [thm]   (*)
+|-- div_neg  [thm]
+|   `-- div_neg_eq_neg_div  [thm]
+|       |-- division_def  [thm]
+|       |   `-- div_eq_mul_inv  [thm]   (*)
+|       |-- inv_eq_one_div  [thm]   (*)
+|       |-- mul_one_div  [thm]
+|       |   |-- div_eq_mul_inv  [thm]   (*)
+|       |   `-- one_mul  [thm]   (*)
+|       |-- neg_mul_eq_mul_neg  [thm]   (*)
+|       `-- one_div_neg_eq_neg_one_div  [thm]
+|           |-- mul_neg  [thm]   (*)
+|           |-- mul_one  [thm]   (*)
+|           |-- neg_eq_neg_one_mul  [thm]   (*)
+|           |-- one_div_mul_one_div_rev  [thm]
+|           |   |-- div_eq_mul_inv  [thm]   (*)
+|           |   |-- eq_self  [thm]   (*)
+|           |   |-- mul_inv_rev  [thm]   (*)
+|           |   |-- of_eq_true  [thm]   (*)
+|           |   `-- one_mul  [thm]   (*)
+|           `-- one_div_neg_one_eq_neg_one  [thm]
+|               |-- eq_one_div_of_mul_eq_one_right  [thm]
+|               |   |-- eq_inv_of_mul_eq_one_right  [thm]
+|               |   |   `-- inv_eq_of_mul_eq_one_right  [thm]   (*)
+|               |   `-- one_div  [thm]   (*)
+|               |-- neg_mul_neg  [thm]   (*)
+|               `-- one_mul  [thm]   (*)
+|-- div_one  [thm]   (*)
+|-- eq_false  [thm]   (*)
+|-- eq_self  [thm]   (*)
+|-- isReduced_of_noZeroDivisors  [thm]   (*)
+|-- monomial_has_deriv_aux  [thm]
+|   |-- ContinuousMul.to_continuousSMul  [thm]
+|   |   `-- ContinuousMul.continuous_mul  [thm]   (*)
+|   |-- HasDerivAt.add_const  [thm]
+|   |   `-- hasDerivAt_add_const_iff  [thm]
+|   |       `-- hasDerivAtFilter_add_const_iff  [thm]
+|   |           `-- hasFDerivAtFilter_add_const_iff  [thm]
+|   |               |-- funext  [ax]   (*)
+|   |               |-- iff_self  [thm]   (*)
+|   |               `-- of_eq_true  [thm]   (*)
+|   |-- HasDerivAt.congr_simp  [thm]
+|   |-- Nat.cast_add  [thm]   (*)
+|   |-- Nat.cast_one  [thm]   (*)
+|   |-- eq_of_heq  [thm]   (*)
+|   |-- eq_self  [thm]   (*)
+|   |-- funext  [ax]   (*)
+|   |-- hasDerivAt_id  [thm]
+|   |   |-- ContinuousMul.to_continuousSMul  [thm]   (*)
+|   |   |-- NormedDivisionRing.to_isTopologicalDivisionRing  [thm]
+|   |   |   `-- NormedDivisionRing.to_continuousInv₀  [thm]
+|   |   |       |-- IsClosed.isOpen_compl  [thm]   (*)
+|   |   |       |-- IsOpen.mem_nhds  [thm]   (*)
+|   |   |       |-- Metric.closedBall_mem_nhds  [thm]
+|   |   |       |   |-- Filter.mem_of_superset  [thm]   (*)
+|   |   |       |   |-- Metric.ball_mem_nhds  [thm]   (*)
+|   |   |       |   `-- Metric.ball_subset_closedBall  [thm]   (*)
+|   |   |       |-- Metric.isClosed_closedBall  [thm]
+|   |   |       |   |-- OrderTopology.to_orderClosedTopology  [thm]   (*)
+|   |   |       |   |-- continuous_const  [thm]   (*)
+|   |   |       |   |-- continuous_id'  [thm]   (*)
+|   |   |       |   `-- isClosed_le  [thm]   (*)
+|   |   |       |-- of_eq_true  [thm]   (*)
+|   |   |       `-- uniformContinuousOn_inv₀  [thm]
+|   |   |           |-- Filter.HasBasis.mem_iff  [thm]   (*)
+|   |   |           |-- LT.lt.trans_le  [thm]   (*)
+|   |   |           |-- Metric.uniformContinuousOn_iff_le  [thm]   (*)
+|   |   |           |-- Set.subset_compl_comm  [thm]
+|   |   |           |   `-- le_compl_iff_le_compl  [thm]
+|   |   |           |       `-- le_compl_comm  [thm]   (*)
+|   |   |           |-- congr_arg  [thm]   (*)
+|   |   |           |-- congr_arg₂  [thm]   (*)
+|   |   |           |-- dist_comm  [thm]   (*)
+|   |   |           |-- dist_eq_norm  [thm]   (*)
+|   |   |           |-- dist_nonneg  [thm]   (*)
+|   |   |           |-- div_one  [thm]   (*)
+|   |   |           |-- eq_self  [thm]   (*)
+|   |   |           |-- funext  [ax]   (*)
+|   |   |           |-- inv_anti₀  [thm]
+|   |   |           |   |-- LT.lt.trans_le  [thm]   (*)
+|   |   |           |   `-- inv_le_inv₀  [thm]
+|   |   |           |       |-- inv_le_iff_one_le_mul₀'  [thm]
+|   |   |           |       |   |-- inv_mul_le_iff₀  [thm]   (*)
+|   |   |           |       |   |-- mul_one  [thm]   (*)
+|   |   |           |       |   `-- propext  [ax]   (*)
+|   |   |           |       |-- le_mul_inv_iff₀  [thm]   (*)
+|   |   |           |       |-- one_mul  [thm]   (*)
+|   |   |           |       `-- propext  [ax]   (*)
+|   |   |           |-- inv_nonneg_of_nonneg  [thm]
+|   |   |           |   `-- inv_nonneg  [thm]   (*)
+|   |   |           |-- inv_pos_of_pos  [thm]   (*)
+|   |   |           |-- inv_sub_inv'  [thm]   (*)
+|   |   |           |-- le_of_lt  [thm]   (*)
+|   |   |           |-- mul_le_mul  [thm]   (*)
+|   |   |           |-- mul_pos  [thm]   (*)
+|   |   |           |-- norm_inv  [thm]   (*)
+|   |   |           |-- norm_mul  [thm]   (*)
+|   |   |           |-- of_decide_eq_true  [thm]   (*)
+|   |   |           |-- of_eq_true  [thm]   (*)
+|   |   |           |-- one_mul  [thm]   (*)
+|   |   |           |-- one_ne_zero  [thm]   (*)
+|   |   |           |-- pow_pos  [thm]   (*)
+|   |   |           `-- propext  [ax]   (*)
+|   |   `-- hasDerivAtFilter_id  [thm]
+|   |       |-- ContinuousMul.to_continuousSMul  [thm]   (*)
+|   |       |-- NormedDivisionRing.to_isTopologicalDivisionRing  [thm]   (*)
+|   |       `-- hasFDerivAtFilter_id  [thm]
+|   |           |-- Asymptotics.IsLittleOTVS.congr_left  [thm]   (*)
+|   |           |-- HasFDerivAtFilter.of_isLittleOTVS  [thm]   (*)
+|   |           |-- eq_self  [thm]   (*)
+|   |           |-- forall_congr  [thm]   (*)
+|   |           |-- implies_true  [thm]   (*)
+|   |           `-- of_eq_true  [thm]   (*)
+|   |-- heq_of_eq  [thm]   (*)
+|   |-- mul_assoc  [thm]   (*)
+|   |-- mul_comm  [thm]   (*)
+|   |-- neg_one_mul  [thm]   (*)
+|   `-- of_eq_true  [thm]   (*)
+|-- mul_ne_zero  [thm]   (*)
+|-- mul_neg  [thm]   (*)
+|-- mul_one  [thm]   (*)
+|-- neg_div  [thm]   (*)
+|-- neg_mul  [thm]   (*)
+|-- not_false_eq_true  [thm]   (*)
+|-- of_decide_eq_true  [thm]   (*)
+|-- of_eq_true  [thm]   (*)
+|-- one_mul  [thm]   (*)
+|-- one_ne_zero  [thm]   (*)
+|-- pow_ne_zero  [thm]   (*)
+|-- propext  [ax]   (*)
+|-- taylor_mean_remainder  [thm]
+|   |-- ContinuousMul.to_continuousSMul  [thm]   (*)
+|   |-- Nat.cast_pos'  [thm]   (*)
+|   |-- Nat.factorial_pos  [thm]   (*)
+|   |-- NeZero.charZero_one  [thm]   (*)
+|   |-- RCLike.charZero_rclike  [thm]   (*)
+|   |-- congr_arg  [thm]   (*)
+|   |-- congr_arg₂  [thm]   (*)
+|   |-- continuousOn_taylorWithinEval  [thm]
+|   |   |-- Nat.lt_succ_iff  [thm]
+|   |   |   |-- Nat.le_of_lt_succ  [thm]   (*)
+|   |   |   `-- Nat.lt_succ_of_le  [thm]   (*)
+|   |   |-- contDiffOn_nat_iff_continuousOn_differentiableOn_deriv  [thm]
+|   |   |   |-- contDiffOn_iff_continuousOn_differentiableOn_deriv  [thm]
+|   |   |   |   |-- UniformContinuousConstSMul.to_continuousConstSMul  [thm]   (*)
+|   |   |   |   |-- contDiffOn_iff_continuousOn_differentiableOn  [thm]
+|   |   |   |   |   |-- ContDiffOn.continuousOn_iteratedFDerivWithin  [thm]
+|   |   |   |   |   |   |-- ContDiffOn.of_le  [thm]
+|   |   |   |   |   |   |   `-- ContDiffWithinAt.of_le  [thm]   (*)
+|   |   |   |   |   |   `-- le_rfl  [thm]   (*)
+|   |   |   |   |   |-- ContDiffOn.differentiableOn_iteratedFDerivWithin  [thm]
+|   |   |   |   |   |   |-- ContDiffOn.of_le  [thm]   (*)
+|   |   |   |   |   |   |-- ENat.add_one_natCast_le_withTop_of_lt  [thm]   (*)
+|   |   |   |   |   |   |-- UniformContinuousConstSMul.to_continuousConstSMul  [thm]   (*)
+|   |   |   |   |   |   |-- lt_add_one  [thm]   (*)
+|   |   |   |   |   |   `-- smulCommClass_self  [thm]   (*)
+|   |   |   |   |   |-- UniformContinuousConstSMul.to_continuousConstSMul  [thm]   (*)
+|   |   |   |   |   |-- contDiffOn_of_continuousOn_differentiableOn  [thm]
+|   |   |   |   |   |   |-- Set.insert_eq_of_mem  [thm]   (*)
+|   |   |   |   |   |   |-- UniformContinuousConstSMul.to_continuousConstSMul  [thm]   (*)
+|   |   |   |   |   |   |-- eq_of_heq  [thm]   (*)
+|   |   |   |   |   |   |-- eq_self  [thm]   (*)
+|   |   |   |   |   |   |-- funext  [ax]   (*)
+|   |   |   |   |   |   |-- heq_of_eq  [thm]   (*)
+|   |   |   |   |   |   |-- le_trans  [thm]   (*)
+|   |   |   |   |   |   |-- lt_of_lt_of_le  [thm]   (*)
+|   |   |   |   |   |   |-- of_eq_true  [thm]   (*)
+|   |   |   |   |   |   |-- self_mem_nhdsWithin  [thm]   (*)
+|   |   |   |   |   |   `-- smulCommClass_self  [thm]   (*)
+|   |   |   |   |   `-- smulCommClass_self  [thm]   (*)
+|   |   |   |   |-- forall_congr  [thm]   (*)
+|   |   |   |   |-- funext  [ax]   (*)
+|   |   |   |   |-- iff_self  [thm]   (*)
+|   |   |   |   |-- implies_congr  [thm]   (*)
+|   |   |   |   |-- iteratedFDerivWithin_eq_equiv_comp  [thm]
+|   |   |   |   |   |-- Function.comp_assoc  [thm]
+|   |   |   |   |   |-- Function.id_comp  [thm]
+|   |   |   |   |   |-- LinearIsometryEquiv.self_comp_symm  [thm]
+|   |   |   |   |   |   `-- LinearIsometryEquiv.symm_comp_self  [thm]
+|   |   |   |   |   |       |-- LinearIsometryEquiv.symm_apply_apply  [thm]
+|   |   |   |   |   |       |   `-- LinearEquiv.symm_apply_apply  [thm]
+|   |   |   |   |   |       |       `-- LinearEquiv.left_inv  [thm]   (*)
+|   |   |   |   |   |       `-- funext  [ax]   (*)
+|   |   |   |   |   |-- UniformContinuousConstSMul.to_continuousConstSMul  [thm]   (*)
+|   |   |   |   |   |-- iteratedDerivWithin_eq_equiv_comp  [thm]
+|   |   |   |   |   |   |-- UniformContinuousConstSMul.to_continuousConstSMul  [thm]   (*)
+|   |   |   |   |   |   |-- funext  [ax]   (*)
+|   |   |   |   |   |   `-- smulCommClass_self  [thm]   (*)
+|   |   |   |   |   `-- smulCommClass_self  [thm]   (*)
+|   |   |   |   |-- of_eq_true  [thm]   (*)
+|   |   |   |   |-- propext  [ax]   (*)
+|   |   |   |   `-- smulCommClass_self  [thm]   (*)
+|   |   |   |-- forall_congr  [thm]   (*)
+|   |   |   |-- iff_self  [thm]   (*)
+|   |   |   |-- implies_congr  [thm]   (*)
+|   |   |   |-- of_eq_true  [thm]   (*)
+|   |   |   `-- propext  [ax]   (*)
+|   |   |-- continuousOn_const  [thm]   (*)
+|   |   |-- continuousOn_id  [thm]   (*)
+|   |   |-- funext  [ax]   (*)
+|   |   |-- propext  [ax]   (*)
+|   |   `-- taylor_within_apply  [thm]
+|   |       |-- Nat.cast_add  [thm]   (*)
+|   |       |-- Nat.cast_mul  [thm]   (*)
+|   |       |-- Nat.cast_one  [thm]   (*)
+|   |       |-- eq_self  [thm]   (*)
+|   |       |-- inv_one  [thm]   (*)
+|   |       |-- iteratedDerivWithin_zero  [thm]
+|   |       |   |-- eq_self  [thm]   (*)
+|   |       |   |-- funext  [ax]   (*)
+|   |       |   `-- of_eq_true  [thm]   (*)
+|   |       |-- mul_inv_rev  [thm]   (*)
+|   |       |-- mul_one  [thm]   (*)
+|   |       |-- of_eq_true  [thm]   (*)
+|   |       |-- one_smul  [thm]   (*)
+|   |       |-- pow_zero  [thm]   (*)
+|   |       |-- taylorWithinEval_succ  [thm]
+|   |       |   |-- Nat.cast_add  [thm]   (*)
+|   |       |   |-- Nat.cast_mul  [thm]   (*)
+|   |       |   |-- Nat.cast_one  [thm]   (*)
+|   |       |   |-- Nat.factorial_succ  [thm]
+|   |       |   |-- Polynomial.eval_C  [thm]
+|   |       |   |   `-- Polynomial.eval₂_C  [thm]   (*)
+|   |       |   |-- Polynomial.eval_X  [thm]
+|   |       |   |   `-- Polynomial.eval₂_X  [thm]
+|   |       |   |       |-- MulZeroClass.zero_mul  [thm]   (*)
+|   |       |   |       |-- Polynomial.eval₂_eq_sum  [thm]   (*)
+|   |       |   |       |-- Polynomial.sum_X_index  [thm]
+|   |       |   |       |   `-- Polynomial.sum_monomial_index  [thm]   (*)
+|   |       |   |       |-- eq_self  [thm]   (*)
+|   |       |   |       |-- map_one  [thm]   (*)
+|   |       |   |       |-- of_eq_true  [thm]   (*)
+|   |       |   |       |-- one_mul  [thm]   (*)
+|   |       |   |       `-- pow_one  [thm]   (*)
+|   |       |   |-- Polynomial.eval_sub  [thm]
+|   |       |   |   `-- Polynomial.eval₂_sub  [thm]
+|   |       |   |       |-- Polynomial.eval₂_add  [thm]   (*)
+|   |       |   |       `-- Polynomial.eval₂_neg  [thm]
+|   |       |   |           |-- Polynomial.eval₂_add  [thm]   (*)
+|   |       |   |           |-- Polynomial.eval₂_zero  [thm]   (*)
+|   |       |   |           `-- propext  [ax]   (*)
+|   |       |   |-- PolynomialModule.comp_eval  [thm]
+|   |       |   |   |-- AddCommMonoid.nat_isScalarTower  [thm]
+|   |       |   |   |   |-- add_smul  [thm]   (*)
+|   |       |   |   |   |-- eq_self  [thm]   (*)
+|   |       |   |   |   |-- of_eq_true  [thm]   (*)
+|   |       |   |   |   |-- one_smul  [thm]   (*)
+|   |       |   |   |   `-- zero_smul  [thm]   (*)
+|   |       |   |   |-- LinearMap.comp_apply  [thm]
+|   |       |   |   |-- Mathlib.Meta.NormNum.isNat_ofNat  [thm]   (*)
+|   |       |   |   |-- Nat.cast_one  [thm]   (*)
+|   |       |   |   |-- Polynomial.eval_pow  [thm]
+|   |       |   |   |   `-- Polynomial.eval₂_pow  [thm]
+|   |       |   |   |       `-- RingHom.map_pow  [thm]
+|   |       |   |   |           `-- map_pow  [thm]   (*)
+|   |       |   |   |-- PolynomialModule.comp_single  [thm]
+|   |       |   |   |   |-- PolynomialModule.comp_apply  [thm]
+|   |       |   |   |   |-- PolynomialModule.eval_single  [thm]
+|   |       |   |   |   |   `-- smul_zero  [thm]   (*)
+|   |       |   |   |   `-- PolynomialModule.map_single  [thm]
+|   |       |   |   |       |-- Finsupp.mapRange_single  [thm]
+|   |       |   |   |       `-- LinearMap.map_zero  [thm]   (*)
+|   |       |   |   |-- PolynomialModule.eval_single  [thm]   (*)
+|   |       |   |   |-- PolynomialModule.eval_smul  [thm]
+|   |       |   |   |   |-- AddCommMonoid.nat_isScalarTower  [thm]   (*)
+|   |       |   |   |   |-- Mathlib.Meta.NormNum.isNat_ofNat  [thm]   (*)
+|   |       |   |   |   |-- Nat.cast_one  [thm]   (*)
+|   |       |   |   |   |-- Polynomial.eval_add  [thm]
+|   |       |   |   |   |   `-- Polynomial.eval₂_add  [thm]   (*)
+|   |       |   |   |   |-- Polynomial.eval_monomial  [thm]
+|   |       |   |   |   |   `-- Polynomial.eval₂_monomial  [thm]
+|   |       |   |   |   |       |-- MulZeroClass.zero_mul  [thm]   (*)
+|   |       |   |   |   |       |-- Polynomial.eval₂_eq_sum  [thm]   (*)
+|   |       |   |   |   |       |-- Polynomial.sum_monomial_index  [thm]   (*)
+|   |       |   |   |   |       |-- eq_self  [thm]   (*)
+|   |       |   |   |   |       `-- of_eq_true  [thm]   (*)
+|   |       |   |   |   |-- Polynomial.induction_on'  [thm]
+|   |       |   |   |   |   `-- Polynomial.induction_on  [thm]
+|   |       |   |   |   |       |-- Polynomial.sum_C_mul_X_pow_eq  [thm]
+|   |       |   |   |   |       |   |-- Polynomial.sum_monomial_eq  [thm]
+|   |       |   |   |   |       |   |   |-- Finsupp.sum_single  [thm]   (*)
+|   |       |   |   |   |       |   |   |-- Polynomial.ofFinsupp_sum  [thm]
+|   |       |   |   |   |       |   |   `-- congr_arg  [thm]   (*)
+|   |       |   |   |   |       |   |-- eq_self  [thm]   (*)
+|   |       |   |   |   |       |   |-- funext  [ax]   (*)
+|   |       |   |   |   |       |   `-- of_eq_true  [thm]   (*)
+|   |       |   |   |   |       |-- eq_of_heq  [thm]   (*)
+|   |       |   |   |   |       |-- mul_one  [thm]   (*)
+|   |       |   |   |   |       `-- pow_zero  [thm]   (*)
+|   |       |   |   |   |-- PolynomialModule.eval_single  [thm]   (*)
+|   |       |   |   |   |-- PolynomialModule.induction_linear  [thm]
+|   |       |   |   |   |   `-- Finsupp.induction_linear  [thm]
+|   |       |   |   |   |-- PolynomialModule.monomial_smul_single  [thm]
+|   |       |   |   |   |   |-- Finsupp.mapDomain_single  [thm]
+|   |       |   |   |   |   |   `-- Finsupp.single_zero  [thm]   (*)
+|   |       |   |   |   |   |-- Finsupp.smul_single  [thm]
+|   |       |   |   |   |   |   |-- Finsupp.mapRange_single  [thm]   (*)
+|   |       |   |   |   |   |   `-- smul_zero  [thm]   (*)
+|   |       |   |   |   |   |-- Function.comp_apply  [thm]   (*)
+|   |       |   |   |   |   |-- Function.iterate_succ  [thm]
+|   |       |   |   |   |   |-- Function.iterate_zero  [thm]
+|   |       |   |   |   |   |-- Module.End.pow_apply  [thm]
+|   |       |   |   |   |   |   |-- Module.End.coe_pow  [thm]
+|   |       |   |   |   |   |   |   `-- hom_coe_pow  [thm]
+|   |       |   |   |   |   |   |       |-- Function.iterate_succ  [thm]   (*)
+|   |       |   |   |   |   |   |       |-- pow_succ  [thm]   (*)
+|   |       |   |   |   |   |   |       `-- pow_zero  [thm]   (*)
+|   |       |   |   |   |   |   `-- congr_fun  [thm]   (*)
+|   |       |   |   |   |   |-- Nat.one_add  [thm]
+|   |       |   |   |   |   |   `-- Nat.add_comm  [thm]   (*)
+|   |       |   |   |   |   |-- Polynomial.aeval_monomial  [thm]
+|   |       |   |   |   |   |   `-- Polynomial.eval₂_monomial  [thm]   (*)
+|   |       |   |   |   |   |-- PolynomialModule.smul_def  [thm]
+|   |       |   |   |   |   |   `-- smulCommClass_self  [thm]   (*)
+|   |       |   |   |   |   `-- smulCommClass_self  [thm]   (*)
+|   |       |   |   |   |-- add_smul  [thm]   (*)
+|   |       |   |   |   |-- eq_natCast  [thm]
+|   |       |   |   |   |   |-- eq_natCast'  [thm]   (*)
+|   |       |   |   |   |   `-- map_one  [thm]   (*)
+|   |       |   |   |   |-- smul_add  [thm]   (*)
+|   |       |   |   |   `-- smul_zero  [thm]   (*)
+|   |       |   |   |-- PolynomialModule.induction_linear  [thm]   (*)
+|   |       |   |   |-- eq_natCast  [thm]   (*)
+|   |       |   |   |-- eq_self  [thm]   (*)
+|   |       |   |   `-- of_eq_true  [thm]   (*)
+|   |       |   |-- PolynomialModule.eval_single  [thm]   (*)
+|   |       |   |-- SemigroupAction.mul_smul  [thm]   (*)
+|   |       |   |-- mul_comm  [thm]   (*)
+|   |       |   |-- mul_inv_rev  [thm]   (*)
+|   |       |   `-- taylorWithin_succ  [thm]
+|   |       `-- taylor_within_zero_eval  [thm]
+|   |           |-- Nat.cast_one  [thm]   (*)
+|   |           |-- PolynomialModule.eval_lsingle  [thm]
+|   |           |   `-- PolynomialModule.eval_single  [thm]   (*)
+|   |           |-- PolynomialModule.eval_single  [thm]   (*)
+|   |           |-- PolynomialModule.map_single  [thm]   (*)
+|   |           |-- eq_self  [thm]   (*)
+|   |           |-- inv_one  [thm]   (*)
+|   |           |-- iteratedDerivWithin_zero  [thm]   (*)
+|   |           |-- map_smul  [thm]   (*)
+|   |           |-- of_eq_true  [thm]   (*)
+|   |           |-- one_smul  [thm]   (*)
+|   |           `-- pow_zero  [thm]   (*)
+|   |-- div_left_inj'  [thm]
+|   |   `-- IsUnit.div_left_inj  [thm]
+|   |       |-- Units.mul_left_inj  [thm]
+|   |       |   |-- Units.mul_inv_cancel_right  [thm]   (*)
+|   |       |   `-- congr_arg  [thm]   (*)
+|   |       `-- div_eq_mul_inv  [thm]   (*)
+|   |-- div_one  [thm]   (*)
+|   |-- eq_self  [thm]   (*)
+|   |-- exists_ratio_hasDerivAt_eq_ratio_slope  [thm]
+|   |   |-- ContinuousMul.to_continuousSMul  [thm]   (*)
+|   |   |-- HasDerivAt.const_mul  [thm]
+|   |   |   |-- HasDerivWithinAt.const_mul  [thm]
+|   |   |   |   |-- MulZeroClass.zero_mul  [thm]   (*)
+|   |   |   |   |-- eq_of_heq  [thm]   (*)
+|   |   |   |   `-- hasDerivWithinAt_const  [thm]
+|   |   |   |       `-- hasDerivAtFilter_const  [thm]
+|   |   |   |           `-- hasFDerivAtFilter_const  [thm]   (*)
+|   |   |   |-- hasDerivWithinAt_univ  [thm]
+|   |   |   |   `-- hasFDerivWithinAt_univ  [thm]
+|   |   |   |       |-- iff_self  [thm]   (*)
+|   |   |   |       |-- nhdsWithin_univ  [thm]   (*)
+|   |   |   |       `-- of_eq_true  [thm]   (*)
+|   |   |   `-- propext  [ax]   (*)
+|   |   |-- Mathlib.Meta.NormNum.IsInt.of_raw  [thm]   (*)
+|   |   |-- Mathlib.Meta.NormNum.IsInt.to_isNat  [thm]   (*)
+|   |   |-- Mathlib.Meta.NormNum.IsInt.to_raw_eq  [thm]   (*)
+|   |   |-- Mathlib.Meta.NormNum.IsNat.of_raw  [thm]   (*)
+|   |   |-- Mathlib.Meta.NormNum.IsNat.to_isInt  [thm]   (*)
+|   |   |-- Mathlib.Meta.NormNum.IsNat.to_raw_eq  [thm]   (*)
+|   |   |-- Mathlib.Meta.NormNum.isInt_add  [thm]   (*)
+|   |   |-- Mathlib.Meta.NormNum.isInt_mul  [thm]   (*)
+|   |   |-- continuousOn_const  [thm]   (*)
+|   |   `-- exists_hasDerivAt_eq_zero  [thm]
+|   |       |-- ContinuousMul.to_continuousSMul  [thm]   (*)
+|   |       |-- IsLocalExtr.hasDerivAt_eq_zero  [thm]
+|   |       |   |-- ContinuousMul.to_continuousSMul  [thm]   (*)
+|   |       |   |-- IsLocalMax.hasDerivAt_eq_zero  [thm]
+|   |       |   |   |-- ContinuousMul.to_continuousSMul  [thm]   (*)
+|   |       |   |   `-- IsLocalMin.hasDerivAt_eq_zero  [thm]
+|   |       |   |       |-- ContinuousMul.to_continuousSMul  [thm]   (*)
+|   |       |   |       |-- DFunLike.congr_fun  [thm]   (*)
+|   |       |   |       |-- IsLocalMin.hasFDerivAt_eq_zero  [thm]
+|   |       |   |       |   |-- IsLocalMinOn.hasFDerivWithinAt_eq_zero  [thm]
+|   |       |   |       |   |   `-- IsLocalMaxOn.hasFDerivWithinAt_eq_zero  [thm]
+|   |       |   |       |   |       |-- IsLocalMaxOn.hasFDerivWithinAt_nonpos  [thm]
+|   |       |   |       |   |       |   |-- ContinuousMul.to_continuousSMul  [thm]   (*)
+|   |       |   |       |   |       |   |-- NNReal.coe_nonneg  [thm]   (*)
+|   |       |   |       |   |       |   |-- exists_fun_of_mem_tangentConeAt  [thm]   (*)
+|   |       |   |       |   |       |   |-- le_of_tendsto  [thm]
+|   |       |   |       |   |       |   |   |-- IsClosed.mem_of_tendsto  [thm]
+|   |       |   |       |   |       |   |   |   `-- IsClosed.mem_of_frequently_of_tendsto  [thm]
+|   |       |   |       |   |       |   |   |       `-- Filter.Frequently.mem_of_closed  [thm]
+|   |       |   |       |   |       |   |   |           |-- Filter.Frequently.mem_closure  [thm]   (*)
+|   |       |   |       |   |       |   |   |           `-- IsClosed.closure_subset  [thm]   (*)
+|   |       |   |       |   |       |   |   `-- isClosed_Iic  [thm]   (*)
+|   |       |   |       |   |       |   |-- mul_nonpos_of_nonneg_of_nonpos  [thm]
+|   |       |   |       |   |       |   |   |-- MulZeroClass.mul_zero  [thm]   (*)
+|   |       |   |       |   |       |   |   `-- mul_le_mul_of_nonneg_left  [thm]   (*)
+|   |       |   |       |   |       |   |-- tendsto_const_nhds  [thm]   (*)
+|   |       |   |       |   |       |   `-- tendsto_nhdsWithin_iff  [thm]   (*)
+|   |       |   |       |   |       `-- le_antisymm  [thm]   (*)
+|   |       |   |       |   |-- Set.mem_univ  [thm]   (*)
+|   |       |   |       |   `-- posTangentConeAt_univ  [thm]
+|   |       |   |       |       `-- tangentConeAt_univ  [thm]
+|   |       |   |       |           |-- Filter.top_smul_nhds_zero  [thm]
+|   |       |   |       |           |   |-- Filter.HasBasis.eq_top_iff  [thm]
+|   |       |   |       |           |   |   |-- Filter.HasBasis.ge_iff  [thm]   (*)
+|   |       |   |       |           |   |   |-- forall_congr  [thm]   (*)
+|   |       |   |       |           |   |   |-- iff_self  [thm]   (*)
+|   |       |   |       |           |   |   |-- implies_congr  [thm]   (*)
+|   |       |   |       |           |   |   |-- of_eq_true  [thm]   (*)
+|   |       |   |       |           |   |   `-- propext  [ax]   (*)
+|   |       |   |       |           |   |-- Filter.basis_sets  [thm]   (*)
+|   |       |   |       |           |   |-- Filter.hasBasis_top  [thm]
+|   |       |   |       |           |   |   |-- funext  [ax]   (*)
+|   |       |   |       |           |   |   |-- iff_self  [thm]   (*)
+|   |       |   |       |           |   |   |-- of_eq_true  [thm]   (*)
+|   |       |   |       |           |   |   `-- true_and  [thm]   (*)
+|   |       |   |       |           |   |-- Set.univ_smul_nhds_zero  [thm]
+|   |       |   |       |           |   |   |-- Filter.mem_map  [thm]   (*)
+|   |       |   |       |           |   |   |-- Filter.nonempty_of_mem  [thm]   (*)
+|   |       |   |       |           |   |   |-- Filter.tendsto_id  [thm]   (*)
+|   |       |   |       |           |   |   |-- Set.eq_univ_of_forall  [thm]   (*)
+|   |       |   |       |           |   |   |-- funext  [ax]   (*)
+|   |       |   |       |           |   |   |-- inter_mem_nhdsWithin  [thm]   (*)
+|   |       |   |       |           |   |   |-- inv_smul_smul₀  [thm]   (*)
+|   |       |   |       |           |   |   |-- tendsto_const_nhds  [thm]   (*)
+|   |       |   |       |           |   |   |-- true_and  [thm]   (*)
+|   |       |   |       |           |   |   `-- zero_smul  [thm]   (*)
+|   |       |   |       |           |   `-- propext  [ax]   (*)
+|   |       |   |       |           |-- eq_self  [thm]   (*)
+|   |       |   |       |           |-- funext  [ax]   (*)
+|   |       |   |       |           |-- nhdsWithin_univ  [thm]   (*)
+|   |       |   |       |           |-- of_eq_true  [thm]   (*)
+|   |       |   |       |           `-- tangentConeAt_def  [thm]   (*)
+|   |       |   |       |-- hasDerivAt_iff_hasFDerivAt  [thm]   (*)
+|   |       |   |       `-- one_mul  [thm]   (*)
+|   |       |   `-- IsLocalMin.hasDerivAt_eq_zero  [thm]   (*)
+|   |       `-- exists_isLocalExtr_Ioo  [thm]
+|   |           |-- OrderTopology.to_orderClosedTopology  [thm]   (*)
+|   |           `-- exists_Ioo_extr_on_Icc  [thm]
+|   |               |-- CompactIccSpace.isCompact_Icc  [thm]
+|   |               |-- IsCompact.exists_isMaxOn  [thm]
+|   |               |   `-- IsCompact.exists_isMinOn  [thm]
+|   |               |       |-- IsCompact.exists_isLeast  [thm]
+|   |               |       |   |-- Exists.choose_spec  [thm]   (*)
+|   |               |       |   |-- IsCompact.elim_directed_family_closed  [thm]
+|   |               |       |   |   |-- Directed.mono_comp  [thm]   (*)
+|   |               |       |   |   |-- IsClosed.isOpen_compl  [thm]   (*)
+|   |               |       |   |   |-- IsCompact.elim_directed_cover  [thm]
+|   |               |       |   |   |   |-- IsCompact.induction_on  [thm]
+|   |               |       |   |   |   |   |-- IsCompact.compl_mem_sets_of_nhdsWithin  [thm]
+|   |               |       |   |   |   |   |   |-- Filter.mem_inf_of_inter  [thm]   (*)
+|   |               |       |   |   |   |   |   |-- Filter.mem_inf_principal  [thm]   (*)
+|   |               |       |   |   |   |   |   `-- IsCompact.compl_mem_sets  [thm]
+|   |               |       |   |   |   |   |       |-- compl_compl  [thm]   (*)
+|   |               |       |   |   |   |   |       |-- funext  [ax]   (*)
+|   |               |       |   |   |   |   |       `-- implies_congr  [thm]   (*)
+|   |               |       |   |   |   |   |-- compl_compl  [thm]   (*)
+|   |               |       |   |   |   |   |-- forall_congr  [thm]   (*)
+|   |               |       |   |   |   |   |-- funext  [ax]   (*)
+|   |               |       |   |   |   |   `-- implies_congr  [thm]   (*)
+|   |               |       |   |   |   |-- IsOpen.mem_nhds  [thm]   (*)
+|   |               |       |   |   |   |-- Set.empty_subset  [thm]   (*)
+|   |               |       |   |   |   |-- Set.mem_iUnion  [thm]   (*)
+|   |               |       |   |   |   |-- Set.union_subset  [thm]   (*)
+|   |               |       |   |   |   `-- mem_nhdsWithin_of_mem_nhds  [thm]   (*)
+|   |               |       |   |   |-- Set.compl_subset_compl  [thm]   (*)
+|   |               |       |   |   |-- forall_congr  [thm]   (*)
+|   |               |       |   |   `-- implies_congr  [thm]   (*)
+|   |               |       |   |-- Monotone.directed_ge  [thm]
+|   |               |       |   |   `-- directed_of_isDirected_ge  [thm]
+|   |               |       |   |       `-- directed_of_isDirected_le  [thm]   (*)
+|   |               |       |   |-- Set.Nonempty.to_subtype  [thm]   (*)
+|   |               |       |   |-- Set.biInter_eq_iInter  [thm]   (*)
+|   |               |       |   |-- Set.mem_iInter₂  [thm]   (*)
+|   |               |       |   |-- Set.not_nonempty_iff_eq_empty  [thm]   (*)
+|   |               |       |   |-- isClosed_Iic  [thm]   (*)
+|   |               |       |   |-- le_rfl  [thm]   (*)
+|   |               |       |   `-- propext  [ax]   (*)
+|   |               |       |-- IsCompact.image_of_continuousOn  [thm]
+|   |               |       |   |-- Filter.comap_inf_principal_neBot_of_image_mem  [thm]
+|   |               |       |   |   |-- Filter.frequently_mem_iff_neBot  [thm]
+|   |               |       |   |   |   `-- Filter.frequently_iff_neBot  [thm]   (*)
+|   |               |       |   |   |-- Filter.map_principal  [thm]   (*)
+|   |               |       |   |   |-- Filter.neBot_inf_comap_iff_map'  [thm]   (*)
+|   |               |       |   |   `-- propext  [ax]   (*)
+|   |               |       |   |-- Filter.le_principal_iff  [thm]   (*)
+|   |               |       |   |-- Filter.tendsto_comap  [thm]   (*)
+|   |               |       |   |-- Set.mem_image_of_mem  [thm]   (*)
+|   |               |       |   `-- eq_of_heq  [thm]   (*)
+|   |               |       |-- Set.forall_mem_image  [thm]   (*)
+|   |               |       |-- Set.image_id'  [thm]   (*)
+|   |               |       `-- Set.mem_image_of_mem  [thm]   (*)
+|   |               |-- IsCompact.exists_isMinOn  [thm]   (*)
+|   |               |-- OrderTopology.to_orderClosedTopology  [thm]   (*)
+|   |               |-- Set.nonempty_Icc  [thm]
+|   |               |   `-- Set.left_mem_Icc  [thm]   (*)
+|   |               |-- Set.nonempty_Ioo  [thm]
+|   |               |   `-- exists_between  [thm]   (*)
+|   |               |-- funext  [ax]   (*)
+|   |               |-- le_antisymm  [thm]   (*)
+|   |               |-- le_of_lt  [thm]   (*)
+|   |               |-- lt_of_le_of_ne  [thm]   (*)
+|   |               `-- of_eq_true  [thm]   (*)
+|   |-- mul_comm  [thm]   (*)
+|   |-- mul_div_cancel_right₀  [thm]   (*)
+|   |-- mul_one  [thm]   (*)
+|   |-- of_eq_true  [thm]   (*)
+|   |-- one_mul  [thm]   (*)
+|   |-- one_ne_zero  [thm]   (*)
+|   |-- propext  [ax]   (*)
+|   |-- taylorWithinEval_hasDerivAt_Ioo  [thm]
+|   |   |-- DifferentiableWithinAt.mono_of_mem_nhdsWithin  [thm]
+|   |   |   `-- HasFDerivWithinAt.mono_of_mem_nhdsWithin  [thm]   (*)
+|   |   |-- IsOpen.mem_nhds  [thm]   (*)
+|   |   |-- hasDerivWithinAt_taylorWithinEval  [thm]
+|   |   |   |-- ContDiffOn.differentiableOn_iteratedDerivWithin  [thm]
+|   |   |   |   |-- ContDiffWithinAt.differentiableWithinAt_iteratedDerivWithin  [thm]
+|   |   |   |   |   |-- ContDiffWithinAt.differentiableWithinAt_iteratedFDerivWithin  [thm]
+|   |   |   |   |   |   |-- ContDiffOn.differentiableOn_iteratedFDerivWithin  [thm]   (*)
+|   |   |   |   |   |   |-- DifferentiableWithinAt.congr_of_eventuallyEq  [thm]
+|   |   |   |   |   |   |   `-- HasFDerivWithinAt.congr_of_eventuallyEq  [thm]
+|   |   |   |   |   |   |       `-- HasFDerivAtFilter.congr_of_eventuallyEq  [thm]   (*)
+|   |   |   |   |   |   |-- ENat.add_one_natCast_le_withTop_of_lt  [thm]   (*)
+|   |   |   |   |   |   |-- Filter.Eventually.self_of_nhds  [thm]   (*)
+|   |   |   |   |   |   |-- Filter.EventuallyEq.filter_mono  [thm]   (*)
+|   |   |   |   |   |   |-- IsOpen.mem_nhds  [thm]   (*)
+|   |   |   |   |   |   |-- Nat.cast_add  [thm]   (*)
+|   |   |   |   |   |   |-- Nat.cast_lt  [thm]
+|   |   |   |   |   |   |   |-- Nat.strictMono_cast  [thm]
+|   |   |   |   |   |   |   |   |-- Monotone.strictMono_of_injective  [thm]
+|   |   |   |   |   |   |   |   |   `-- LE.le.lt_of_ne  [thm]   (*)
+|   |   |   |   |   |   |   |   |-- Nat.cast_injective  [thm]   (*)
+|   |   |   |   |   |   |   |   `-- Nat.mono_cast  [thm]   (*)
+|   |   |   |   |   |   |   `-- StrictMono.lt_iff_lt  [thm]   (*)
+|   |   |   |   |   |   |-- Nat.cast_one  [thm]   (*)
+|   |   |   |   |   |   |-- Nat.lt_succ_self  [thm]   (*)
+|   |   |   |   |   |   |-- Set.diff_eq_compl_inter  [thm]
+|   |   |   |   |   |   |   |-- Set.diff_eq  [thm]
+|   |   |   |   |   |   |   `-- Set.inter_comm  [thm]   (*)
+|   |   |   |   |   |   |-- Set.insert_diff_of_mem  [thm]
+|   |   |   |   |   |   |-- Set.inter_assoc  [thm]   (*)
+|   |   |   |   |   |   |-- Set.mem_insert  [thm]   (*)
+|   |   |   |   |   |   |-- UniformContinuousConstSMul.to_continuousConstSMul  [thm]   (*)
+|   |   |   |   |   |   |-- differentiableWithinAt_congr_set'  [thm]   (*)
+|   |   |   |   |   |   |-- eq_false  [thm]   (*)
+|   |   |   |   |   |   |-- implies_congr  [thm]   (*)
+|   |   |   |   |   |   |-- iteratedFDerivWithin_eventually_congr_set'  [thm]   (*)
+|   |   |   |   |   |   |-- mem_nhdsWithin_of_mem_nhds  [thm]   (*)
+|   |   |   |   |   |   |-- ne_of_beq_false  [thm]
+|   |   |   |   |   |   |   `-- not_eq_of_beq_eq_false  [thm]
+|   |   |   |   |   |   |       `-- noConfusion_of_Nat  [thm]   (*)
+|   |   |   |   |   |   |-- nhdsWithin_inter_of_mem'  [thm]   (*)
+|   |   |   |   |   |   |-- of_eq_true  [thm]   (*)
+|   |   |   |   |   |   |-- propext  [ax]   (*)
+|   |   |   |   |   |   `-- smulCommClass_self  [thm]   (*)
+|   |   |   |   |   |-- UniformContinuousConstSMul.to_continuousConstSMul  [thm]   (*)
+|   |   |   |   |   |-- iteratedDerivWithin_eq_equiv_comp  [thm]   (*)
+|   |   |   |   |   `-- smulCommClass_self  [thm]   (*)
+|   |   |   |   `-- Set.insert_eq_of_mem  [thm]   (*)
+|   |   |   |-- ContDiffOn.of_succ  [thm]
+|   |   |   |   `-- ContDiffOn.of_le  [thm]   (*)
+|   |   |   |-- DifferentiableWithinAt.mono_of_mem_nhdsWithin  [thm]   (*)
+|   |   |   |-- HasDerivWithinAt.congr_simp  [thm]   (*)
+|   |   |   |-- Nat.cast_add  [thm]   (*)
+|   |   |   |-- Nat.cast_lt  [thm]   (*)
+|   |   |   |-- Nat.cast_mul  [thm]   (*)
+|   |   |   |-- Nat.cast_one  [thm]   (*)
+|   |   |   |-- Nat.lt_succ_self  [thm]   (*)
+|   |   |   |-- UniqueDiffWithinAt.mono_nhds  [thm]   (*)
+|   |   |   |-- eq_of_heq  [thm]   (*)
+|   |   |   |-- funext  [ax]   (*)
+|   |   |   |-- hasDerivWithinAt_taylor_coeff_within  [thm]
+|   |   |   |   |-- AddCommMonoid.nat_isScalarTower  [thm]   (*)
+|   |   |   |   |-- ContinuousMul.to_continuousSMul  [thm]   (*)
+|   |   |   |   |-- DifferentiableWithinAt.mono_of_mem_nhdsWithin  [thm]   (*)
+|   |   |   |   |-- HasDerivWithinAt.const_mul  [thm]   (*)
+|   |   |   |   |-- Mathlib.Meta.NormNum.IsInt.of_raw  [thm]   (*)
+|   |   |   |   |-- Mathlib.Meta.NormNum.IsInt.to_raw_eq  [thm]   (*)
+|   |   |   |   |-- Mathlib.Meta.NormNum.IsNNRat.to_isNat  [thm]   (*)
+|   |   |   |   |-- Mathlib.Meta.NormNum.IsNat.of_raw  [thm]   (*)
+|   |   |   |   |-- Mathlib.Meta.NormNum.IsNat.to_isInt  [thm]   (*)
+|   |   |   |   |-- Mathlib.Meta.NormNum.IsNat.to_isNNRat  [thm]   (*)
+|   |   |   |   |-- Mathlib.Meta.NormNum.IsNat.to_raw_eq  [thm]   (*)
+|   |   |   |   |-- Mathlib.Meta.NormNum.isInt_mul  [thm]   (*)
+|   |   |   |   |-- Mathlib.Meta.NormNum.isNNRat_inv_pos  [thm]   (*)
+|   |   |   |   |-- Mathlib.Meta.NormNum.isNat_ofNat  [thm]   (*)
+|   |   |   |   |-- Mathlib.Meta.Positivity.pos_of_isNat  [thm]   (*)
+|   |   |   |   |-- Nat.cast_nonneg'  [thm]   (*)
+|   |   |   |   |-- Nat.cast_one  [thm]   (*)
+|   |   |   |   |-- Nat.cast_pos'  [thm]   (*)
+|   |   |   |   |-- Nat.factorial_pos  [thm]   (*)
+|   |   |   |   |-- NeZero.charZero_one  [thm]   (*)
+|   |   |   |   |-- RCLike.charZero_rclike  [thm]   (*)
+|   |   |   |   |-- congr_arg  [thm]   (*)
+|   |   |   |   |-- congr_arg₂  [thm]   (*)
+|   |   |   |   |-- derivWithin_of_mem_nhdsWithin  [thm]
+|   |   |   |   |   `-- HasDerivWithinAt.mono_of_mem_nhdsWithin  [thm]
+|   |   |   |   |       `-- HasFDerivWithinAt.mono_of_mem_nhdsWithin  [thm]   (*)
+|   |   |   |   |-- div_one  [thm]   (*)
+|   |   |   |   |-- eq_natCast  [thm]   (*)
+|   |   |   |   |-- eq_of_heq  [thm]   (*)
+|   |   |   |   |-- iteratedDerivWithin_succ  [thm]
+|   |   |   |   |   |-- Finset.prod_const_one  [thm]   (*)
+|   |   |   |   |   |-- LinearIsometryEquiv.comp_fderivWithin  [thm]
+|   |   |   |   |   |   `-- ContinuousLinearEquiv.comp_fderivWithin  [thm]
+|   |   |   |   |   |       |-- ContinuousLinearEquiv.comp_differentiableWithinAt_iff  [thm]
+|   |   |   |   |   |       |   |-- ContinuousLinearEquiv.symm_comp_self  [thm]
+|   |   |   |   |   |       |   |   |-- ContinuousLinearEquiv.symm_apply_apply  [thm]
+|   |   |   |   |   |       |   |   |   `-- LinearEquiv.left_inv  [thm]   (*)
+|   |   |   |   |   |       |   |   `-- funext  [ax]   (*)
+|   |   |   |   |   |       |   |-- DifferentiableAt.comp_differentiableWithinAt  [thm]
+|   |   |   |   |   |       |   |   `-- Set.mapsTo_univ  [thm]
+|   |   |   |   |   |       |   `-- Function.comp_assoc  [thm]   (*)
+|   |   |   |   |   |       |-- ContinuousLinearMap.comp_zero  [thm]
+|   |   |   |   |   |       |   |-- eq_self  [thm]   (*)
+|   |   |   |   |   |       |   `-- of_eq_true  [thm]   (*)
+|   |   |   |   |   |       |-- fderivWithin_zero_of_not_differentiableWithinAt  [thm]
+|   |   |   |   |   |       |   |-- dite_cond_eq_false  [thm]   (*)
+|   |   |   |   |   |       |   |-- eq_false  [thm]   (*)
+|   |   |   |   |   |       |   |-- eq_self  [thm]   (*)
+|   |   |   |   |   |       |   |-- fderivWithin_def  [thm]   (*)
+|   |   |   |   |   |       |   |-- ite.congr_simp  [thm]   (*)
+|   |   |   |   |   |       |   |-- ite_self  [thm]   (*)
+|   |   |   |   |   |       |   `-- of_eq_true  [thm]   (*)
+|   |   |   |   |   |       `-- fderiv_comp_fderivWithin  [thm]
+|   |   |   |   |   |           |-- HasFDerivAt.comp_hasFDerivWithinAt  [thm]   (*)
+|   |   |   |   |   |           `-- TopologicalSpace.t2Space_of_metrizableSpace  [thm]   (*)
+|   |   |   |   |   |-- NormedDivisionRing.to_isTopologicalDivisionRing  [thm]   (*)
+|   |   |   |   |   |-- TopologicalSpace.t2Space_of_metrizableSpace  [thm]   (*)
+|   |   |   |   |   |-- UniformContinuousConstSMul.to_continuousConstSMul  [thm]   (*)
+|   |   |   |   |   |-- derivWithin_zero_of_not_accPt  [thm]
+|   |   |   |   |   |   |-- ContinuousLinearMap.zero_apply  [thm]
+|   |   |   |   |   |   |-- TopologicalSpace.t2Space_of_metrizableSpace  [thm]   (*)
+|   |   |   |   |   |   `-- fderivWithin_zero_of_not_accPt  [thm]
+|   |   |   |   |   |       |-- HasFDerivWithinAt.of_not_accPt  [thm]
+|   |   |   |   |   |       |   |-- Filter.not_neBot  [thm]
+|   |   |   |   |   |       |   |   |-- Filter.neBot_iff  [thm]   (*)
+|   |   |   |   |   |       |   |   `-- Iff.not_left  [thm]
+|   |   |   |   |   |       |   |       `-- Classical.not_not  [thm]   (*)
+|   |   |   |   |   |       |   |-- accPt_principal_iff_nhdsWithin  [thm]
+|   |   |   |   |   |       |   |   |-- accPt_principal_iff_clusterPt  [thm]
+|   |   |   |   |   |       |   |   |   |-- Filter.inf_principal  [thm]   (*)
+|   |   |   |   |   |       |   |   |   |-- Set.diff_eq  [thm]   (*)
+|   |   |   |   |   |       |   |   |   |-- Set.inter_comm  [thm]   (*)
+|   |   |   |   |   |       |   |   |   |-- accPt_iff_clusterPt  [thm]   (*)
+|   |   |   |   |   |       |   |   |   `-- propext  [ax]   (*)
+|   |   |   |   |   |       |   |   `-- propext  [ax]   (*)
+|   |   |   |   |   |       |   |-- hasFDerivAtFilter_iff_isLittleOTVS  [thm]   (*)
+|   |   |   |   |   |       |   |-- hasFDerivWithinAt_diff_singleton  [thm]   (*)
+|   |   |   |   |   |       |   `-- propext  [ax]   (*)
+|   |   |   |   |   |       `-- fderivWithin_def  [thm]   (*)
+|   |   |   |   |   |-- eq_self  [thm]   (*)
+|   |   |   |   |   |-- fderivWithin_zero_of_not_accPt  [thm]   (*)
+|   |   |   |   |   |-- iteratedDerivWithin_eq_iteratedFDerivWithin  [thm]
+|   |   |   |   |   |-- iteratedFDerivWithin_eq_equiv_comp  [thm]   (*)
+|   |   |   |   |   |-- iteratedFDerivWithin_succ_apply_left  [thm]
+|   |   |   |   |   |   |-- UniformContinuousConstSMul.to_continuousConstSMul  [thm]   (*)
+|   |   |   |   |   |   `-- smulCommClass_self  [thm]   (*)
+|   |   |   |   |   |-- of_eq_true  [thm]   (*)
+|   |   |   |   |   |-- one_smul  [thm]   (*)
+|   |   |   |   |   `-- smulCommClass_self  [thm]   (*)
+|   |   |   |   |-- monomial_has_deriv_aux  [thm]   (*)
+|   |   |   |   |-- mul_neg  [thm]   (*)
+|   |   |   |   |-- mul_one  [thm]   (*)
+|   |   |   |   |-- neg_mul  [thm]   (*)
+|   |   |   |   |-- of_decide_eq_true  [thm]   (*)
+|   |   |   |   |-- one_mul  [thm]   (*)
+|   |   |   |   `-- one_ne_zero  [thm]   (*)
+|   |   |   |-- inv_one  [thm]   (*)
+|   |   |   |-- iteratedDerivWithin_one  [thm]
+|   |   |   |   |-- TopologicalSpace.t2Space_of_metrizableSpace  [thm]   (*)
+|   |   |   |   |-- derivWithin_zero_of_not_accPt  [thm]   (*)
+|   |   |   |   |-- eq_self  [thm]   (*)
+|   |   |   |   |-- fderivWithin_zero_of_not_accPt  [thm]   (*)
+|   |   |   |   |-- funext  [ax]   (*)
+|   |   |   |   |-- iteratedFDerivWithin_one_apply  [thm]
+|   |   |   |   |   |-- LinearIsometryEquiv.comp_fderivWithin  [thm]   (*)
+|   |   |   |   |   |-- UniformContinuousConstSMul.to_continuousConstSMul  [thm]   (*)
+|   |   |   |   |   |-- eq_self  [thm]   (*)
+|   |   |   |   |   |-- of_eq_true  [thm]   (*)
+|   |   |   |   |   `-- smulCommClass_self  [thm]   (*)
+|   |   |   |   `-- of_eq_true  [thm]   (*)
+|   |   |   |-- iteratedDerivWithin_zero  [thm]   (*)
+|   |   |   |-- mul_one  [thm]   (*)
+|   |   |   |-- nhdsWithin_le_iff  [thm]   (*)
+|   |   |   |-- nhdsWithin_mono  [thm]   (*)
+|   |   |   |-- one_smul  [thm]   (*)
+|   |   |   |-- pow_zero  [thm]   (*)
+|   |   |   |-- self_mem_nhdsWithin  [thm]   (*)
+|   |   |   |-- taylorWithinEval_succ  [thm]   (*)
+|   |   |   `-- taylor_within_zero_eval  [thm]   (*)
+|   |   |-- isOpen_Ioo  [thm]   (*)
+|   |   |-- nhdsWithin_le_nhds  [thm]   (*)
+|   |   `-- uniqueDiffOn_Icc  [thm]
+|   |       |-- ContinuousMul.to_continuousSMul  [thm]   (*)
+|   |       |-- convex_Icc  [thm]
+|   |       |   |-- convex_Ici  [thm]
+|   |       |   |   `-- convex_Iic  [thm]
+|   |       |   |       |-- Convex.combo_self  [thm]
+|   |       |   |       |   |-- add_smul  [thm]   (*)
+|   |       |   |       |   `-- one_smul  [thm]   (*)
+|   |       |   |       `-- smul_le_smul_of_nonneg_left  [thm]   (*)
+|   |       |   `-- convex_Iic  [thm]   (*)
+|   |       |-- eq_true  [thm]   (*)
+|   |       |-- interior_Icc  [thm]
+|   |       |   |-- interior_Ici  [thm]
+|   |       |   |   |-- Set.nonempty_Iio  [thm]
+|   |       |   |   |   `-- NoMinOrder.exists_lt  [thm]
+|   |       |   |   `-- interior_Ici'  [thm]
+|   |       |   |       |-- Set.compl_Iic  [thm]   (*)
+|   |       |   |       |-- Set.compl_Iio  [thm]
+|   |       |   |       |   `-- not_lt  [thm]   (*)
+|   |       |   |       |-- closure_Iio'  [thm]
+|   |       |   |       |   `-- closure_Ioi'  [thm]   (*)
+|   |       |   |       `-- interior_compl  [thm]   (*)
+|   |       |   |-- interior_Iic  [thm]
+|   |       |   |   |-- Set.nonempty_Ioi  [thm]   (*)
+|   |       |   |   `-- interior_Iic'  [thm]
+|   |       |   |       `-- interior_Ici'  [thm]   (*)
+|   |       |   `-- interior_inter  [thm]
+|   |       |       |-- Monotone.map_inf_le  [thm]   (*)
+|   |       |       |-- Set.inter_subset_inter  [thm]   (*)
+|   |       |       |-- interior_maximal  [thm]   (*)
+|   |       |       |-- interior_mono  [thm]
+|   |       |       |   |-- interior_maximal  [thm]   (*)
+|   |       |       |   |-- interior_subset  [thm]   (*)
+|   |       |       |   `-- isOpen_interior  [thm]   (*)
+|   |       |       |-- interior_subset  [thm]   (*)
+|   |       |       `-- isOpen_interior  [thm]   (*)
+|   |       |-- of_eq_true  [thm]   (*)
+|   |       `-- uniqueDiffOn_convex  [thm]
+|   |           |-- subset_closure  [thm]   (*)
+|   |           `-- uniqueDiffWithinAt_convex  [thm]
+|   |               |-- Convex.span_tangentConeAt  [thm]
+|   |               |   |-- Convex.openSegment_closure_interior_subset_interior  [thm]
+|   |               |   |   `-- Convex.combo_closure_interior_mem_interior  [thm]
+|   |               |   |       |-- Convex.combo_closure_interior_subset_interior  [thm]
+|   |               |   |       |   `-- Convex.combo_interior_closure_subset_interior  [thm]
+|   |               |   |       |       |-- Convex.set_combo_subset  [thm]
+|   |               |   |       |       |   `-- convex_iff_pointwise_add_subset  [thm]
+|   |               |   |       |       |-- interior_mono  [thm]   (*)
+|   |               |   |       |       |-- interior_smul₀  [thm]
+|   |               |   |       |       |   `-- Homeomorph.image_interior  [thm]
+|   |               |   |       |       |       |-- Homeomorph.preimage_interior  [thm]
+|   |               |   |       |       |       |   `-- IsOpenMap.preimage_interior_eq_interior_preimage  [thm]
+|   |               |   |       |       |       |       |-- IsOpenMap.interior_preimage_subset_preimage_interior  [thm]
+|   |               |   |       |       |       |       |   |-- IsOpenMap.mapsTo_interior  [thm]
+|   |               |   |       |       |       |       |   |   |-- Set.MapsTo.image_subset  [thm]
+|   |               |   |       |       |       |       |   |   |   `-- Set.mapsTo_iff_image_subset  [thm]
+|   |               |   |       |       |       |       |   |   |       `-- Set.image_subset_iff  [thm]   (*)
+|   |               |   |       |       |       |       |   |   |-- Set.mapsTo_iff_image_subset  [thm]   (*)
+|   |               |   |       |       |       |       |   |   |-- interior_maximal  [thm]   (*)
+|   |               |   |       |       |       |       |   |   |-- interior_subset  [thm]   (*)
+|   |               |   |       |       |       |       |   |   `-- isOpen_interior  [thm]   (*)
+|   |               |   |       |       |       |       |   `-- Set.mapsTo_preimage  [thm]   (*)
+|   |               |   |       |       |       |       `-- preimage_interior_subset_interior_preimage  [thm]
+|   |               |   |       |       |       |           |-- Set.preimage_mono  [thm]   (*)
+|   |               |   |       |       |       |           |-- interior_maximal  [thm]   (*)
+|   |               |   |       |       |       |           |-- interior_subset  [thm]   (*)
+|   |               |   |       |       |       |           `-- isOpen_interior  [thm]   (*)
+|   |               |   |       |       |       `-- Homeomorph.preimage_symm  [thm]   (*)
+|   |               |   |       |       |-- isOpen_interior  [thm]   (*)
+|   |               |   |       |       `-- smul_closure_subset  [thm]
+|   |               |   |       |           |-- ContinuousConstSMul.continuous_const_smul  [thm]   (*)
+|   |               |   |       |           |-- Set.MapsTo.image_subset  [thm]   (*)
+|   |               |   |       |           `-- Set.mapsTo_image  [thm]   (*)
+|   |               |   |       `-- Set.smul_mem_smul_set  [thm]   (*)
+|   |               |   |-- Filter.mem_of_superset  [thm]   (*)
+|   |               |   |-- IsOpen.mem_nhds  [thm]   (*)
+|   |               |   |-- IsOpenMap.image_mem_nhds  [thm]   (*)
+|   |               |   |-- NormedField.nhdsWithin_isUnit_neBot  [thm]
+|   |               |   |   |-- NormedField.nhdsNE_neBot  [thm]   (*)
+|   |               |   |   `-- funext  [ax]   (*)
+|   |               |   |-- Submodule.eq_top_of_nonempty_interior'  [thm]
+|   |               |   |   |-- Filter.inter_mem  [thm]   (*)
+|   |               |   |   |-- Filter.mem_map  [thm]   (*)
+|   |               |   |   |-- Filter.nonempty_of_mem  [thm]   (*)
+|   |               |   |   |-- Filter.tendsto_id  [thm]   (*)
+|   |               |   |   |-- Submodule.add_mem_iff_right  [thm]
+|   |               |   |   |-- Submodule.eq_top_iff'  [thm]
+|   |               |   |   |   `-- eq_top_iff  [thm]   (*)
+|   |               |   |   |-- Submodule.smul_mem_iff'  [thm]
+|   |               |   |   |   `-- SubMulAction.smul_mem_iff'  [thm]
+|   |               |   |   |       |-- SubMulAction.smul_of_tower_mem  [thm]
+|   |               |   |   |       |   |-- SubMulAction.smul_mem  [thm]   (*)
+|   |               |   |   |       |   |-- one_smul  [thm]   (*)
+|   |               |   |   |       |   `-- smul_assoc  [thm]   (*)
+|   |               |   |   |       `-- inv_smul_smul  [thm]   (*)
+|   |               |   |   |-- Units.smul_def  [thm]
+|   |               |   |   |-- mem_interior_iff_mem_nhds  [thm]   (*)
+|   |               |   |   |-- mem_of_mem_nhds  [thm]   (*)
+|   |               |   |   |-- propext  [ax]   (*)
+|   |               |   |   |-- self_mem_nhdsWithin  [thm]   (*)
+|   |               |   |   |-- tendsto_const_nhds  [thm]   (*)
+|   |               |   |   |-- tendsto_nhdsWithin_of_tendsto_nhds  [thm]
+|   |               |   |   |   `-- Filter.Tendsto.mono_left  [thm]   (*)
+|   |               |   |   `-- zero_smul  [thm]   (*)
+|   |               |   |-- Submodule.subset_span  [thm]   (*)
+|   |               |   |-- interior_mono  [thm]   (*)
+|   |               |   |-- interior_subset  [thm]   (*)
+|   |               |   |-- isOpen_interior  [thm]   (*)
+|   |               |   |-- mem_interior_iff_mem_nhds  [thm]   (*)
+|   |               |   |-- mem_tangentConeAt_of_openSegment_subset  [thm]
+|   |               |   |   |-- sub_mem_posTangentConeAt_of_openSegment_subset  [thm]
+|   |               |   |   |   |-- Filter.mp_mem  [thm]   (*)
+|   |               |   |   |   |-- Filter.tendsto_id'  [thm]
+|   |               |   |   |   |-- Filter.univ_mem'  [thm]   (*)
+|   |               |   |   |   |-- Nat.cast_one  [thm]   (*)
+|   |               |   |   |   |-- Nat.cast_zero  [thm]   (*)
+|   |               |   |   |   |-- NeZero.charZero_one  [thm]   (*)
+|   |               |   |   |   |-- OrderTopology.to_orderClosedTopology  [thm]   (*)
+|   |               |   |   |   |-- eq_self  [thm]   (*)
+|   |               |   |   |   |-- mem_tangentConeAt_of_add_smul_mem  [thm]
+|   |               |   |   |   |   |-- eq_false  [thm]   (*)
+|   |               |   |   |   |   |-- eq_self  [thm]   (*)
+|   |               |   |   |   |   |-- inv_smul_smul₀  [thm]   (*)
+|   |               |   |   |   |   |-- mem_tangentConeAt_of_seq  [thm]
+|   |               |   |   |   |   |   `-- mem_tangentConeAt_of_frequently  [thm]   (*)
+|   |               |   |   |   |   |-- not_false_eq_true  [thm]   (*)
+|   |               |   |   |   |   |-- of_eq_true  [thm]   (*)
+|   |               |   |   |   |   |-- propext  [ax]   (*)
+|   |               |   |   |   |   |-- tendsto_const_nhds  [thm]   (*)
+|   |               |   |   |   |   |-- tendsto_nhdsWithin_iff  [thm]   (*)
+|   |               |   |   |   |   |-- tendsto_nhds_of_eventually_eq  [thm]   (*)
+|   |               |   |   |   |   `-- zero_smul  [thm]   (*)
+|   |               |   |   |   |-- nhdsGT_le_nhdsNE  [thm]
+|   |               |   |   |   |   `-- nhdsWithin_mono  [thm]   (*)
+|   |               |   |   |   |-- nhdsGT_neBot  [thm]   (*)
+|   |               |   |   |   |-- of_eq_true  [thm]   (*)
+|   |               |   |   |   |-- one_pos  [thm]   (*)
+|   |               |   |   |   `-- openSegment_eq_image_lineMap  [thm]
+|   |               |   |   |       |-- AffineMap.lineMap_apply_module  [thm]
+|   |               |   |   |       |   |-- one_smul  [thm]   (*)
+|   |               |   |   |       |   |-- smul_sub  [thm]   (*)
+|   |               |   |   |       |   `-- sub_smul  [thm]   (*)
+|   |               |   |   |       |-- Set.image_congr  [thm]   (*)
+|   |               |   |   |       |-- eq_of_heq  [thm]   (*)
+|   |               |   |   |       `-- openSegment_eq_image  [thm]
+|   |               |   |   |           |-- eq_self  [thm]   (*)
+|   |               |   |   |           `-- of_eq_true  [thm]   (*)
+|   |               |   |   `-- tangentConeAt_mono_field  [thm]
+|   |               |   |       |-- Filter.smul_le_smul  [thm]   (*)
+|   |               |   |       |-- le_imp_le_of_le_of_le  [thm]   (*)
+|   |               |   |       |-- le_refl  [thm]   (*)
+|   |               |   |       |-- le_top  [thm]   (*)
+|   |               |   |       |-- smul_one_smul  [thm]
+|   |               |   |       |   |-- one_smul  [thm]   (*)
+|   |               |   |       |   `-- smul_assoc  [thm]   (*)
+|   |               |   |       `-- tangentConeAt_def  [thm]   (*)
+|   |               |   `-- propext  [ax]   (*)
+|   |               |-- and_self  [thm]   (*)
+|   |               |-- eq_true  [thm]   (*)
+|   |               `-- of_eq_true  [thm]   (*)
+|   |-- taylorWithinEval_self  [thm]
+|   |   |-- MulZeroClass.mul_zero  [thm]   (*)
+|   |   |-- and_false  [thm]   (*)
+|   |   |-- eq_self  [thm]   (*)
+|   |   |-- mul_inv_rev  [thm]   (*)
+|   |   |-- not_false_eq_true  [thm]   (*)
+|   |   |-- of_eq_true  [thm]   (*)
+|   |   |-- taylorWithinEval_succ  [thm]   (*)
+|   |   |-- taylor_within_zero_eval  [thm]   (*)
+|   |   |-- zero_pow  [thm]
+|   |   |   |-- MulZeroClass.mul_zero  [thm]   (*)
+|   |   |   `-- pow_succ  [thm]   (*)
+|   |   `-- zero_smul  [thm]   (*)
+|   `-- uniqueDiffOn_Icc  [thm]   (*)
+`-- zero_pow  [thm]   (*)
