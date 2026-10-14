@@ -1,0 +1,1 @@
+(echo 23375703& echo 23375207& echo 23375196& echo 23374932& echo 23374928& echo 23374922& echo 23374440& echo 23374438& echo 23374403)> delete_list.txt

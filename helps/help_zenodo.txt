@@ -8,3 +8,7 @@ zenodo_doi.bat --sandbox --reset-on-success
 rem --- Production: state file is already gone from the sandbox run ---
 set ZENODO_TOKEN=pCo1sQIegUb43DaRMMNf04kMo67aVVTc81H2fHvMZvSlAAVbox8SissIClFm
 zenodo_doi.bat
+
+
+
+MhEwqaOgdUfG9LChOaVtS8zGXrazdeeA1nBAYaBnCtgLzwpcrOrUfgCg8epU

@@ -36,10 +36,12 @@ if not exist "zenodo_doi.py" (
 )
 
 echo.
-echo Running: python zenodo_doi.py %*
+echo Running: python zenodo_doi.py --auto-release-stale %*
 echo.
 
-"%PYTHON_EXE%" zenodo_doi.py %*
+rem ---- Pass-through args appended AFTER --auto-release-stale, so user
+rem ---- flags still win (e.g. --sandbox, --only NAME, --dry-run).
+"%PYTHON_EXE%" zenodo_doi.py --auto-release-stale %*
 
 set EXITCODE=%ERRORLEVEL%
 echo.

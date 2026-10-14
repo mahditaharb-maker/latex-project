@@ -1,58 +1,56 @@
 #!/usr/bin/env python3
 """
-zenodo_doi.py - Mint a Zenodo DOI for each paper subdirectory.
+zenodo_doi.py - Mint or update Zenodo DOIs for each paper subdirectory.
 
-Scans document/ for subdirectories. For each subdirectory without a
-recorded DOI, creates a Zenodo deposition, uploads the paper's files,
-publishes it, and records the resulting DOI.
+Scans document/ for subdirectories. For each subdirectory:
+  - no DOI yet          -> create a new deposition, publish, record DOI
+  - DOI, files unchanged-> skip
+  - DOI, files changed  -> (with --auto-release-stale) publish a new version
+                           (without it) report as [stale], take no action
+
+Adoption safety net:
+    Before creating a brand-new deposition for a paper, this script
+    queries Zenodo for any existing deposition with the same title on
+    the current account. If one is found, it is ADOPTED (its DOI, ID,
+    and concept DOI are written into the state file) rather than
+    creating a duplicate.
+
+    This protects against a lost or emptied .zenodo_dois.json - which
+    used to cause a fresh set of duplicates on every run.
 
 Change detection:
     Each published paper records a content hash of the files that were
     uploaded. On subsequent runs, the hash of the current files is
-    compared to the recorded one. If they differ, the paper is reported
-    as [stale] - it still has a DOI, but the published version is out of
-    date. To publish a new version, run:
-
-        zenodo_doi.bat --new-version --only <paper-name>
-
-    or, more conveniently:
-
-        zenodo_release.bat <paper-name>
-
-    A new version is never created automatically. That's deliberate -
-    you decide when a revision is ready to be published.
+    compared to the recorded one. If they differ, the paper is stale.
 
 Usage:
-    python zenodo_doi.py                  # process all new subdirs
-    python zenodo_doi.py --dry-run        # show what would be done
-    python zenodo_doi.py --sandbox        # use Zenodo sandbox
-    python zenodo_doi.py --only PDE       # process one subdirectory
-    python zenodo_doi.py --new-version    # create new versions for existing DOIs
+    python zenodo_doi.py                       # process all, report stale
+    python zenodo_doi.py --auto-release-stale  # process all, auto-update stale
+    python zenodo_doi.py --dry-run             # show what would be done
+    python zenodo_doi.py --sandbox             # use Zenodo sandbox
+    python zenodo_doi.py --only PDE            # process one subdirectory
+    python zenodo_doi.py --new-version         # force a new version for all
 
-    python zenodo_doi.py --status         # report DOI status (no token/API)
-    python zenodo_doi.py --verify-stale X # exit 0 if X changed (no token/API)
+    python zenodo_doi.py --status              # report DOI status (no token)
+    python zenodo_doi.py --verify-stale X      # exit 0 if X changed (no token)
 
     python zenodo_doi.py --reset                    # wipe state file first
     python zenodo_doi.py --reset-on-success         # wipe state file if all OK
-    python zenodo_doi.py --sandbox --reset-on-success   # typical sandbox use
 
 IMPORTANT: Zenodo sandbox and production use SEPARATE tokens.
-    Sandbox token:    https://sandbox.zenodo.org/account/settings/applications/tokens/new/
-    Production token: https://zenodo.org/account/settings/applications/tokens/new/
-
-WARNING about --reset-on-success:
-    In production, deleting the state file means the NEXT run recreates
-    every DOI -> duplicate Zenodo records. Only use it with --sandbox,
-    or when you genuinely intend to start over.
+    Sandbox:    https://sandbox.zenodo.org/account/settings/applications/tokens/new/
+    Production: https://zenodo.org/account/settings/applications/tokens/new/
 """
 
 import argparse
 import hashlib
 import json
 import os
+import re
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -94,19 +92,22 @@ def safe_print(msg):
 
 # ---------- Zenodo API helpers ----------
 
-def api_request(url, method="GET", payload=None, token=None):
+def api_request(url, method="GET", payload=None, token=None, allow_404=False):
+    """Make a JSON API request.
+
+    Sends the token both as Bearer header and as ?access_token= query
+    param. Older Zenodo deployments ignore the header and require the
+    query param - this makes both work.
+    """
     data = None
+    headers = {"Accept": "application/json", "User-Agent": "zenodo-doi-script"}
     if payload is not None:
         data = json.dumps(payload).encode("utf-8")
-
-    headers = {
-        "Accept": "application/json",
-        "User-Agent": "zenodo-doi-script",
-    }
-    if data is not None:
         headers["Content-Type"] = "application/json"
     if token:
         headers["Authorization"] = "Bearer " + token
+        sep = "&" if "?" in url else "?"
+        url = url + sep + "access_token=" + urllib.parse.quote(token, safe="")
 
     req = urllib.request.Request(url, data=data, method=method, headers=headers)
     try:
@@ -114,6 +115,8 @@ def api_request(url, method="GET", payload=None, token=None):
             body = response.read().decode("utf-8")
             return json.loads(body) if body else {}
     except urllib.error.HTTPError as e:
+        if e.code == 404 and allow_404:
+            return None
         err_body = ""
         try:
             err_body = e.read().decode("utf-8", errors="replace")
@@ -181,6 +184,22 @@ def delete_doi_state(reason):
         safe_print(f"[{reason}] {DOI_FILE.name} not present, nothing to delete")
 
 
+# ---------- Title helpers ----------
+
+def title_from_folder(name):
+    return name.replace("-", " ").replace("_", " ").strip()
+
+
+def normalize_title(s):
+    if not s:
+        return ""
+    s = s.lower()
+    s = re.sub(r"[\u2010-\u2015\u2212]", "-", s)
+    s = re.sub(r"[^a-z0-9]+", " ", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
+
+
 # ---------- Paper discovery ----------
 
 def find_papers(document_dir):
@@ -234,10 +253,47 @@ def compute_paper_hash(paper_dir):
     return h.hexdigest()
 
 
+# ---------- Fetch index of existing depositions ----------
+
+def fetch_deposition_index(api_base, token):
+    """Return dict: normalized_title -> deposition record (published only).
+
+    Lists all depositions on the account (paginated, 25 per page to
+    satisfy the anonymous request limit) and builds a title index. Only
+    records in state 'done' (published) are indexed - drafts and
+    submissions in progress are ignored.
+    """
+    index = {}
+    page = 1
+    while True:
+        url = (f"{api_base}/deposit/depositions"
+               f"?size=25&page={page}&sort=mostrecent")
+        try:
+            data = api_request(url, token=token)
+        except Exception as e:
+            safe_print(f"[WARN] could not list depositions: {e}")
+            return index
+        if not isinstance(data, list) or not data:
+            break
+        for d in data:
+            if d.get("state") != "done":
+                continue
+            title = (d.get("metadata") or {}).get("title") or ""
+            key = normalize_title(title)
+            if not key:
+                continue
+            if key not in index:
+                index[key] = d
+        if len(data) < 25:
+            break
+        page += 1
+    return index
+
+
 # ---------- Metadata ----------
 
 def build_metadata(name, paper_dir):
-    title = name.replace("-", " ").replace("_", " ").strip()
+    title = title_from_folder(name)
 
     desc = f"Preprint from the {GITHUB_REPO} repository."
     for candidate in ("README.md", "README.txt", "abstract.txt"):
@@ -273,7 +329,6 @@ def build_metadata(name, paper_dir):
 # ---------- Status / verify (no token, no API) ----------
 
 def status_report():
-    """Print a one-line-per-paper status. Returns exit code 0 always."""
     if not DOCUMENT_DIR.exists():
         safe_print("  (no document/ folder)")
         return 0
@@ -318,7 +373,7 @@ def status_report():
         if new:
             safe_print(f"  {new} new paper(s)      -> zenodo_doi.bat")
         if stale:
-            safe_print(f"  {stale} stale paper(s)  -> zenodo_release.bat <name>")
+            safe_print(f"  {stale} stale paper(s)  -> zenodo_doi.bat (auto-release)")
         if rebase:
             safe_print(f"  {rebase} paper(s) need  -> zenodo_doi.bat (records baseline)")
 
@@ -326,14 +381,6 @@ def status_report():
 
 
 def verify_stale(name):
-    """Check whether a paper has changed since its recorded DOI.
-
-    Exit codes:
-        0 = stale (changed, ready to release)
-        1 = unchanged (nothing to do)
-        2 = not tracked / no baseline
-        3 = paper folder not found
-    """
     state = load_doi_state()
     entry = state.get(name)
     if entry is None:
@@ -383,9 +430,16 @@ def new_version(api_base, deposition_id, token):
 
 
 def process_paper(name, paper_dir, api_base, token, state, dry_run=False,
-                  force_new_version=False):
+                  force_new_version=False, auto_release_stale=False,
+                  existing_index=None):
+    """Process one paper.
+
+    Returns (result, outcome) where outcome is one of:
+        "dry-run", "skipped", "stale", "created", "updated", "adopted", "failed"
+    """
     existing = state.get(name)
 
+    # ---- dry-run ----
     if dry_run:
         action = "would create" if not existing else "already has DOI"
         safe_print(f"  [dry-run] {name}: {action}")
@@ -398,8 +452,10 @@ def process_paper(name, paper_dir, api_base, token, state, dry_run=False,
             elif current_hash == stored:
                 safe_print(f"            files unchanged since publish")
             else:
-                safe_print(f"            files CHANGED since publish "
-                           f"(would be [stale])")
+                mode = ("would be [update]"
+                        if (auto_release_stale or force_new_version)
+                        else "would be [stale]")
+                safe_print(f"            files CHANGED since publish ({mode})")
         else:
             files = collect_upload_files(paper_dir)
             safe_print(f"            would upload {len(files)} file(s):")
@@ -407,9 +463,49 @@ def process_paper(name, paper_dir, api_base, token, state, dry_run=False,
                 safe_print(f"              {f.relative_to(paper_dir)}")
             if len(files) > 5:
                 safe_print(f"              ... and {len(files) - 5} more")
+            # Note: live run may adopt an existing record
+            if existing_index is not None:
+                folder_title = normalize_title(title_from_folder(name))
+                if folder_title in existing_index:
+                    safe_print(f"            NOTE: a matching Zenodo record already")
+                    safe_print(f"                  exists - live run would ADOPT it")
         return None, "dry-run"
 
-    if existing and not force_new_version:
+    # ---- ADOPTION safety net ----
+    # If there is no state entry for this paper but Zenodo already has a
+    # published record with the same title, adopt it instead of creating
+    # a duplicate. This is what protects against a lost state file.
+    if existing is None and existing_index is not None:
+        folder_title = normalize_title(title_from_folder(name))
+        match = existing_index.get(folder_title)
+        if match:
+            dep_id = match.get("id")
+            version_doi = match.get("doi")
+            concept_doi = match.get("conceptdoi")
+            pub_date = (match.get("metadata") or {}).get("publication_date") or "?"
+
+            safe_print(f"  [adopt]  {name} - found existing record on Zenodo")
+            safe_print(f"           DOI:       {version_doi}")
+            safe_print(f"           concept:   {concept_doi}")
+            safe_print(f"           published: {pub_date}")
+            safe_print(f"           Reusing it instead of creating a duplicate.")
+
+            state[name] = {
+                "id": dep_id,
+                "doi": version_doi,
+                "concept_doi": concept_doi,
+                "published": pub_date + " (adopted)",
+                "files_hash": compute_paper_hash(paper_dir),
+            }
+            save_doi_state(state)
+            return version_doi, "adopted"
+
+    # ---- decide mode ----
+    if not existing:
+        mode = "create"
+        outcome = "created"
+        safe_print(f"  [create] {name} - new deposition")
+    else:
         current_hash = compute_paper_hash(paper_dir)
         stored = existing.get("files_hash")
 
@@ -425,15 +521,30 @@ def process_paper(name, paper_dir, api_base, token, state, dry_run=False,
                        f"{existing.get('doi')}")
             return existing.get("doi"), "skipped"
 
-        safe_print(f"  [stale]  {name} - files changed since DOI was minted")
-        safe_print(f"           DOI:       {existing.get('doi')}")
-        safe_print(f"           published: {existing.get('published', '?')}")
-        safe_print(f"           To publish a new version, run:")
-        safe_print(f"             zenodo_release.bat {name}")
-        return existing.get("doi"), "stale"
+        if force_new_version or auto_release_stale:
+            mode = "version"
+            outcome = "updated"
+            safe_print(f"  [update] {name} - files changed, publishing new version")
+            safe_print(f"           previous:  {existing.get('doi')}")
+            safe_print(f"           published: {existing.get('published', '?')}")
+        else:
+            safe_print(f"  [stale]  {name} - files changed since DOI was minted")
+            safe_print(f"           DOI:       {existing.get('doi')}")
+            safe_print(f"           published: {existing.get('published', '?')}")
+            safe_print(f"           To publish a new version, run:")
+            safe_print(f"             zenodo_release.bat {name}")
+            return existing.get("doi"), "stale"
 
-    if existing and force_new_version:
-        safe_print(f"  [update] {name} - creating new version")
+    # ---- create or new version ----
+    if mode == "create":
+        try:
+            draft = create_deposition(api_base, token)
+        except Exception as e:
+            safe_print(f"    [ERROR] create failed:")
+            for line in str(e).splitlines():
+                safe_print(f"      {line}")
+            return None, "failed"
+    else:  # mode == "version"
         try:
             draft = new_version(api_base, existing["id"], token)
         except Exception as e:
@@ -444,7 +555,6 @@ def process_paper(name, paper_dir, api_base, token, state, dry_run=False,
         if not draft_id:
             safe_print("    [ERROR] could not determine new draft ID")
             return None, "failed"
-        deposition_id = draft_id
         try:
             draft = api_request(
                 f"{api_base}/deposit/depositions/{draft_id}", token=token
@@ -452,17 +562,8 @@ def process_paper(name, paper_dir, api_base, token, state, dry_run=False,
         except Exception as e:
             safe_print(f"    [ERROR] could not fetch draft: {e}")
             return None, "failed"
-    else:
-        safe_print(f"  [create] {name} - new deposition")
-        try:
-            draft = create_deposition(api_base, token)
-        except Exception as e:
-            safe_print(f"    [ERROR] create failed:")
-            for line in str(e).splitlines():
-                safe_print(f"      {line}")
-            return None, "failed"
-        deposition_id = draft["id"]
 
+    deposition_id = draft["id"]
     bucket_url = draft.get("links", {}).get("bucket")
     if not bucket_url:
         safe_print("    [ERROR] no bucket URL in deposition response")
@@ -517,11 +618,11 @@ def process_paper(name, paper_dir, api_base, token, state, dry_run=False,
     save_doi_state(state)
 
     write_citation_cff(paper_dir, name, doi, concept_doi)
-    return doi, "created"
+    return doi, outcome
 
 
 def write_citation_cff(paper_dir, name, doi, concept_doi):
-    title = name.replace("-", " ").replace("_", " ").strip()
+    title = title_from_folder(name)
     cff = f"""cff-version: 1.2.0
 title: "{title}"
 message: "If you use this work, please cite it as below."
@@ -544,26 +645,17 @@ identifiers:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--dry-run", action="store_true",
-                        help="Show what would be done, take no action")
-    parser.add_argument("--sandbox", action="store_true",
-                        help="Use Zenodo sandbox instead of production")
-    parser.add_argument("--only", metavar="NAME",
-                        help="Process only this subdirectory")
-    parser.add_argument("--new-version", action="store_true",
-                        help="Create new versions for papers that already have DOIs")
-    parser.add_argument("--reset", action="store_true",
-                        help="Delete .zenodo_dois.json BEFORE running")
-    parser.add_argument("--reset-on-success", action="store_true",
-                        help="Delete .zenodo_dois.json AFTER a fully successful run")
-    parser.add_argument("--status", action="store_true",
-                        help="Report DOI status of all papers (no token, no API)")
-    parser.add_argument("--verify-stale", metavar="NAME",
-                        help="Check if a paper's files changed since publishing "
-                             "(exit 0 if changed, 1 if unchanged, 2 if untracked)")
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--sandbox", action="store_true")
+    parser.add_argument("--only", metavar="NAME")
+    parser.add_argument("--new-version", action="store_true")
+    parser.add_argument("--auto-release-stale", action="store_true")
+    parser.add_argument("--reset", action="store_true")
+    parser.add_argument("--reset-on-success", action="store_true")
+    parser.add_argument("--status", action="store_true")
+    parser.add_argument("--verify-stale", metavar="NAME")
     args = parser.parse_args()
 
-    # Short-circuit modes: no token, no API, no banner
     if args.status:
         return status_report()
     if args.verify_stale:
@@ -571,7 +663,6 @@ def main():
 
     if not ZENODO_TOKEN and not args.dry_run:
         safe_print("[FATAL] ZENODO_TOKEN environment variable is not set.")
-        safe_print("        set ZENODO_TOKEN=your_token_here")
         return 1
 
     api_base = SANDBOX_API if args.sandbox else ZENODO_API
@@ -586,7 +677,9 @@ def main():
     safe_print(f"DOI state:    {DOI_FILE}")
     safe_print(f"Mode:         {'DRY-RUN' if args.dry_run else 'LIVE'}")
     if args.new_version:
-        safe_print("             new versions enabled")
+        safe_print("             --new-version: forcing new version for all")
+    if args.auto_release_stale:
+        safe_print("             --auto-release-stale: stale papers will be updated")
     if args.reset:
         safe_print("             --reset: state will be wiped before run")
     if args.reset_on_success:
@@ -612,9 +705,19 @@ def main():
 
     state = load_doi_state()
 
+    # ---- Fetch existing depositions for adoption safety net ----
+    existing_index = None
+    if not args.dry_run:
+        safe_print("Fetching existing depositions for adoption check...")
+        existing_index = fetch_deposition_index(api_base, ZENODO_TOKEN)
+        safe_print(f"Indexed {len(existing_index)} published record(s) by title.")
+        safe_print("")
+
     created = 0
+    updated = 0
     skipped = 0
     stale   = 0
+    adopted = 0
     failed  = 0
 
     for name, paper_dir in papers:
@@ -625,12 +728,18 @@ def main():
             name, paper_dir, api_base, ZENODO_TOKEN, state,
             dry_run=args.dry_run,
             force_new_version=args.new_version,
+            auto_release_stale=args.auto_release_stale,
+            existing_index=existing_index,
         )
 
         if args.dry_run:
             continue
         if outcome == "created":
             created += 1
+        elif outcome == "updated":
+            updated += 1
+        elif outcome == "adopted":
+            adopted += 1
         elif outcome == "skipped":
             skipped += 1
         elif outcome == "stale":
@@ -643,15 +752,16 @@ def main():
     if args.dry_run:
         safe_print(" Dry run complete. No changes were made.")
     else:
-        line = f" Done. Created: {created}  Skipped: {skipped}  Failed: {failed}"
+        line = (f" Done. Created: {created}  Updated: {updated}  "
+                f"Adopted: {adopted}  Skipped: {skipped}  Failed: {failed}")
         if stale:
             line += f"  Stale: {stale}"
         safe_print(line)
         if stale:
             safe_print("")
             safe_print(" Stale papers have edits since their DOI was minted.")
-            safe_print(" To publish an update, run:")
-            safe_print("   zenodo_release.bat <paper-name>")
+            safe_print(" To publish updates, run:")
+            safe_print("   zenodo_doi.bat")
         safe_print(f" DOI state saved to: {DOI_FILE}")
     safe_print("=" * 60)
 

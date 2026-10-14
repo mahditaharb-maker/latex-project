@@ -1,23 +1,23 @@
 {
   "Taylor-s-Theorem-with-Lagrange-Remainder-in-Mathlib-26A06": {
-    "concept_doi": "10.5281/zenodo.23375195",
-    "doi": "10.5281/zenodo.23375196",
+    "concept_doi": "10.5281/zenodo.23375843",
+    "doi": "10.5281/zenodo.23375844",
     "files_hash": "48b7e8e3cbe920ce73c6ce07f6ab816fd110d0aa7273b1528c78964f120c007c",
-    "id": 23375196,
-    "published": "2026-10-14 18:32:05"
+    "id": 23375844,
+    "published": "2026-10-14 19:09:17"
   },
   "The-Dependency-Ordered-Formal-Exposition-of-PDE": {
-    "concept_doi": "10.5281/zenodo.23375206",
-    "doi": "10.5281/zenodo.23375207",
+    "concept_doi": "10.5281/zenodo.23375876",
+    "doi": "10.5281/zenodo.23375877",
     "files_hash": "3ef00769c8e9072c2825aa5105dc457d81fda259503ba8270437c3d1f981812e",
-    "id": 23375207,
-    "published": "2026-10-14 18:32:30"
+    "id": 23375877,
+    "published": "2026-10-14 19:09:23"
   },
   "The-Fundamental-Theorem-of-Calculus-in-Mathlib-26A42": {
-    "concept_doi": "10.5281/zenodo.23375214",
-    "doi": "10.5281/zenodo.23375215",
-    "files_hash": "ea82c4ffc8254bd5b6b0d8499d65abc1f976d97539256033caaea030a74f2624",
-    "id": 23375215,
-    "published": "2026-10-14 18:33:03"
+    "concept_doi": "10.5281/zenodo.23375880",
+    "doi": "10.5281/zenodo.23375881",
+    "files_hash": "de794f385b3a3ee86113c9639fcc997d10521f5253d68150834e514f7b36869a",
+    "id": 23375881,
+    "published": "2026-10-14 19:09:30"
   }
 }
