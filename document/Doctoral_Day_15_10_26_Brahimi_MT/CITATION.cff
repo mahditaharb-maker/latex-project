@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+title: "Doctoral Day 15 10 26 Brahimi MT"
+message: "If you use this work, please cite it as below."
+type: software
+authors:
+  - family-names: Tahar
+    given-names: Mahdi
+    affiliation: "University Mohamed Boudiaf of M'Sila"
+    orcid: "https://orcid.org/0009-0007-2507-7548"
+license: MIT
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23405209
+    description: "Zenodo DOI for this work"

@@ -1,0 +1,1 @@
+D:\Python38\python.exe -c "import json; data=json.load(open('.zenodo_dois.json',encoding='utf-8')); data.pop('The-Dependency-Ordered-Formal-Exposition-of-PDE.synctex', None); open('.zenodo_dois.json','w',encoding='utf-8').write(json.dumps(data,indent=2,sort_keys=True)); print('removed synctex entry')"

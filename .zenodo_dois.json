@@ -1,4 +1,11 @@
 {
+  "Doctoral_Day_15_10_26_Brahimi_MT": {
+    "concept_doi": "10.5281/zenodo.23405209",
+    "doi": "10.5281/zenodo.23405210",
+    "files_hash": "55afe8ee385f50e473d703afe3c55aefe262b3a5683b07c72abcba351c19476d",
+    "id": 23405210,
+    "published": "2026-10-15 22:00:55"
+  },
   "Taylor-s-Theorem-with-Lagrange-Remainder-in-Mathlib-26A06": {
     "concept_doi": "10.5281/zenodo.23375843",
     "doi": "10.5281/zenodo.23375844",
@@ -12,13 +19,6 @@
     "files_hash": "09c119f8bb27d0204cf1776e14eba694a3e44225d4e34e90fdd2b78cca54f4d7",
     "id": 23381971,
     "published": "2026-10-15 01:20:32"
-  },
-  "The-Dependency-Ordered-Formal-Exposition-of-PDE.synctex": {
-    "concept_doi": "10.5281/zenodo.23382214",
-    "doi": "10.5281/zenodo.23382215",
-    "files_hash": "09c119f8bb27d0204cf1776e14eba694a3e44225d4e34e90fdd2b78cca54f4d7",
-    "id": 23382215,
-    "published": "2026-10-15 01:45:10"
   },
   "The-Fundamental-Theorem-of-Calculus-in-Mathlib-26A42": {
     "concept_doi": "10.5281/zenodo.23375880",
