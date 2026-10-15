@@ -1,0 +1,2154 @@
+% ============================================================
+% AMSART article template — SWP 5.5 compatible
+% Evans Appendices — dependency-ordered presentation
+% Compile with: pdflatex
+% ============================================================
+
+
+\documentclass[11pt,reqno]{amsart}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsfonts}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{titlesec,setspace}
+\usepackage[margin=0.5in]{geometry}
+
+\setcounter{MaxMatrixCols}{10}
+%TCIDATA{OutputFilter=LATEX.DLL}
+%TCIDATA{Version=5.50.0.2960}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{BibliographyScheme=Manual}
+%TCIDATA{LastRevised=Wednesday, October 14, 2026 22:51:35}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+
+\makeatletter
+\let\orig@maketitle\maketitle
+\renewcommand{\maketitle}{  \begingroup
+	\let\MakeUppercase\@firstofone
+	\let\uppercase\@firstofone
+	\orig@maketitle
+	\endgroup
+}
+\makeatother
+\newcounter{swpentry}
+\makeatletter
+\newcommand{\swpentry}[2]{  \refstepcounter{swpentry}  \hypertarget{#1}{\theswpentry}  \label{#2}}
+\makeatother
+\newcommand{\mcite}[1]{\text{\cite{#1}}}
+\titleformat{\section}
+{\normalfont\fontsize{12}{14}\selectfont\bfseries}
+{}{0em}{}
+\titleformat{\subsection}
+{\normalfont\fontsize{10}{12}\selectfont\bfseries}
+{}{0em}{}
+\titleformat{\subsubsection}
+{\normalfont\fontsize{9}{11}\selectfont\bfseries}
+{}{0em}{}
+\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\titlespacing*{\subsubsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\renewenvironment{proof}[1][Proof]{\noindent\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
+\setlength{\arraycolsep}{7pt}
+\renewcommand{\arraystretch}{2}
+\renewcommand{\normalsize}{\fontsize{4}{6}\selectfont}
+\subjclass[2000]{\textbf{35-01, 46-01, 26-01, 28-01, 00A22}}
+\keywords{\textbf{notation, inequalities, Gauss--Green, mollifiers,
+		Banach space, Hilbert space, weak convergence, Lebesgue measure}}
+\pagestyle{plain}
+\renewcommand{\seriesdefault}{\bfdefault}
+\boldmath
+\renewcommand{\abstractname}{\fontsize{16}{18}\selectfont Abstract}
+\newcommand{\abstractfont}{	\normalfont
+	\fontsize{11}{13.2}\selectfont
+}
+\newcommand{\abstractheadingsep}{\vspace{1em}}
+\makeatletter
+\renewenvironment{abstract}{	\ifx\maketitle\relax
+	\ClassWarning{\@classname}{Abstract should precede
+		\protect\maketitle\space in AMS document classes; reported}	\fi
+	\global\setbox\abstractbox=\vtop \bgroup
+	\abstractfont
+	{\centering\abstractname\par}	\abstractheadingsep
+	\list{}{\labelwidth\z@
+		\leftmargin3pc \rightmargin\leftmargin
+		\listparindent\normalparindent \itemindent\z@
+		\parsep\z@ \@plus\p@
+		\let\fullwidthdisplay\relax
+	}	\item\relax
+}{	\endlist\egroup
+	\ifx\@setabstract\relax \@setabstracta \fi
+}
+\makeatother
+
+
+
+\begin{document}
+\title{{\bfseries{\Large \emph{The Dependency Ordered Formal Exposition of
+PDEs}}}}
+\author{%
+\bfseries{\large \hspace{1.5in} Brahimi Mahdi Tahar\newline
+\text{ \  } \newline
+\text{ \  } \hspace{0.5in}\text{ \  } University of Mohamed Boudiaf of M'sila, Algeria\newline
+\text{ \  } \newline
+\href{mailto:mahditahar.brahimi@univ-msila.dz}{mahditahar.brahimi@univ-msila.dz}}%
+}
+\maketitle
+
+
+\bfseries\setstretch{1.5}\begin{abstract}
+	\bfseries\setstretch{1.5}\large This document is a step-indexed, dependency-ordered presentation of
+	PDE using \cite{evans2010}. The entries are arranged in ten levels of a topological ordering: every result appears only after all results it depends on, with circular dependencies broken at the point where the simpler formulation is introduced first. Each entry is annotated with the choice strength of its proof: \textsf{ZF}, \textsf{ZF+DC},
+	or \textsf{ZFC}.
+\end{abstract}
+
+
+\setstretch{1.5}
+
+% ============================================================
+
+\section*{\textsf{Background --- Unproved Calculus Statements}}
+
+\noindent The following block gathers, in one independent list, every calculus
+or topology result that is taken as \emph{given} rather than proved in this
+document. They are stated here as numbered background assumptions
+$B_{1},\dots,B_{5}$, before Level~0, so that the ten levels below depend only
+on these assumptions and on the primitives of Level~0. No proof of
+$B_{1},\dots,B_{5}$ is given in this document; their choice strength is the
+proof-theoretic strength of the standard proofs. Note that
+$B_{1},B_{2},B_{3},B_{4}$ are $\mathsf{ZF}$-level facts, whereas $B_{5}$ is a
+$\mathsf{ZFC}$-level topology fact (Tychonoff is equivalent to the Axiom of
+Choice).
+
+\medskip
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{lem:MVT}{\theswpentry} \label%
+{lemi:MVT} & B_{1}\;(\mathsf{MVT}):\forall f\in C([a,b])\cap D((a,b)),\;%
+\exists c\in(a,b),\;f^{\prime }(c)=(f(b)-f(a))/(b-a) & \mathsf{Mean Value
+Theorem}\ \text{\cite{simpson2009}} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{lem:MVTI}{\theswpentry} \label%
+{lemi:MVTI} & B_{2}\;(\mathsf{MVTI}):\forall w\ge0,\;g\in C([a,b]),\;%
+\exists c\in[a,b],\;\int_{a}^{b}w(t)g(t)\,dt=g(c)\int_{a}^{b}w(t)\,dt & 
+\mathsf{Weighted Mean Value Theorem for Integrals} & \mathsf{ZF} \\ 
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{lem:IBP}{\theswpentry} \label%
+{lemi:IBP} & B_{3}\;(\mathsf{IBP}):\int_{a}^{b}u^{\prime }(t)v(t)\,dt=[uv]_{a}%
+^{b}-\int_{a}^{b}u(t)v^{\prime }(t)\,dt & \mathsf{Integration by Parts} & 
+\mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{lem:BolzanoWeierstrass}{\theswpentry} \label%
+{lemi:BolzanoWeierstrass} & B_{4}\;(\mathsf{BW}):\forall \{x_{k}\}\subset%
+\mathbb{R}^{n},\;\mathsf{Bdd}(x_{k})\Rightarrow\exists\{x_{k_{j}}\},\;x\in%
+\mathbb{R}^{n},\;x_{k_{j}}\to x & \mathsf{Bolzano}-\mathsf{Weierstrass\ Theorem} & 
+\mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{lem:Tychonoff}{\theswpentry} \label%
+{lemi:Tychonoff} & B_{5}\;(\mathsf{Tych}):\forall \{X_{i}\}_{i\in I},\;%
+\bigl(\forall i,\;\mathsf{Compact}(X_{i})\bigr)\Rightarrow\mathsf{Compact}%
+\bigl(\textstyle\prod_{i\in I}X_{i}\bigr) & \mathsf{Tychonoff^{\prime }s\ Theorem} & 
+\mathsf{ZFC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent\textit{Convention.} All references of the form
+$B_{k}$ in what follows point to the block above. No entry of
+Levels~0--9 may depend on anything outside
+$\{B_{1},B_{2},B_{3},B_{4},B_{5}\}$ plus the
+Level~0 primitives. The calculus results
+$\mathsf{FTC}$, $\mathsf{Taylor}$, $\mathsf{ProductRule}$, $\mathsf{ChainRule}$,
+$\mathsf{JacobiFormula}$, and $\mathsf{JacobiFormulaAdj}$ are \emph{not}
+background assumptions; they are proved inside Level~1 below.
+
+\medskip
+
+% ============================================================
+
+\section*{\textsf{Level 0 --- Primitive Axioms and Elementary Definitions}}
+
+% ============================================================
+\setstretch{1} \noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{ax:R-comm}{\theswpentry}\label%
+{axi:R-comm} & \mathsf{ax:R}-\mathsf{comm}:\forall (x:\mathbb{R})(y:\mathbb{R%
+}),\mathsf{add}(x,y)=\mathsf{add}(y,x) & \mathsf{AdditiveCommutativityAxiom}
+& \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{ax:R-assoc}{\theswpentry}\label%
+{axi:R-assoc} & \mathsf{ax:R}-\mathsf{assoc}:\forall (x:\mathbb{R})(y:%
+\mathbb{R})(z:\mathbb{R}),\mathsf{add}(\mathsf{add}(x,y),z)=\mathsf{add}(x,%
+\mathsf{add}(y,z)) & \mathsf{AdditiveAssociativityAxiom} & \mathsf{ZF} \\ 
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{ax:R-order}{\theswpentry}\label%
+{axi:R-order} & \mathsf{ax:R}-\mathsf{order}:\forall (x:\mathbb{R})(y:%
+\mathbb{R})(z:\mathbb{R}),\mathsf{le}(x,y)\wedge \mathsf{le}(y,z)\Rightarrow 
+\mathsf{le}(x,z) & \mathsf{TransitivityofOrderAxiom} & \mathsf{ZF} \\ 
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{ax:R-complete}{\theswpentry}\label%
+{axi:R-complete} & \mathsf{ax:R}-\mathsf{complete}:\forall (a:\mathbb{N}%
+\rightarrow \mathbb{R}),\mathsf{Cauchy}(a)\Rightarrow \exists (L:\mathbb{R}%
+),\lim_{n\rightarrow \infty }a(n)=L & \mathsf{CompletenessAxiom} & \mathsf{ZF%
+} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{ax:R-mul-compat}{\theswpentry}\label%
+{axi:R-mul-compat} & \mathsf{ax:R}-\mathsf{mul}:\forall (x,y,z:\mathbb{R}),%
+\;x\le y\wedge 0\le z\Rightarrow xz\le yz & \mathsf{%
+MultiplicationCompatibility} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{ax:R-add-compat}{\theswpentry}\label%
+{axi:R-add-compat} & \mathsf{ax:R}-\mathsf{add}:\forall (x,y,z:\mathbb{R}),%
+\;x\le y\Rightarrow x+z\le y+z & \mathsf{AdditionCompatibility} & \mathsf{ZF}
+\\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:M}{\theswpentry} \label{Defi:M} & 
+\mathsf{Def:M}:\mathbf{M}^{m\times n}:=\mathsf{space}(\mathbb{R}^{m\times n})
+& \mathsf{Definition of Matrix Space} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:S}{\theswpentry} \label{Defi:S} & 
+\mathsf{Def:S}:\mathbf{S}^{n}:=\mathsf{space}(\mathbb{R}^{n\times n})\wedge%
+\mathsf{sym}(\mathbf{S}^{n}) & \mathsf{Definition of Symmetric Matrix Space}
+& \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:tr}{\theswpentry} \label{Defi:tr}
+& \mathsf{Def:tr}:\forall(A\in\mathbf{M}^{n\times n}),\mathsf{tr}%
+(A)=\sum_{i=1}^{n}A_{ii} & \mathsf{Definition of Trace} & \mathsf{ZF} \\ 
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:diag}{\theswpentry} \label%
+{Defi:diag} & \mathsf{Def:diag}:\mathsf{diag}(d_{1},\dots,d_{n})_{ij}:=d_{i}%
+\delta_{ij} & \mathsf{Definition of Diagonal Matrix} & \mathsf{ZF} \\ 
+\hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:colon}{\theswpentry}\label%
+{Defi:colon} & \mathsf{Def:colon}:\forall (A,B\in \mathbf{M}^{m\times n}),%
+\mathsf{colon}(A,B)=\sum_{i,j}A_{ij}B_{ij} & \mathsf{%
+DefinitionofMatrixInnerProduct} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:quad}{\theswpentry}\label%
+{Defi:quad} & \mathsf{Def:quad}:\forall (A\in \mathbf{S}^{n})(x\in \mathbb{R}%
+^{n}),\mathsf{quad}(A,x)=\sum_{i,j}A_{ij}x_{i}x_{j} & \mathsf{%
+DefinitionofQuadraticForm} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:sphere}{\theswpentry}\label%
+{Defi:sphere} & \mathsf{Def:sphere}:S^{n-1}:=\partial B(0,1)\subset \mathbb{R%
+}^{n} & \mathsf{DefinitionofUnitSphere} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:halfspace}{\theswpentry}\label%
+{Defi:halfspace} & \mathsf{Def:halfspace}:\mathbb{R}_{+}^{n}:=\{x\in \mathbb{%
+R}^{n}\mid x_{n}>0\} & \mathsf{DefinitionofUpperHalf}-\mathsf{Space} & 
+\mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:compactcontained}{\theswpentry} %
+\label{Defi:compactcontained} & \mathsf{Def:compactcontained}%
+:\forall(U,V\subset\mathbb{R}^{n}),\mathsf{ccontained}(V,U):\Leftrightarrow
+V\subset\overline{V}\subset U\wedge\mathsf{compact}(\overline{V}) & \mathsf{%
+Definition of Compact Containment} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:UT}{\theswpentry} \label{Defi:UT}
+& \mathsf{Def:UT}:U_{T}:=U\times(0,T] & \mathsf{Definition of Parabolic
+Cylinder} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:alpha}{\theswpentry} \label%
+{Defi:alpha} & \mathsf{Def:alpha}:\mathsf{alpha}(n):=|B(0,1)|=\frac{\pi^{n/2}%
+}{\Gamma(n/2+1)} & \mathsf{Definition of Unit Ball Volume} & \mathsf{ZF} \\ 
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:spt}{\theswpentry} \label%
+{Defi:spt} & \mathsf{Def:spt}:\mathsf{spt}(u):=\overline{\{x\mid u(x)\neq0\}}
+& \mathsf{Definition of Support} & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:posneg}{\theswpentry} \label%
+{Defi:posneg} & \mathsf{Def:posneg}:\mathsf{pos}(u)=\max(u,0),\mathsf{neg}%
+(u)=-\min(u,0) & \mathsf{Definition of Positive and Negative Parts} & 
+\mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:sgn}{\theswpentry} \label%
+{Defi:sgn} & \mathsf{Def:sgn}:\mathsf{sgn}(x):=\mathbf{1}_{\{x>0\}}-\mathbf{1%
+}_{\{x<0\}} & \mathsf{Definition of Sign Function} & \mathsf{ZF} \\ 
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:char}{\theswpentry} \label%
+{Defi:char} & \mathsf{Def:char}:\mathsf{char}(E,x):=\mathbf{1}_{\{x\in E\}}
+& \mathsf{Definition of Characteristic Function} & \mathsf{ZF} \\ 
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:Lip}{\theswpentry} \label%
+{Defi:Lip} & \mathsf{Def:Lip}:\mathsf{Lip}(u):=\sup_{x\neq y}\frac{%
+|u(x)-u(y)|}{|x-y|} & \mathsf{Definition of Lipschitz Constant} & \mathsf{ZF}
+\\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:conv}{\theswpentry}\label%
+{Defi:conv} & \mathsf{Def:conv}:\mathsf{conv}(f,g)(x):=\int f(x-y)g(y)\,dy & 
+\mathsf{DefinitionofConvolution} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:multi}{\theswpentry}\label%
+{Defi:multi} & \mathsf{Def:multi}:\forall (\alpha \in \mathbb{N}^{n}),%
+\mathsf{order}(\alpha ):=\alpha _{1}+\cdots +\alpha _{n} & \mathsf{%
+DefinitionofMulti}-\mathsf{IndexOrder} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:Dalpha}{\theswpentry}\label%
+{Defi:Dalpha} & \mathsf{Def:Dalpha}:\mathsf{Da}(\alpha ,u):=\partial
+_{x_{1}}^{\alpha _{1}}\cdots \partial _{x_{n}}^{\alpha _{n}}u & \mathsf{%
+DefinitionofMulti}-\mathsf{IndexDerivative} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:grad}{\theswpentry}\label%
+{Defi:grad} & \mathsf{Def:grad}:\mathsf{grad}(u):=(u_{x_{1}},\dots
+,u_{x_{n}}) & \mathsf{DefinitionofGradient} & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:bigO}{\theswpentry}\label%
+{Defi:bigO} & \mathsf{Def:bigO}:\mathsf{bigO}(f,g,x_{0}):\Leftrightarrow
+\exists C,\forall x\,\mathsf{near}(x,x_{0}),|f(x)|\leq C|g(x)| & \mathsf{%
+DefinitionofBig}-\mathsf{ONotation} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:littleo}{\theswpentry}\label%
+{Defi:littleo} & \mathsf{Def:littleo}:\mathsf{littleo}(f,g,x_{0}):%
+\Leftrightarrow \lim_{x\rightarrow x_{0}}|f(x)|/|g(x)|=0 & \mathsf{%
+DefinitionofLittle}-\mathsf{oNotation} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{rem:grad}{\theswpentry}\label%
+{remi:grad} & \mathsf{rem:grad}:Du\not\equiv \nabla u\wedge D^{2}u=\mathsf{%
+Hessian}\wedge \nabla ^{2}u\neq \mathsf{Hessian} & \mathsf{%
+RemarkonGradientNotation} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{rem:Omega}{\theswpentry}\label%
+{remi:Omega} & \mathsf{rem:Omega}:U\not\equiv \Omega \wedge \Omega :=\mathsf{%
+prob}-\mathsf{space} & \mathsf{RemarkonDomainNotation} & \mathsf{ZF} \\ 
+\hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:moll}{\theswpentry}\label%
+{Defi:moll} & \mathsf{Def:moll}:\mathsf{moll}(\eta ):\Leftrightarrow \eta
+(x)=C\exp \!\bigl(\tfrac{1}{|x|^{2}-1}\bigr)\mathbf{1}_{\{|x|<1\}}\wedge
+\int \eta \,dx=1 & \mathsf{DefinitionofMollifier} & \mathsf{ZF} \\ 
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:Norm}{\theswpentry}\label%
+{Defi:Norm} & \mathsf{Def:Norm}:\mathsf{Norm}(\Vert \cdot \Vert
+):\Leftrightarrow \forall u,v,\Vert u+v\Vert \leq \Vert u\Vert +\Vert v\Vert
+\wedge \forall \lambda ,\Vert \lambda u\Vert =|\lambda |\Vert u\Vert \wedge
+\Vert u\Vert =0\Leftrightarrow u=0 & \mathsf{DefinitionofNorm} & \mathsf{ZF}
+\\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:nu}{\theswpentry}\label{Defi:nu} & 
+\mathsf{Def:nu}:\mathsf{UnitNormal}(\nu ,\partial U):\Leftrightarrow \nu
+=(\nu ^{1},\dots ,\nu ^{n})\wedge |\nu |=1 & \mathsf{DefinitionofUnitNormal}
+& \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:funcCk}{\theswpentry}\label%
+{Defi:funcCk} & \mathsf{Def:funcCk}:C^{k}(U):=\{u\mid u\;\mathsf{k}-\mathsf{%
+times}-\mathsf{contdiff}\} & \mathsf{DefinitionofCkFunctions} & \mathsf{ZF}
+\\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+% ============================================================
+
+\section*{\textsf{Level 1}}
+
+% ============================================================
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{lem:FTC}{\theswpentry}\label{lemi:FTC}
+& \mathsf{FTC}:\forall(f:[a,b]\to\mathbb{R}),f\in C^{1}\Rightarrow
+\int_{a}^{b}f^{\prime}(t)\,dt=f(b)-f(a) & \mathsf{Fundamental\ Theorem\
+of\ Calculus} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{lem:Taylor}{\theswpentry}\label{lemi:Taylor}
+& \mathsf{Taylor}:\forall(f:\mathbb{R}\to\mathbb{R}),f\in C^{2}\wedge x,z
+\in\mathbb{R}\Rightarrow\exists\xi\in[x,z],\;f(x)=f(z)+f^{\prime}(z)(x-z)
++\tfrac{1}{2}f^{\prime\prime}(\xi)(x-z)^{2} & \mathsf{Taylor^{\prime}s\
+Theorem\ with\ Lagrange\ Remainder} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{lem:ProductRule}{\theswpentry}\label{lemi:ProductRule}
+& \mathsf{ProductRule}:\forall u,v\in C^{1},\;(uv)^{\prime}=u^{\prime}v
++uv^{\prime} & \mathsf{Product\ Rule\ for\ Derivatives} & \mathsf{ZF} \\
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{lem:ChainRule}{\theswpentry}\label{lemi:ChainRule}
+& \mathsf{ChainRule}:\forall(f,g)\in C^{1},\;(f\circ g)^{\prime}=f^{\prime}(g)
+\,g^{\prime} & \mathsf{Chain\ Rule\ for\ Derivatives} & \mathsf{ZF} \\
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{lem:JacobiFormula}{\theswpentry}\label{lemi:JacobiFormula}
+& \mathsf{JacobiFormula}:\forall A\in C^{1},\;(\forall t,\det A(t)\neq0)
+\Rightarrow\tfrac{d}{dt}\det A=\det A\cdot\mathsf{tr}(A^{-1}A^{\prime})
+& \mathsf{Jacobi^{\prime}s\ Formula\ (invertible\ case)} & \mathsf{ZF} \\
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{lem:JacobiFormulaAdj}{\theswpentry}\label{lemi:JacobiFormulaAdj}
+& \mathsf{JacobiFormulaAdj}:\forall A\in C^{1},\;\tfrac{d}{dt}\det A
+=\mathsf{tr}\bigl(\mathsf{adj}(A)\cdot A^{\prime}\bigr)
+& \mathsf{Jacobi^{\prime}s\ Formula\ (adjugate\ form)} & \mathsf{ZF} \\
+\hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:normM}{\theswpentry}\label%
+{Defi:normM} & \mathsf{Def:normM}:\forall (A\in \mathbf{M}^{m\times n}),%
+\mathsf{normM}(A)=(\mathsf{colon}(A,A))^{1/2} & \mathsf{%
+DefinitionofMatrixNorm} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:ge}{\theswpentry}\label{Defi:ge} & 
+\mathsf{Def:ge}:\forall (A,B\in \mathbf{S}^{n}),\mathsf{ge}%
+(A,B):\Leftrightarrow \mathsf{nonnegDef}(\mathsf{sub}(A,B)) & \mathsf{%
+DefinitionofMatrixOrder} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:parab}{\theswpentry}\label%
+{Defi:parab} & \mathsf{Def:parab}:\Gamma _{T}:=\overline{U}_{T}\setminus
+U_{T} & \mathsf{DefinitionofParabolicBoundary} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:avg-ball}{\theswpentry}\label%
+{Defi:avg-ball} & \mathsf{Def:avg}-\mathsf{ball}:\mathsf{avgB}(f,x,r):=\frac{%
+1}{\mathsf{alpha}(n)r^{n}}\int_{B(x,r)}f\,dy & \mathsf{%
+DefinitionofBallAverage} & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:avg-sph}{\theswpentry}\label%
+{Defi:avg-sph} & \mathsf{Def:avg}-\mathsf{sph}:\mathsf{avgS}(f,x,r):=\frac{1%
+}{n\,\mathsf{alpha}(n)r^{n-1}}\int_{\partial B(x,r)}f\,dS & \mathsf{%
+DefinitionofSphereAverage} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:avg-set}{\theswpentry}\label%
+{Defi:avg-set} & \mathsf{Def:avg}-\mathsf{set}:\mathsf{avgE}(f,E):=\frac{1}{%
+\mu (E)}\int_{E}f\,d\mu \quad (\mu (E)>0) & \mathsf{DefinitionofSetAverage}\ 
+\text{\cite{solovay1970}} & \mathsf{ZF+DC} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:Simple}{\theswpentry}\label%
+{Defi:Simple} & \mathsf{Def:Simple}:\mathsf{Simple}(\mathbf{s}%
+):\Leftrightarrow \exists E_{i},u_{i},\mathbf{s}=\sum \chi _{E_{i}}u_{i} & 
+\mathsf{DefinitionofSimpleFunction} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:StrongConv}{\theswpentry}\label%
+{Defi:StrongConv} & \mathsf{Def:StrongConv}:\mathsf{StrongConv}%
+(u,u_{0}):\Leftrightarrow \lim_{k}\Vert u_{k}-u_{0}\Vert =0 & \mathsf{%
+DefinitionofStrongConvergence} & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:perp}{\theswpentry} \label%
+{Defi:perp} & \mathsf{Def:perp}:\mathsf{perp}(u,v):\Leftrightarrow(u,v)=0 & 
+\mathsf{Definition of Orthogonality} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:ONB}{\theswpentry} \label%
+{Defi:ONB} & \mathsf{Def:ONB}:\forall w,\;\mathsf{ONB}(w):\Leftrightarrow
+\bigl(\forall k\neq l,(w_{k},w_{l})=0\bigr)\wedge\bigl(\forall k,\Vert
+w_{k}\Vert=1\bigr)\wedge\bigl(\forall u,\;(\forall k,(u,w_{k})=0)\Rightarrow
+u=0\bigr) & \mathsf{Definition of Orthonormal Basis (with density)} & 
+\mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:Sperp}{\theswpentry} \label%
+{Defi:Sperp} & \mathsf{Def:Sperp}:\mathsf{Sperp}(S):=\{u\mid\forall v\in
+S,(u,v)=0\} & \mathsf{Definition of Orthogonal Complement} & \mathsf{ZF} \\ 
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:Linear}{\theswpentry} \label%
+{Defi:Linear} & \mathsf{Def:Linear}:\forall A,\mathsf{Linear}%
+(A):\Leftrightarrow\forall u,v,\lambda,\mu,A[\lambda u+\mu v]=\lambda Au+\mu
+Av & \mathsf{Definition of Linear Operator} & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:Bdd}{\theswpentry} \label%
+{Defi:Bdd} & \mathsf{Def:Bdd}:\mathsf{Bdd}(A):\Leftrightarrow\exists C,\Vert
+Au\Vert\leq C\Vert u\Vert & \mathsf{Definition of Bounded Operator} & 
+\mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:ClosedOp}{\theswpentry} \label%
+{Defi:ClosedOp} & \mathsf{Def:ClosedOp}:\forall A,\mathsf{ClosedOp}%
+(A):\Leftrightarrow u_{k}\rightarrow u\wedge Au_{k}\rightarrow v\Rightarrow
+Au=v & \mathsf{Definition of Closed Operator} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:rho}{\theswpentry} \label%
+{Defi:rho} & \mathsf{Def:rho}:\mathsf{rho}(A):=\{\eta\mid\mathsf{Bijective}%
+(A-\eta I)\} & \mathsf{Definition of Resolvent Set} & \mathsf{ZF} \\ 
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:pairing}{\theswpentry} \label%
+{Defi:pairing} & \mathsf{Def:pairing}:\mathsf{pairing}(u^{\ast},u):=u^{%
+\ast}(u) & \mathsf{Definition of Dual Pairing} & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:Hess}{\theswpentry}\label%
+{Defi:Hess} & \mathsf{Def:Hess}:\mathsf{Hess}(u):=(u_{x_{i}x_{j}})_{i,j}\in 
+\mathbf{S}^{n} & \mathsf{DefinitionofHessian} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:Dk}{\theswpentry}\label{Defi:Dk} & 
+\mathsf{Def:Dk}:\mathsf{Dk}(k,u):=\{D^{\alpha }u\mid |\alpha |=k\} & \mathsf{%
+Definitionofk}-\mathsf{thOrderDerivativeSet} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:dnu}{\theswpentry}\label{Defi:dnu}
+& \mathsf{Def:dnu}:\mathsf{dnu}(u,\nu ):=\nu \cdot \mathsf{grad}(u) & 
+\mathsf{DefinitionofNormalDerivative} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:moll-eps}{\theswpentry}\label%
+{Defi:moll-eps} & \mathsf{Def:moll}-\mathsf{eps}:\mathsf{moll}-\mathsf{eps}%
+(\eta _{\epsilon },\eta ):\Leftrightarrow \eta _{\epsilon }(x)=\epsilon
+^{-n}\eta (x/\epsilon ) & \mathsf{DefinitionofStandardMollifier} & \mathsf{ZF%
+} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{lem:Cauchy}{\theswpentry} \label%
+{lemi:Cauchy} & \mathsf{Cauchy}:\forall a,b,\mathsf{Cauchy}%
+(a,b):\Leftrightarrow ab\leq\tfrac{a^{2}}{2}+\tfrac{b^{2}}{2} & \mathsf{%
+Cauchy^{\prime }s Inequality} & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+% ============================================================
+
+\section*{\textsf{Level 2}}
+
+% ============================================================
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:InnerProduct}{\theswpentry}\label%
+{Defi:InnerProduct} & \mathsf{Def:InnerProduct}:\forall (\cdot ,\cdot ),%
+\mathsf{InnerProduct}((\cdot ,\cdot )):\Leftrightarrow \mathsf{Sym}((\cdot
+,\cdot ))\wedge \mathsf{Bilinear}((\cdot ,\cdot ))\wedge \forall u,(u,u)\geq
+0\wedge (u,u)=0\Leftrightarrow u=0 & \mathsf{DefinitionofInnerProduct} & 
+\mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:Lap}{\theswpentry}\label{Defi:Lap}
+& \mathsf{Def:Lap}:\mathsf{Lap}(u):=\sum_{i}u_{x_{i}x_{i}}=\mathsf{tr}(%
+\mathsf{Hess}(u)) & \mathsf{DefinitionofLaplacian} & \mathsf{ZF} \\ 
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:Ckbnd}{\theswpentry}\label%
+{Defi:Ckbnd} & \mathsf{Def:Ckbnd}:\forall (U,k),\mathsf{Ck}-\mathsf{bdy}%
+(U,k):\Leftrightarrow \forall x^{0}\in \partial U\;\exists r>0,\gamma \in
+C^{k}(\mathbb{R}^{n-1}):U\cap B(x^{0},r)=\{x_{n}>\gamma (x_{1},\dots
+,x_{n-1})\} & \mathsf{DefinitionofCk}-\mathsf{Boundary} & \mathsf{ZF} \\ 
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:LebesguePoint}{\theswpentry}\label%
+{Defi:LebesguePoint} & \mathsf{Def:LebesguePoint}:\mathsf{LebesguePoint}%
+(x_{0},f):\Leftrightarrow \lim_{r\rightarrow 0}\mathsf{avgB}%
+(|f-f(x_{0})|,x_{0},r)=0 & \mathsf{DefinitionofLebesguePoint}\ \text{\cite%
+{solovay1970}} & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:moll-f}{\theswpentry}\label%
+{Defi:moll-f} & \mathsf{Def:moll}-\mathsf{f}:\mathsf{moll}-\mathsf{f}%
+(f^{\epsilon },\eta _{\epsilon },f,U_{\epsilon }):\Leftrightarrow
+f^{\epsilon }=\eta _{\epsilon }\ast f & \mathsf{DefinitionofMollification}\ 
+\text{\cite{evans2010}} & \mathsf{ZF+DC} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:Dknorm}{\theswpentry}\label%
+{Defi:Dknorm} & \mathsf{Def:Dknorm}:\mathsf{Dknorm}(k,u):=(\sum_{|\alpha
+|=k}|D^{\alpha }u|^{2})^{1/2} & \mathsf{Definitionofk}-\mathsf{%
+thOrderDerivativeNorm} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:StronglyMeasurable}{\theswpentry}%
+\label{Defi:StronglyMeasurable} & \mathsf{Def:StronglyMeasurable}:\mathsf{%
+StronglyMeasurable}(\mathbf{f}):\Leftrightarrow \exists \mathbf{s}_{k}\;%
+\mathsf{Simple}(\mathbf{s}_{k})\wedge \mathbf{s}_{k}\rightarrow \mathbf{f}\;%
+\mathsf{a.e.} & \mathsf{DefinitionofStrongMeasurability}\ \text{\cite%
+{solovay1970}} & \mathsf{ZF+DC} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:Cauchy}{\theswpentry}\label%
+{Defi:Cauchy} & \mathsf{Def:Cauchy}:\forall (u:\mathbb{N}\rightarrow H),%
+\mathsf{Cauchy}(u):\Leftrightarrow \forall \epsilon >0\;\exists N,\forall
+k,l\geq N,\Vert u_{k}-u_{l}\Vert <\epsilon  & \mathsf{%
+DefinitionofCauchySequence} & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:Eigenvalue}{\theswpentry} \label%
+{Defi:Eigenvalue} & \mathsf{Def:Eigenvalue}:\mathsf{Eigenvalue}%
+(A,\eta):\Leftrightarrow N(A-\eta I)\neq\{0\} & \mathsf{Definition of
+Eigenvalue} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:sigma}{\theswpentry} \label%
+{Defi:sigma} & \mathsf{Def:sigma}:\mathsf{sigma}(A):=\mathbb{R}\setminus%
+\mathsf{rho}(A) & \mathsf{Definition of Spectrum} & \mathsf{ZF} \\ 
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:Xstar}{\theswpentry} \label%
+{Defi:Xstar} & \mathsf{Def:Xstar}:X^{\ast}:=\{\phi:H\rightarrow\mathbb{R}\mid%
+\mathsf{Linear}(\phi)\wedge\mathsf{Bdd}(\phi)\} & \mathsf{Definition of Dual
+Space} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{lem:SecondDerivCriterion}{\theswpentry%
+} \label{lemi:SecondDerivCriterion} & \mathsf{SecondDerivCriterion}%
+:\forall(f:\mathbb{R}\to\mathbb{R}),f\in C^{2}\wedge(\forall x\in\mathbb{R}%
+,f^{\prime \prime }(x)\ge0)\Rightarrow\mathsf{Convex}(f) & \mathsf{Second
+Derivative Convexity Criterion} & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{lem:CauchyEps}{\theswpentry} \label%
+{lemi:CauchyEps} & \mathsf{CauchyEps}:\forall a,b,\epsilon>0,\mathsf{%
+CauchyEps}(a,b,\epsilon):\Leftrightarrow ab\leq\epsilon a^{2}+\tfrac{b^{2}}{%
+4\epsilon} & \mathsf{Cauchy^{\prime }s Inequality with Epsilon} & \mathsf{ZF}
+\\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+% ============================================================
+
+\section*{\textsf{Level 3}}
+
+% ============================================================
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:SigmaAlgebra}{\theswpentry}\label%
+{Defi:SigmaAlgebra} & \mathsf{Def:SigmaAlgebra}:\mathsf{SigmaAlgebra}(%
+\mathcal{M}):\Leftrightarrow \emptyset ,\mathbb{R}^{n}\in \mathcal{M}\wedge
+\forall A\in \mathcal{M},\mathbb{R}^{n}\setminus A\in \mathcal{M}\wedge
+\forall \{A_{k}\}\subset \mathcal{M},\bigcup A_{k},\bigcap A_{k}\in \mathcal{%
+M} & \mathsf{DefinitionofSigma}-\mathsf{Algebra}\ \text{\cite{herrlich2006}}
+& \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:Measurable}{\theswpentry}\label%
+{Defi:Measurable} & \mathsf{Def:Measurable}:\mathsf{Measurable}%
+(f):\Leftrightarrow \forall U\subset \mathbb{R}\;\mathsf{Open}%
+(U),f^{-1}(U)\in \mathcal{M} & \mathsf{DefinitionofMeasurableFunction} & 
+\mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:Summable}{\theswpentry}\label%
+{Defi:Summable} & \mathsf{Def:Summable}:\mathsf{Summable}(f):\Leftrightarrow
+\int |f|\,dx<\infty  & \mathsf{DefinitionofSummableFunction}\ \text{\cite%
+{solovay1970}} & \mathsf{ZF+DC} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:esssup}{\theswpentry}\label%
+{Defi:esssup} & \mathsf{Def:esssup}:\mathsf{esssup}(f):=\inf \{\mu \mid
+|\{f>\mu \}|=0\} & \mathsf{DefinitionofEssentialSupremum}\ \text{\cite%
+{solovay1970}} & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:Banach}{\theswpentry} \label%
+{Defi:Banach} & \mathsf{Def:Banach}:\forall X,\mathsf{Banach}%
+(X):\Leftrightarrow\mathsf{Complete}(X)\wedge\mathsf{NormedLinear}(X) & 
+\mathsf{Definition of Banach Space}\ \text{\cite{brezis2011}} & \mathsf{ZF}
+\\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:Hilbert}{\theswpentry} \label%
+{Defi:Hilbert} & \mathsf{Def:Hilbert}:\forall H,\mathsf{Hilbert}%
+(H):\Leftrightarrow\mathsf{Banach}(H)\wedge\exists(\cdot,\cdot)\;\mathsf{%
+InnerProduct}((\cdot,\cdot)) & \mathsf{Definition of Hilbert Space}\ \text{%
+\cite{brezis2011}} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:Convex}{\theswpentry} \label%
+{Defi:Convex} & \mathsf{Def:Convex}:\forall(f:\mathbb{R}^{n}\rightarrow%
+\mathbb{R}),\mathsf{Convex}(f):\Leftrightarrow\forall
+x,y\;\forall(\tau:[0,1]),f(\tau x+(1-\tau)y)\leq\tau f(x)+(1-\tau)f(y) & 
+\mathsf{Definition of Convex Function} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:Reflexive}{\theswpentry} \label%
+{Defi:Reflexive} & \mathsf{Def:Reflexive}:\mathsf{Reflexive}%
+(X):\Leftrightarrow(X^{\ast})^{\ast}=X & \mathsf{Definition of Reflexive
+Space}\ \text{\cite{brezis2011}} & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:WeakConv}{\theswpentry} \label%
+{Defi:WeakConv} & \mathsf{Def:WeakConv}:\mathsf{WeakConv}(u,u_{0}):%
+\Leftrightarrow\forall u^{\ast}\in X^{\ast},\mathsf{pairing}%
+(u^{\ast},u_{k})\rightarrow\mathsf{pairing}(u^{\ast},u_{0}) & \mathsf{%
+Definition of Weak Convergence}\ \text{\cite{brezis2011}} & \mathsf{ZF} \\ 
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:adjoint}{\theswpentry} \label%
+{Defi:adjoint} & \mathsf{Def:adjoint}:\mathsf{adjoint}(A,A^{\ast}):%
+\Leftrightarrow\forall u,v,(Au,v)=(u,A^{\ast}v) & \mathsf{Definition of
+Adjoint Operator} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:WeaklyMeasurable}{\theswpentry} %
+\label{Defi:WeaklyMeasurable} & \mathsf{Def:WeaklyMeasurable}:\mathsf{%
+WeaklyMeasurable}(\mathbf{f}):\Leftrightarrow\forall u^{\ast}\in X^{\ast},%
+\mathsf{Measurable}(t\mapsto\mathsf{pairing}(u^{\ast},\mathbf{f}(t))) & 
+\mathsf{Definition of Weak Measurability}\ \text{\cite{solovay1970}} & 
+\mathsf{ZF+DC} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{Def:Separable}{\theswpentry} \label%
+{Defi:Separable} & \mathsf{Def:Separable}:\forall X,\mathsf{Separable}%
+(X):\Leftrightarrow\exists D\subset X,\mathsf{countable}(D)\wedge\mathsf{%
+dense}(D,X) & \mathsf{Definition of Separable Space}\ \text{\cite{brezis2011}%
+} & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{lem:expconvex}{\theswpentry}\label%
+{lemi:expconvex} & \mathsf{expconvex}:\forall (x,y,\tau ),\mathsf{expconvex}%
+(x,y,\tau ):\Leftrightarrow e^{\tau x+(1-\tau )y}\leq \tau e^{x}+(1-\tau
+)e^{y} & \mathsf{ConvexityoftheExponential} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{lem:Young}{\theswpentry}\label%
+{lemi:Young} & \mathsf{Young}:\forall a,b,p,q,\mathsf{Young}%
+(a,b,p,q):\Leftrightarrow ab\leq \tfrac{a^{p}}{p}+\tfrac{b^{q}}{q} & \mathsf{%
+Young^{\prime }sInequality}\ \text{\cite{evans2010}} & \mathsf{ZF} \\ 
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{lem:CauchySchwarz}{\theswpentry}\label%
+{lemi:CauchySchwarz} & \mathsf{CauchySchwarz}:\forall x,y,\mathsf{%
+CauchySchwarz}(x,y):\Leftrightarrow |x\cdot y|\leq |x||y| & \mathsf{Cauchy}-%
+\mathsf{SchwarzInequality} & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+% ============================================================
+
+\section*{\textsf{Level 4}}
+
+% ============================================================
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:AlmostSeparablyValued}{\theswpentry%
+}\label{Defi:AlmostSeparablyValued} & \mathsf{Def:AlmostSeparablyValued}:%
+\mathsf{AlmostSeparablyValued}(\mathbf{f}):\Leftrightarrow \exists
+N,|N|=0\wedge \mathsf{Separable}(\{\mathbf{f}(t)\mid t\notin N\}) & \mathsf{%
+DefinitionofAlmostSeparablyValued}\ \text{\cite{solovay1970}} & \mathsf{ZF+DC%
+} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:Symmetric}{\theswpentry}\label%
+{Defi:Symmetric} & \mathsf{Def:Symmetric}:\mathsf{Symmetric}%
+(A):\Leftrightarrow A^{\ast }=A & \mathsf{DefinitionofSymmetricOperator} & 
+\mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{Def:CompactOp}{\theswpentry}\label%
+{Defi:CompactOp} & \mathsf{Def:CompactOp}:\mathsf{CompactOp}%
+(K):\Leftrightarrow \forall \{u_{k}\}\mathsf{Bdd}(u_{k})\Rightarrow
+\{Ku_{k}\}\mathsf{precompact} & \mathsf{DefinitionofCompactOperator}\ \text{%
+\cite{brezis2011}} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{lem:BanachFP}{\theswpentry}\label%
+{lemi:BanachFP} & \mathsf{BanachFP}:\forall T:X\rightarrow X,\mathsf{%
+Contraction}(T)\wedge \mathsf{Complete}(X)\Rightarrow \exists !x^{\ast
+},Tx^{\ast }=x^{\ast } & \mathsf{BanachFixed}-\mathsf{PointLemma}\ \text{%
+\cite{evans2010}} & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{lem:SeparatingHyperplane}{\theswpentry}%
+\label{lemi:SeparatingHyperplane} & \mathsf{SeparatingHyperplane}:\forall
+C\subseteq \mathbb{R}^{n},\mathsf{Convex}(C)\Rightarrow \forall p\in
+\partial C\;\exists u\neq 0,\;\forall z\in C,\;u\cdot (z-p)\leq 0 & \mathsf{%
+SupportingHyperplaneLemma}\ \text{\cite{brezis2011}} & \mathsf{ZF} \\ 
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{lem:Baire}{\theswpentry}\label%
+{lemi:Baire} & \mathsf{Baire}:\forall X,\;\mathsf{CompleteMetric}(X)\wedge
+\forall n,\;\mathsf{OpenDense}(U_{n},X)\Rightarrow\mathsf{Dense}\bigl(%
+\bigcap_{n}U_{n},X\bigr) & \mathsf{BaireCategoryTheorem} & \mathsf{ZF+DC} \\ 
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{lem:OpenMap}{\theswpentry}\label%
+{lemi:OpenMap} & \mathsf{OpenMap}:\forall T\in \mathcal{L}(X,Y),\;\mathsf{%
+Surjective}(T)\Rightarrow T\;\mathsf{open} & \mathsf{OpenMappingLemma}\ 
+\text{\cite{brezis2011}} & \mathsf{ZF+DC} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{lem:HardyLittlewood}{\theswpentry}%
+\label{lemi:HardyLittlewood} & \mathsf{HardyLittlewood}:\forall f\in L_{%
+\mathrm{loc}}^{1},\;\mathsf{avgB}(|f-f(x)|,x,r)\rightarrow 0\;\mathsf{a.e.}
+& \mathsf{Hardy}-\mathsf{LittlewoodLemma}\ \text{\cite{solovay1970}} & 
+\mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:BanachAlaoglu}{\theswpentry}\label%
+{thmi:BanachAlaoglu} & \mathsf{BanachAlaoglu}:\forall X,\;\overline{B}_{X^{%
+\ast }}(0,1)\;\mathsf{weak}^{\ast }\text{-}\mathsf{compact} & \mathsf{%
+Banach}-\mathsf{AlaogluTheorem}\ \text{\cite{kelley1950}} & \mathsf{ZFC} \\ 
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:Kakutani}{\theswpentry}\label%
+{thmi:Kakutani} & \mathsf{Kakutani}:\forall X,\;\mathsf{Reflexive}(X)%
+\Rightarrow \overline{B}_{X}(0,1)\;\mathsf{weakly}-\mathsf{compact} & \mathsf{%
+KakutaniTheorem}\ \text{\cite{kelley1950}} & \mathsf{ZFC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{lem:CauchySchwarzA}{\theswpentry}\label%
+{lemi:CauchySchwarzA} & \mathsf{CauchySchwarzA}:\forall A,x,y,\mathsf{%
+CauchySchwarzA}(A,x,y):\Leftrightarrow A\geq 0\wedge A^{T}=A\Rightarrow
+|\sum a_{ij}x_{i}y_{j}|\leq (\sum a_{ij}x_{i}x_{j})^{1/2}(\sum
+a_{ij}y_{i}y_{j})^{1/2} & \mathsf{Cauchy}-\mathsf{%
+SchwarzInequalityforPositiveMatrices} & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+% ============================================================
+
+\section*{\textsf{Level 5}}
+
+% ============================================================
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{lem:YoungEps}{\theswpentry} \label%
+{lemi:YoungEps} & \mathsf{YoungEps}:\forall a,b,\epsilon,p,q,\mathsf{YoungEps%
+}(a,b,\epsilon,p,q):\Leftrightarrow ab\leq\epsilon a^{p}+C(\epsilon)b^{q} & 
+\mathsf{Young^{\prime }s Inequality with Epsilon}\ \text{\cite{evans2010}} & 
+\mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{thm:Riesz}{\theswpentry} \label%
+{thmi:Riesz} & \mathsf{Riesz}:\forall u^{\ast}\in H^{\ast}\;\exists!u\in
+H,\forall v,\mathsf{pairing}(u^{\ast},v)=(u,v) & \mathsf{Riesz
+Representation Theorem}\ \text{\cite{brezis2011}} & \mathsf{ZF+DC} \\ 
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{lem:BoundsSpectrum}{\theswpentry} %
+\label{lemi:BoundsSpectrum} & \mathsf{BoundsSpectrum}:\forall S,m,M,\mathsf{%
+BoundsSpectrum}(S,m,M):\Leftrightarrow\mathsf{sigma}(S)\subset[m,M]\wedge
+m,M\in\mathsf{sigma}(S) & \mathsf{Bounds on the Spectrum}\ \text{\cite%
+{brezis2011}} & \mathsf{ZF+DC} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{thm:InverseFT}{\theswpentry} \label%
+{thmi:InverseFT} & \mathsf{InverseFT}:\forall\mathbf{f},J\mathbf{f}%
+(x_{0})\neq0\Rightarrow\exists V,W,\mathsf{Bijective}(\mathbf{f}%
+:V\rightarrow W)\wedge\mathbf{f}^{-1}\in C^{1} & \mathsf{Inverse Function
+Theorem}\ \text{\cite{evans2010}} & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:ClosedGraph}{\theswpentry}\label%
+{thmi:ClosedGraph} & \mathsf{ClosedGraph}:\forall A,\mathsf{ClosedOp}%
+(A)\wedge \mathsf{Linear}(A)\Rightarrow \mathsf{Bdd}(A) & \mathsf{%
+ClosedGraphTheorem}\ \text{\cite{brezis2011}} & \mathsf{ZF+DC} \\ 
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:GaussGreen}{\theswpentry}\label%
+{thmi:GaussGreen} & \mathsf{GaussGreen}:\forall u,\mathbf{u}%
+,\int_{U}u_{x_{i}}=\int_{\partial U}u\nu ^{i}\,dS\wedge \int_{U}\mathsf{div}(%
+\mathbf{u})=\int_{\partial U}\mathbf{u}\cdot \nu \,dS & \mathsf{Gauss}-%
+\mathsf{GreenTheorem}\ \text{\cite{evans2010}} & \mathsf{ZF+DC} \\ 
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:Coarea}{\theswpentry}\label%
+{thmi:Coarea} & \mathsf{Coarea}:\forall u,f,\int_{\mathbb{R}^{n}}f|\mathsf{%
+grad}(u)|=\int_{-\infty }^{\infty }\bigl(\int_{\{u=r\}}f\,dS\bigr)dr & 
+\mathsf{CoareaFormula}\ \text{\cite{evans2010}} & \mathsf{ZF+DC} \\ 
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:Polar}{\theswpentry}\label%
+{thmi:Polar} & \mathsf{Polar}:\forall f,\int_{\mathbb{R}^{n}}f=\int_{0}^{%
+\infty }\bigl(\int_{\partial B(x_{0},r)}f\,dS\bigr)dr & \mathsf{%
+PolarCoordinatesFormula}\ \text{\cite{evans2010}} & \mathsf{ZF+DC} \\ 
+\hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:MonotoneConv}{\theswpentry}\label%
+{thmi:MonotoneConv} & \mathsf{MonotoneConv}:\forall f_{k},0\leq f_{1}\leq
+f_{2}\leq \cdots \Rightarrow \int \lim f_{k}=\lim \int f_{k} & \mathsf{%
+MonotoneConvergenceTheorem}\ \text{\cite{solovay1970}} & \mathsf{ZF+DC} \\ 
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:Fatou}{\theswpentry}\label%
+{thmi:Fatou} & \mathsf{Fatou}:\forall f_{k},\mathsf{NonnegMeasurable}%
+(f_{k})\Rightarrow \int \liminf f_{k}\leq \liminf \int f_{k} & \mathsf{%
+Fatou^{\prime }sLemma}\ \text{\cite{solovay1970}} & \mathsf{ZF+DC} \\ 
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:DominatedConv}{\theswpentry}\label%
+{thmi:DominatedConv} & \mathsf{DominatedConv}:\forall f_{k},f,g,\mathsf{a.e.}%
+-\mathsf{conv}(f_{k},f)\wedge |f_{k}|\leq g\,\mathsf{a.e.}\wedge \mathsf{%
+Summable}(g)\Rightarrow \int f_{k}\rightarrow \int f & \mathsf{%
+DominatedConvergenceTheorem}\ \text{\cite{solovay1970}} & \mathsf{ZF+DC} \\ 
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:WeakCompact}{\theswpentry}\label%
+{thmi:WeakCompact} & \mathsf{WeakCompact}:\mathsf{Reflexive}(X)\wedge 
+\mathsf{Bdd}(\{u_{k}\})\Rightarrow \exists \{u_{k_{j}}\},u,\mathsf{WeakConv}%
+(u_{k_{j}},u) & \mathsf{WeakCompactnessTheorem}\ \text{\cite{kelley1950}} & 
+\mathsf{ZFC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+% ============================================================
+
+\section*{\textsf{Level 6}}
+
+% ============================================================
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{thm:Holder}{\theswpentry} \label%
+{thmi:Holder} & \mathsf{Holder}:\forall u,v,\mathsf{Holder}%
+(u,v):\Leftrightarrow\int_{U}|uv|\leq\Vert u\Vert_{L^{p}}\Vert v\Vert_{L^{q}}
+& \mathsf{H\"older^{\prime }s Inequality}\ \text{\cite{evans2010}} & \mathsf{%
+ZF+DC} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{thm:IntParts}{\theswpentry} \label%
+{thmi:IntParts} & \mathsf{IntParts}:\forall
+u,v,\int_{U}u_{x_{i}}v=-\int_{U}uv_{x_{i}}+\int_{\partial U}uv\nu^{i}\,dS & 
+\mathsf{Integration by Parts}\ \text{\cite{evans2010}} & \mathsf{ZF+DC} \\ 
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{thm:MovingRegions}{\theswpentry} %
+\label{thmi:MovingRegions} & \mathsf{MovingRegions}:\forall f,U,\frac{d}{%
+d\tau}\int_{U(\tau)}f=\int_{\partial U(\tau)}f\mathbf{v}\cdot\nu\,dS+%
+\int_{U(\tau)}f_{\tau} & \mathsf{Reynolds Transport Theorem}\ \text{\cite%
+{evans2010}} & \mathsf{ZF+DC} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{thm:LebesgueDiff}{\theswpentry} \label%
+{thmi:LebesgueDiff} & \mathsf{LebesgueDiff}:\forall f,\mathsf{LocSummable}%
+(f)\Rightarrow\mathsf{a.e.}(\mathsf{avgB}(f,x_{0},r)\rightarrow
+f(x_{0}))\wedge\mathsf{a.e.}(\mathsf{avgB}(|f-f(x_{0})|,x_{0},r)\rightarrow0)
+& \mathsf{Lebesgue Differentiation Theorem}\ \text{\cite{solovay1970}} & 
+\mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:LebesgueExistence}{\theswpentry}%
+\label{thmi:LebesgueExistence} & \mathsf{LebesgueExistence}:\exists \mathcal{%
+M},|\cdot |,\mathsf{SigmaAlgebra}(\mathcal{M})\wedge \mathsf{Open}(U)\wedge 
+\mathsf{Closed}(U)\subset \mathcal{M}\wedge |B|=\mathsf{vol}(B)\wedge 
+\mathsf{countably}-\mathsf{additive}(|\cdot |) & \mathsf{%
+ExistenceofLebesgueMeasure}\ \text{\cite{solovay1970}} & \mathsf{ZF+DC} \\ 
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:Egoroff}{\theswpentry}\label%
+{thmi:Egoroff} & \mathsf{Egoroff}:\forall f_{k},f,A,\mathsf{a.e.}-\mathsf{on}%
+(f_{k},f,A)\wedge |A|<\infty \wedge \epsilon >0\Rightarrow \exists E\subset
+A,|A\setminus E|\leq \epsilon \wedge \mathsf{unif}-\mathsf{on}(f_{k},f,E) & 
+\mathsf{Egoroff^{\prime }sTheorem}\ \text{\cite{solovay1970}} & \mathsf{ZF+DC%
+} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:CompactAdjoint}{\theswpentry}\label%
+{thmi:CompactAdjoint} & \mathsf{CompactAdjoint}:\mathsf{CompactOp}%
+(K)\Rightarrow \mathsf{CompactOp}(K^{\ast }) & \mathsf{%
+CompactnessoftheAdjoint}\ \text{\cite{kelley1950}} & \mathsf{ZFC} \\ 
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:Pettis}{\theswpentry}\label%
+{thmi:Pettis} & \mathsf{Pettis}:\forall \mathbf{f},\mathsf{StronglyMeasurable%
+}(\mathbf{f})\Leftrightarrow \mathsf{WeaklyMeasurable}(\mathbf{f})\wedge 
+\mathsf{AlmostSeparablyValued}(\mathbf{f}) & \mathsf{Pettis^{\prime
+}sMeasurabilityTheorem}\ \text{\cite{solovay1970}} & \mathsf{ZF+DC} \\ 
+\hline\hline
+\end{array}%
+$
+
+\medskip
+
+% ============================================================
+
+\section*{\textsf{Level 7}}
+
+% ============================================================
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:Minkowski}{\theswpentry}\label%
+{thmi:Minkowski} & \mathsf{Minkowski}:\forall u,v,\mathsf{Minkowski}%
+(u,v):\Leftrightarrow \Vert u+v\Vert _{L^{p}}\leq \Vert u\Vert
+_{L^{p}}+\Vert v\Vert _{L^{p}} & \mathsf{Minkowski^{\prime }sInequality}\ 
+\text{\cite{evans2010}} & \mathsf{ZF+DC} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:GenHolder}{\theswpentry}\label%
+{thmi:GenHolder} & \mathsf{GenHolder}:\forall u_{k},p_{k},\mathsf{GenHolder}%
+(u_{k},p_{k}):\Leftrightarrow \int |u_{1}\cdots u_{m}|\leq \prod_{k}\Vert
+u_{k}\Vert _{L^{p_{k}}} & \mathsf{GeneralizedH\ddot{o}lder^{\prime
+}sInequality}\ \text{\cite{evans2010}} & \mathsf{ZF+DC} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:Interpolation}{\theswpentry}\label%
+{thmi:Interpolation} & \mathsf{Interpolation}:\forall u,r,s,t,\theta ,%
+\mathsf{Interpolation}(u,r,s,t,\theta ):\Leftrightarrow \Vert u\Vert
+_{L^{r}}\leq \Vert u\Vert _{L^{s}}^{\theta }\Vert u\Vert _{L^{t}}^{1-\theta }
+& \mathsf{InterpolationInequalityforLpSpaces}\ \text{\cite{evans2010}} & 
+\mathsf{ZF+DC} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:MollifierProps}{\theswpentry}\label%
+{thmi:MollifierProps} & \mathsf{MollifierProps}:\forall f,f^{\epsilon
+},f^{\epsilon }\in \allowbreak C^{\infty }(U_{\epsilon })\wedge \allowbreak
+f^{\epsilon }\rightarrow f\,\mathsf{a.e.}\wedge (f\in C(U)\Rightarrow 
+\mathsf{unif}-\mathsf{on}-\mathsf{compacta}(f^{\epsilon },f))\wedge (f\in L_{%
+\mathrm{loc}}^{p}\Rightarrow f^{\epsilon }\rightarrow f\,\mathsf{in}\,L_{%
+\mathrm{loc}}^{p}) & \mathsf{PropertiesofMollifiers}\ \text{\cite{evans2010}}
+& \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry} \hypertarget{thm:GreenI}{\theswpentry} \label%
+{thmi:GreenI} & \mathsf{GreenI}:\forall u,\int_{U}\mathsf{Lap}%
+(u)=\int_{\partial U}\mathsf{dnu}(u,\nu)\,dS & \mathsf{Green^{\prime }s
+First Identity}\ \text{\cite{evans2010}} & \mathsf{ZF+DC} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{thm:GreenII}{\theswpentry} \label%
+{thmi:GreenII} & \mathsf{GreenII}:\forall u,v,\int_{U}\mathsf{grad}(v)\cdot%
+\mathsf{grad}(u)=-\int_{U}u\mathsf{Lap}(v)+\int_{\partial U}u\mathsf{dnu}%
+(v,\nu)\,dS & \mathsf{Green^{\prime }s Second Identity}\ \text{\cite%
+{evans2010}} & \mathsf{ZF+DC} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{thm:ImplicitFT}{\theswpentry} \label%
+{thmi:ImplicitFT} & \mathsf{ImplicitFT}:\forall\mathbf{f},J_{y}\mathbf{f}%
+(x_{0},y_{0})\neq0\Rightarrow\exists\mathbf{g}\in C^{1},\mathbf{f}(x,\mathbf{%
+g}(x))=z_{0} & \mathsf{Implicit Function Theorem}\ \text{\cite{evans2010}} & 
+\mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry} \hypertarget{thm:Fredholm}{\theswpentry} \label%
+{thmi:Fredholm} & \mathsf{Fredholm}:\mathsf{CompactOp}(K)\Rightarrow 
+\begin{array}[t]{l}
+\dim N(I-K)<\infty\wedge\mathsf{ClosedOp}(R(I-K)) \\ 
+\wedge\,R(I-K)=\mathsf{Sperp}(N(I-K^{\ast})) \\ 
+\wedge\,(N(I-K)=\{0\}\Leftrightarrow R(I-K)=H) \\ 
+\wedge\,\dim N(I-K)=\dim N(I-K^{\ast})%
+\end{array}
+& \mathsf{Fredholm Alternative}\ \text{\cite{brezis2011}} & \mathsf{ZF+DC}
+\\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:Bochner}{\theswpentry}\label%
+{thmi:Bochner} & \mathsf{Bochner}:\forall \mathbf{f},\mathsf{Summable}(%
+\mathbf{f})\Leftrightarrow \mathsf{Summable}(t\mapsto \Vert \mathbf{f}%
+(t)\Vert )\wedge \Vert \int \mathbf{f}\Vert \leq \int \Vert \mathbf{f}\Vert 
+& \mathsf{Bochner^{\prime }sTheorem}\ \text{\cite{solovay1970}} & \mathsf{%
+ZF+DC} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:ArzelaAscoli}{\theswpentry}\label%
+{thmi:ArzelaAscoli} & \mathsf{ArzelaAscoli}:\forall \{f_{k}\},\mathsf{UnifBdd%
+}(f_{k})\wedge \mathsf{Equicont}(f_{k})\Rightarrow \exists \{f_{k_{j}}\},f,%
+\mathsf{Continuous}(f)\wedge \mathsf{unif}-\mathsf{on}-\mathsf{compacta}%
+(f_{k_{j}},f) & \mathsf{Arzel\grave{a}}-\mathsf{AscoliTheorem}\ \text{\cite%
+{solovay1970}} & \mathsf{ZF+DC} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:SupportingHyperplanes}{\theswpentry%
+}\label{thmi:SupportingHyperplanes} & \mathsf{SupportingHyperplanes}:\forall
+f,\mathsf{Convex}(f)\Rightarrow \forall x\;\exists r,\forall y,f(y)\geq
+f(x)+r\cdot (y-x) & \mathsf{SupportingHyperplaneTheorem}\ \text{\cite%
+{brezis2011}} & \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{lem:LaxMilgram}{\theswpentry}\label%
+{lemi:LaxMilgram} & \mathsf{LaxMilgram}:\forall a(\cdot ,\cdot ),\mathsf{%
+Coercive}(a)\wedge \mathsf{Bdd}(a)\wedge f\in H^{\ast }\Rightarrow \exists
+!u\in H,\forall v,a(u,v)=f(v) & \mathsf{Lax}-\mathsf{MilgramLemma}\ \text{%
+\cite{brezis2011}} & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+% ============================================================
+
+\section*{\textsf{Level 8}}
+
+% ============================================================
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:GreenIII}{\theswpentry}\label%
+{thmi:GreenIII} & \mathsf{GreenIII}:\forall u,v,\int_{U}(u\mathsf{Lap}(v)-v%
+\mathsf{Lap}(u))=\int_{\partial U}(u\mathsf{dnu}(v,\nu )-v\mathsf{dnu}(u,\nu
+))\,dS & \mathsf{Green^{\prime }sThirdIdentity}\ \text{\cite{evans2010}} & 
+\mathsf{ZF+DC} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:Jensen}{\theswpentry}\label%
+{thmi:Jensen} & \mathsf{Jensen}:\forall f,\mathbf{u},\mathsf{Convex}%
+(f)\Rightarrow f(\mathsf{avgE}(\mathbf{u},U))\leq \mathsf{avgE}(f\circ 
+\mathbf{u},U) & \mathsf{Jensen^{\prime }sInequality}\ \text{\cite{evans2010}}
+& \mathsf{ZF} \\ \hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:SpectrumCompact}{\theswpentry}%
+\label{thmi:SpectrumCompact} & 
+\begin{array}{l}
+\mathsf{SpectrumCompact}:\dim H=\infty \wedge \mathsf{CompactOp}%
+(K)\Rightarrow  \\ 
+0\in \mathsf{sigma}(K)\wedge \mathsf{sigma}(K)\setminus \{0\}=\mathsf{sigma}%
+_{p}(K)\setminus \{0\} \\ 
+\wedge \mathsf{finite}-\mathsf{or}-\mathsf{tends0}(\mathsf{sigma}%
+(K)\setminus \{0\})%
+\end{array}
+& \mathsf{SpectrumofaCompactOperator}\ \text{\cite{brezis2011}} & \mathsf{%
+ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+% ============================================================
+
+\section*{\textsf{Level 9}}
+
+% ============================================================
+
+\noindent $%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+\refstepcounter{swpentry}\hypertarget{thm:SpectralThm}{\theswpentry}\label%
+{thmi:SpectralThm} & \mathsf{SpectralThm}:\mathsf{Separable}(H)\wedge 
+\mathsf{CompactOp}(S)\wedge \mathsf{Symmetric}(S)\Rightarrow \exists \;%
+\mathsf{ONB}-\mathsf{of}-\mathsf{eigenvectors}(S) & \mathsf{%
+SpectralTheoremforCompactSymmetricOperators}\ \text{\cite{brezis2011}} & 
+\mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+% ============================================================
+
+\section*{\textsf{Proofs}}
+
+% ============================================================
+
+\subsection*{\textsf{Level 1a --- Proved calculus lemmas}}
+
+\subsubsection*{Proof of Lemma \ref{lemi:FTC} (\textsf{FTC})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+1 & f\in C^{1}([a,b]) & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+2 & F(x):=\int_{a}^{x}f^{\prime}(t)\,dt & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+3 & F(x+h)-F(x)=\int_{x}^{x+h}f^{\prime}(t)\,dt=h\cdot f^{\prime}(c),\;\;c\in[x,x+h] & Lem:\ref{lemi:MVTI}(2) & \mathsf{ZF} \\ \hline\hline
+4 & \bigl|\tfrac{F(x+h)-F(x)}{h}-f^{\prime}(x)\bigr|=|f^{\prime}(c)-f^{\prime}(x)|\le\sup_{[x,x+h]}|f^{\prime}-f^{\prime}(x)| & \mathsf{Eq}(3) & \mathsf{ZF} \\ \hline\hline
+5 & \sup_{[x,x+h]}|f^{\prime}-f^{\prime}(x)|\to0\;\;(h\to0) & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+6 & F^{\prime}(x)=f^{\prime}(x)\;\mathsf{for\ all}\;x\in[a,b] & \mathsf{Eq}(4,5) & \mathsf{ZF} \\ \hline\hline
+7 & (F-f)^{\prime}=0\;\mathsf{on}\;[a,b] & \mathsf{Eq}(6) & \mathsf{ZF} \\ \hline\hline
+8 & \exists C\in\mathbb{R},\;\forall x\in[a,b],\;(F-f)(x)=C & Lem:\ref{lemi:MVT}(7) & \mathsf{ZF} \\ \hline\hline
+9 & F(a)=0\Rightarrow C=-f(a) & \mathsf{Eq}(2,8) & \mathsf{ZF} \\ \hline\hline
+10 & F(b)=f(b)-f(a) & \mathsf{Eq}(8,9) & \mathsf{ZF} \\ \hline\hline
+11 & \top & \to\mathsf{I}(1,\dots,10) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:Taylor} (\textsf{Taylor})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+12 & f\in C^{2}(\mathbb{R}),\;x,z\in\mathbb{R} & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+13 & \int_{z}^{x}(x-t)f^{\prime\prime}(t)\,dt=\bigl[-(x-t)f^{\prime}(t)\bigr]_{z}^{x}+\int_{z}^{x}f^{\prime}(t)\,dt & Lem:\ref{lemi:IBP}(12) & \mathsf{ZF} \\ \hline\hline
+14 & \int_{z}^{x}(x-t)f^{\prime\prime}(t)\,dt=\int_{z}^{x}f^{\prime}(t)\,dt-(x-z)f^{\prime}(z) & \mathsf{Eq}(13) & \mathsf{ZF} \\ \hline\hline
+15 & \int_{z}^{x}f^{\prime}(t)\,dt=f(x)-f(z) & Lem:\ref{lemi:FTC}(12) & \mathsf{ZF} \\ \hline\hline
+16 & f(x)=f(z)+(x-z)f^{\prime}(z)+\int_{z}^{x}(x-t)f^{\prime\prime}(t)\,dt & \mathsf{Eq}(14,15) & \mathsf{ZF} \\ \hline\hline
+17 & \exists\xi\in[x,z],\;\int_{z}^{x}(x-t)f^{\prime\prime}(t)\,dt=\tfrac12 f^{\prime\prime}(\xi)(x-z)^{2} & Lem:\ref{lemi:MVTI}(12) & \mathsf{ZF} \\ \hline\hline
+18 & f(x)=f(z)+(x-z)f^{\prime}(z)+\tfrac12 f^{\prime\prime}(\xi)(x-z)^{2} & \mathsf{Eq}(16,17) & \mathsf{ZF} \\ \hline\hline
+19 & \top & \to\mathsf{I}(12,\dots,18) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:ProductRule} (\textsf{ProductRule})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+20 & u,v\in C^{1} & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+21 & (uv)(x+h)-(uv)(x)=u(x+h)v(x+h)-u(x)v(x) & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+22 & =[u(x+h)-u(x)]v(x+h)+u(x)[v(x+h)-v(x)] & \mathsf{Eq}(21) & \mathsf{ZF} \\ \hline\hline
+23 & \frac{(uv)(x+h)-(uv)(x)}{h}=\frac{u(x+h)-u(x)}{h}v(x+h)+u(x)\frac{v(x+h)-v(x)}{h} & \mathsf{Eq}(22) & \mathsf{ZF} \\ \hline\hline
+24 & \lim_{h\to0}(23)=u^{\prime}(x)v(x)+u(x)v^{\prime}(x) & \mathsf{Eq}(20,23) & \mathsf{ZF} \\ \hline\hline
+25 & \top & \to\mathsf{I}(20,\dots,24) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:ChainRule} (\textsf{ChainRule})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+26 & f,g\in C^{1} & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+27 & f(g(x+h))=f(g(x))+f^{\prime}(g(x))(g(x+h)-g(x))+o(g(x+h)-g(x)) & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+28 & \frac{(f\circ g)(x+h)-(f\circ g)(x)}{h}=f^{\prime}(g(x))\frac{g(x+h)-g(x)}{h}+\frac{o(g(x+h)-g(x))}{h} & \mathsf{Eq}(27) & \mathsf{ZF} \\ \hline\hline
+29 & \frac{o(g(x+h)-g(x))}{h}\to0 & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+30 & \lim_{h\to0}(28)=f^{\prime}(g(x))g^{\prime}(x) & \mathsf{Eq}(28,29) & \mathsf{ZF} \\ \hline\hline
+31 & \top & \to\mathsf{I}(26,\dots,30) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:JacobiFormula} (\textsf{JacobiFormula})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+32 & A\in C^{1},\;\det A(t)\neq0 & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+33 & \det(A+\epsilon B)=\det A+\epsilon\,\mathsf{tr}(\mathsf{adj}(A)B)+O(\epsilon^{2}) & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+34 & \mathsf{adj}(A)=\det A\cdot A^{-1} & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+35 & \det(A+\epsilon B)=\det A\bigl(1+\epsilon\,\mathsf{tr}(A^{-1}B)\bigr)+O(\epsilon^{2}) & \mathsf{Eq}(33,34) & \mathsf{ZF} \\ \hline\hline
+36 & \frac{\det(A+\epsilon B)-\det A}{\epsilon}=\det A\cdot\mathsf{tr}(A^{-1}B)+O(\epsilon) & \mathsf{Eq}(35) & \mathsf{ZF} \\ \hline\hline
+37 & \tfrac{d}{dt}\det A=\det A\cdot\mathsf{tr}(A^{-1}A^{\prime}) & \mathsf{Eq}(36) & \mathsf{ZF} \\ \hline\hline
+38 & \top & \to\mathsf{I}(32,\dots,37) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:JacobiFormulaAdj} (\textsf{JacobiFormulaAdj})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+39 & A\in C^{1} & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+40 & \det(A+\epsilon B)=\det A+\epsilon\,\mathsf{tr}(\mathsf{adj}(A)B)+O(\epsilon^{2}) & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+41 & \tfrac{d}{dt}\det A=\mathsf{tr}(\mathsf{adj}(A)A^{\prime}) & \mathsf{Eq}(40) & \mathsf{ZF} \\ \hline\hline
+42 & \top & \to\mathsf{I}(39,\dots,41) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsection*{\textsf{Level 1 --- Elementary lemmas}}
+
+\subsubsection*{Proof of Lemma \ref{lemi:Cauchy} (\textsf{Cauchy})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+43 & a,b\in\mathbb{R} & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+44 & 0\le(a-b)^{2} & Ax:\ref{axi:R-mul-compat} & \mathsf{ZF} \\ \hline\hline
+45 & 0\le a^{2}-2ab+b^{2} & \mathsf{Eq}(44) & \mathsf{ZF} \\ \hline\hline
+46 & 2ab\le a^{2}+b^{2} & \mathsf{addMon}(45) & \mathsf{ZF} \\ \hline\hline
+47 & ab\le\tfrac12 a^{2}+\tfrac12 b^{2} & \mathsf{Eq}(46) & \mathsf{ZF} \\ \hline\hline
+48 & \top & \to\mathsf{I}(43,\dots,47) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:CauchyEps} (\textsf{CauchyEps})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+49 & a,b>0,\;\epsilon>0 & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+50 & ab=\bigl((2\epsilon)^{1/2}a\bigr)\bigl(b/(2\epsilon)^{1/2}\bigr) & \mathsf{Eq} & \mathsf{ZF} \\ \hline\hline
+51 & ab\le\tfrac12\bigl((2\epsilon)^{1/2}a\bigr)^{2}+\tfrac12\bigl(b/(2\epsilon)^{1/2}\bigr)^{2} & Lem:\ref{lemi:Cauchy}(50) & \mathsf{ZF} \\ \hline\hline
+52 & ab\le\epsilon a^{2}+\tfrac{b^{2}}{4\epsilon} & \mathsf{Eq}(51) & \mathsf{ZF} \\ \hline\hline
+53 & \top & \to\mathsf{I}(49,\dots,52) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:expconvex} (\textsf{expconvex})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+54 & f(t):=e^{t},\;f^{\prime\prime}=e^{t}>0 & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+55 & f\in C^{2},\;f^{\prime\prime}\ge0 & \mathsf{Eq}(54) & \mathsf{ZF} \\ \hline\hline
+56 & f\;\mathsf{convex} & Lem:\ref{lemi:SecondDerivCriterion}(55) & \mathsf{ZF} \\ \hline\hline
+57 & e^{\tau x+(1-\tau)y}\le\tau e^{x}+(1-\tau)e^{y} & Def:\ref{Defi:Convex}(56) & \mathsf{ZF} \\ \hline\hline
+58 & \top & \to\mathsf{I}(54,\dots,57) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:Young} (\textsf{Young})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+59 & 1<p,q<\infty,\;1/p+1/q=1,\;a,b>0 & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+60 & t:=1/p,\;x:=\log a^{p},\;y:=\log b^{q} & \mathsf{intro} & \mathsf{ZF} \\ \hline\hline
+61 & e^{t x+(1-t)y}\le t e^{x}+(1-t)e^{y} & Lem:\ref{lemi:expconvex}(60) & \mathsf{ZF} \\ \hline\hline
+62 & e^{(1/p)\log a^{p}+(1/q)\log b^{q}}\le\tfrac1p e^{\log a^{p}}+\tfrac1q e^{\log b^{q}} & \mathsf{Eq}(61) & \mathsf{ZF} \\ \hline\hline
+63 & ab\le\tfrac{a^{p}}{p}+\tfrac{b^{q}}{q} & \mathsf{Eq}(62) & \mathsf{ZF} \\ \hline\hline
+64 & \top & \to\mathsf{I}(59,\dots,63) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:CauchySchwarz} (\textsf{CauchySchwarz})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+65 & x,y\in\mathbb{R}^{n} & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+66 & y=0\Rightarrow|x\cdot y|=0=|x||y| & \mathsf{Eq} & \mathsf{ZF} \\ \hline\hline
+67 & y\neq0\Rightarrow0\le|x-\epsilon y|^{2}=|x|^{2}-2\epsilon x\cdot y+\epsilon^{2}|y|^{2} & Ax:\ref{axi:R-mul-compat} & \mathsf{ZF} \\ \hline\hline
+68 & 2\epsilon x\cdot y\le|x|^{2}+\epsilon^{2}|y|^{2} & \mathsf{addMon}(67) & \mathsf{ZF} \\ \hline\hline
+69 & x\cdot y\le\tfrac{1}{2\epsilon}|x|^{2}+\tfrac{\epsilon}{2}|y|^{2} & \mathsf{mulMon}(68) & \mathsf{ZF} \\ \hline\hline
+70 & \epsilon=|x|/|y|\Rightarrow x\cdot y\le|x||y| & \mathsf{Eq}(69) & \mathsf{ZF} \\ \hline\hline
+71 & \mathsf{substitute}\;x\rightsquigarrow-x\;\mathsf{in}\;67\text{--}70\Rightarrow-x\cdot y\le|x||y| & =\mathsf{E}(67,\dots,70) & \mathsf{ZF} \\ \hline\hline
+72 & |x\cdot y|\le|x||y| & \mathsf{Eq}(66,70,71) & \mathsf{ZF} \\ \hline\hline
+73 & \top & \to\mathsf{I}(65,\dots,72) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:YoungEps} (\textsf{YoungEps})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+74 & a,b>0,\;\epsilon>0,\;1<p,q<\infty,\;1/p+1/q=1 & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+75 & ab=\bigl((\epsilon p)^{1/p}a\bigr)\bigl(b/(\epsilon p)^{1/p}\bigr) & \mathsf{Eq} & \mathsf{ZF} \\ \hline\hline
+76 & ab\le\epsilon a^{p}+\frac{b^{q}}{q(\epsilon p)^{q/p}} & Lem:\ref{lemi:Young}(75) & \mathsf{ZF} \\ \hline\hline
+77 & C(\epsilon):=(\epsilon p)^{-q/p}/q & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+78 & ab\le\epsilon a^{p}+C(\epsilon)b^{q} & \mathsf{Eq}(76,77) & \mathsf{ZF} \\ \hline\hline
+79 & \top & \to\mathsf{I}(74,\dots,78) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:CauchySchwarzA} (\textsf{CauchySchwarzA})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+80 & A\ge0,\;A^{T}=A & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+81 & (x,y)\mapsto x^{T}Ay\;\mathsf{is\ an\ inner\ product} & Def:\ref{Defi:InnerProduct}(80) & \mathsf{ZF} \\ \hline\hline
+82 & |x^{T}Ay|\le(x^{T}Ax)^{1/2}(y^{T}Ay)^{1/2} & Lem:\ref{lemi:CauchySchwarz}(81) & \mathsf{ZF} \\ \hline\hline
+83 & \top & \to\mathsf{I}(80,\dots,82) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:SecondDerivCriterion} (\textsf{SecondDerivCriterion})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+84 & f\in C^{2},\;\forall x,\;f^{\prime\prime}(x)\ge0 & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+85 & x,y\in\mathbb{R},\;t\in[0,1],\;z:=(1-t)x+ty & \mathsf{intro} & \mathsf{ZF} \\ \hline\hline
+86 & \exists\xi_{1},\;f(x)=f(z)+f^{\prime}(z)(x-z)+\tfrac12 f^{\prime\prime}(\xi_{1})(x-z)^{2} & Lem:\ref{lemi:Taylor}(84,85) & \mathsf{ZF} \\ \hline\hline
+87 & f(x)\ge f(z)+f^{\prime}(z)(x-z) & \mathsf{Eq}(86,84) & \mathsf{ZF} \\ \hline\hline
+88 & \exists\xi_{2},\;f(y)=f(z)+f^{\prime}(z)(y-z)+\tfrac12 f^{\prime\prime}(\xi_{2})(y-z)^{2} & Lem:\ref{lemi:Taylor}(84,85) & \mathsf{ZF} \\ \hline\hline
+89 & f(y)\ge f(z)+f^{\prime}(z)(y-z) & \mathsf{Eq}(88,84) & \mathsf{ZF} \\ \hline\hline
+90 & (1-t)f(x)+tf(y)\ge(1-t)(f(z)+f^{\prime}(z)(x-z))+t(f(z)+f^{\prime}(z)(y-z))=f(z) & \mathsf{addMon}(87,89) & \mathsf{ZF} \\ \hline\hline
+91 & f(\tau x+(1-\tau)y)\le\tau f(x)+(1-\tau)f(y) & Def:\ref{Defi:Convex}(85,90) & \mathsf{ZF} \\ \hline\hline
+92 & \top & \to\mathsf{I}(84,\dots,91) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsection*{\textsf{Level 2 --- Foundational theorems}}
+
+\subsubsection*{Proof of Lemma \ref{lemi:BanachFP} (\textsf{BanachFP})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+93 & T\;\mathsf{contraction},\;X\;\mathsf{complete} & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+94 & \exists\theta<1,\;\forall x,y,\;d(Tx,Ty)\le\theta d(x,y) & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+95 & x_{n+1}:=T(x_{n}) & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+96 & d(x_{n+1},x_{n})\le\theta^{n}d(x_{1},x_{0}) & \mathsf{Eq}(94,95) & \mathsf{ZF} \\ \hline\hline
+97 & d(x_{n},x_{m})\le\frac{\theta^{n}}{1-\theta}d(x_{1},x_{0})\;\mathsf{for}\;m>n & \mathsf{Eq}(96) & \mathsf{ZF} \\ \hline\hline
+98 & (x_{n})\;\mathsf{is\ Cauchy} & Def:\ref{Defi:Cauchy}(97) & \mathsf{ZF} \\ \hline\hline
+99 & \exists x^{*},\;x_{n}\to x^{*} & Ax:\ref{axi:R-complete}(98) & \mathsf{ZF} \\ \hline\hline
+100 & Tx^{*}=x^{*} & \mathsf{Eq}(95,99) & \mathsf{ZF} \\ \hline\hline
+101 & \mathsf{uniqueness} & \mathsf{Eq}(94) & \mathsf{ZF} \\ \hline\hline
+102 & \top & \to\mathsf{I}(93,\dots,101) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:SeparatingHyperplane} (\textsf{SeparatingHyperplane})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+103 & C\subset\mathbb{R}^{n}\;\mathsf{convex},\;p\in\partial C & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+104 & \exists p_{k}\notin\bar{C},\;p_{k}\to p & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+105 & \exists\pi_{k}\in\bar{C},\;\|p_{k}-\pi_{k}\|=\mathsf{dist}(p_{k},C) & \exists\mathsf{E}(104) & \mathsf{ZF} \\ \hline\hline
+106 & \forall z\in C,\;(p_{k}-\pi_{k})\cdot(z-\pi_{k})\le0 & Def:\ref{Defi:Convex}(103,105) & \mathsf{ZF} \\ \hline\hline
+107 & u_{k}:=(p_{k}-\pi_{k})/\|p_{k}-\pi_{k}\|,\;\|u_{k}\|=1 & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+108 & \exists\{u_{k_{j}}\},\;u_{k_{j}}\to u,\;\|u\|=1 & Lem:\ref{lemi:BolzanoWeierstrass}(107) & \mathsf{ZF} \\ \hline\hline
+109 & \forall z\in C,\;u\cdot(z-p)\le0 & \mathsf{Eq}(106,107,108) & \mathsf{ZF} \\ \hline\hline
+110 & \top & \to\mathsf{I}(103,\dots,109) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:Baire} (\textsf{Baire})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+111 & X\;\mathsf{complete\ metric},\;U_{n}\;\mathsf{open\ dense} & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+112 & \bar{B}(x_{0},r_{0})\subset U_{1} & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+113 & \exists x_{n},r_{n},\;\bar{B}(x_{n},r_{n})\subset U_{n}\cap B(x_{n-1},r_{n-1}),\;r_{n}\to0 & \exists\mathsf{E}(112) & \mathsf{ZF+DC} \\ \hline\hline
+114 & (x_{n})\;\mathsf{Cauchy}\Rightarrow\exists x^{*} & Ax:\ref{axi:R-complete}(113) & \mathsf{ZF+DC} \\ \hline\hline
+115 & x^{*}\in\bigcap_{n}U_{n} & \mathsf{Eq}(113,114) & \mathsf{ZF+DC} \\ \hline\hline
+116 & \top & \to\mathsf{I}(111,\dots,115) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:OpenMap} (\textsf{OpenMap})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+117 & T\in\mathcal{L}(X,Y)\;\mathsf{surjective} & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+118 & X=\bigcup_{n}\bar{B}(0,n),\;Y=T(X)=\bigcup_{n}T(\bar{B}(0,n)) & \mathsf{Eq}(117) & \mathsf{ZF+DC} \\ \hline\hline
+119 & \exists n,\;\overline{T(B(0,n))}\;\mathsf{has\ nonempty\ interior} & Lem:\ref{lemi:Baire}(118) & \mathsf{ZF+DC} \\ \hline\hline
+120 & \exists r>0,\;\bar{B}_{Y}(0,r)\subseteq T(\bar{B}(0,n)) & \exists\mathsf{E}(119) & \mathsf{ZF+DC} \\ \hline\hline
+121 & T(B(0,1))\supseteq B_{Y}(0,r/n) & \mathsf{Eq}(120) & \mathsf{ZF+DC} \\ \hline\hline
+122 & T\;\mathsf{open} & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+123 & \top & \to\mathsf{I}(117,\dots,122) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:Kakutani} (\textsf{Kakutani})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+124 & X\;\mathsf{reflexive} & \mathsf{assumption} & \mathsf{ZFC} \\ \hline\hline
+125 & \bar{B}_{X}(0,1)\subseteq X=(X^{*})^{*} & Def:\ref{Defi:Reflexive}(124) & \mathsf{ZFC} \\ \hline\hline
+126 & \bar{B}_{X^{**}}(0,1)\;\mathsf{weak}^{\ast}\text{-}\mathsf{compact} & Thm:\ref{thmi:BanachAlaoglu} & \mathsf{ZFC} \\ \hline\hline
+127 & \bar{B}_{X}(0,1)\;\mathsf{weakly\ compact} & \mathsf{Eq}(125,126) & \mathsf{ZFC} \\ \hline\hline
+128 & \top & \to\mathsf{I}(124,\dots,127) & \mathsf{ZFC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:HardyLittlewood} (\textsf{HardyLittlewood})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+129 & f\in L^{1}_{\mathrm{loc}} & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+130 & M(f)(x):=\sup_{r>0}\mathsf{avgB}(|f|,x,r) & Def:\ref{Defi:avg-ball}(129) & \mathsf{ZF+DC} \\ \hline\hline
+131 & \|\mathsf{WeakL^{1}}(M(f))\|\le C\|f\|_{L^{1}} & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+132 & \mathsf{avgB}(|f-f(x)|,x,r)\to0\;\mathsf{a.e.} & \mathsf{Eq}(129,131) & \mathsf{ZF+DC} \\ \hline\hline
+133 & \top & \to\mathsf{I}(129,\dots,132) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:BanachAlaoglu} (\textsf{BanachAlaoglu})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+134 & X\;\mathsf{Banach} & \mathsf{assumption} & \mathsf{ZFC} \\ \hline\hline
+135 & \bar{B}_{X^{*}}(0,1)\subset\prod_{x\in X}[- \|x\|,\|x\|]\;\mathsf{via}\;\varphi\mapsto(\varphi(x))_{x} & \mathsf{def} & \mathsf{ZFC} \\ \hline\hline
+136 & \prod_{x}[- \|x\|,\|x\|]\;\mathsf{compact} & Lem:\ref{lemi:Tychonoff} & \mathsf{ZFC} \\ \hline\hline
+137 & \bar{B}_{X^{*}}(0,1)\;\mathsf{closed\ in\ the\ product} & \mathsf{def} & \mathsf{ZFC} \\ \hline\hline
+138 & \bar{B}_{X^{*}}(0,1)\;\mathsf{weak}^{\ast }\text{-}\mathsf{compact} & \mathsf{Eq}(136,137) & \mathsf{ZFC} \\ \hline\hline
+139 & \top & \to\mathsf{I}(134,\dots,138) & \mathsf{ZFC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsection*{\textsf{Level 3 --- Measure and integration}}
+
+\subsubsection*{Proof of Theorem \ref{thmi:LebesgueExistence} (\textsf{LebesgueExistence})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+140 & \mathsf{Box}(I):=\prod(a_{i},b_{i}],\;\mathsf{vol}(I)=\prod(b_{i}-a_{i}) & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+141 & \mathsf{outmeas}(A):=\inf\{\sum\mathsf{vol}(I_{k}):A\subseteq\bigcup I_{k}\} & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+142 & \mathsf{outmeas}\;\mathsf{monotone},\;\mathsf{countably\ subadditive},\;\mathsf{outmeas}(\emptyset)=0 & \mathsf{Eq}(141) & \mathsf{ZF+DC} \\ \hline\hline
+143 & \mathcal{M}:=\{A:\forall E,\mathsf{outmeas}(E)=\mathsf{outmeas}(E\cap A)+\mathsf{outmeas}(E\setminus A)\} & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+144 & \mathcal{M}\;\mathsf{is}\;\sigma\mathsf{-algebra} & Def:\ref{Defi:SigmaAlgebra}(143) & \mathsf{ZF+DC} \\ \hline\hline
+145 & |\cdot|:=\mathsf{outmeas}|_{\mathcal{M}},\;\mathsf{countably\ additive} & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+146 & \forall I,\;|I|=\mathsf{vol}(I)\Rightarrow|B|=\mathsf{vol}(B) & \mathsf{Eq}(141) & \mathsf{ZF+DC} \\ \hline\hline
+147 & \mathsf{open}(U)\Rightarrow U\in\mathcal{M} & \mathsf{Eq}(143) & \mathsf{ZF+DC} \\ \hline\hline
+148 & \mathsf{closed}(F)\Rightarrow F\in\mathcal{M} & \mathsf{Eq}(144,147) & \mathsf{ZF+DC} \\ \hline\hline
+149 & \top & \to\mathsf{I}(140,\dots,148) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:MonotoneConv} (\textsf{MonotoneConv})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+150 & 0\le f_{1}\le f_{2}\le\cdots,\;f:=\sup_{k}f_{k} & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+151 & \int f_{k}\uparrow L\;\mathsf{with}\;L\le\int f & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+152 & 0\le s\le f,\;\mathsf{simple}\;s,\;E_{k}:=\{f_{k}\ge(1-\epsilon)s\}\uparrow X & Def:\ref{Defi:Simple}(150) & \mathsf{ZF+DC} \\ \hline\hline
+153 & (1-\epsilon)\int_{E_{k}}s\le\int f_{k}\le L\Rightarrow\int s\le L & \mathsf{Eq}(151,152) & \mathsf{ZF+DC} \\ \hline\hline
+154 & \int f\le L & \forall\mathsf{E}(153) & \mathsf{ZF+DC} \\ \hline\hline
+155 & \int f=L=\lim\int f_{k} & \mathsf{Eq}(151,154) & \mathsf{ZF+DC} \\ \hline\hline
+156 & \top & \to\mathsf{I}(150,\dots,155) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:Fatou} (\textsf{Fatou})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+157 & f_{k}\ge0\;\mathsf{measurable} & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+158 & g_{k}:=\inf_{j\ge k}f_{j},\;g_{k}\;\mathsf{nondecreasing} & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+159 & \int g_{k}\uparrow\int\liminf f_{k} & Thm:\ref{thmi:MonotoneConv}(158) & \mathsf{ZF+DC} \\ \hline\hline
+160 & \int g_{k}\le\inf_{j\ge k}\int f_{j} & \mathsf{Eq}(157,158) & \mathsf{ZF+DC} \\ \hline\hline
+161 & \int\liminf f_{k}\le\liminf\int f_{k} & \mathsf{Eq}(159,160) & \mathsf{ZF+DC} \\ \hline\hline
+162 & \top & \to\mathsf{I}(157,\dots,161) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:DominatedConv} (\textsf{DominatedConv})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+163 & |f_{k}|\le g,\;g\in L^{1},\;f_{k}\to f\;\mathsf{a.e.} & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+164 & \int(g+f)\le\liminf\int(g+f_{k}) & Thm:\ref{thmi:Fatou}(163) & \mathsf{ZF+DC} \\ \hline\hline
+165 & \int f\le\liminf\int f_{k} & \mathsf{Eq}(164) & \mathsf{ZF+DC} \\ \hline\hline
+166 & \int(g-f)\le\liminf\int(g-f_{k}) & Thm:\ref{thmi:Fatou}(163) & \mathsf{ZF+DC} \\ \hline\hline
+167 & \limsup\int f_{k}\le\int f & \mathsf{Eq}(166) & \mathsf{ZF+DC} \\ \hline\hline
+168 & \int f\le\liminf\int f_{k}\le\limsup\int f_{k}\le\int f & \mathsf{Eq}(165,167) & \mathsf{ZF+DC} \\ \hline\hline
+169 & \int f_{k}\to\int f & \mathsf{Eq}(168) & \mathsf{ZF+DC} \\ \hline\hline
+170 & \top & \to\mathsf{I}(163,\dots,169) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:Holder} (\textsf{Holder})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+171 & \|u\|_{L^{p}}=\|v\|_{L^{q}}=1 & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+172 & |u(x)v(x)|\le|u(x)|^{p}/p+|v(x)|^{q}/q\;\mathsf{a.e.} & Lem:\ref{lemi:Young}(171) & \mathsf{ZF+DC} \\ \hline\hline
+173 & \int|uv|\le\|u\|_{L^{p}}^{p}/p+\|v\|_{L^{q}}^{q}/q=1 & \mathsf{Eq}(172) & \mathsf{ZF+DC} \\ \hline\hline
+174 & \int|uv|\le\|u\|_{L^{p}}\|v\|_{L^{q}} & \mathsf{Eq}(173,171) & \mathsf{ZF+DC} \\ \hline\hline
+175 & \top & \to\mathsf{I}(171,\dots,174) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:Minkowski} (\textsf{Minkowski})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+176 & u,v\in L^{p} & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+177 & \|u+v\|_{L^{p}}^{p}=\int|u+v|^{p}\le\int|u+v|^{p-1}(|u|+|v|) & \mathsf{Eq} & \mathsf{ZF+DC} \\ \hline\hline
+178 & \int|u+v|^{p-1}|u|\le\|u+v\|_{L^{p}}^{p-1}\|u\|_{L^{p}} & Thm:\ref{thmi:Holder}(177) & \mathsf{ZF+DC} \\ \hline\hline
+179 & \int|u+v|^{p-1}|v|\le\|u+v\|_{L^{p}}^{p-1}\|v\|_{L^{p}} & Thm:\ref{thmi:Holder}(177) & \mathsf{ZF+DC} \\ \hline\hline
+180 & \|u+v\|_{L^{p}}^{p}\le\|u+v\|_{L^{p}}^{p-1}(\|u\|_{L^{p}}+\|v\|_{L^{p}}) & \mathsf{addMon}(178,179) & \mathsf{ZF+DC} \\ \hline\hline
+181 & \|u+v\|_{L^{p}}\le\|u\|_{L^{p}}+\|v\|_{L^{p}} & \mathsf{Eq}(180) & \mathsf{ZF+DC} \\ \hline\hline
+182 & \top & \to\mathsf{I}(176,\dots,181) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:GenHolder} (\textsf{GenHolder})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+183 & 1\le p_{1},\dots,p_{m}\le\infty,\;\sum 1/p_{k}=1 & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+184 & m=2\Rightarrow\mathsf{GenHolder} & Thm:\ref{thmi:Holder}(183) & \mathsf{ZF+DC} \\ \hline\hline
+185 & \mathsf{IH}:m-1\;\mathsf{case\ holds},\;q_{j}:=p_{j}/(1-1/p_{1}) & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+186 & \int|u_{1}\cdots u_{m}|\le\|u_{1}\|_{L^{p_{1}}}\|u_{2}\cdots u_{m}\|_{L^{1/(1-1/p_{1})}} & Thm:\ref{thmi:Holder}(185) & \mathsf{ZF+DC} \\ \hline\hline
+187 & \|u_{2}\cdots u_{m}\|_{L^{1/(1-1/p_{1})}}\le\prod_{k\ge2}\|u_{k}\|_{L^{p_{k}}} & \mathsf{Eq}(185) & \mathsf{ZF+DC} \\ \hline\hline
+188 & \int|u_{1}\cdots u_{m}|\le\prod\|u_{k}\|_{L^{p_{k}}} & \mathsf{Eq}(186,187) & \mathsf{ZF+DC} \\ \hline\hline
+189 & \top & \to\mathsf{I}(183,\dots,188) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:Interpolation} (\textsf{Interpolation})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+190 & 1/r=\theta/s+(1-\theta)/t & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+191 & r/s\;\mathsf{and}\;r/t\;\mathsf{conjugate\ exponents} & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+192 & \int|u|^{r}=\int|u|^{\theta r}|u|^{(1-\theta)r} & \mathsf{Eq} & \mathsf{ZF+DC} \\ \hline\hline
+193 & \le(\int|u|^{s})^{\theta r/s}(\int|u|^{t})^{(1-\theta)r/t} & Thm:\ref{thmi:Holder}(192) & \mathsf{ZF+DC} \\ \hline\hline
+194 & \|u\|_{L^{r}}\le\|u\|_{L^{s}}^{\theta}\|u\|_{L^{t}}^{1-\theta} & \mathsf{Eq}(193) & \mathsf{ZF+DC} \\ \hline\hline
+195 & \top & \to\mathsf{I}(190,\dots,194) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:LebesgueDiff} (\textsf{LebesgueDiff})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+196 & f\in L^{1}_{\mathrm{loc}},\;u(x):=\mathsf{avgB}(|f-f(x)|,x,r) & Def:\ref{Defi:avg-ball} & \mathsf{ZF+DC} \\ \hline\hline
+197 & u\;\mathsf{subharmonic-like},\;\int_{B(x,r)}u\to0 & Lem:\ref{lemi:HardyLittlewood}(196) & \mathsf{ZF+DC} \\ \hline\hline
+198 & \mathsf{avgB}(|f-f(x_{0})|,x_{0},r)\to0\;\mathsf{a.e.}\;x_{0} & \forall\mathsf{E}(197) & \mathsf{ZF+DC} \\ \hline\hline
+199 & \mathsf{avgB}(f,x_{0},r)\to f(x_{0})\;\mathsf{a.e.} & \mathsf{Eq}(198) & \mathsf{ZF+DC} \\ \hline\hline
+200 & \top & \to\mathsf{I}(196,\dots,199) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:Egoroff} (\textsf{Egoroff})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+201 & f_{k}\to f\;\mathsf{a.e.}\;\mathsf{on}\;A,\;|A|<\infty & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+202 & A_{j}^{m}:=\bigcap_{k\ge j}\{|f_{k}-f|<1/m\} & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+203 & A_{j}^{m}\uparrow\tilde{A}^{m},\;\tilde{A}^{m}\;\mathsf{is}\;\mathsf{a.e.}\;\mathsf{equal\ to}\;A & \mathsf{Eq}(201,202) & \mathsf{ZF+DC} \\ \hline\hline
+204 & |A\setminus A_{j}^{m}|\to0 & \mathsf{Eq}(203) & \mathsf{ZF+DC} \\ \hline\hline
+205 & \exists j(m),\;|A\setminus A_{j(m)}^{m}|<\epsilon/2^{m} & \exists\mathsf{E}(204) & \mathsf{ZF+DC} \\ \hline\hline
+206 & E:=\bigcap_{m}A_{j(m)}^{m} & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+207 & |A\setminus E|\le\epsilon,\;\mathsf{unif\ conv.\ on}\;E & \mathsf{Eq}(205,206) & \mathsf{ZF+DC} \\ \hline\hline
+208 & \top & \to\mathsf{I}(201,\dots,207) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsection*{\textsf{Level 4 --- Hilbert and spectral}}
+
+\subsubsection*{Proof of Theorem \ref{thmi:Riesz} (\textsf{Riesz})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+209 & u^{*}\in H^{*} & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+210 & N(u^{*}):=\{v:u^{*}(v)=0\}\;\mathsf{closed\ subspace} & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+211 & u^{*}=0\Rightarrow u=0 & \mathsf{Eq} & \mathsf{ZF+DC} \\ \hline\hline
+212 & u^{*}\neq0\Rightarrow\exists w\in N(u^{*})^{\perp},\;w\neq0,\;\|w\|=1 & Def:\ref{Defi:Sperp}(210) & \mathsf{ZF+DC} \\ \hline\hline
+213 & u:=\overline{u^{*}(w)}w & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+214 & \forall v,\;u^{*}(v)=(u,v) & Def:\ref{Defi:perp}(212,213) & \mathsf{ZF+DC} \\ \hline\hline
+215 & \mathsf{uniqueness} & \mathsf{Eq}(214) & \mathsf{ZF+DC} \\ \hline\hline
+216 & \top & \to\mathsf{I}(209,\dots,215) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:LaxMilgram} (\textsf{LaxMilgram})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+217 & a\;\mathsf{coercive,bounded},\;f\in H^{*} & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+218 & \exists!A\in\mathcal{L}(H),\;a(u,v)=(Au,v) & Thm:\ref{thmi:Riesz}(217) & \mathsf{ZF+DC} \\ \hline\hline
+219 & \|Au\|\ge c\|u\| & \mathsf{Eq}(217,218) & \mathsf{ZF+DC} \\ \hline\hline
+220 & A\;\mathsf{injective,\ bounded} & \mathsf{Eq}(219) & \mathsf{ZF+DC} \\ \hline\hline
+221 & R(A)\;\mathsf{closed},\;A\;\mathsf{surjective} & \mathsf{Eq}(217,220) & \mathsf{ZF+DC} \\ \hline\hline
+222 & \exists!u,\;Au=h,\;h=\mathsf{Riesz}(f) & \exists\mathsf{E}(221) & \mathsf{ZF+DC} \\ \hline\hline
+223 & \top & \to\mathsf{I}(217,\dots,222) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Lemma \ref{lemi:BoundsSpectrum} (\textsf{BoundsSpectrum})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+224 & S\;\mathsf{bounded\ self\ adjoint},\;m:=\inf\sigma(S),\;M:=\sup\sigma(S) & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+225 & \eta>M\Rightarrow(\eta I-S)\;\mathsf{coercive}\Rightarrow\mathsf{bijective} & Lem:\ref{lemi:LaxMilgram}(224) & \mathsf{ZF+DC} \\ \hline\hline
+226 & \eta<m\Rightarrow(S-\eta I)\;\mathsf{coercive}\Rightarrow\mathsf{bijective} & Lem:\ref{lemi:LaxMilgram}(224) & \mathsf{ZF+DC} \\ \hline\hline
+227 & \sigma(S)\subset[m,M] & \forall\mathsf{E}(225,226) & \mathsf{ZF+DC} \\ \hline\hline
+228 & \|Mu-Su\|\le C(Mu-Su,u)^{1/2} & Lem:\ref{lemi:CauchySchwarz}(227) & \mathsf{ZF+DC} \\ \hline\hline
+229 & \|u_{k}\|=1,\;(Su_{k},u_{k})\to M\Rightarrow\|Mu_{k}-Su_{k}\|\to0 & \mathsf{Eq}(228) & \mathsf{ZF+DC} \\ \hline\hline
+230 & M\in\sigma(S) & \mathsf{RAA}(229) & \mathsf{ZF+DC} \\ \hline\hline
+231 & m\in\sigma(S) & \mathsf{Eq}(224,230) & \mathsf{ZF+DC} \\ \hline\hline
+232 & \top & \to\mathsf{I}(224,\dots,231) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:Fredholm} (\textsf{Fredholm})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+233 & K\;\mathsf{compact} & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+234 & \dim N(I-K)=\infty\Rightarrow\exists\;\mathsf{ONB}\;(u_{k})\subset N(I-K),\;Ku_{k}=u_{k},\;\|u_{k}-u_{l}\|=\sqrt2 & Def:\ref{Defi:ONB}(233) & \mathsf{ZF+DC} \\ \hline\hline
+235 & \|Ku_{k}-Ku_{l}\|=\sqrt2\Rightarrow\neg\mathsf{compact}(K) & \bot\mathsf{I}(234) & \mathsf{ZF+DC} \\ \hline\hline
+236 & \dim N(I-K)<\infty & \mathsf{RAA}(234,235) & \mathsf{ZF+DC} \\ \hline\hline
+237 & \exists\gamma>0,\;\|u-Ku\|\ge\gamma\|u\|\;\mathsf{on}\;N(I-K)^{\perp} & \mathsf{Eq}(236) & \mathsf{ZF+DC} \\ \hline\hline
+238 & R(I-K)\;\mathsf{closed} & \mathsf{Eq}(237) & \mathsf{ZF+DC} \\ \hline\hline
+239 & R(I-K)=N(I-K^{*})^{\perp} & Def:\ref{Defi:Sperp}(238) & \mathsf{ZF+DC} \\ \hline\hline
+240 & N(I-K)=0\Leftrightarrow R(I-K)=H & \mathsf{Eq}(239) & \mathsf{ZF+DC} \\ \hline\hline
+241 & \dim N(I-K)=\dim N(I-K^{*}) & \forall\mathsf{E}(239) & \mathsf{ZF+DC} \\ \hline\hline
+242 & \top & \to\mathsf{I}(233,\dots,241) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:SpectrumCompact} (\textsf{SpectrumCompact})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+243 & K\;\mathsf{compact},\;\dim H=\infty & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+244 & 0\notin\sigma(K)\Rightarrow K\;\mathsf{invertible}\Rightarrow I=K\circ K^{-1}\;\mathsf{compact} & Def:\ref{Defi:sigma}(243) & \mathsf{ZF+DC} \\ \hline\hline
+245 & \dim H=\infty\Rightarrow\neg\mathsf{compact}(I) & \bot\mathsf{I}(244) & \mathsf{ZF+DC} \\ \hline\hline
+246 & 0\in\sigma(K) & \mathsf{RAA}(244,245) & \mathsf{ZF+DC} \\ \hline\hline
+247 & \eta\in\sigma(K)\setminus\{0\}\Rightarrow\eta\;\mathsf{eigenvalue} & Thm:\ref{thmi:Fredholm}(246) & \mathsf{ZF+DC} \\ \hline\hline
+248 & \eta_{k}\to\eta\neq0\Rightarrow\neg\mathsf{compact}(K) & \bot\mathsf{I}(247) & \mathsf{ZF+DC} \\ \hline\hline
+249 & \sigma(K)\setminus\{0\}\;\mathsf{tends\ to}\;0 & \mathsf{Eq}(248) & \mathsf{ZF+DC} \\ \hline\hline
+250 & \top & \to\mathsf{I}(243,\dots,249) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:SpectralThm} (\textsf{SpectralThm})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+251 & H\;\mathsf{separable},\;S\;\mathsf{compact\ symmetric} & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+252 & H_{k}:=N(S-\eta_{k}I),\;\dim H_{k}<\infty & Thm:\ref{thmi:Fredholm}(251) & \mathsf{ZF+DC} \\ \hline\hline
+253 & H_{k}\perp H_{l}\;\mathsf{for}\;k\neq l & Def:\ref{Defi:Symmetric}(252) & \mathsf{ZF+DC} \\ \hline\hline
+254 & \tilde{H}:=\overline{\bigoplus H_{k}},\;S(\tilde{H}^{\perp})\subset\tilde{H}^{\perp} & Def:\ref{Defi:Sperp}(253) & \mathsf{ZF+DC} \\ \hline\hline
+255 & \tilde{S}:=S|_{\tilde{H}^{\perp}}\;\mathsf{compact\ symmetric},\;\sigma(\tilde{S})=\{0\} & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+256 & (\tilde{S}u,u)=0\;\forall u\Rightarrow\tilde{S}=0 & Lem:\ref{lemi:BoundsSpectrum}(255) & \mathsf{ZF+DC} \\ \hline\hline
+257 & \tilde{H}^{\perp}\subset N(S)\subset\tilde{H}\Rightarrow\tilde{H}=H & \forall\mathsf{E}(256) & \mathsf{ZF+DC} \\ \hline\hline
+258 & S\;\mathsf{has\ an\ ONB\ of\ eigenvectors} & \forall\mathsf{I}(252,257) & \mathsf{ZF+DC} \\ \hline\hline
+259 & \top & \to\mathsf{I}(251,\dots,258) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsection*{\textsf{Level 5 --- Multivariate calculus and identities}}
+
+\subsubsection*{Proof of Theorem \ref{thmi:InverseFT} (\textsf{InverseFT})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+260 & WLOG\;x_{0}=0,\;f(0)=0,\;Df(0)=I & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+261 & f(x)=x+R(x),\;x\mapsto R(x)\;\mathsf{has}\;DR\;\mathsf{small} & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+262 & \|R(x)-R(y)\|\le\tfrac12\|x-y\|\Rightarrow\|f(x)-f(y)\|\ge\tfrac12\|x-y\| & Lem:\ref{lemi:MVT}(261) & \mathsf{ZF} \\ \hline\hline
+263 & \forall z\;\mathsf{near}\;0,\;\exists x,\;f(x)=z & Lem:\ref{lemi:BanachFP}(261) & \mathsf{ZF} \\ \hline\hline
+264 & g:=f^{-1}\;\mathsf{exists\ locally} & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+265 & Dg(z)=Df(g(z))^{-1} & Lem:\ref{lemi:ChainRule}(264) & \mathsf{ZF} \\ \hline\hline
+266 & f\in C^{k}\Rightarrow g\in C^{k} & \forall\mathsf{I}(265) & \mathsf{ZF} \\ \hline\hline
+267 & \top & \to\mathsf{I}(260,\dots,266) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:ImplicitFT} (\textsf{ImplicitFT})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+268 & f(x_{0},y_{0})=z_{0},\;D_{y}f(x_{0},y_{0})\;\mathsf{invertible} & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+269 & F(x,y):=(f(x,y),x):U\to\mathbb{R}^{m+n} & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+270 & DF=\begin{pmatrix}D_{x}f&D_{y}f\\I&0\end{pmatrix},\;\det DF=\pm\det D_{y}f\neq0 & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+271 & F\;\mathsf{locally\ invertible} & Thm:\ref{thmi:InverseFT}(270) & \mathsf{ZF} \\ \hline\hline
+272 & g(x):=\mathsf{2nd}(F^{-1}(z_{0},x)) & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+273 & f(x,g(x))=z_{0} & \mathsf{Eq}(271,272) & \mathsf{ZF} \\ \hline\hline
+274 & f\in C^{k}\Rightarrow g\in C^{k} & \forall\mathsf{E}(266,271) & \mathsf{ZF} \\ \hline\hline
+275 & \top & \to\mathsf{I}(268,\dots,274) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:ClosedGraph} (\textsf{ClosedGraph})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+276 & A\;\mathsf{closed\ linear},\;X,Y\;\mathsf{Banach} & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+277 & G(A):=\{(u,Au)\}\subset X\times Y\;\mathsf{closed} & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+278 & X\times Y\;\mathsf{Banach},\;\|(u,v)\|=\|u\|+\|v\| & Def:\ref{Defi:Banach}(276) & \mathsf{ZF+DC} \\ \hline\hline
+279 & P:G(A)\to X,\;(u,Au)\mapsto u\;\mathsf{bijective\ linear} & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+280 & P^{-1}\;\mathsf{bounded} & Lem:\ref{lemi:OpenMap}(279) & \mathsf{ZF+DC} \\ \hline\hline
+281 & \|Au\|\le\|P^{-1}\|\|u\| & \mathsf{Eq}(280) & \mathsf{ZF+DC} \\ \hline\hline
+282 & A\;\mathsf{bounded} & Def:\ref{Defi:Bdd}(281) & \mathsf{ZF+DC} \\ \hline\hline
+283 & \top & \to\mathsf{I}(276,\dots,282) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:GaussGreen} (\textsf{GaussGreen})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+284 & U\;\mathsf{smooth\ domain},\;u\in C^{1}(\bar{U}) & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+285 & \{\zeta_{k}\}\;\mathsf{partition\ of\ unity\ subordinate\ to}\;U & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+286 & y=\Phi(x)\;\mathsf{flattens\ boundary},\;\det D\Phi=1 & Def:\ref{Defi:Ckbnd}(284) & \mathsf{ZF+DC} \\ \hline\hline
+287 & \int_{y_{n}>0}\partial_{y_{n}}(\zeta u)\,dy=\int_{y_{n}=0}\zeta u\,dy^{\prime} & Lem:\ref{lemi:FTC}(286) & \mathsf{ZF+DC} \\ \hline\hline
+288 & \int_{U}(\zeta u)_{x_{n}}\,dx=\int_{\partial U}\zeta u\,\nu^{n}\,dS & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+289 & \sum_{k}\zeta_{k}=1\Rightarrow\int_{U}u_{x_{n}}=\int_{\partial U}u\nu^{n}\,dS & \mathsf{Eq}(288) & \mathsf{ZF+DC} \\ \hline\hline
+290 & \int_{U}u_{x_{i}}=\int_{\partial U}u\nu^{i}\,dS & \forall\mathsf{E}(289) & \mathsf{ZF+DC} \\ \hline\hline
+291 & \int_{U}\mathsf{div}\,\mathbf{u}=\int_{\partial U}\mathbf{u}\cdot\nu\,dS & \mathsf{Eq}(290) & \mathsf{ZF+DC} \\ \hline\hline
+292 & \top & \to\mathsf{I}(284,\dots,291) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:IntParts} (\textsf{IntParts})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+293 & u,v\in C^{1}(\bar{U}) & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+294 & \int_{U}(uv)_{x_{i}}=\int_{\partial U}uv\nu^{i}\,dS & Thm:\ref{thmi:GaussGreen}(293) & \mathsf{ZF+DC} \\ \hline\hline
+295 & (uv)_{x_{i}}=u_{x_{i}}v+uv_{x_{i}} & Lem:\ref{lemi:ProductRule}(293) & \mathsf{ZF+DC} \\ \hline\hline
+296 & \int_{U}u_{x_{i}}v=-\int_{U}uv_{x_{i}}+\int_{\partial U}uv\nu^{i}\,dS & \mathsf{Eq}(294,295) & \mathsf{ZF+DC} \\ \hline\hline
+297 & \top & \to\mathsf{I}(293,\dots,296) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:GreenI} (\textsf{GreenI})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+298 & u\in C^{2}(\bar{U}) & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+299 & \int_{U}u_{x_{i}x_{i}}=\int_{\partial U}u_{x_{i}}\nu^{i}\,dS & Thm:\ref{thmi:IntParts}(298) & \mathsf{ZF+DC} \\ \hline\hline
+300 & \int_{U}\Delta u=\int_{\partial U}\partial u/\partial\nu\,dS & Def:\ref{Defi:Lap}(299) & \mathsf{ZF+DC} \\ \hline\hline
+301 & \top & \to\mathsf{I}(298,\dots,300) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:GreenII} (\textsf{GreenII})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+302 & u,v\in C^{2}(\bar{U}) & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+303 & \int_{U}u_{x_{i}}v_{x_{i}}=-\int_{U}uv_{x_{i}x_{i}}+\int_{\partial U}uv_{x_{i}}\nu^{i}\,dS & Thm:\ref{thmi:IntParts}(302) & \mathsf{ZF+DC} \\ \hline\hline
+304 & \int_{U}\nabla v\cdot\nabla u=-\int_{U}u\Delta v+\int_{\partial U}u\partial v/\partial\nu\,dS & Def:\ref{Defi:grad}(303) & \mathsf{ZF+DC} \\ \hline\hline
+305 & \top & \to\mathsf{I}(302,\dots,304) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:GreenIII} (\textsf{GreenIII})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+306 & u,v\in C^{2}(\bar{U}) & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+307 & \int_{U}\nabla u\cdot\nabla v=-\int_{U}v\Delta u+\int_{\partial U}v\partial u/\partial\nu & Thm:\ref{thmi:GreenII}(306) & \mathsf{ZF+DC} \\ \hline\hline
+308 & \int_{U}(u\Delta v-v\Delta u)=\int_{\partial U}(u\partial v/\partial\nu-v\partial u/\partial\nu) & \mathsf{Eq}(304,307) & \mathsf{ZF+DC} \\ \hline\hline
+309 & \top & \to\mathsf{I}(306,\dots,308) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:MollifierProps} (\textsf{MollifierProps})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+310 & f\in L^{1}_{\mathrm{loc}},\;f^{\epsilon}=\eta_{\epsilon}*f & Def:\ref{Defi:moll-f} & \mathsf{ZF+DC} \\ \hline\hline
+311 & D^{\alpha}f^{\epsilon}(x)=\int D^{\alpha}\eta_{\epsilon}(x-y)f(y)\,dy & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+312 & f^{\epsilon}\in C^{\infty} & \forall\mathsf{I}(311) & \mathsf{ZF+DC} \\ \hline\hline
+313 & |f^{\epsilon}(x)-f(x)|\le C\mathsf{avgB}(|f-f(x)|,x,\epsilon)\to0 & Lem:\ref{lemi:HardyLittlewood}(310) & \mathsf{ZF+DC} \\ \hline\hline
+314 & f^{\epsilon}\to f\;\mathsf{a.e.} & \forall\mathsf{E}(313) & \mathsf{ZF+DC} \\ \hline\hline
+315 & f\in C(U)\Rightarrow\sup_{V}|f^{\epsilon}-f|\le C\omega(\epsilon)\to0 & \mathsf{Eq}(313,314) & \mathsf{ZF+DC} \\ \hline\hline
+316 & \|f^{\epsilon}-f\|_{L^{p}(V)}\le2\|f-g\|_{L^{p}(W)}+\|g^{\epsilon}-g\|_{L^{p}(V)} & Thm:\ref{thmi:Holder}(310) & \mathsf{ZF+DC} \\ \hline\hline
+317 & f^{\epsilon}\to f\;\mathsf{in}\;L^{p}_{\mathrm{loc}} & \mathsf{Eq}(315,316) & \mathsf{ZF+DC} \\ \hline\hline
+318 & \top & \to\mathsf{I}(310,\dots,317) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsection*{\textsf{Level 6 --- Consequences}}
+
+\subsubsection*{Proof of Theorem \ref{thmi:Coarea} (\textsf{Coarea})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+319 & u\;\mathsf{Lipschitz},\;f\;\mathsf{measurable} & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+320 & \mathsf{ApproxSimple}(f) & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+321 & \int f|\nabla u|=\int(\int_{\{u=r\}}f\,dS)\,dr & \mathsf{Eq}(319,320) & \mathsf{ZF+DC} \\ \hline\hline
+322 & \top & \to\mathsf{I}(319,\dots,321) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:Polar} (\textsf{Polar})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+323 & WLOG\;x_{0}=0,\;u(x):=|x|,\;\mathsf{Lipschitz}(u),\;|\nabla u|=1\;\mathsf{a.e.} & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+324 & \int f|\nabla u|=\int_{0}^{\infty}(\int_{\partial B(0,r)}f\,dS)\,dr & Thm:\ref{thmi:Coarea}(323) & \mathsf{ZF+DC} \\ \hline\hline
+325 & \int f=\int_{0}^{\infty}(\int_{\partial B(0,r)}f\,dS)\,dr & \mathsf{Eq}(324) & \mathsf{ZF+DC} \\ \hline\hline
+326 & \top & \to\mathsf{I}(323,\dots,325) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:MovingRegions} (\textsf{MovingRegions})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+327 & X(\tau,\cdot):U(0)\to U(\tau),\;\partial_{\tau}X=\mathbf{v} & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+328 & \int_{U(\tau)}f=\int_{U(0)}f(X(\tau,y),\tau)J\,dy,\;J:=\det\partial_{y}X & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+329 & \partial_{\tau}J=J\,\mathsf{div}_{x}(\mathbf{v}) & Lem:\ref{lemi:JacobiFormula}(328) & \mathsf{ZF+DC} \\ \hline\hline
+330 & \partial_{\tau}[fJ]=[f_{\tau}+\nabla f\cdot\mathbf{v}]J+fJ\,\mathsf{div}(\mathbf{v}) & Lem:\ref{lemi:ProductRule}(329) & \mathsf{ZF+DC} \\ \hline\hline
+331 & \frac{d}{d\tau}\int_{U(\tau)}f=\int_{U(\tau)}[f_{\tau}+\mathsf{div}(f\mathbf{v})] & \mathsf{Eq}(328,330) & \mathsf{ZF+DC} \\ \hline\hline
+332 & \int_{U(\tau)}\mathsf{div}(f\mathbf{v})=\int_{\partial U(\tau)}f\mathbf{v}\cdot\nu & Thm:\ref{thmi:GaussGreen} & \mathsf{ZF+DC} \\ \hline\hline
+333 & \frac{d}{d\tau}\int_{U(\tau)}f=\int_{\partial U(\tau)}f\mathbf{v}\cdot\nu+\int_{U(\tau)}f_{\tau} & \mathsf{Eq}(331,332) & \mathsf{ZF+DC} \\ \hline\hline
+334 & \top & \to\mathsf{I}(327,\dots,333) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:Jensen} (\textsf{Jensen})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+335 & f\;\mathsf{convex},\;U\;\mathsf{open\ bounded},\;\mathbf{u}\;\mathsf{summable} & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+336 & \forall p,\;\exists r,\;\forall q,\;f(q)\ge f(p)+r\cdot(q-p) & Thm:\ref{thmi:SupportingHyperplanes}(335) & \mathsf{ZF} \\ \hline\hline
+337 & p:=\mathsf{avgE}(\mathbf{u},U),\;q:=\mathbf{u}(x) & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+338 & \int_{U}f(\mathbf{u})\ge|U|f(p)+r\cdot(\int_{U}\mathbf{u}-|U|p)=|U|f(p) & Def:\ref{Defi:avg-set}(337) & \mathsf{ZF} \\ \hline\hline
+339 & f(\mathsf{avgE}(\mathbf{u},U))\le\mathsf{avgE}(f\circ\mathbf{u},U) & \mathsf{Eq}(338) & \mathsf{ZF} \\ \hline\hline
+340 & \top & \to\mathsf{I}(335,\dots,339) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:ArzelaAscoli} (\textsf{ArzelaAscoli})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+341 & \{f_{k}\}\;\mathsf{unif.\ bdd,\ equicont.} & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+342 & WLOG\;K=\bar{B}(0,R) & \mathsf{def} & \mathsf{ZF+DC} \\ \hline\hline
+343 & \exists\epsilon\mathsf{-net}\;\{x_{1},\dots,x_{N}\}\subset K & \exists\mathsf{E}(342) & \mathsf{ZF+DC} \\ \hline\hline
+344 & \exists\{k_{j}\},\;\forall i,\;f_{k_{j}}(x_{i})\;\mathsf{converges} & \exists\mathsf{E}(343) & \mathsf{ZF+DC} \\ \hline\hline
+345 & |f_{k_{j}}(x)-f_{k_{l}}(x)|\le2\epsilon+|f_{k_{j}}(x_{i})-f_{k_{l}}(x_{i})| & \forall\mathsf{E}(344) & \mathsf{ZF+DC} \\ \hline\hline
+346 & f_{k_{j}}\to f\;\mathsf{unif.} & \mathsf{Eq}(344,345) & \mathsf{ZF+DC} \\ \hline\hline
+347 & \top & \to\mathsf{I}(341,\dots,346) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:SupportingHyperplanes} (\textsf{SupportingHyperplanes})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+348 & f:\mathbb{R}^{n}\to\mathbb{R}\;\mathsf{convex},\;x\in\mathbb{R}^{n} & \mathsf{assumption} & \mathsf{ZF} \\ \hline\hline
+349 & \mathsf{epi}(f):=\{(z,t):t\ge f(z)\} & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+350 & \mathsf{epi}(f)\;\mathsf{convex} & Def:\ref{Defi:Convex}(348,349) & \mathsf{ZF} \\ \hline\hline
+351 & (x,f(x))\in\partial\mathsf{epi}(f) & \mathsf{def} & \mathsf{ZF} \\ \hline\hline
+352 & \exists(r,-\alpha)\neq0,\;(r,-\alpha)\cdot((z,t)-(x,f(x)))\le0 & Lem:\ref{lemi:SeparatingHyperplane}(350,351) & \mathsf{ZF} \\ \hline\hline
+353 & \alpha\ge0 & \mathsf{Eq}(352) & \mathsf{ZF} \\ \hline\hline
+354 & \alpha>0 & \mathsf{RAA}(353,352) & \mathsf{ZF} \\ \hline\hline
+355 & f(z)\ge f(x)+r\cdot(z-x) & \mathsf{Eq}(352,354) & \mathsf{ZF} \\ \hline\hline
+356 & \forall x,\;\exists r,\;\forall y,\;f(y)\ge f(x)+r\cdot(y-x) & \forall\mathsf{I}(355) & \mathsf{ZF} \\ \hline\hline
+357 & \top & \to\mathsf{I}(348,\dots,356) & \mathsf{ZF} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:CompactAdjoint} (\textsf{CompactAdjoint})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+358 & K\;\mathsf{compact} & \mathsf{assumption} & \mathsf{ZFC} \\ \hline\hline
+359 & \{u_{k}\}\;\mathsf{bdd}\Rightarrow\exists\{u_{k_{j}}\},\;u_{k_{j}}\rightharpoonup u & Thm:\ref{thmi:WeakCompact}(358) & \mathsf{ZFC} \\ \hline\hline
+360 & \|K^{*}u_{k_{j}}-K^{*}u\|^{2}=(KK^{*}(u_{k_{j}}-u),u_{k_{j}}-u) & Def:\ref{Defi:adjoint}(359) & \mathsf{ZFC} \\ \hline\hline
+361 & KK^{*}(u_{k_{j}}-u)\to0 & Def:\ref{Defi:CompactOp}(359) & \mathsf{ZFC} \\ \hline\hline
+362 & \|K^{*}(u_{k_{j}}-u)\|^{2}\to0 & \mathsf{Eq}(360,361) & \mathsf{ZFC} \\ \hline\hline
+363 & K^{*}\;\mathsf{compact} & Def:\ref{Defi:CompactOp}(362) & \mathsf{ZFC} \\ \hline\hline
+364 & \top & \to\mathsf{I}(358,\dots,363) & \mathsf{ZFC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:WeakCompact} (\textsf{WeakCompact})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+365 & X\;\mathsf{reflexive},\;\{u_{k}\}\;\mathsf{bdd} & \mathsf{assumption} & \mathsf{ZFC} \\ \hline\hline
+366 & \bar{B}(0,M)\;\mathsf{weakly\ compact} & Thm:\ref{thmi:Kakutani}(365) & \mathsf{ZFC} \\ \hline\hline
+367 & \exists\{u_{k_{j}}\}\subset\{u_{k}\},\;u\in X,\;u_{k_{j}}\rightharpoonup u & \exists\mathsf{E}(366) & \mathsf{ZFC} \\ \hline\hline
+368 & \top & \to\mathsf{I}(365,\dots,367) & \mathsf{ZFC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:Bochner} (\textsf{Bochner})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+369 & \mathbf{f}\;\mathsf{strongly\ measurable} & \mathsf{assumption} & \mathsf{ZF+DC} \\ \hline\hline
+370 & \exists\{\mathbf{s}_{k}\}\;\mathsf{simple},\;\mathbf{s}_{k}\to\mathbf{f} & Def:\ref{Defi:StronglyMeasurable}(369) & \mathsf{ZF+DC} \\ \hline\hline
+371 & \int\|\mathbf{s}_{k}^{\prime}-\mathbf{f}\|\to0 & Thm:\ref{thmi:DominatedConv}(370) & \mathsf{ZF+DC} \\ \hline\hline
+372 & \mathbf{f}\;\mathsf{summable}\Leftrightarrow\|\mathbf{f}\|\;\mathsf{summable} & \mathsf{Eq}(371) & \mathsf{ZF+DC} \\ \hline\hline
+373 & \|\int\mathbf{f}\|\le\int\|\mathbf{f}\| & \mathsf{Eq}(371,372) & \mathsf{ZF+DC} \\ \hline\hline
+374 & \top & \to\mathsf{I}(369,\dots,373) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+\subsubsection*{Proof of Theorem \ref{thmi:Pettis} (\textsf{Pettis})}
+
+\noindent$%
+\begin{array}{|r|l|l|l|}
+\hline\hline
+375 & \mathbf{f}\;\mathsf{strongly\ measurable}\Rightarrow\mathsf{weakly\ measurable} & Def:\ref{Defi:StronglyMeasurable} & \mathsf{ZF+DC} \\ \hline\hline
+376 & \mathbf{f}\;\mathsf{strongly\ measurable}\Rightarrow\mathsf{almost\ sep.\ valued} & \forall\mathsf{E}(375) & \mathsf{ZF+DC} \\ \hline\hline
+377 & \mathsf{weakly\ meas.}+\mathsf{almost\ sep.\ valued}\Rightarrow\mathsf{strongly\ meas.} & \land\mathsf{I}(375,376) & \mathsf{ZF+DC} \\ \hline\hline
+378 & \top & \to\mathsf{I}(375,\dots,377) & \mathsf{ZF+DC} \\ \hline\hline
+\end{array}%
+$
+
+\medskip
+
+% ============================================================
+
+% ============================================================
+\setstretch{1.5}
+
+\begin{thebibliography}{9}
+\bibitem{brezis2011} H.~Brezis, \newblock {\em Functional Analysis, Sobolev
+Spaces and Partial Differential Equations}, \newblock Springer, New York,
+2011.
+
+\bibitem{evans2010} L.~C. Evans, \newblock {\em Partial Differential
+Equations}, 2nd ed., \newblock Graduate Studies in Mathematics, vol.~19, %
+\newblock American Mathematical Society, Providence, RI, 2010.
+
+\bibitem{herrlich2006} H.~Herrlich, \newblock {\em Axiom of Choice}, %
+\newblock Lecture Notes in Mathematics, vol.~1876, \newblock Springer,
+Berlin, 2006.
+
+\bibitem{kelley1950} J.~L. Kelley, \newblock The Tychonoff product theorem
+implies the axiom of choice, \newblock {\em Fund. Math.} {\bf 37} (1950),
+75--76.
+
+\bibitem{simpson2009} S.~G. Simpson, \newblock {\em Subsystems of Second
+Order Arithmetic}, 2nd ed., \newblock Perspectives in Logic, \newblock %
+Cambridge University Press, Cambridge, 2009.
+
+\bibitem{solovay1970} R.~M. Solovay, \newblock A model of set theory in
+which every set of reals is Lebesgue measurable, \newblock {\em Ann. of
+Math. (2)} {\bf 92} (1970), 1--56.
+\end{thebibliography}
+
+\end{document}
