@@ -1,0 +1,780 @@
+\documentclass[11pt]{beamer}
+
+% ============================================================
+% PACKAGES
+% ============================================================
+\usepackage{amsmath, amssymb, hyperref, amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{fontawesome5}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+
+% ============================================================
+% PDF METADATA
+% ============================================================
+\hypersetup{
+    pdftitle={Doctoral_Day_15_10_2026},
+    pdfauthor={Mahdi Tahar Brahimi},
+    pdfsubject={Doctoral Day — 15 October 2026},
+    pdfkeywords={Nonlinear PDEs, Variable Nonlinearity, Doctoral Day},
+    citecolor=red
+}
+
+% ============================================================
+% RED BOLD CITATIONS — FORCED VISUAL COLOR
+% ============================================================
+\let\oldcite\cite
+\renewcommand{\cite}[1]{\textcolor{red}{\textbf{\oldcite{#1}}}}
+
+% ============================================================
+% BEAMER THEME
+% ============================================================
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+
+\setbeamertemplate{theorems}[numbered]
+\setbeamercolor{block title}{fg=white, bg=green!75!black}
+
+% ============================================================
+% CUSTOM COLORS
+% ============================================================
+\definecolor{primaryblue}{RGB}{0, 70, 140}
+\definecolor{accentgreen}{RGB}{0, 120, 80}
+\definecolor{warningorange}{RGB}{200, 100, 0}
+
+% ============================================================
+% CUSTOM COMMANDS — status labels
+% ============================================================
+\newcommand{\completed}{\textcolor{accentgreen}{\faCheckCircle\ Completed}}
+\newcommand{\inprogress}{\textcolor{warningorange}{\faHourglassHalf\ In Progress}}
+\newcommand{\planned}{\textcolor{primaryblue}{\faClock\ Planned}}
+
+% ============================================================
+% GLOBAL FOOTLINE
+% ============================================================
+\setbeamertemplate{footline}{
+    \leavevmode%
+    \hbox{%
+        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+            \usebeamerfont{author in head/foot}\insertshortauthor
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+            \usebeamerfont{title in head/foot}\insertshorttitle
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+            \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+            \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+        \end{beamercolorbox}}%
+    \vskip0pt%
+}
+
+% ============================================================
+% TITLE INFORMATION
+% ============================================================
+\title[Nonlinear PDEs with Variable Nonlinearity]{On Nonlinear Partial Differential Equations\\ with Variable Nonlinearity}
+\subtitle{Doctoral Day — 15 October 2026}
+\author[M. T. Brahimi]{Mahdi Tahar Brahimi \\ \small Supervisor: Prof. Abdelhamid Tallab \\ \small Co-Supervisor: Dr. Abdelaziz Hellal}
+\date[15 Oct 2026]{15 October 2026}
+\institute{Université Mohamed Boudiaf -- M'sila \\ \small Faculty of Mathematics and Computer Science \\ \small Speciality: Functional Analysis for PDEs}
+
+% ============================================================
+% START DOCUMENT
+% ============================================================
+\begin{document}
+	
+	% ============================================================
+	% TITLE FRAME
+	% ============================================================
+	{
+		\setbeamertemplate{headline}{}
+		\setbeamertemplate{footline}{}
+		\begin{frame}[plain,noframenumbering]
+			\titlepage
+			\vspace{-0.3cm}
+			\begin{center}
+				\includegraphics[height=1.4cm]{logo.png}
+			\end{center}
+		\end{frame}
+	}
+	
+	% ============================================================
+	% TABLE OF CONTENTS
+	% ============================================================
+	\begin{frame}{Table of Contents}
+		\tableofcontents
+	\end{frame}
+	
+	% ============================================================
+	% SECTION 1: THESIS OVERVIEW
+	% ============================================================
+	\section{Thesis Overview}
+	
+	\begin{frame}{Thesis Identity}
+		\begin{block}{Title}
+			On Nonlinear Partial Differential Equations with Variable Nonlinearity
+		\end{block}
+		
+		\begin{block}{French Title}
+			Sur les équations aux dérivées partielles non linéaires avec non-linéarité variable
+		\end{block}
+		
+		\begin{columns}
+			\begin{column}{0.5\textwidth}
+				\textbf{Field:} Mathematics
+				
+				\textbf{Speciality:} Functional Analysis for PDEs
+			\end{column}
+			\begin{column}{0.5\textwidth}
+				\textbf{Supervisor:} Prof. A. Tallab
+				
+				\textbf{Co-Supervisor:} Dr. A. Hellal
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	\begin{frame}{Keywords}
+		\begin{itemize}
+			\item Nonlinear elliptic equations
+			\item Nonlinear parabolic equations
+			\item Variable nonlinearity
+			\item Existence, regularity, and uniqueness of solutions
+			\item Variational and non-variational methods
+			\item Sobolev and Lebesgue spaces with variable exponents
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Scientific Summary}
+		\begin{block}{Research Focus}
+			Theoretical and numerical analysis of nonlinear elliptic and parabolic PDEs characterized by \textbf{variable nonlinearity}.
+		\end{block}
+		
+		\begin{block}{Core Framework}
+			Study of existence, uniqueness, and regularity of solutions within \textbf{Sobolev and Lebesgue spaces with variable exponents}.
+		\end{block}
+		
+		\begin{block}{Goal}
+			Develop new analytical tools and stable numerical methods for this complex class of PDEs, with applications in physics, biology, and engineering.
+		\end{block}
+	\end{frame}
+	
+	% ============================================================
+	% SECTION 2: YEAR 1
+	% ============================================================
+	\section{Year 1 — Foundations}
+	
+	\begin{frame}{Year 1: Objectives}
+		\begin{enumerate}
+			\item Develop rigorous mathematical theories for existence, uniqueness, and regularity using functional analysis tools.
+			\item Design stable and efficient numerical algorithms tailored to these PDEs.
+			\item Apply theoretical and numerical results to real-world problems in applied sciences.
+			\item Contribute to interdisciplinary advancements bridging fundamental mathematics with technological challenges.
+		\end{enumerate}
+	\end{frame}
+	
+	\begin{frame}{Year 1: Work Plan}
+		\begin{enumerate}
+			\item \textbf{Literature Review:} Critical analysis of existing works on nonlinear PDEs and variable nonlinearity.
+			\item \textbf{Theoretical Analysis:} Proofs of existence, uniqueness, and regularity using variational methods.
+			\item \textbf{Numerical Development:} Implementation of algorithms (finite elements, finite differences).
+			\item \textbf{Applied Validation:} Case studies on concrete problems.
+			\item \textbf{Dissemination:} Publication of results and final thesis writing.
+		\end{enumerate}
+	\end{frame}
+	
+	\begin{frame}{Year 1: Doctoral Training Programme}
+		\begin{table}[h!]
+			\centering
+			\renewcommand{\arraystretch}{1.3}
+			\small
+			\begin{tabular}{@{}p{0.22\textwidth} p{0.36\textwidth} p{0.36\textwidth}@{}}
+				\toprule
+				\textbf{Activity} & \textbf{Semester 1} & \textbf{Semester 2} \\
+				\midrule
+				Speciality courses &
+				Sobolev/Lebesgue spaces with variable exponents (3h) &
+				Research methodology (1.5h) \\
+				\bottomrule
+			\end{tabular}
+		\end{table}
+		
+		\vspace{0.3cm}
+		
+		\begin{block}{Training Objectives}
+			\begin{itemize}
+				\item Establish rigorous mathematical theories for nonlinear elliptic and parabolic equations.
+				\item Create efficient and stable numerical algorithms.
+				\item Apply results to real-world problems in physics, biology, and engineering.
+			\end{itemize}
+		\end{block}
+	\end{frame}
+	
+	% ============================================================
+	% SECTION 3: YEAR 2
+	% ============================================================
+	\section{Year 2 (2025/2026) — Theoretical Framework}
+	
+	\begin{frame}{Year 2: Progress Overview}
+		\begin{block}{Overall Progress: Approximately 25\%}
+			\begin{itemize}
+				\item \completed\ Foundational coursework on variable exponent spaces and research methodology.
+				\item \completed\ Thorough literature review and precise formulation of the specific class of PDEs.
+				\item \inprogress\ Active development of the theoretical framework; initial a priori estimates underway.
+				\item \planned\ Rigorous numerical analysis and implementation of algorithms.
+				\item \planned\ Detailed application to real-world models (e.g., electrorheological fluids).
+			\end{itemize}
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}{Year 2: Work Plan — Months 1--6}
+		\begin{block}{Primary Objective}
+			Solidify the theoretical foundation and initiate the numerical analysis phase.
+		\end{block}
+		
+		\begin{block}{Theoretical Finalization}
+			\begin{enumerate}
+				\item Finalize the proof of the main existence and uniqueness theorem for elliptic and parabolic equations with $p(x)$-growth.
+				\item Initiate a detailed study of solution regularity (e.g., Hölder continuity, higher integrability).
+				\item Complete a draft of the first research paper for submission to a peer-reviewed journal.
+			\end{enumerate}
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}{Year 2: Work Plan — Months 7--12}
+		\begin{block}{Bridge to Numerical Methods}
+			\begin{enumerate}
+				\item Begin numerical analysis: stability and convergence of a Finite Element Method adapted to variable exponents.
+				\item Develop and test a basic prototype algorithm (MATLAB, Python with FEniCS).
+				\item Produce a working prototype code and a draft section of the thesis on the numerical scheme.
+			\end{enumerate}
+		\end{block}
+		
+		\begin{exampleblock}{Expected Deliverables}
+			\begin{itemize}
+				\item Working prototype code
+				\item Draft thesis section on numerical scheme
+				\item First research paper draft
+			\end{itemize}
+		\end{exampleblock}
+	\end{frame}
+	
+	% ============================================================
+	% SECTION 4: YEAR 3
+	% ============================================================
+	\section{Year 3 — Advanced Results \& Numerical Implementation}
+	
+	\begin{frame}{Year 3: Summary of Previous Year}
+		\begin{block}{Main Achievements}
+			\begin{itemize}
+				\item Completed comprehensive literature review on nonlinear PDEs with variable nonlinearity.
+				\item Studied variational and non-variational methods for existence and uniqueness.
+				\item Began investigating regularity results under variable exponent conditions.
+				\item Attended doctoral training courses (3h + 1.5h).
+				\item Submitted the first paper of the thesis manuscript \cite{BrahimiHellal2026}.
+				\item Drafted the first part of the thesis manuscript.
+			\end{itemize}
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}{Year 3: Progress of the Work}
+		\begin{table}[h!]
+			\centering
+			\renewcommand{\arraystretch}{1.4}
+			\small
+			\begin{tabular}{@{}p{0.30\textwidth} p{0.64\textwidth}@{}}
+				\toprule
+				\textbf{Component} & \textbf{Status} \\
+				\midrule
+				Theoretical framework & \completed\ — Functional setting established. \\
+				Existence \& uniqueness & \inprogress\ — Elliptic case preliminary; parabolic under study. \\
+				Regularity & \inprogress\ — Preliminary investigation begun. \\
+				Numerical methods & \planned\ — Planned for current year. \\
+				Manuscript & \inprogress\ — First chapter drafted. \\
+				\bottomrule
+			\end{tabular}
+		\end{table}
+	\end{frame}
+	
+	\begin{frame}{Year 3: Progress Rate}
+		\begin{block}{Overall Progress: Approximately 45\%}
+			The work is broadly proceeding as planned. A slight delay was caused by the additional time required to master the variable exponent functional framework, which is essential for the rest of the thesis. The revised schedule remains on track for completion within the planned timeframe.
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}{Year 3: Work Plan — Main Objectives}
+		\begin{enumerate}
+			\item Finalise existence and uniqueness results for the elliptic case and extend them to the parabolic case.
+			\item Establish regularity results for solutions under variable nonlinearity.
+			\item Begin developing numerical schemes for approximating solutions, with a focus on stability and accuracy.
+			\item Prepare and submit a first research article to a peer-reviewed journal.
+			\item Continue drafting the thesis manuscript (Chapters 2 and 3).
+		\end{enumerate}
+	\end{frame}
+	
+	\begin{frame}{Year 3: Planned Activities}
+		\begin{table}[h!]
+			\centering
+			\renewcommand{\arraystretch}{1.3}
+			\small
+			\begin{tabular}{@{}p{0.22\textwidth} p{0.72\textwidth}@{}}
+				\toprule
+				\textbf{Period} & \textbf{Activity} \\
+				\midrule
+				Semester 1 & Complete existence, uniqueness proofs; begin regularity analysis; draft article 1. \\
+				Semester 2 & Extend results to parabolic case; begin numerical methods; draft Chapters 2--3. \\
+				Throughout & Regular meetings with supervisors; attend seminars and doctoral training. \\
+				\bottomrule
+			\end{tabular}
+		\end{table}
+		
+		\vspace{0.3cm}
+		
+		\begin{block}{New Orientations}
+			\begin{itemize}
+				\item Greater emphasis on numerical approximation of solutions.
+				\item Consideration of applications in physics, biology, and engineering.
+			\end{itemize}
+		\end{block}
+	\end{frame}
+	
+	% ============================================================
+	% SECTION 5: MATHEMATICAL FOUNDATIONS
+	% ============================================================
+	\section{Mathematical Foundations}
+	
+	% ------------------------------------------------------------
+	% CORE DEFINITIONS
+	% ------------------------------------------------------------
+	\begin{frame}{Core Definitions: Variable Exponent Spaces \cite{diening2011}}
+		\begin{columns}[T]
+			\begin{column}{0.48\textwidth}
+				\begin{block}{Variable Exponent}
+					\small
+					$p: \Omega \to [1, \infty)$ measurable
+					
+					\textbf{Bounds:} $p^- = \operatorname*{ess\,inf} p(x)$, \; $p^+ = \operatorname*{ess\,sup} p(x)$
+					
+					\textbf{Modular:} $\displaystyle \rho_{p(\cdot)}(f) = \int_\Omega |f(x)|^{p(x)} dx$
+				\end{block}
+				
+				\begin{block}{Lebesgue Space $L^{p(\cdot)}$}
+					\small
+					\resizebox{\linewidth}{!}{%
+						$L^{p(\cdot)}(\Omega) = \left\{ f : \exists\, \lambda > 0,\ \rho_{p(\cdot)}(f/\lambda) < \infty \right\}$
+					}
+					
+					\vspace{0.2cm}
+					\textbf{Luxemburg Norm:}
+					
+					\resizebox{\linewidth}{!}{%
+						$\|f\|_{p(\cdot)} = \inf\left\{\lambda > 0 : \rho_{p(\cdot)}(f/\lambda) \le 1\right\}$
+					}
+				\end{block}
+			\end{column}
+			
+			\begin{column}{0.48\textwidth}
+				\begin{block}{Sobolev Space $W^{k, p(\cdot)}$}
+					\small
+					\resizebox{\linewidth}{!}{%
+						$W^{k, p(\cdot)}(\Omega) = \left\{ f \in L^{p(\cdot)} : D^\alpha f \in L^{p(\cdot)},\ |\alpha| \le k \right\}$
+					}
+				\end{block}
+				
+				\begin{block}{Key Properties}
+					\small
+					\begin{itemize}
+						\item \textbf{Banach:} Complete under Luxemburg norm
+						\item \textbf{Reflexive:} When $1 < p^- \le p^+ < \infty$
+						\item \textbf{Separable:} When $p^+ < \infty$
+						\item \textbf{Hölder:} $\|fg\|_{s(\cdot)} \le 2\|f\|_{p(\cdot)}\|g\|_{q(\cdot)}$
+					\end{itemize}
+				\end{block}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	% ------------------------------------------------------------
+	% ESSENTIAL CONDITIONS
+	% ------------------------------------------------------------
+	\begin{frame}{Essential Conditions \cite{diening2011}}
+		\begin{block}{Log-Hölder Continuity}
+			\[
+			|p(x) - p(y)| \le \frac{C}{-\log|x-y|}, \quad \forall\, x, y \in \Omega,\ 0 < |x-y| < \tfrac{1}{2}
+			\]
+		\end{block}
+		
+		\begin{block}{Sobolev Embedding}
+			If $p$ is log-Hölder and $1 < p^- \le p^+ < n$:
+			\[
+			W^{1, p(\cdot)} \hookrightarrow L^{p^*(\cdot)}, \qquad \frac{1}{p^*(x)} = \frac{1}{p(x)} - \frac{1}{n}
+			\]
+		\end{block}
+		
+		\begin{alertblock}{Why These Conditions Matter}
+			Log-Hölder continuity ensures the \textbf{Poincaré inequality}, \textbf{embedding theorems}, and \textbf{density of smooth functions} in $W^{1, p(\cdot)}$ — all essential for PDE analysis.
+		\end{alertblock}
+	\end{frame}
+	
+	% ------------------------------------------------------------
+	% EXAMPLE 1 — ELLIPTIC
+	% ------------------------------------------------------------
+	\begin{frame}[allowframebreaks]{Example 1: Elliptic Equations — $p(x)$-Laplace \cite{fan2015}}
+		\begin{block}{Model Problem}
+			\[
+			-\Delta_{p(x)} u = f \ \text{ in } \Omega, \qquad u = 0 \ \text{ on } \partial\Omega
+			\]
+			where $\Delta_{p(x)} u = \operatorname{div}\left(|\nabla u|^{p(x)-2}\nabla u\right)$
+		\end{block}
+		
+		\begin{columns}[T]
+			\begin{column}{0.48\textwidth}
+				\begin{block}{Weak Formulation}
+					\small
+					Find $u \in W_0^{1, p(\cdot)}(\Omega)$ such that:
+					\[
+					\int_\Omega |\nabla u|^{p(x)-2}\nabla u \cdot \nabla v \, dx = \int_\Omega f v \, dx
+					\]
+					for all $v \in W_0^{1, p(\cdot)}(\Omega)$
+				\end{block}
+			\end{column}
+			
+			\begin{column}{0.48\textwidth}
+				\begin{block}{Energy Functional}
+					\small
+					\[
+					J(u) = \int_\Omega \frac{1}{p(x)} |\nabla u|^{p(x)} dx - \int_\Omega f u \, dx
+					\]
+					Minimizers of $J$ are weak solutions.
+				\end{block}
+			\end{column}
+		\end{columns}
+		
+		\begin{block}{Existence \& Regularity}
+			\begin{itemize}
+				\item \textbf{Existence:} If $p$ log-Hölder, $1 < p^- \le p^+ < \infty$, $f \in L^{p'(\cdot)}(\Omega)$
+				\item \textbf{Regularity:} Additional conditions yield $u \in C^{1, \alpha}(\Omega)$ \cite{diening2011}
+				\item \textbf{Uniqueness:} Guaranteed if $p(x) \ge 2$ or $1 < p(x) \le 2$ for all $x$
+			\end{itemize}
+		\end{block}
+	\end{frame}
+	
+	% ------------------------------------------------------------
+	% EXAMPLE 2 — PARABOLIC
+	% ------------------------------------------------------------
+	\begin{frame}[allowframebreaks]{Example 2: Parabolic Equations — $p(x)$-Heat}
+		\begin{block}{Model Problem}
+			\[
+			u_t - \Delta_{p(x)} u = f(x, t) \ \text{ in } \Omega \times (0, T)
+			\]
+			\[
+			u = 0 \ \text{ on } \partial\Omega \times (0, T), \qquad u(x, 0) = u_0(x) \ \text{ in } \Omega
+			\]
+		\end{block}
+		
+		\begin{block}{Weak Formulation}
+			\small
+			Find $u \in L^2(0, T; W_0^{1, p(\cdot)}(\Omega))$ with $u_t \in L^2(0, T; W^{-1, p'(\cdot)}(\Omega))$ such that:
+			\[
+			\langle u_t, v \rangle + \int_\Omega |\nabla u|^{p(x)-2}\nabla u \cdot \nabla v \, dx = \int_\Omega f v \, dx
+			\]
+			for all $v \in W_0^{1, p(\cdot)}(\Omega)$, a.e. $t \in (0, T)$
+		\end{block}
+		
+		\begin{block}{Energy Estimates}
+			\textbf{Basic Energy:}
+			\[
+			\frac{1}{2}\frac{d}{dt}\|u\|_2^2 + \int_\Omega |\nabla u|^{p(x)} dx \le \int_\Omega f u \, dx
+			\]
+			\textbf{Higher Integrability:} $|\nabla u|^{p(x)} \in L^{1 + \delta}(\Omega \times (0, T))$ for some $\delta > 0$.
+		\end{block}
+	\end{frame}
+	
+	% ------------------------------------------------------------
+	% VARIABLE EXPONENT SPACES — FORMAL FRAMEWORK
+	% ------------------------------------------------------------
+	\begin{frame}{Variable Exponent Spaces — Formal Framework \cite{diening2011}}
+		\begin{definition}[Variable Exponent Lebesgue Space]
+			For a measurable function $p: \Omega \to [1, \infty)$:
+			\[
+			L^{p(x)}(\Omega) = \left\{ u : \Omega \to \mathbb{R} \;\middle|\; \int_\Omega |u(x)|^{p(x)} \, dx < \infty \right\}
+			\]
+		\end{definition}
+		
+		\begin{definition}[Variable Exponent Sobolev Space]
+			\[
+			W^{1, p(x)}(\Omega) = \left\{ u \in L^{p(x)}(\Omega) \;\middle|\; \nabla u \in L^{p(x)}(\Omega) \right\}
+			\]
+		\end{definition}
+		
+		\begin{block}{Poincaré Inequality}
+			\[
+			\|u\|_{p(\cdot)} \le C\|\nabla u\|_{p(\cdot)}, \quad \forall u \in W_0^{1, p(x)}(\Omega)
+			\]
+		\end{block}
+	\end{frame}
+	
+	% ------------------------------------------------------------
+	% MAIN THEOREM — PART 1
+	% ------------------------------------------------------------
+	\begin{frame}{Main Existence and Uniqueness Theorem — Part 1 \cite{BrahimiHellal2026}}
+		\begin{block}{Dirichlet Problem}
+			\small
+			\[
+			-\operatorname{div}\big(|\nabla u|^{p(x)-2}\nabla u\big) = \beta |\nabla u|^{q(x)} + f \ \text{ in } \Omega, \qquad u = 0 \ \text{ on } \partial\Omega
+			\]
+			with $\Omega \subset \mathbb{R}^N$, $N \ge 2$, $p, q: \overline{\Omega} \to (1, N)$, $p(x) - 1 < q(x) < p(x)$.
+		\end{block}
+		
+		\begin{columns}[T]
+			\begin{column}{0.48\textwidth}
+				\begin{block}{Existence}
+					\small
+					If $f \in L^{m(\cdot)}(\Omega)$ with suitable summability, then
+					\[
+					u \in W_0^{1, p(x)}(\Omega)
+					\]
+				\end{block}
+			\end{column}
+			
+			\begin{column}{0.48\textwidth}
+				\begin{block}{Uniqueness}
+					\small
+					Let $\frac{2N}{N+2} \le p(x) \le 2$ and
+					\[
+					p(x) - 1 < q(x) \le p(x) - 1 + \frac{p(x)}{N}.
+					\]
+					Then the solution is \textbf{unique}.
+				\end{block}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	% ------------------------------------------------------------
+	% MAIN THEOREM — PART 2
+	% ------------------------------------------------------------
+	\begin{frame}{Main Existence and Uniqueness Theorem — Part 2 \cite{AlvinoFeroneMercaldo2025}}
+		\begin{block}{Comparison Principle}
+			\small
+			If $f \le g$ in $\mathcal{D}'(\Omega)$, then $u \le v$ a.e. in $\Omega$.
+		\end{block}
+		
+		\begin{block}{Three Conditions for $q$}
+			\small
+			\begin{enumerate}
+				\item $p-1 < q < \dfrac{N(p-1)}{N-1}$ \quad (Renormalized/Entropy solutions)
+				\item $\dfrac{N(p-1)}{N-1} \le q < p-1 + \dfrac{p}{N}$ \quad (Weak solutions)
+				\item $p-1 + \dfrac{p}{N} \le q \le p$ \quad (Standard weak solutions)
+			\end{enumerate}
+		\end{block}
+		
+		\begin{block}{Sharp Smallness Condition}
+			\small
+			If $\|f\|_{L^{(p^*)'}} < K_2$ and $\|g\|_{L^{(p^*)'}} < K_2$, then $u \le v$ a.e., where
+			\resizebox{\linewidth}{!}{%
+				$K_2 = \dfrac{q-p+1}{q}\left( \omega_N^{1/N} \dfrac{N(q-p+1)-q}{q-p+1} \right)^{\frac{q-p+1}{q}}\left( \dfrac{p-1}{\beta q} \right)^{\frac{N(q-1)}{N(q-p+1)}}$
+			}
+		\end{block}
+	\end{frame}
+	
+	% ------------------------------------------------------------
+	% KEY THEOREMS
+	% ------------------------------------------------------------
+	\begin{frame}{Key Theorems \cite{diening2011,chipot2000}}
+		\begin{theorem}[Existence and Uniqueness]
+			Under appropriate conditions on the variable exponent $p(x)$ and the nonlinearity, the elliptic problem
+			\[
+			-\operatorname{div}\left( |\nabla u|^{p(x)-2} \nabla u \right) = f(x, u, \nabla u)
+			\]
+			admits a unique weak solution $u \in W^{1, p(x)}_0(\Omega)$.
+		\end{theorem}
+		
+		\begin{theorem}[Regularity]
+			If $p(x)$ is log-Hölder continuous and $f$ satisfies suitable growth conditions, then the weak solution is locally Hölder continuous \cite{diening2011}.
+		\end{theorem}
+		
+		\begin{block}{Key Tool: Three-Step Method \cite{boccardo1992}}
+			Approximation $\to$ A Priori Estimates $\to$ Passage to the Limit.
+		\end{block}
+	\end{frame}
+	
+	% ------------------------------------------------------------
+	% NUMERICAL SCHEME
+	% ------------------------------------------------------------
+	\begin{frame}{Numerical Scheme: Finite Element Method \cite{chipot2000,evans2010}}
+		\begin{block}{Discrete Problem}
+			Find $u_h \in V_h \subset W^{1, p(x)}_0(\Omega)$ such that for all $v_h \in V_h$:
+			\[
+			\int_\Omega |\nabla u_h|^{p(x)-2} \nabla u_h \cdot \nabla v_h \, dx = \int_\Omega f \, v_h \, dx
+			\]
+		\end{block}
+		
+		\begin{block}{Key Challenges}
+			\begin{itemize}
+				\item Variable exponent affects stiffness matrix assembly.
+				\item Nonlinearity requires iterative solvers (Newton, fixed-point).
+				\item Stability and convergence analysis in variable exponent spaces.
+			\end{itemize}
+		\end{block}
+	\end{frame}
+	
+	% ------------------------------------------------------------
+	% PHYSICAL APPLICATIONS
+	% ------------------------------------------------------------
+	\begin{frame}{Physical Applications \cite{ruzi2000,fan2015}}
+		\begin{columns}[T]
+			\begin{column}{0.48\textwidth}
+				\begin{block}{Electrorheological Fluids \cite{ruzi2000}}
+					$p(x)$ depends on the electric field — a classic application of variable exponent PDEs.
+				\end{block}
+				
+				\begin{block}{Image Processing}
+					Adaptive regularization via variable exponent models.
+				\end{block}
+			\end{column}
+			
+			\begin{column}{0.48\textwidth}
+				\begin{block}{Non-Newtonian Fluids}
+					Shear-dependent viscosity modeled by $p(x)$-Laplacian.
+				\end{block}
+				
+				\begin{block}{Other Contexts}
+					\begin{itemize}
+						\item Thermal processes with temperature-dependent conductivity
+						\item Filtration in porous media
+						\item Biological systems with density-dependent diffusion
+					\end{itemize}
+				\end{block}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	% ============================================================
+	% SECTION 6: CONCLUSION
+	% ============================================================
+	\section{Conclusion}
+	
+	\begin{frame}{Summary of Progress}
+		\begin{columns}
+			\begin{column}{0.33\textwidth}
+				\begin{block}{Year 1}
+					\centering
+					\textbf{Foundations}\\
+					\vspace{0.2cm}
+					Literature review\\
+					Coursework\\
+					Problem formulation
+				\end{block}
+			\end{column}
+			\begin{column}{0.33\textwidth}
+				\begin{block}{Year 2}
+					\centering
+					\textbf{Theory}\\
+					\vspace{0.2cm}
+					Existence proofs\\
+					Regularity\\
+					Numerical bridge
+				\end{block}
+			\end{column}
+			\begin{column}{0.33\textwidth}
+				\begin{block}{Year 3}
+					\centering
+					\textbf{Implementation}\\
+					\vspace{0.2cm}
+					Numerical schemes\\
+					Applications\\
+					Manuscript
+				\end{block}
+			\end{column}
+		\end{columns}
+		
+		\vspace{0.5cm}
+		
+		\begin{alertblock}{Current Status: 45\% Complete}
+			On track for completion within the planned timeframe.
+		\end{alertblock}
+	\end{frame}
+	
+	% ============================================================
+	% SINGLE CONSOLIDATED REFERENCES SLIDE — at the very end
+	% ============================================================
+	\begin{frame}[allowframebreaks]{References}
+		\begin{thebibliography}{99}
+			\small
+			\setlength{\itemsep}{4pt}
+			
+			\bibitem{AlvinoFeroneMercaldo2025}
+			Alvino, A., Ferone, V., \& Mercaldo, A. (2025).
+			The Existence and Uniqueness of Nonlinear Elliptic Equations with General Growth in the Gradient.
+			\textit{Mathematics}, 13, 63.
+			
+			\bibitem{BrahimiHellal2026}
+			Brahimi, M.-T., \& Hellal, A. (2026).
+			Dirichlet boundary value problems with general growth in the gradient involving variable exponents.
+			\textit{Preprint}.
+			
+			\bibitem{boccardo1992}
+			Boccardo, L., \& Murat, F. (1992).
+			Almost everywhere convergence of the gradients of solutions to elliptic and parabolic equations.
+			\textit{Nonlinear Analysis}, 19, 581–597.
+			
+			\bibitem{chipot2000}
+			Chipot, M. (2000).
+			\textit{Elements of Nonlinear Analysis}.
+			Birkhäuser.
+			
+			\bibitem{diening2011}
+			Diening, L., Harjulehto, P., Hästö, P., \& Růžička, M. (2011).
+			\textit{Lebesgue and Sobolev Spaces with Variable Exponents}.
+			Springer.
+			
+			\bibitem{evans2010}
+			Evans, L. C. (2010).
+			\textit{Partial Differential Equations} (2nd ed.).
+			AMS.
+			
+			\bibitem{fan2015}
+			Fan, X. (2015).
+			An overview of $p(x)$-Laplace equations.
+			\textit{Nonlinear Analysis}.
+			
+			\bibitem{lions1969}
+			Lions, J.-L. (1969).
+			\textit{Quelques méthodes de résolution des problèmes aux limites non linéaires}.
+			Dunod.
+			
+			\bibitem{ruzi2000}
+			Růžička, M. (2000).
+			\textit{Electrorheological Fluids: Modeling and Mathematical Theory}.
+			Springer.
+			
+			\bibitem{showalter1997}
+			Showalter, R. E. (1997).
+			\textit{Monotone Operators in Banach Space and Nonlinear Partial Differential Equations}.
+			AMS.
+		\end{thebibliography}
+	\end{frame}
+	
+	\begin{frame}
+		\begin{center}
+			\Huge\textbf{Thank You!}
+			
+			\vspace{1cm}
+			
+			\Large Questions?
+			
+			\vspace{1cm}
+			
+			\normalsize
+			\textbf{Mahdi Tahar Brahimi}\\
+			\small Université Mohamed Boudiaf -- M'sila\\
+			\small Speciality: Functional Analysis for PDEs
+			
+			\vspace{0.5cm}
+			
+			\scriptsize
+			\textbf{Contact:} mahdithar.brahimi@univ-msila.dz
+		\end{center}
+	\end{frame}
+	
+\end{document}
