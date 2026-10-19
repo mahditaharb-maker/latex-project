@@ -1,0 +1,2576 @@
+
+\documentclass[11pt,reqno]{amsart}
+\usepackage{amsfonts}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{titlesec,amsmath,amssymb,amsthm,ragged2e,float}
+\usepackage{array}
+\usepackage{graphicx,setspace}
+\usepackage[margin=0.5in]{geometry}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{xcolor}
+\usepackage{fancyvrb}
+
+\setcounter{MaxMatrixCols}{10}
+\IfFileExists{tcilatex.tex}{\input{tcilatex}}{}
+\DeclareUnicodeCharacter{03B9}{\ensuremath{\iota}}
+\DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
+\DeclareUnicodeCharacter{2203}{\ensuremath{\exists}}
+\DeclareUnicodeCharacter{2218}{\ensuremath{\circ}}
+\DeclareUnicodeCharacter{2264}{\ensuremath{\leq}}
+\DeclareUnicodeCharacter{2265}{\ensuremath{\geq}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\to}}
+\DeclareUnicodeCharacter{21A6}{\ensuremath{\mapsto}}
+\DeclareUnicodeCharacter{2260}{\ensuremath{\neq}}
+\DeclareUnicodeCharacter{00D7}{\ensuremath{\times}}
+\DeclareUnicodeCharacter{2115}{\ensuremath{\mathbb{N}}}
+\DeclareUnicodeCharacter{211D}{\ensuremath{\mathbb{R}}}
+\DeclareUnicodeCharacter{27E8}{\ensuremath{\langle}}
+\DeclareUnicodeCharacter{27E9}{\ensuremath{\rangle}}
+\providecommand{\R}{\mathbb{R}}
+\providecommand{\N}{\mathbb{N}}
+\fvset{frame=lines,framerule=0.7pt,rulecolor=\color{blue!60!black},
+	framesep=5pt,fontsize=\scriptsize,xleftmargin=6pt,xrightmargin=6pt}
+\RecustomVerbatimEnvironment{verbatim}{Verbatim}{}
+\DefineVerbatimEnvironment{verbatimbox}{Verbatim}{
+	frame=single,framerule=0.7pt,rulecolor=\color{blue!60!black},
+	framesep=5pt,fontsize=\scriptsize,xleftmargin=6pt,xrightmargin=6pt}
+\subjclass{\textbf{2020 Mathematics Subject Classification.}\,
+	Primary 35-01, 35J20, 35J25, 35K05, 35L05, 46-01, 46E35;
+	Secondary 26-01, 28-01, 00A22.}
+\makeatletter
+\def\@setsubjclass{\ifx\@subjclass\@empty\else\@subjclass\fi}
+\makeatother
+\keywords{notation, inequalities, Gauss--Green, mollifiers, Banach space,
+	Hilbert space, weak convergence, Lebesgue measure, Sobolev spaces,
+	weak derivatives, weak solutions, elliptic regularity, maximum
+	principle, heat equation, wave equation, Morrey, trace, semigroup}
+\renewcommand{\abstractname}{\fontsize{16}{18}\selectfont Abstract}
+\newcommand{\abstractfont}{\normalfont\fontsize{11}{13.2}\selectfont}
+\newcommand{\abstractheadingsep}{\vspace{1em}}
+\makeatletter
+\renewenvironment{abstract}{\ifx\maketitle\relax
+	\ClassWarning{\@classname}{Abstract should precede
+		\protect\maketitle\space in AMS document classes; reported}\fi
+	\global\setbox\abstractbox=\vtop \bgroup
+	\abstractfont
+	{\centering\abstractname\par}\abstractheadingsep
+	\list{}{\labelwidth\z@\leftmargin3pc \rightmargin\leftmargin
+		\listparindent\normalparindent \itemindent\z@
+		\parsep\z@ \@plus\p@\let\fullwidthdisplay\relax}\item\relax
+}{  \endlist\egroup
+	\ifx\@setabstract\relax \@setabstracta \fi}
+\makeatother
+\setcounter{secnumdepth}{3}
+\newcommand{\SecAbove}{2.6ex plus 0.6ex minus 0.15ex}
+\newcommand{\SecBelow}{2.0ex plus 0.6ex minus 0.15ex}
+\newcommand{\SubsecAbove}{2.0ex plus 0.5ex minus 0.15ex}
+\newcommand{\SubsecBelow}{1.2ex plus 0.4ex minus 0.15ex}
+\newcommand{\SubsubsecAbove}{2.0ex plus 0.5ex minus 0.15ex}
+\newcommand{\SubsubsecBelow}{1.2ex plus 0.4ex minus 0.15ex}
+\makeatletter
+\titleformat{\section}{\normalfont\fontsize{14}{16}\selectfont\bfseries}
+{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalfont\fontsize{12}{14}\selectfont\bfseries}
+{\thesubsection}{0.5em}{}
+\titleformat{\subsubsection}{\normalfont\fontsize{10}{12}\selectfont\bfseries}
+{\thesubsubsection}{0.5em}{}
+\titlespacing*{\section}{\z@}{\SecAbove}{\SecBelow}
+\titlespacing*{\subsection}{\z@}{\SubsecAbove}{\SubsecBelow}
+\titlespacing*{\subsubsection}{\z@}{\SubsubsecAbove}{\SubsubsecBelow}
+\makeatother
+\setlength{\arraycolsep}{3pt}
+\renewcommand{\arraystretch}{1.3}
+\newcolumntype{r}{>{\centering\arraybackslash\scriptsize$}m{3cm}<{$}}
+\newcolumntype{l}{>{\raggedright\arraybackslash\scriptsize$}m{12cm}<{$}}
+\newcolumntype{c}{>{\centering\arraybackslash\scriptsize$}m{2cm}<{$}}
+\newcounter{axctr}\newcounter{posctr}\newcounter{defctr}
+\newcounter{lemctr}\newcounter{thmctr}\newcounter{propctr}\newcounter{corctr}
+\renewcommand{\theaxctr}{\arabic{axctr}}
+\renewcommand{\theposctr}{\arabic{posctr}}
+\renewcommand{\thedefctr}{\arabic{defctr}}
+\renewcommand{\thelemctr}{\arabic{lemctr}}
+\renewcommand{\thethmctr}{\arabic{thmctr}}
+\renewcommand{\thepropctr}{\arabic{propctr}}
+\renewcommand{\thecorctr}{\arabic{corctr}}
+\newcommand{\swpax}[2]{\refstepcounter{axctr}\hypertarget{#1}{\mbox{\textbf{Ax\,\theaxctr}}}\label{#2}}
+\newcommand{\swppos}[2]{\refstepcounter{posctr}\hypertarget{#1}{\mbox{\textbf{Pos\,\theposctr}}}\label{#2}}
+\newcommand{\swpdef}[2]{\refstepcounter{defctr}\hypertarget{#1}{\mbox{\textbf{Def\,\thedefctr}}}\label{#2}}
+\newcommand{\swplem}[2]{\refstepcounter{lemctr}\hypertarget{#1}{\mbox{\textbf{Lem\,\thelemctr}}}\label{#2}}
+\newcommand{\swpthm}[2]{\refstepcounter{thmctr}\hypertarget{#1}{\mbox{\textbf{Thm\,\thethmctr}}}\label{#2}}
+\newcommand{\tagged}[2]{\hypertarget{#1}{\mbox{\textbf{#2}}}}
+\newcommand{\refto}[2]{\hyperlink{#1}{#2}}
+\newcommand{\mcite}[1]{\text{\cite{#1}}}
+\makeatletter
+\let\orig@maketitle\maketitle
+\renewcommand{\maketitle}{\begingroup
+	\let\MakeUppercase\@firstofone
+	\let\uppercase\@firstofone
+	\orig@maketitle
+	\endgroup}
+\makeatother
+\makeatletter
+\newlength{\titleToAuthorSkip}
+\newlength{\authorToAbstractSkip}
+\setlength{\titleToAuthorSkip}{10pt plus 4pt minus 2pt}
+\setlength{\authorToAbstractSkip}{20pt plus 6pt minus 3pt}
+\renewcommand{\@maketitle}{\normalfont\normalsize
+	\let\@makefnmark\relax
+	\let\@thefnmark\relax
+	\ifx\@empty\@subjclass\else
+	\@footnotetext{\@setsubjclass}\fi
+	\ifx\@empty\@keywords\else
+	\@footnotetext{\@setkeywords}\fi
+	\ifx\@empty\@thanks\else
+	\@footnotetext{\@setthanks}\fi
+	\@settitle
+	\ifx\@empty\@authors\else
+	\vspace{\titleToAuthorSkip}\@setauthors\fi
+	\ifx\@empty\@date\else
+	\vspace{6pt}\@setdate\fi
+	\ifx\@empty\@abstract\else
+	\vspace{\authorToAbstractSkip}\fi
+	\@setabstract}
+\makeatother
+\pagestyle{plain}
+\renewcommand{\seriesdefault}{\bfdefault}
+\boldmath
+
+\begin{document}
+	\title{\bfseries{\Large \emph{The Dependency Ordered Formal Exposition of PDEs}}}
+	\author{%
+		\bfseries{\large \hspace{1.5in} Brahimi Mahdi Tahar\newline
+			\text{ \  } \newline
+			\text{ \  } \hspace{0.5in}\text{ \  } University of Mohamed Boudiaf of M'sila, Algeria\newline
+			\text{ \  } \newline
+			\href{mailto:mahditahar.brahimi@univ-msila.dz}{mahditahar.brahimi@univ-msila.dz}}%
+	}
+	\maketitle
+	
+	\begin{abstract}
+		\bfseries
+		\setstretch{1.3}{\small This document is a step-indexed,
+			dependency-ordered presentation of the theory of partial differential
+			equations, following \cite{brezis2011, evans2010} . Every result
+			appears only after all results it depends on. Entries are split into
+			postulates (unproved statements used inside proofs) and axioms of the
+			ordered field $\R$ (primitive structure). The document covers the full
+			prerequisite tower (measure theory, $L^{p}$ spaces, Hilbert and Banach
+			space theory, convex analysis, integration by parts) and the PDE solution
+			layer built on it: Sobolev spaces and weak derivatives, existence,
+			uniqueness and regularity for the Dirichlet problem for the Laplacian via
+			Lax--Milgram, the weak maximum principle and Hopf lemma, the Dirichlet
+			principle, weak existence and energy estimates for the heat and wave
+			equations, and Duhamel's principle. Each entry is annotated with the
+			choice strength of its proof: \textsf{ZF}, \textsf{ZF+DC}, or \textsf{ZFC}.}
+	\end{abstract}
+\noindent \text{ \ } \newline
+\begin{center}
+	\begin{minipage}[c]{0.55\linewidth}
+		\vspace{0pt}
+		\begin{Verbatim}[frame=single,framerule=0.7pt,
+		rulecolor=\color{blue!60!black},framesep=8pt,
+		fontsize=\fontsize{6}{8}\selectfont,
+		formatcom=\color{red}\bfseries,
+		xleftmargin=6pt,xrightmargin=6pt]
+		Root theorems (nothing depends on them):
+		SpectralThm    CompactAdjoint   Minkowski
+		GenHolder      Interpolation    LebesgueDiff
+		Egoroff        Bochner          Pettis
+		SpectrumCompact   Jensen        ArzelaAscoli
+		GreenI         GreenIII         Polar
+		MovingRegions  MollifierProps   LebesgueExistence
+		ClosedGraph    ImplicitFT       DuhamelPrinciple
+		HeatEnergyDecay WaveWeakExistence HeatWeakExistence
+		StrongMaxPrinciple EllipticBoundaryReg EllipticInteriorReg
+		PoissonExistence PoissonUniqueness DirichletPrinciple
+		RellichKondrachov
+		\end{Verbatim}
+	\end{minipage}\hfill
+	\begin{minipage}[c]{0.42\linewidth}
+		\vspace{0pt}
+		\begin{Verbatim}[frame=single,framerule=0.7pt,
+		rulecolor=\color{blue!60!black},framesep=8pt,
+		fontsize=\fontsize{6}{8}\selectfont,
+		formatcom=\color{red}\bfseries,
+		xleftmargin=6pt,xrightmargin=6pt]
+		Deepest chains (by depth):
+		L0 | Minkowski
+		L1 |   Holder
+		L2 |     Young
+		L3 |       expconvex
+		L4 |         SecondDerivCriterion
+		L5 |           Taylor
+		L6 |             FTC
+		L7 |               MVT
+		
+		L0 | HeatWeakExistence
+		L1 |   WeakCompact
+		L2 |     Kakutani
+		L3 |       BanachAlaoglu
+		L4 |         Tych
+		
+		L0 | RellichKondrachov
+		L1 |   WeakCompact
+		L2 |     Kakutani
+		L3 |       BanachAlaoglu
+		L4 |         Tych
+		
+		L0 | SpectralThm
+		L1 |   BoundsSpectrum
+		L2 |     LaxMilgram
+		L3 |       Riesz
+		L4 |         {Sperp, perp}
+		\end{Verbatim}
+	\end{minipage}
+	
+	\medskip
+	\noindent \text{ \ } \newline
+	{\small\refstepcounter{figure}\textcolor{red}{\textbf{Figure \thefigure.}\enspace
+			Summary of root theorems and the deepest dependency chains.}}
+	\label{fig:summary}
+\end{center}
+	
+
+	
+	\thispagestyle{empty} \newpage \pagestyle{plain} \pagenumbering{arabic}
+	\setstretch{1.3}
+	
+	% ============================================================
+	\section{Introduction}
+	% ============================================================
+	\noindent The document is organised into six parts: \emph{Axioms},
+	\emph{Postulates}, \emph{Definitions}, \emph{Statements} (Lemmas,
+	Theorems), \emph{Proofs}, and \emph{Scripts}. Following the
+	reverse-mathematics convention of \cite{simpson2009}, entries are split
+	into two primitive layers: \emph{axioms of the ordered field $\R$} and
+	\emph{postulates} (unproved statements admitted inside proofs). Every
+	entry in a later part may depend only on earlier entries, and no entry
+	may depend on anything outside the union of axioms and postulates.
+	Lemmas and Theorems form a single dependency layer: an entry may depend
+	on an earlier Lemma or Theorem, so long as the global order is respected.
+	
+	Choice-strength tags record the strength needed to make the given proof
+	go through; they are upper bounds on the logical strength of each entry
+	and are not claimed to be tight.
+	
+	% ============================================================
+	\section{Axioms}
+	% ============================================================
+	\noindent The axioms of the ordered field $\R$, kept as primitive
+	structure.
+	
+	\noindent \text{ \ } \newline
+	
+	\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpax{ax:R-comm}{axi:R-comm} & \mathsf{ax:R-comm}:\forall (x:\R),\;\forall (y:\R),\;x+y=y+x & \mathsf{Additive}\allowbreak \mathsf{Commutativity} & \mathsf{ZF} \\ \hline
+	\swpax{ax:R-assoc}{axi:R-assoc} & \mathsf{ax:R-assoc}:\forall (x:\R),\;\forall (y:\R),\;\forall (z:\R),\;(x+y)+z=x+(y+z) & \mathsf{Additive}\allowbreak \mathsf{Associativity} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpax{ax:R-order}{axi:R-order} & \mathsf{ax:R-order}:\forall (x:\R),\;\forall (y:\R),\;\forall (z:\R),\;x\le y\wedge y\le z\Rightarrow x\le z & \mathsf{Order}\allowbreak \mathsf{Transitivity} & \mathsf{ZF} \\ \hline
+	\swpax{ax:R-complete}{axi:R-complete} & \mathsf{ax:R-complete}:\forall (a:\N\to\R),\;\mathsf{Cauchy}(a)\Rightarrow\exists (L:\R),\;\lim_{n}a(n)=L & \mathsf{Completeness}\allowbreak \mathsf{of}\allowbreak \mathsf{R} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpax{ax:R-mul-compat}{axi:R-mul-compat} & \mathsf{ax:R-mul}:\forall (x:\R),\;\forall (y:\R),\;\forall (z:\R),\;x\le y\wedge0\le z\Rightarrow xz\le yz & \mathsf{Multiplication}\allowbreak \mathsf{Compat.} & \mathsf{ZF} \\ \hline
+	\swpax{ax:R-add-compat}{axi:R-add-compat} & \mathsf{ax:R-add}:\forall (x:\R),\;\forall (y:\R),\;\forall (z:\R),\;x\le y\Rightarrow x+z\le y+z & \mathsf{Addition}\allowbreak \mathsf{Compat.} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	
+	\medskip
+	
+	% ============================================================
+	\section{Postulates}
+	% ============================================================
+	\noindent Unproved statements admitted inside proofs (postulates).
+	
+	\noindent \text{ \ } \newline
+	
+	\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swppos{pos:MVT}{posi:MVT} & \mathsf{MVT}:\forall (f:\R\to\R),\;C([a,b])(f)\wedge D((a,b))(f)\Rightarrow\exists (c:(a,b)),\;f^{\prime}(c)=(f(b)-f(a))/(b-a) & \mathsf{Mean}\allowbreak \mathsf{Value}\allowbreak \mathsf{Theorem} & \mathsf{ZF} \\ \hline
+	\swppos{pos:MVTI}{posi:MVTI} & \mathsf{MVTI}:\forall (w:\R\to\R),\;\forall (g:\R\to\R),\;w\ge0\wedge C([a,b])(g)\Rightarrow\exists (c:[a,b]),\;\int_{a}^{b}w(t)g(t)\,dt=g(c)\int_{a}^{b}w(t)\,dt & \mathsf{Weighted}\allowbreak \mathsf{Mean}\allowbreak \mathsf{Value} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swppos{pos:IBP}{posi:IBP} & \mathsf{IBP}:\forall (u:\R\to\R),\;\forall (v:\R\to\R),\;C^{1}(u)\wedge C^{1}(v)\Rightarrow\int_{a}^{b}u^{\prime}(t)v(t)\,dt=[uv]_{a}^{b}-\int_{a}^{b}u(t)v^{\prime}(t)\,dt & \mathsf{Integration}\allowbreak \mathsf{by}\allowbreak \mathsf{Parts} & \mathsf{ZF} \\ \hline
+	\swppos{pos:BW}{posi:BW} & \mathsf{BW}:\forall (x:\N\to\R^{n}),\;\mathsf{Bdd}(x)\Rightarrow\exists (x^{\prime}:\N\to\R^{n}),\;\exists (L:\R^{n}),\;\mathsf{Subseq}(x^{\prime},x)\wedge x^{\prime}\to L & \mathsf{Bolzano-Weierstrass} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swppos{pos:Tych}{posi:Tych} & \mathsf{Tych}:\forall (X:I\to\mathsf{Top}),\;(\forall (i:I),\;\mathsf{Compact}(X_{i}))\Rightarrow\mathsf{Compact}(\prod_{i}X_{i}) & \mathsf{Tychonoff} & \mathsf{ZFC} \\ \hline
+	\swppos{pos:Morrey}{posi:Morrey} & \mathsf{Morrey}:\forall (p>n),\;\forall (u\in W^{1,p}(U)),\;\exists (C_{M}:\R_{>0}),\;\|u\|_{C^{0,1-n/p}(U)}\le C_{M}\|u\|_{W^{1,p}(U)} & \mathsf{Morrey} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swppos{pos:Trace}{posi:Trace} & \mathsf{Trace}:\exists (\mathsf{Tr}:H^{1}(U)\to L^{2}(\partial U)),\;\exists (\mathsf{Ext}:H^{3/2}(\partial U)\to H^{2}(U)),\;\mathsf{lin.\ cont.}(\mathsf{Tr})\wedge\mathsf{lin.\ cont.}(\mathsf{Ext})\wedge\mathsf{Tr}\circ\mathsf{Ext}=\mathsf{id} & \mathsf{Bounded}\allowbreak \mathsf{Trace/Ext} & \mathsf{ZF+DC} \\ \hline
+	\swppos{pos:EllipticBoundaryReg-Step}{posi:EllipticBoundaryReg-Step} & \mathsf{EllipticBoundaryReg\text{-}Step}:\forall (\partial U\in C^{2},\;f\in L^{2},\;g\in H^{3/2}(\partial U)),\;\exists! (u\in H^{2}(U)),\;-\Delta u=f\wedge\mathsf{Tr}(u)=g\wedge\|u\|_{H^{2}}\le C(\|f\|_{L^{2}}+\|g\|_{H^{3/2}}) & \mathsf{Boundary}\allowbreak \mathsf{Regularity}\allowbreak \mathsf{Step} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swppos{pos:HeatSemigroupGenerator}{posi:HeatSemigroupGenerator} & \mathsf{HeatSemigroupGenerator}:\exists (S:[0,\infty)\to\mathcal{L}(L^{2})),\;S\;\textsf{C}_{0}\text{-}\mathsf{semigroup},\;S^{\prime}(t)=\Delta S(t)\;\mathsf{on}\;H_{0}^{1}\cap H^{2} & \mathsf{Heat}\allowbreak \mathsf{Semigroup}\allowbreak \mathsf{Generator} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	
+	\medskip
+	
+	% ============================================================
+	\section{Definitions}
+	% ============================================================
+	\noindent \text{ \ } \newline
+	
+	\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:M}{defi:M} & \mathsf{Def:M}:\mathbf{M}^{m\times n}:=\R^{m\times n} & \mathsf{Matrix}\allowbreak \mathsf{Space} & \mathsf{ZF} \\ \hline
+	\swpdef{def:S}{defi:S} & \mathsf{Def:S}:\mathbf{S}^{n}:=\{A:\mathbf{M}^{n\times n}\mid A^{T}=A\} & \mathsf{Symmetric}\allowbreak \mathsf{Matrix}\allowbreak \mathsf{Space} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:tr}{defi:tr} & \mathsf{Def:tr}:\forall (A:\mathbf{M}^{n\times n}),\;\mathsf{tr}(A)=\sum_{i=1}^{n}A_{ii} & \mathsf{Trace} & \mathsf{ZF} \\ \hline
+	\swpdef{def:diag}{defi:diag} & \mathsf{Def:diag}:\forall (d:\N\to\R),\;\forall (i:\N),\;\forall (j:\N),\;\mathsf{diag}(d)_{ij}=d_{i}\delta_{ij} & \mathsf{Diagonal}\allowbreak \mathsf{Matrix} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:colon}{defi:colon} & \mathsf{Def:colon}:\forall (A:\mathbf{M}^{m\times n}),\;\forall (B:\mathbf{M}^{m\times n}),\;\mathsf{colon}(A,B)=\sum_{i,j}A_{ij}B_{ij} & \mathsf{Matrix}\allowbreak \mathsf{Inner}\allowbreak \mathsf{Product} & \mathsf{ZF} \\ \hline
+	\swpdef{def:quad}{defi:quad} & \mathsf{Def:quad}:\forall (A:\mathbf{S}^{n}),\;\forall (x:\R^{n}),\;\mathsf{quad}(A,x)=\sum_{i,j}A_{ij}x_{i}x_{j} & \mathsf{Quadratic}\allowbreak \mathsf{Form} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:sphere}{defi:sphere} & \mathsf{Def:sphere}:S^{n-1}:=\partial B(0,1)\subset\R^{n} & \mathsf{Unit}\allowbreak \mathsf{Sphere} & \mathsf{ZF} \\ \hline
+	\swpdef{def:halfspace}{defi:halfspace} & \mathsf{Def:halfspace}:\R_{+}^{n}:=\{x:\R^{n}\mid x_{n}>0\} & \mathsf{Upper}\allowbreak \mathsf{Half-Space} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:ccontained}{defi:ccontained} & \mathsf{Def:ccontained}:\forall (U:\mathsf{Set}),\;\forall (V:\mathsf{Set}),\;\mathsf{ccontained}(V,U)\Leftrightarrow V\subset\bar{V}\subset U\wedge\mathsf{compact}(\bar{V}) & \mathsf{Compact}\allowbreak \mathsf{Containment} & \mathsf{ZF} \\ \hline
+	\swpdef{def:UT}{defi:UT} & \mathsf{Def:UT}:U_{T}:=U\times(0,T] & \mathsf{Parabolic}\allowbreak \mathsf{Cylinder} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:alpha}{defi:alpha} & \mathsf{Def:alpha}:\alpha(n):=|B(0,1)|=\pi^{n/2}/\Gamma(n/2+1) & \mathsf{Unit}\allowbreak \mathsf{Ball}\allowbreak \mathsf{Volume} & \mathsf{ZF} \\ \hline
+	\swpdef{def:spt}{defi:spt} & \mathsf{Def:spt}:\forall (u:\R^{n}\to\R),\;\mathsf{spt}(u):=\overline{\{x:\R^{n}\mid u(x)\neq0\}} & \mathsf{Support} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:posneg}{defi:posneg} & \mathsf{Def:posneg}:\forall (u:\R\to\R),\;\mathsf{pos}(u)=\max(u,0)\wedge\mathsf{neg}(u)=-\min(u,0) & \mathsf{Positive/Negative}\allowbreak \mathsf{Parts} & \mathsf{ZF} \\ \hline
+	\swpdef{def:sgn}{defi:sgn} & \mathsf{Def:sgn}:\forall (x:\R),\;\mathsf{sgn}(x)=\mathbf{1}_{\{x>0\}}-\mathbf{1}_{\{x<0\}} & \mathsf{Sign}\allowbreak \mathsf{Function} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:char}{defi:char} & \mathsf{Def:char}:\forall (E:\mathsf{Set}),\;\forall (x:\R),\;\mathsf{char}(E,x)=\mathbf{1}_{\{x\in E\}} & \mathsf{Characteristic}\allowbreak \mathsf{Function} & \mathsf{ZF} \\ \hline
+	\swpdef{def:Lip}{defi:Lip} & \mathsf{Def:Lip}:\forall (u:\R^{n}\to\R),\;\mathsf{Lip}(u)=\sup_{x\neq y}|u(x)-u(y)|/|x-y| & \mathsf{Lipschitz}\allowbreak \mathsf{Constant} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:conv}{defi:conv} & \mathsf{Def:conv}:\forall (f:\R^{n}\to\R),\;\forall (g:\R^{n}\to\R),\;f,g\;\mathsf{meas.},\;(f*g)(x)=\int_{\R^{n}}f(x-y)g(y)\,dy & \mathsf{Convolution} & \mathsf{ZF} \\ \hline
+	\swpdef{def:multi}{defi:multi} & \mathsf{Def:multi}:\forall (\alpha:\N^{n}),\;|\alpha|=\alpha_{1}+\dots+\alpha_{n} & \mathsf{Multi-Index}\allowbreak \mathsf{Order} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:Dalpha}{defi:Dalpha} & \mathsf{Def:Dalpha}:\forall (\alpha:\N^{n}),\;D^{\alpha}u=\partial_{x_{1}}^{\alpha_{1}}\dots\partial_{x_{n}}^{\alpha_{n}}u & \mathsf{Multi-Index}\allowbreak \mathsf{Derivative} & \mathsf{ZF} \\ \hline
+	\swpdef{def:grad}{defi:grad} & \mathsf{Def:grad}:\nabla u=(u_{x_{1}},\dots,u_{x_{n}}) & \mathsf{Gradient} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:bigO}{defi:bigO} & \mathsf{Def:bigO}:\forall (f:\R\to\R),\;\forall (g:\R\to\R),\;f=O(g)\Leftrightarrow\exists (C:\R),\;\forall (x:\R),\;|f(x)|\le C|g(x)| & \mathsf{Big-O}\allowbreak \mathsf{Notation} & \mathsf{ZF} \\ \hline
+	\swpdef{def:littleo}{defi:littleo} & \mathsf{Def:littleo}:\forall (f:\R\to\R),\;\forall (g:\R\to\R),\;f=o(g)\Leftrightarrow\lim_{x\to0}|f(x)|/|g(x)|=0 & \mathsf{Little-o}\allowbreak \mathsf{Notation} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:moll}{defi:moll} & \mathsf{Def:moll}:\forall (x:\R^{n}),\;\eta(x)=C\exp(1/(|x|^{2}-1))\mathbf{1}_{|x|<1}\wedge\int\eta=1 & \mathsf{Mollifier} & \mathsf{ZF} \\ \hline
+	\swpdef{def:Norm}{defi:Norm} & \mathsf{Def:Norm}:\|\cdot\|\;\mathsf{satisfies}\;\triangle,\;\mathsf{homog},\;\mathsf{sep} & \mathsf{Norm} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:nu}{defi:nu} & \mathsf{Def:nu}:\nu=(\nu^{1},\dots,\nu^{n})\wedge|\nu|=1 & \mathsf{Unit}\allowbreak \mathsf{Normal} & \mathsf{ZF} \\ \hline
+	\swpdef{def:funcCk}{defi:funcCk} & \mathsf{Def:funcCk}:\forall (k:\N),\;\forall (U:\mathsf{Set}),\;C^{k}(U)=\{u:U\to\R\mid k\text{-times cont.\ diff.}\} & \mathsf{Ck}\allowbreak \mathsf{Functions} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:normM}{defi:normM} & \mathsf{Def:normM}:\forall (A:\mathbf{M}^{m\times n}),\;\|A\|=(\mathsf{colon}(A,A))^{1/2} & \mathsf{Matrix}\allowbreak \mathsf{Norm} & \mathsf{ZF} \\ \hline
+	\swpdef{def:ge}{defi:ge} & \mathsf{Def:ge}:\forall (A:\mathbf{S}^{n}),\;\forall (B:\mathbf{S}^{n}),\;A\ge B\Leftrightarrow A-B\;\mathsf{nonneg.} & \mathsf{Matrix}\allowbreak \mathsf{Order} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:parab}{defi:parab} & \mathsf{Def:parab}:\Gamma_{T}:=\bar{U}_{T}\setminus U_{T} & \mathsf{Parabolic}\allowbreak \mathsf{Boundary} & \mathsf{ZF} \\ \hline
+	\swpdef{def:avg-ball}{defi:avg-ball} & \mathsf{Def:avg-ball}:\forall (f:\R^{n}\to\R),\;\forall (x:\R^{n}),\;\forall (r:\R_{>0}),\;\mathsf{avgB}(f,x,r):=\frac{1}{\alpha(n)r^{n}}\int_{B(x,r)}f\,dy & \mathsf{Ball}\allowbreak \mathsf{Average} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:avg-sph}{defi:avg-sph} & \mathsf{Def:avg-sph}:\forall (f:\R^{n}\to\R),\;\forall (x:\R^{n}),\;\forall (r:\R_{>0}),\;\mathsf{avgS}(f,x,r)=\frac{1}{n\alpha(n)r^{n-1}}\int_{\partial B(x,r)}f\,dS & \mathsf{Sphere}\allowbreak \mathsf{Average} & \mathsf{ZF} \\ \hline
+	\swpdef{def:avg-set}{defi:avg-set} & \mathsf{Def:avg-set}:\forall (f:\R^{n}\to\R),\;\forall (E:\mathsf{Set}),\;\mathsf{avgE}(f,E)=\frac{1}{\mu(E)}\int_{E}f\,d\mu\wedge\mu(E)>0 & \mathsf{Set}\allowbreak \mathsf{Average} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:Simple}{defi:Simple} & \mathsf{Def:Simple}:\forall (N:\N),\;\exists (E:\{1,\dots,N\}\to\mathcal{M}),\;\exists (u:\{1,\dots,N\}\to\R),\;\mathbf{s}=\sum_{i=1}^{N}\chi_{E_{i}}u_{i} & \mathsf{Simple}\allowbreak \mathsf{Function} & \mathsf{ZF} \\ \hline
+	\swpdef{def:StrongConv}{defi:StrongConv} & \mathsf{Def:StrongConv}:\forall (u:\N\to H),\;\forall (u_{\infty}:H),\;u_{k}\to u_{\infty}\Leftrightarrow\lim\|u_{k}-u_{\infty}\|=0 & \mathsf{Strong}\allowbreak \mathsf{Convergence} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:perp}{defi:perp} & \mathsf{Def:perp}:\forall (u:H),\;\forall (v:H),\;(u,v)=0 & \mathsf{Orthogonality} & \mathsf{ZF} \\ \hline
+	\swpdef{def:ONB}{defi:ONB} & \mathsf{Def:ONB}:\forall (w:\N\to H),\;\mathsf{ONB}(w)\Leftrightarrow(\forall k\neq l,\;(w_{k},w_{l})=0)\wedge(\forall k,\;\|w_{k}\|=1)\wedge(\forall u,\;(\forall k,\;(u,w_{k})=0)\Rightarrow u=0) & \mathsf{Orthonormal}\allowbreak \mathsf{Basis} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:Sperp}{defi:Sperp} & \mathsf{Def:Sperp}:S^{\perp}=\{u:H\mid\forall (v:H),\;(u,v)=0\} & \mathsf{Orthogonal}\allowbreak \mathsf{Complement} & \mathsf{ZF} \\ \hline
+	\swpdef{def:Linear}{defi:Linear} & \mathsf{Def:Linear}:\forall (A:H\to H),\;\forall (u:H),\;\forall (v:H),\;\forall (\lambda:\R),\;\forall (\mu:\R),\;A(\lambda u+\mu v)=\lambda Au+\mu Av & \mathsf{Linear}\allowbreak \mathsf{Operator} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:Bdd}{defi:Bdd} & \mathsf{Def:Bdd}:\forall (A:H\to H),\;\exists (C:\R),\;\forall (u:H),\;\|Au\|\le C\|u\| & \mathsf{Bounded}\allowbreak \mathsf{Operator} & \mathsf{ZF} \\ \hline
+	\swpdef{def:ClosedOp}{defi:ClosedOp} & \mathsf{Def:ClosedOp}:\forall (A:H\to H),\;\forall (u:\N\to H),\;\forall (u_{\infty}:H),\;\forall (v:H),\;u_{k}\to u_{\infty}\wedge Au_{k}\to v\Rightarrow Au_{\infty}=v & \mathsf{Closed}\allowbreak \mathsf{Operator} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:rho}{defi:rho} & \mathsf{Def:rho}:\forall (A:H\to H),\;\rho(A)=\{\eta:\R\mid\exists (B:H\to H),\;\mathsf{bdd}(B)\wedge B=(A-\eta I)^{-1}\} & \mathsf{Resolvent}\allowbreak \mathsf{Set} & \mathsf{ZF} \\ \hline
+	\swpdef{def:pairing}{defi:pairing} & \mathsf{Def:pairing}:\forall (u^{*}:X^{*}),\;\forall (u:X),\;u^{*}(u) & \mathsf{Dual}\allowbreak \mathsf{Pairing} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:Hess}{defi:Hess} & \mathsf{Def:Hess}:D^{2}u=(u_{x_{i}x_{j}})_{ij} & \mathsf{Hessian} & \mathsf{ZF} \\ \hline
+	\swpdef{def:Dk}{defi:Dk} & \mathsf{Def:Dk}:\forall (k:\N),\;D^{k}u=\{D^{\alpha}u:\N^{n}\mid|\alpha|=k\} & \mathsf{k-th}\allowbreak \mathsf{Derivative}\allowbreak \mathsf{Set} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:dnu}{defi:dnu} & \mathsf{Def:dnu}:\partial u/\partial\nu=\nu\cdot\nabla u & \mathsf{Normal}\allowbreak \mathsf{Derivative} & \mathsf{ZF} \\ \hline
+	\swpdef{def:moll-eps}{defi:moll-eps} & \mathsf{Def:moll-eps}:\forall (\epsilon:\R_{>0}),\;\forall (x:\R^{n}),\;\eta_{\epsilon}(x)=\epsilon^{-n}\eta(x/\epsilon) & \mathsf{Standard}\allowbreak \mathsf{Mollifier} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:InnerProduct}{defi:InnerProduct} & \mathsf{Def:InnerProduct}:(\cdot,\cdot)\;\mathsf{sym.,bil.,pos.} & \mathsf{Inner}\allowbreak \mathsf{Product} & \mathsf{ZF} \\ \hline
+	\swpdef{def:Lap}{defi:Lap} & \mathsf{Def:Lap}:\Delta u=\sum_{i}u_{x_{i}x_{i}}=\mathsf{tr}(D^{2}u) & \mathsf{Laplacian} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:Ckbnd}{defi:Ckbnd} & \mathsf{Def:Ckbnd}:\partial U\;\mathsf{loc.\ graph\ of}\;C^{k}\;\mathsf{fn.} & \mathsf{Ck}\allowbreak \mathsf{Boundary} & \mathsf{ZF} \\ \hline
+	\swpdef{def:LebesguePoint}{defi:LebesguePoint} & \mathsf{Def:LebesguePoint}:\forall (f:\R^{n}\to\R),\;\forall (x_{0}:\R^{n}),\;\lim_{r\to0}\mathsf{avgB}(|f-f(x_{0})|,x_{0},r)=0 & \mathsf{Lebesgue}\allowbreak \mathsf{Point} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:moll-f}{defi:moll-f} & \mathsf{Def:moll-f}:\forall (\epsilon:\R_{>0}),\;f^{\epsilon}=\eta_{\epsilon}*f & \mathsf{Mollification} & \mathsf{ZF+DC} \\ \hline
+	\swpdef{def:Dknorm}{defi:Dknorm} & \mathsf{Def:Dknorm}:\forall (k:\N),\;|D^{k}u|=(\sum_{|\alpha|=k}|D^{\alpha}u|^{2})^{1/2} & \mathsf{k-th}\allowbreak \mathsf{Derivative}\allowbreak \mathsf{Norm} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:StronglyMeasurable}{defi:StronglyMeasurable} & \mathsf{Def:StronglyMeasurable}:\forall (\mathbf{f}:X),\;(\exists (\mathbf{s}:\N\to X),\;\mathsf{simple}(\mathbf{s}_{k})\wedge\mathbf{s}_{k}\to\mathbf{f}\;\mathsf{a.e.}) & \mathsf{Strong}\allowbreak \mathsf{Measurability} & \mathsf{ZF+DC} \\ \hline
+	\swpdef{def:Cauchy}{defi:Cauchy} & \mathsf{Def:Cauchy}:\forall (u:\N\to H),\;\forall (\epsilon:\R_{>0}),\;\exists (N:\N),\;\forall (k:\N),\;\forall (l:\N),\;k,l\ge N\Rightarrow\|u_{k}-u_{l}\|<\epsilon & \mathsf{Cauchy}\allowbreak \mathsf{Sequence} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:Eigenvalue}{defi:Eigenvalue} & \mathsf{Def:Eigenvalue}:\forall (A:H\to H),\;\forall (\eta:\R),\;N(A-\eta I)\neq\{0\} & \mathsf{Eigenvalue} & \mathsf{ZF} \\ \hline
+	\swpdef{def:sigma}{defi:sigma} & \mathsf{Def:sigma}:\forall (A:H\to H),\;\sigma(A)=\R\setminus\rho(A) & \mathsf{Spectrum} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:Xstar}{defi:Xstar} & \mathsf{Def:Xstar}:X^{*}=\{\phi:H\to\R\mid\mathsf{lin.}\wedge\mathsf{bdd.}\} & \mathsf{Dual}\allowbreak \mathsf{Space} & \mathsf{ZF} \\ \hline
+	\swpdef{def:SigmaAlgebra}{defi:SigmaAlgebra} & \mathsf{Def:SigmaAlgebra}:\mathcal{M}\;\mathsf{closed\ under\ complement\ and\ countable\ unions} & \mathsf{Sigma-Algebra} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:Measurable}{defi:Measurable} & \mathsf{Def:Measurable}:\forall (f:X\to\R),\;\forall (U:\mathsf{Open}),\;f^{-1}(U)\in\mathcal{M} & \mathsf{Measurable}\allowbreak \mathsf{Function} & \mathsf{ZF} \\ \hline
+	\swpdef{def:Summable}{defi:Summable} & \mathsf{Def:Summable}:\forall (f:X\to\R),\;\int|f|<\infty & \mathsf{Summable}\allowbreak \mathsf{Function} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:esssup}{defi:esssup} & \mathsf{Def:esssup}:\forall (f:X\to\R),\;\inf\{\mu:\R\mid|\{f>\mu\}|=0\} & \mathsf{Essential}\allowbreak \mathsf{Supremum} & \mathsf{ZF+DC} \\ \hline
+	\swpdef{def:Banach}{defi:Banach} & \mathsf{Def:Banach}:\mathsf{complete\ normed\ lin.\ space} & \mathsf{Banach}\allowbreak \mathsf{Space} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:Hilbert}{defi:Hilbert} & \mathsf{Def:Hilbert}:\forall (H:\mathsf{Banach}),\;\exists (\cdot,\cdot),\;\|u\|^{2}=(u,u) & \mathsf{Hilbert}\allowbreak \mathsf{Space} & \mathsf{ZF} \\ \hline
+	\swpdef{def:Convex}{defi:Convex} & \mathsf{Def:Convex}:\forall (f:\R^{n}\to\R),\;\forall (x:\R^{n}),\;\forall (y:\R^{n}),\;\forall (\tau:[0,1]),\;f(\tau x+(1-\tau)y)\le\tau f(x)+(1-\tau)f(y) & \mathsf{Convex}\allowbreak \mathsf{Function} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:Reflexive}{defi:Reflexive} & \mathsf{Def:Reflexive}:(X^{*})^{*}=X & \mathsf{Reflexive}\allowbreak \mathsf{Space} & \mathsf{ZF} \\ \hline
+	\swpdef{def:WeakConv}{defi:WeakConv} & \mathsf{Def:WeakConv}:\forall (u:\N\to X),\;\forall (u_{\infty}:X),\;u_{k}\rightharpoonup u_{\infty}\Leftrightarrow\forall (u^{*}:X^{*}),\;u^{*}(u_{k})\to u^{*}(u_{\infty}) & \mathsf{Weak}\allowbreak \mathsf{Convergence} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:adjoint}{defi:adjoint} & \mathsf{Def:adjoint}:\forall (A:H\to H),\;\forall (u:H),\;\forall (v:H),\;(Au,v)=(u,A^{*}v) & \mathsf{Adjoint}\allowbreak \mathsf{Operator} & \mathsf{ZF} \\ \hline
+	\swpdef{def:WeaklyMeasurable}{defi:WeaklyMeasurable} & \mathsf{Def:WeaklyMeasurable}:\forall (\mathbf{f}:X),\;(\forall (u^{*}:X^{*}),\;(t\mapsto u^{*}(\mathbf{f}(t)))\;\mathsf{meas.}) & \mathsf{Weak}\allowbreak \mathsf{Measurability} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:Separable}{defi:Separable} & \mathsf{Def:Separable}:\exists (D:\mathsf{Set}),\;\mathsf{countable}(D)\wedge\mathsf{dense}(D) & \mathsf{Separable}\allowbreak \mathsf{Space} & \mathsf{ZF} \\ \hline
+	\swpdef{def:AlmostSeparablyValued}{defi:AlmostSeparablyValued} & \mathsf{Def:AlmostSeparablyValued}:\forall (\mathbf{f}:X),\;\mathsf{separable}(|\{\mathbf{f}(t):t\in\R\}|)\;\mathsf{off\ null\ set} & \mathsf{Almost}\allowbreak \mathsf{Sep.}\allowbreak \mathsf{Valued} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:Symmetric}{defi:Symmetric} & \mathsf{Def:Symmetric}:\forall (A:H\to H),\;A^{*}=A & \mathsf{Symmetric}\allowbreak \mathsf{Operator} & \mathsf{ZF} \\ \hline
+	\swpdef{def:CompactOp}{defi:CompactOp} & \mathsf{Def:CompactOp}:\forall (A:H\to H),\;\mathsf{bdd\ seq}\to\mathsf{precompact\ image} & \mathsf{Compact}\allowbreak \mathsf{Operator} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:CompCont}{defi:CompCont} & \mathsf{Def:CompCont}:\forall (C:\mathsf{Set}),\;\forall (U:\mathsf{Set}),\;C\subset\subset U\Leftrightarrow\bar{C}\;\mathsf{compact}\wedge\bar{C}\subset U & \mathsf{Compact}\allowbreak \mathsf{Contained} & \mathsf{ZF} \\ \hline
+	\swpdef{def:Distribution}{defi:Distribution} & \mathsf{Def:Distribution}:\mathcal{D}(U):=\{\phi\in C^{\infty}(U):\mathsf{compact\ supp}(\phi)\} & \mathsf{Test}\allowbreak \mathsf{Function}\allowbreak \mathsf{Space} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:WeakDeriv}{defi:WeakDeriv} & \mathsf{Def:WeakDeriv}:\forall (u\in L^{1}_{\mathrm{loc}}(U)),\;\forall (\alpha:\N^{n}),\;\forall (v\in L^{1}_{\mathrm{loc}}(U)),\;\mathsf{WeakDeriv}^{\alpha}(u)=v\Leftrightarrow\forall (\phi\in\mathcal{D}(U)),\;\int_{U}v\phi=(-1)^{|\alpha|}\int_{U}uD^{\alpha}\phi & \mathsf{Weak}\allowbreak \mathsf{Derivative} & \mathsf{ZF+DC} \\ \hline
+	\swpdef{def:SobolevWkp}{defi:SobolevWkp} & \mathsf{Def:SobolevWkp}:\forall (k:\N),\;\forall (p\in[1,\infty]),\;W^{k,p}(U):=\{u\in L^{p}(U):\forall (\alpha:\N^{n}),\;|\alpha|\le k\Rightarrow\exists (v\in L^{p}(U)),\;\mathsf{WeakDeriv}^{\alpha}(u)=v\} & \mathsf{Sobolev}\allowbreak \mathsf{Space} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:SobolevHk}{defi:SobolevHk} & \mathsf{Def:SobolevHk}:\forall (k:\N),\;H^{k}(U):=W^{k,2}(U) & \mathsf{Sobolev}\allowbreak \mathsf{Hilbert}\allowbreak \mathsf{Space} & \mathsf{ZF+DC} \\ \hline
+	\swpdef{def:H01}{defi:H01} & \mathsf{Def:H01}:H_{0}^{1}(U):=\overline{\mathcal{D}(U)}^{\|\cdot\|_{H^{1}}} & \mathsf{Zero}\allowbreak \mathsf{Trace}\allowbreak \mathsf{Sobolev} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:EllipticForm}{defi:EllipticForm} & \mathsf{Def:EllipticForm}:B[u,v]:=\int_{U}\nabla u\cdot\nabla v & \mathsf{Dirichlet}\allowbreak \mathsf{Form} & \mathsf{ZF+DC} \\ \hline
+	\swpdef{def:Elliptic}{defi:Elliptic} & \mathsf{Def:Elliptic}:\forall (a^{ij}\in L^{\infty}(U)),\;\mathsf{Elliptic}(a)\Leftrightarrow\exists (\theta>0),\;\forall (\xi\in\R^{n}),\;a^{ij}\xi_{i}\xi_{j}\ge\theta|\xi|^{2} & \mathsf{Uniform}\allowbreak \mathsf{Ellipticity} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:PoissonWeakSol}{defi:PoissonWeakSol} & \mathsf{Def:PoissonWeakSol}:\forall (f\in H^{-1}(U)),\;u\in H_{0}^{1}(U)\;\mathsf{solves}\;-\Delta u=f\Leftrightarrow\forall (v\in H_{0}^{1}(U)),\;B[u,v]=\langle f,v\rangle & \mathsf{Weak}\allowbreak \mathsf{Solution}\allowbreak \mathsf{Dirichlet} & \mathsf{ZF+DC} \\ \hline
+	\swpdef{def:ParabolicWeakSol}{defi:ParabolicWeakSol} & \mathsf{Def:ParabolicWeakSol}:u\in L^{2}(0,T;H_{0}^{1}(U))\wedge u_{t}\in L^{2}(0,T;H^{-1}(U))\;\mathsf{solves}\;u_{t}-\Delta u=f\Leftrightarrow\forall (v\in H_{0}^{1}),\;\langle u_{t},v\rangle+B[u,v]=\langle f,v\rangle\;\mathsf{a.e.}\;t & \mathsf{Weak}\allowbreak \mathsf{Solution}\allowbreak \mathsf{Heat} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:WaveWeakSol}{defi:WaveWeakSol} & \mathsf{Def:WaveWeakSol}:u\in L^{2}(0,T;H_{0}^{1}(U))\wedge u_{t}\in L^{2}(0,T;L^{2}(U))\wedge u_{tt}\in L^{2}(0,T;H^{-1}(U))\;\mathsf{solves}\;u_{tt}-\Delta u=f\Leftrightarrow\forall (v\in H_{0}^{1}),\;\langle u_{tt},v\rangle+B[u,v]=\langle f,v\rangle\;\mathsf{a.e.}\;t & \mathsf{Weak}\allowbreak \mathsf{Solution}\allowbreak \mathsf{Wave} & \mathsf{ZF+DC} \\ \hline
+	\swpdef{def:DirichletEnergy}{defi:DirichletEnergy} & \mathsf{Def:DirichletEnergy}:I[w]:=\tfrac12\int_{U}|\nabla w|^{2}-\int_{U}fw,\;w\in H_{0}^{1}(U) & \mathsf{Dirichlet}\allowbreak \mathsf{Energy} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:Harmonic}{defi:Harmonic} & \mathsf{Def:Harmonic}:\forall (u\in C^{2}(U)),\;\mathsf{Harmonic}(u)\Leftrightarrow\Delta u=0\;\mathsf{in}\;U & \mathsf{Harmonic}\allowbreak \mathsf{Function} & \mathsf{ZF} \\ \hline
+	\swpdef{def:FundamentalSolution}{defi:FundamentalSolution} & \mathsf{Def:FundamentalSolution}:\;\Delta\Phi=\delta_{0} \Phi(x):=\left\{\begin{array}{l}
+	-\dfrac{1}{2\pi}\log|x|,\ \text{if }n=2\\[4pt]
+	\dfrac{1}{n(n-2)\alpha(n)}\dfrac{1}{|x|^{n-2}},\ \text{if }n\ge3
+	\end{array}\right.,& \mathsf{Fundamental}\allowbreak \mathsf{Solution} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpdef{def:Conormal}{defi:Conormal} & \mathsf{Def:Conormal}:\partial u/\partial\nu_{a}:=a^{ij}u_{x_{i}}\nu^{j} & \mathsf{Co-normal}\allowbreak \mathsf{Derivative} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	
+	\medskip
+	
+	% ============================================================
+	\section{Statements}
+	% ============================================================
+	
+	\subsection{Lemmas}
+	
+	\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swplem{lem:FTC}{lemi:FTC} & \mathsf{FTC}:\forall (f:\R\to\R),\;C^{1}([a,b])(f)\Rightarrow\int_{a}^{b}f^{\prime}=f(b)-f(a) & \mathsf{Fundamental}\allowbreak \mathsf{Thm}\allowbreak \mathsf{of}\allowbreak \mathsf{Calculus} & \mathsf{ZF} \\ \hline
+	\swplem{lem:Taylor}{lemi:Taylor} & \mathsf{Taylor}:\forall (f:\R\to\R),\;C^{2}(f)\Rightarrow\exists (\xi:[\min(x,z),\max(x,z)]),\;f(x)=f(z)+f^{\prime}(z)(x-z)+\tfrac12 f^{\prime\prime}(\xi)(x-z)^{2} & \mathsf{Taylor}\allowbreak \mathsf{with}\allowbreak \mathsf{Lagrange}\allowbreak \mathsf{Remainder} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swplem{lem:ProductRule}{lemi:ProductRule} & \mathsf{ProductRule}:\forall (u:\R\to\R),\;\forall (v:\R\to\R),\;(uv)^{\prime}=u^{\prime}v+uv^{\prime} & \mathsf{Product}\allowbreak \mathsf{Rule} & \mathsf{ZF} \\ \hline
+	\swplem{lem:ChainRule}{lemi:ChainRule} & \mathsf{ChainRule}:\forall (f:\R\to\R),\;\forall (g:\R\to\R),\;(f\circ g)^{\prime}=f^{\prime}(g)g^{\prime} & \mathsf{Chain}\allowbreak \mathsf{Rule} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swplem{lem:JacobiFormula}{lemi:JacobiFormula} & \mathsf{JacobiFormula}:\forall (A:\R\to\mathbf{M}^{n\times n}),\;C^{1}(A)\Rightarrow\forall (t:\R),\;\det A(t)\neq0\Rightarrow\frac{d}{dt}\det A=\det A\cdot\mathsf{tr}(A^{-1}A^{\prime}) & \mathsf{Jacobi}\allowbreak \mathsf{Formula}\allowbreak \mathsf{(invertible)} & \mathsf{ZF} \\ \hline
+	\swplem{lem:JacobiFormulaAdj}{lemi:JacobiFormulaAdj} & \mathsf{JacobiFormulaAdj}:\forall (A:\R\to\mathbf{M}^{n\times n}),\;C^{1}(A)\Rightarrow\frac{d}{dt}\det A=\mathsf{tr}(\mathsf{adj}(A)A^{\prime}) & \mathsf{Jacobi}\allowbreak \mathsf{Formula}\allowbreak \mathsf{(adjugate)} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swplem{lem:Cauchy}{lemi:Cauchy} & \mathsf{Cauchy}:\forall (a:\R),\;\forall (b:\R),\;ab\le\tfrac12 a^{2}+\tfrac12 b^{2} & \mathsf{Cauchy}\allowbreak \mathsf{Inequality} & \mathsf{ZF} \\ \hline
+	\swplem{lem:CauchyEps}{lemi:CauchyEps} & \mathsf{CauchyEps}:\forall (a:\R),\;\forall (b:\R),\;\forall (\epsilon:\R_{>0}),\;ab\le\epsilon a^{2}+\tfrac{b^{2}}{4\epsilon} & \mathsf{Cauchy}\allowbreak \mathsf{Ineq.}\allowbreak \mathsf{with}\allowbreak \epsilon & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swplem{lem:SecondDerivCriterion}{lemi:SecondDerivCriterion} & \mathsf{SecondDerivCriterion}:\forall (f:\R\to\R),\;C^{2}(f)\wedge f^{\prime\prime}\ge0\Rightarrow f\;\mathsf{convex} & \mathsf{Second}\allowbreak \mathsf{Deriv.}\allowbreak \mathsf{Convexity} & \mathsf{ZF} \\ \hline
+	\swplem{lem:expconvex}{lemi:expconvex} & \mathsf{expconvex}:\forall (x:\R),\;\forall (y:\R),\;\forall (\tau:[0,1]),\;e^{\tau x+(1-\tau)y}\le\tau e^{x}+(1-\tau)e^{y} & \mathsf{Exponential}\allowbreak \mathsf{Convexity} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swplem{lem:Young}{lemi:Young} & \mathsf{Young}:\forall (p:\R_{>1}),\;\forall (q:\R_{>1}),\;1/p+1/q=1\Rightarrow\forall (a:\R_{>0}),\;\forall (b:\R_{>0}),\;ab\le a^{p}/p+b^{q}/q & \mathsf{Young}\allowbreak \mathsf{Inequality} & \mathsf{ZF} \\ \hline
+	\swplem{lem:YoungEps}{lemi:YoungEps} & \mathsf{YoungEps}:\forall (p:\R_{>1}),\;\forall (q:\R_{>1}),\;1/p+1/q=1\Rightarrow\forall (a:\R_{>0}),\;\forall (b:\R_{>0}),\;\forall (\epsilon:\R_{>0}),\;ab\le\epsilon a^{p}+C(\epsilon)b^{q} & \mathsf{Young}\allowbreak \mathsf{with}\allowbreak \epsilon & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swplem{lem:CauchySchwarz}{lemi:CauchySchwarz} & \mathsf{CauchySchwarz}:\forall (x:\R^{n}),\;\forall (y:\R^{n}),\;|x\cdot y|\le|x||y| & \mathsf{Cauchy-Schwarz} & \mathsf{ZF} \\ \hline
+	\swplem{lem:CauchySchwarzA}{lemi:CauchySchwarzA} & \mathsf{CauchySchwarzA}:\forall (A:\mathbf{S}^{n}),\;A>0\wedge A^{T}=A\Rightarrow\forall (x:\R^{n}),\;\forall (y:\R^{n}),\;|x^{T}Ay|\le(x^{T}Ax)^{1/2}(y^{T}Ay)^{1/2} & \mathsf{Cauchy-Schwarz}\allowbreak \mathsf{for}\allowbreak \mathsf{Matrices} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swplem{lem:BanachFP}{lemi:BanachFP} & \mathsf{BanachFP}:\forall (T:X\to X),\;\mathsf{contraction}(T)\wedge\mathsf{complete}(X)\Rightarrow\exists! (x^{*}:X),\;Tx^{*}=x^{*} & \mathsf{Banach}\allowbreak \mathsf{Fixed}\allowbreak \mathsf{Point} & \mathsf{ZF} \\ \hline
+	\swplem{lem:SeparatingHyperplane}{lemi:SeparatingHyperplane} & \mathsf{SepHyper}:\forall (C:\mathsf{Set}),\;\mathsf{convex}(C)\wedge\mathsf{closed}(C)\Rightarrow\forall (p:\partial C),\;\exists (u:\R^{n}),\;u\neq0\wedge\forall (z:C),\;u\cdot(z-p)\le0 & \mathsf{Separating}\allowbreak \mathsf{Hyperplane} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swplem{lem:Baire}{lemi:Baire} & \mathsf{Baire}:\mathsf{complete\ metric}\Rightarrow\mathsf{countable\ intersection\ of\ dense\ open\ is\ dense} & \mathsf{Baire}\allowbreak \mathsf{Category} & \mathsf{ZF+DC} \\ \hline
+	\swplem{lem:OpenMap}{lemi:OpenMap} & \mathsf{OpenMap}:\forall (T:X\to Y),\;\mathsf{surjective}(T)\wedge\mathsf{bdd}(T)\Rightarrow\mathsf{open}(T) & \mathsf{Open}\allowbreak \mathsf{Mapping} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swplem{lem:HardyLittlewood}{lemi:HardyLittlewood} & \mathsf{HardyLittlewood}:\forall (f:\R^{n}\to\R),\;L^{1}_{\mathrm{loc}}(f)\Rightarrow\mathsf{avgB}(|f-f(x)|,x,r)\to0\;\mathsf{a.e.} & \mathsf{Hardy-Littlewood} & \mathsf{ZF+DC} \\ \hline
+	\swplem{lem:Riesz}{lemi:Riesz} & \mathsf{Riesz}:\forall (H:\mathsf{Hilbert}),\;\forall (u^{*}:H^{*}),\;\exists! (u:H),\;\forall (v:H),\;u^{*}(v)=(u,v) & \mathsf{Riesz}\allowbreak \mathsf{Representation} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swplem{lem:LaxMilgram}{lemi:LaxMilgram} & \mathsf{LaxMilgram}:\forall (a:H\to H\to\R),\;\mathsf{coercive}(a)\wedge\mathsf{bounded}(a)\Rightarrow\forall (f:H^{*}),\;\exists! (u:H),\;\forall (v:H),\;a(u,v)=f(v) & \mathsf{Lax-Milgram} & \mathsf{ZF+DC} \\ \hline
+	\swplem{lem:BoundsSpectrum}{lemi:BoundsSpectrum} & \mathsf{BoundsSpectrum}:\forall (S:H\to H),\;\forall (m:\R),\;\forall (M:\R),\;\sigma(S)\subset[m,M]\wedge m\in\sigma(S)\wedge M\in\sigma(S) & \mathsf{Bounds}\allowbreak \mathsf{on}\allowbreak \mathsf{Spectrum} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swplem{lem:WeakDerivRules}{lemi:WeakDerivRules} & \mathsf{WeakDerivRules}:\forall (u,w\in W^{1,p}(U)),\;\forall (\phi\in\mathcal{D}(U)),\;\mathsf{WeakDeriv}(D(u+w))=Du+Dw\wedge\mathsf{WeakDeriv}(D(u\phi))=u^{\prime}\phi+uD\phi & \mathsf{Weak}\allowbreak \mathsf{Derivative}\allowbreak \mathsf{Rules} & \mathsf{ZF+DC} \\ \hline
+	\swplem{lem:Poincare}{lemi:Poincare} & \mathsf{Poincare}:\forall (\partial U\in C^{0}),\;\forall (u\in H_{0}^{1}(U)),\;\|u\|_{L^{2}(U)}\le C_{P}(U)\|\nabla u\|_{L^{2}(U)} & \mathsf{Poincar\acute{e}}\allowbreak \mathsf{Inequality} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swplem{lem:TraceInequality}{lemi:TraceInequality} & \mathsf{TraceInequality}:\forall (u\in H^{1}(U)),\;\|u\|_{L^{2}(\partial U)}\le C_{T}\|u\|_{H^{1}(U)} & \mathsf{Trace}\allowbreak \mathsf{Inequality} & \mathsf{ZF+DC} \\ \hline
+	\swplem{lem:SobolevEmbedding}{lemi:SobolevEmbedding} & \mathsf{SobolevEmbedding}:\forall (u\in W^{1,p}(U)),\;p>n\Rightarrow u\in C^{0,1-n/p}(U)\wedge\|u\|_{C^{0,1-n/p}}\le C\|u\|_{W^{1,p}} & \mathsf{Sobolev}\allowbreak \mathsf{Embedding} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swplem{lem:EnergyEstimateElliptic}{lemi:EnergyEstimateElliptic} & \mathsf{EnergyEstimateElliptic}:\forall (f\in L^{2}(U)),\;u\;\mathsf{weak\ sol}\Rightarrow\|u\|_{H_{0}^{1}}\le C\|f\|_{L^{2}} & \mathsf{Elliptic}\allowbreak \mathsf{Energy}\allowbreak \mathsf{Estimate} & \mathsf{ZF+DC} \\ \hline
+	\swplem{lem:EllipticInteriorReg-Step}{lemi:EllipticInteriorReg-Step} & \mathsf{EllipticInteriorReg\text{-}Step}:\forall (u\in H^{1},\;-\Delta u=f\in L^{2}),\;\forall (V\subset\subset U),\;\|u\|_{H^{2}(V)}\le C(\|f\|_{L^{2}}+\|u\|_{H^{1}}) & \mathsf{Interior}\allowbreak \mathsf{Regularity}\allowbreak \mathsf{Step} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	
+	\medskip
+	
+	\subsection{Theorems}
+	
+	\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:BanachAlaoglu}{thmi:BanachAlaoglu} & \mathsf{BanachAlaoglu}:\forall (X:\mathsf{Banach}),\;\overline{B}_{X^{*}}(0,1)\;\mathsf{weak}^{\ast}\text{-}\mathsf{compact} & \mathsf{Banach-Alaoglu} & \mathsf{ZFC} \\ \hline
+	\swpthm{thm:Kakutani}{thmi:Kakutani} & \mathsf{Kakutani}:\forall (X:\mathsf{Banach}),\;\mathsf{reflexive}(X)\Rightarrow\overline{B}_{X}(0,1)\;\mathsf{weakly\ compact} & \mathsf{Kakutani} & \mathsf{ZFC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:InverseFT}{thmi:InverseFT} & \mathsf{InverseFT}:\forall (f:\R^{n}\to\R^{n}),\;Jf(x_{0})\neq0\Rightarrow f\;\mathsf{locally\ invertible}\wedge f^{-1}\in C^{1} & \mathsf{Inverse}\allowbreak \mathsf{Function} & \mathsf{ZF} \\ \hline
+	\swpthm{thm:ImplicitFT}{thmi:ImplicitFT} & \mathsf{ImplicitFT}:\forall (f:\R^{n}\times\R^{m}\to\R^{m}),\;J_{y}f(x_{0},y_{0})\neq0\Rightarrow\exists (g:\R^{n}\to\R^{m}),\;f(x,g(x))=z_{0} & \mathsf{Implicit}\allowbreak \mathsf{Function} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:ClosedGraph}{thmi:ClosedGraph} & \mathsf{ClosedGraph}:\forall (A:X\to Y),\;\mathsf{closed}(A)\wedge\mathsf{linear}(A)\Rightarrow\mathsf{bounded}(A) & \mathsf{Closed}\allowbreak \mathsf{Graph} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:GaussGreen}{thmi:GaussGreen} & \mathsf{GaussGreen}:\int_{U}u_{x_{i}}=\int_{\partial U}u\nu^{i}\wedge\int_{U}\mathsf{div}\,\mathbf{u}=\int_{\partial U}\mathbf{u}\cdot\nu & \mathsf{Gauss-Green} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:IntParts}{thmi:IntParts} & \mathsf{IntParts}:\forall (u:\bar{U}\to\R),\;\forall (v:\bar{U}\to\R),\;\int_{U}u_{x_{i}}v=-\int_{U}uv_{x_{i}}+\int_{\partial U}uv\nu^{i} & \mathsf{Integration}\allowbreak \mathsf{by}\allowbreak \mathsf{Parts}\allowbreak \mathsf{(nD)} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:GreenI}{thmi:GreenI} & \mathsf{GreenI}:\forall (u:\bar{U}\to\R),\;\int_{U}\Delta u=\int_{\partial U}\partial u/\partial\nu & \mathsf{Green}\allowbreak \mathsf{First}\allowbreak \mathsf{Identity} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:GreenII}{thmi:GreenII} & \mathsf{GreenII}:\forall (u:\bar{U}\to\R),\;\forall (v:\bar{U}\to\R),\;\int_{U}\nabla v\cdot\nabla u=-\int_{U}u\Delta v+\int_{\partial U}u\partial v/\partial\nu & \mathsf{Green}\allowbreak \mathsf{Second}\allowbreak \mathsf{Identity} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:GreenIII}{thmi:GreenIII} & \mathsf{GreenIII}:\forall (u,v:\bar{U}\to\R),\;\int_{U}(u\Delta v-v\Delta u)=\int_{\partial U}(u\partial v/\partial\nu-v\partial u/\partial\nu) & \mathsf{Green}\allowbreak \mathsf{Third}\allowbreak \mathsf{Identity} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:Coarea}{thmi:Coarea} & \mathsf{Coarea}:\forall (f:\R^{n}\to\R),\;\forall (u:\R^{n}\to\R),\;\int f|\nabla u|=\int(\int_{\{u=r\}}f\,dS)\,dr & \mathsf{Coarea}\allowbreak \mathsf{Formula} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:Polar}{thmi:Polar} & \mathsf{Polar}:\forall (f:\R^{n}\to\R),\;\forall (x_{0}:\R^{n}),\;\int f=\int_{0}^{\infty}(\int_{\partial B(x_{0},r)}f\,dS)\,dr & \mathsf{Polar}\allowbreak \mathsf{Coordinates} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:MovingRegions}{thmi:MovingRegions} & \mathsf{MovingRegions}:\frac{d}{d\tau}\int_{U(\tau)}f=\int_{\partial U(\tau)}f\mathbf{v}\cdot\nu+\int_{U(\tau)}f_{\tau} & \mathsf{Reynolds}\allowbreak \mathsf{Transport} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:MollifierProps}{thmi:MollifierProps} & \mathsf{MollifierProps}:\forall (f:\R^{n}\to\R),\;f^{\epsilon}\in C^{\infty}\wedge f^{\epsilon}\to f\;\mathsf{a.e.}\wedge\mathsf{unif\ on\ compacta\ if\ }C(f)\wedge L^{p}_{\mathrm{loc}}\;\mathsf{conv.} & \mathsf{Mollifier}\allowbreak \mathsf{Properties} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:LebesgueExistence}{thmi:LebesgueExistence} & \mathsf{LebesgueExistence}:\exists (\mathcal{M}:\mathsf{SigmaAlgebra}),\;\exists (|\cdot|:\mathcal{M}\to\R_{\ge0}\cup\{\infty\}),\;\mathcal{M}\;\sigma\mathsf{-alg.}\wedge|B|=\mathsf{vol}(B)\wedge\sigma\mathsf{-additive} & \mathsf{Lebesgue}\allowbreak \mathsf{Measure}\allowbreak \mathsf{Existence} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:MonotoneConv}{thmi:MonotoneConv} & \mathsf{MonotoneConv}:\forall (f:\N\to(\R\to\R)),\;0\le f_{k}\uparrow\Rightarrow\int\lim f_{k}=\lim\int f_{k} & \mathsf{Monotone}\allowbreak \mathsf{Convergence} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:Fatou}{thmi:Fatou} & \mathsf{Fatou}:\int\liminf f_{k}\le\liminf\int f_{k} & \mathsf{Fatou} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:DominatedConv}{thmi:DominatedConv} & \mathsf{DominatedConv}:\forall (f:\N\to(\R\to\R)),\;\forall (g:\R\to\R),\;|f_{k}|\le g\wedge L^{1}(g)\wedge f_{k}\to f\;\mathsf{a.e.}\Rightarrow\int f_{k}\to\int f & \mathsf{Dominated}\allowbreak \mathsf{Convergence} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:Holder}{thmi:Holder} & \mathsf{Holder}:\forall (u:\R^{n}\to\R),\;\forall (v:\R^{n}\to\R),\;\int|uv|\le\|u\|_{L^{p}}\|v\|_{L^{q}}\wedge1/p+1/q=1 & \mathsf{Holder} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:Minkowski}{thmi:Minkowski} & \mathsf{Minkowski}:\forall (u:\R^{n}\to\R),\;\forall (v:\R^{n}\to\R),\;\|u+v\|_{L^{p}}\le\|u\|_{L^{p}}+\|v\|_{L^{p}} & \mathsf{Minkowski} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:GenHolder}{thmi:GenHolder} & \mathsf{GenHolder}:\int|u_{1}\cdots u_{m}|\le\prod\|u_{k}\|_{L^{p_{k}}} & \mathsf{Generalized}\allowbreak \mathsf{Holder} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:Interpolation}{thmi:Interpolation} & \mathsf{Interpolation}:\forall (u:\R^{n}\to\R),\;\|u\|_{L^{r}}\le\|u\|_{L^{s}}^{\theta}\|u\|_{L^{t}}^{1-\theta} & \mathsf{Interpolation} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:LebesgueDiff}{thmi:LebesgueDiff} & \mathsf{LebesgueDiff}:\forall (f:\R^{n}\to\R),\;\forall (x_{0}:\R^{n}),\;\mathsf{avgB}(f,x_{0},r)\to f(x_{0})\;\mathsf{a.e.} & \mathsf{Lebesgue}\allowbreak \mathsf{Differentiation} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:Egoroff}{thmi:Egoroff} & \mathsf{Egoroff}:\mathsf{a.e.}\text{-}\mathsf{conv.}\Rightarrow\mathsf{unif.}\;\mathsf{off}\;\epsilon & \mathsf{Egoroff} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:Bochner}{thmi:Bochner} & \mathsf{Bochner}:\forall (\mathbf{f}:X),\;\mathsf{summable}(\mathbf{f})\Leftrightarrow\mathsf{summable}(\|\mathbf{f}\|)\wedge\|\int\mathbf{f}\|\le\int\|\mathbf{f}\| & \mathsf{Bochner} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:Pettis}{thmi:Pettis} & \mathsf{Pettis}:\forall (\mathbf{f}:X),\;\mathsf{strong\ meas.}(\mathbf{f})\Leftrightarrow\mathsf{weak\ meas.}(\mathbf{f})\wedge\mathsf{almost\ sep.\ valued}(\mathbf{f}) & \mathsf{Pettis} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:Fredholm}{thmi:Fredholm} & \mathsf{Fredholm}:\forall (K:H\to H),\;\mathsf{CompactOp}(K)\Rightarrow\dim N(I-K)<\infty\wedge\mathsf{ClosedOp}(R(I-K))\wedge R(I-K)=\mathsf{Sperp}(N(I-K^{\ast}))\wedge(N(I-K)=\{0\}\Leftrightarrow R(I-K)=H)\wedge\dim N(I-K)=\dim N(I-K^{\ast}) & \mathsf{Fredholm}\allowbreak \mathsf{Alternative} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:SpectrumCompact}{thmi:SpectrumCompact} & \mathsf{SpectrumCompact}:\forall (K:H\to H),\;\dim H=\infty\wedge\mathsf{CompactOp}(K)\Rightarrow0\in\sigma(K)\wedge\sigma(K)\setminus\{0\}=\sigma_{p}(K)\setminus\{0\}\wedge\mathsf{finite}\text{-}\mathsf{or}\text{-}\mathsf{tends0}(\sigma(K)\setminus\{0\}) & \mathsf{Spectrum}\allowbreak \mathsf{of}\allowbreak \mathsf{Compact}\allowbreak \mathsf{Op.} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:SupportingHyperplanes}{thmi:SupportingHyperplanes} & \mathsf{SupportingHyperplanes}:\forall (f:\R^{n}\to\R),\;\mathsf{convex}(f)\Rightarrow\forall (x:\R^{n}),\;\exists (r:\R^{n}),\;\forall (y:\R^{n}),\;f(y)\ge f(x)+r\cdot(y-x) & \mathsf{Supporting}\allowbreak \mathsf{Hyperplanes} & \mathsf{ZF} \\ \hline
+	\swpthm{thm:Jensen}{thmi:Jensen} & \mathsf{Jensen}:\forall (f:\R^{n}\to\R),\;\mathsf{convex}(f)\Rightarrow f(\mathsf{avgE}(\mathbf{u},U))\le\mathsf{avgE}(f\circ\mathbf{u},U) & \mathsf{Jensen} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:ArzelaAscoli}{thmi:ArzelaAscoli} & \mathsf{ArzelaAscoli}:\forall (f:\N\to(\R\to\R)),\;\mathsf{unif.\ bdd}(f)\wedge\mathsf{equicont}(f)\Rightarrow\mathsf{unif.\ conv.\ subseq.} & \mathsf{Arzela-Ascoli} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:WeakCompact}{thmi:WeakCompact} & \mathsf{WeakCompact}:\mathsf{reflexive}(X)\wedge\mathsf{bdd}(u)\Rightarrow\mathsf{weakly\ conv.\ subseq.} & \mathsf{Weak}\allowbreak \mathsf{Compactness} & \mathsf{ZFC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:RellichKondrachov}{thmi:RellichKondrachov} & \mathsf{RellichKondrachov}:\forall (U\;\mathsf{bdd}),\;W^{1,p}(U)\hookrightarrow\hookrightarrow L^{q}(U)\;\mathsf{compactly\ for}\;q<p^{*} & \mathsf{Rellich-Kondrachov} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:CompactAdjoint}{thmi:CompactAdjoint} & \mathsf{CompactAdjoint}:\forall (K:H\to H),\;K\;\mathsf{compact}\Rightarrow K^{*}\;\mathsf{compact} & \mathsf{Compactness}\allowbreak \mathsf{of}\allowbreak \mathsf{Adjoint} & \mathsf{ZFC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:SpectralThm}{thmi:SpectralThm} & \mathsf{SpectralThm}:\forall (H:\mathsf{Hilbert}),\;\forall (S:H\to H),\;\mathsf{Separable}(H)\wedge\mathsf{CompactOp}(S)\wedge\mathsf{Symmetric}(S)\Rightarrow\exists (w:\N\to H),\;\mathsf{ONB}\text{-}\mathsf{of}\text{-}\mathsf{eigenvectors}(S,w) & \mathsf{Spectral}\allowbreak \mathsf{Theorem} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:PoissonExistence}{thmi:PoissonExistence} & \mathsf{PoissonExistence}:\forall (f\in H^{-1}(U)),\;\exists (u\in H_{0}^{1}(U)),\;-\Delta u=f\;\mathsf{weak} & \mathsf{Dirichlet}\allowbreak \mathsf{Existence} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:PoissonUniqueness}{thmi:PoissonUniqueness} & \mathsf{PoissonUniqueness}:\forall (u_{1},u_{2}\in H_{0}^{1}(U)),\;\mathsf{WeakSol}(u_{1})\wedge\mathsf{WeakSol}(u_{2})\Rightarrow u_{1}=u_{2}\;\mathsf{a.e.} & \mathsf{Dirichlet}\allowbreak \mathsf{Uniqueness} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:DirichletPrinciple}{thmi:DirichletPrinciple} & \mathsf{DirichletPrinciple}:\forall (u\in H_{0}^{1}(U)),\;u\;\mathsf{weak\ sol}\Leftrightarrow u\;\mathsf{minimizes}\;I[w]\;\mathsf{over}\;H_{0}^{1}(U) & \mathsf{Dirichlet}\allowbreak \mathsf{Principle} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:EllipticInteriorReg}{thmi:EllipticInteriorReg} & \mathsf{EllipticInteriorReg}:\forall (u\in H^{1},\;f\in L^{2},\;-\Delta u=f),\;\forall (V\subset\subset U),\;u\in H_{\mathrm{loc}}^{2}(U)\wedge\|u\|_{H^{2}(V)}\le C(\|f\|_{L^{2}}+\|u\|_{H^{1}}) & \mathsf{Interior}\allowbreak \mathsf{Regularity} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:EllipticBoundaryReg}{thmi:EllipticBoundaryReg} & \mathsf{EllipticBoundaryReg}:\forall (\partial U\in C^{2},\;f\in L^{2},\;g\in H^{3/2}(\partial U)),\;\exists! (u\in H^{2}(U)),\;-\Delta u=f\wedge\mathsf{trace}(u)=g\wedge\|u\|_{H^{2}}\le C(\|f\|_{L^{2}}+\|g\|_{H^{3/2}}) & \mathsf{Boundary}\allowbreak \mathsf{Regularity} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:MaximumPrinciple}{thmi:MaximumPrinciple} & \mathsf{MaximumPrinciple}:\forall (u\in C^{2}(U)\cap C^{0}(\bar{U}),\;\Delta u\ge0),\;\max_{\bar{U}}u=\max_{\partial U}u & \mathsf{Weak}\allowbreak \mathsf{Maximum}\allowbreak \mathsf{Principle} & \mathsf{ZF} \\ \hline
+	\swpthm{thm:HopfLemma}{thmi:HopfLemma} & \mathsf{HopfLemma}:\forall (u\in C^{2}(U)\cap C^{0}(\bar{U}),\;\Delta u\ge0,\;x_{0}\in\partial U,\;u(x_{0})>u(x)\;\forall x\in U),\;\partial u/\partial\nu(x_{0})>0 & \mathsf{Hopf}\allowbreak \mathsf{Lemma} & \mathsf{ZF} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:StrongMaxPrinciple}{thmi:StrongMaxPrinciple} & \mathsf{StrongMaxPrinciple}:\forall (u\in C^{2}(U),\;\Delta u\ge0),\;(u\;\mathsf{attains\ interior\ max})\Rightarrow u\;\mathsf{constant} & \mathsf{Strong}\allowbreak \mathsf{Maximum}\allowbreak \mathsf{Principle} & \mathsf{ZF} \\ \hline
+	\swpthm{thm:HeatWeakExistence}{thmi:HeatWeakExistence} & \mathsf{HeatWeakExistence}:\forall (f\in L^{2}(0,T;H^{-1}),\;u_{0}\in L^{2}),\;\exists! (u\;\mathsf{weak\ sol\ heat}),\;u(0)=u_{0}\wedge\|u\|_{L^{2}(0,T;H_{0}^{1})}^{2}+\|u_{t}\|_{L^{2}(0,T;H^{-1})}^{2}\le C_{T}(\|f\|^{2}+\|u_{0}\|^{2}) & \mathsf{Heat}\allowbreak \mathsf{Weak}\allowbreak \mathsf{Existence} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:HeatEnergyDecay}{thmi:HeatEnergyDecay} & \mathsf{HeatEnergyDecay}:\forall (u\;\mathsf{weak\ sol\ heat},\;f=0),\;\|u(t)\|_{L^{2}}\le e^{-\lambda_{1}t}\|u_{0}\|_{L^{2}} & \mathsf{Heat}\allowbreak \mathsf{Energy}\allowbreak \mathsf{Decay} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:WaveEnergyConservation}{thmi:WaveEnergyConservation} & \mathsf{WaveEnergyConservation}:\forall (u\;\mathsf{weak\ sol\ wave},\;f=0),\;\frac{d}{dt}(\tfrac12\|u_{t}\|^{2}+\tfrac12\|\nabla u\|^{2})=0 & \mathsf{Wave}\allowbreak \mathsf{Energy}\allowbreak \mathsf{Conservation} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|c|l|r|c|}
+	\hline
+	\swpthm{thm:WaveWeakExistence}{thmi:WaveWeakExistence} & \mathsf{WaveWeakExistence}:\forall (f\in L^{2}(0,T;L^{2}),\;u_{0}\in H_{0}^{1},\;u_{1}\in L^{2}),\;\exists! (u\;\mathsf{weak\ sol\ wave}),\;u(0)=u_{0}\wedge u_{t}(0)=u_{1} & \mathsf{Wave}\allowbreak \mathsf{Weak}\allowbreak \mathsf{Existence} & \mathsf{ZF+DC} \\ \hline
+	\swpthm{thm:DuhamelPrinciple}{thmi:DuhamelPrinciple} & \mathsf{DuhamelPrinciple}:\forall (f\in L^{2}(0,T;H^{-1})),\;u(t)=\int_{0}^{t}S(t-s)f(s)\,ds\;\mathsf{weak\ sol\ heat\ with}\;u_{0}=0 & \mathsf{Duhamel}\allowbreak \mathsf{Principle} & \mathsf{ZF+DC} \\ \hline
+	\end{array}$
+	
+	\medskip
+	
+		% ============================================================
+	\section{Proofs}
+	% ============================================================
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:FTC} (\textsf{FTC})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & C^{1}([a,b])(f) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & F(x):=\int_{a}^{x}f^{\prime}(t)\,dt & \mathsf{def} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & F^{\prime}(x)=f^{\prime}(x) & \mathsf{FTC\ step} & \mathsf{Eq}(2) \\ \hline
+	4 & (F-f)^{\prime}=0 & \mathsf{derivative} & \mathsf{Eq}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \exists (C:\R),\;\forall (x:[a,b]),\;(F-f)(x)=C & \mathsf{MVT} & \textsf{Pos:}\ref{posi:MVT}(4) \\ \hline
+	6 & F(a)=0\Rightarrow C=-f(a) & \mathsf{initial\ value} & \mathsf{Eq}(2,5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & F(b)=f(b)-f(a) & \mathsf{endpoint} & \mathsf{Eq}(5,6) \\ \hline
+	8 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,7) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:Taylor} (\textsf{Taylor})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & C^{2}(f)\wedge(x:\R)\wedge(z:\R) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \int_{z}^{x}(x-t)f^{\prime\prime}=[-(x-t)f^{\prime}]_{z}^{x}+\int_{z}^{x}f^{\prime} & \mathsf{IBP} & \textsf{Pos:}\ref{posi:IBP}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \int_{z}^{x}(x-t)f^{\prime\prime}=\int_{z}^{x}f^{\prime}-(x-z)f^{\prime}(z) & \mathsf{simplify} & \mathsf{Eq}(2) \\ \hline
+	4 & \int_{z}^{x}f^{\prime}=f(x)-f(z) & \mathsf{FTC} & \textsf{Lem:}\ref{lemi:FTC}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & f(x)=f(z)+(x-z)f^{\prime}(z)+\int_{z}^{x}(x-t)f^{\prime\prime} & \mathsf{rearrange} & \mathsf{Eq}(3,4) \\ \hline
+	6 & \exists (\xi:[\min(x,z),\max(x,z)]),\;\int_{z}^{x}(x-t)f^{\prime\prime}=\tfrac12 f^{\prime\prime}(\xi)(x-z)^{2} & \mathsf{weighted\ mean} & \textsf{Pos:}\ref{posi:MVTI}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & f(x)=f(z)+(x-z)f^{\prime}(z)+\tfrac12 f^{\prime\prime}(\xi)(x-z)^{2} & \mathsf{conclusion} & \mathsf{Eq}(5,6) \\ \hline
+	8 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,7) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:ProductRule} (\textsf{ProductRule})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & C^{1}(u)\wedge C^{1}(v) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & (uv)(x+h)-(uv)(x)=u(x+h)v(x+h)-u(x)v(x) & \mathsf{expand} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & =[u(x+h)-u(x)]v(x+h)+u(x)[v(x+h)-v(x)] & \mathsf{add\ zero} & \mathsf{Eq}(2) \\ \hline
+	4 & \frac{(uv)(x+h)-(uv)(x)}{h}=\frac{u(x+h)-u(x)}{h}v(x+h)+u(x)\frac{v(x+h)-v(x)}{h} & \mathsf{divide} & \mathsf{Eq}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \lim_{h\to0}=u^{\prime}(x)v(x)+u(x)v^{\prime}(x) & \mathsf{limit} & \mathsf{Eq}(1,4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:ChainRule} (\textsf{ChainRule})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & C^{1}(f)\wedge C^{1}(g) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & F(y):=\left\{\begin{array}{l}\dfrac{f(y)-f(g(x))}{y-g(x)},\ \text{if }y\neq g(x)\\[4pt] f^{\prime}(g(x)),\ \text{if }y=g(x)\end{array}\right. & \mathsf{aux} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & C(F)\text{ at }g(x) & \mathsf{continuity} & \mathsf{Eq}(1,2) \\ \hline
+	4 & (f\circ g)(x+h)-(f\circ g)(x)=F(g(x+h))\cdot(g(x+h)-g(x)) & \mathsf{exact} & \mathsf{Eq}(2) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \lim_{h\to0}F(g(x+h))=f^{\prime}(g(x)) & \mathsf{comp.\ cont.} & \mathsf{Eq}(3) \\ \hline
+	6 & \lim_{h\to0}(g(x+h)-g(x))/h=g^{\prime}(x) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \lim_{h\to0}\frac{(f\circ g)(x+h)-(f\circ g)(x)}{h}=f^{\prime}(g(x))g^{\prime}(x) & \mathsf{limit} & \mathsf{Eq}(4,5,6) \\ \hline
+	8 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,7) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:JacobiFormula} (\textsf{JacobiFormula})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & C^{1}(A)\wedge\det A(t)\neq0 & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \det(A+\epsilon B)=\det A+\epsilon\mathsf{tr}(\mathsf{adj}(A)B)+O(\epsilon^{2}) & \mathsf{expansion} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \mathsf{adj}(A)=\det A\cdot A^{-1} & \mathsf{adjugate} & \mathsf{def} \\ \hline
+	4 & \frac{\det(A+\epsilon B)-\det A}{\epsilon}=\det A\mathsf{tr}(A^{-1}B)+O(\epsilon) & \mathsf{quotient} & \mathsf{Eq}(2,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \tfrac{d}{dt}\det A=\det A\mathsf{tr}(A^{-1}A^{\prime}) & \mathsf{conclusion} & \mathsf{Eq}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:JacobiFormulaAdj} (\textsf{JacobiFormulaAdj})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & C^{1}(A) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \det(A+\epsilon B)=\det A+\epsilon\mathsf{tr}(\mathsf{adj}(A)B)+O(\epsilon^{2}) & \mathsf{expansion} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \tfrac{d}{dt}\det A=\mathsf{tr}(\mathsf{adj}(A)A^{\prime}) & \mathsf{conclusion} & \mathsf{Eq}(2) \\ \hline
+	4 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,3) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:Cauchy} (\textsf{Cauchy})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & (a:\R)\wedge(b:\R) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & 0\le(a-b)^{2} & \mathsf{square\ nonneg} & \textsf{Ax:}\ref{axi:R-mul-compat}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & 0\le a^{2}-2ab+b^{2} & \mathsf{expand} & \mathsf{Eq}(2) \\ \hline
+	4 & 2ab\le a^{2}+b^{2} & \mathsf{add} & \mathsf{addMon}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & ab\le\tfrac12 a^{2}+\tfrac12 b^{2} & \mathsf{conclusion} & \mathsf{Eq}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:CauchyEps} (\textsf{CauchyEps})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & a,b\in\R,\;\epsilon>0 & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & ab=((2\epsilon)^{1/2}a)(b/(2\epsilon)^{1/2}) & \mathsf{factor} & \mathsf{Eq} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & ab\le\tfrac12((2\epsilon)^{1/2}a)^{2}+\tfrac12(b/(2\epsilon)^{1/2})^{2} & \mathsf{Cauchy} & \textsf{Lem:}\ref{lemi:Cauchy}(2) \\ \hline
+	4 & ab\le\epsilon a^{2}+\tfrac{b^{2}}{4\epsilon} & \mathsf{conclusion} & \mathsf{Eq}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,4) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:SecondDerivCriterion} (\textsf{SecondDerivCriterion})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & C^{2}(f)\wedge f^{\prime\prime}\ge0 & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & x,y\in\R,\;t\in[0,1],\;z:=(1-t)x+ty & \mathsf{intro} & \mathsf{intro} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & f(x)=f(z)+f^{\prime}(z)(x-z)+\tfrac12 f^{\prime\prime}(\xi_{1})(x-z)^{2} & \mathsf{Taylor} & \textsf{Lem:}\ref{lemi:Taylor}(1,2) \\ \hline
+	4 & f(x)\ge f(z)+f^{\prime}(z)(x-z) & \mathsf{lower} & \mathsf{Eq}(3,1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & f(y)\ge f(z)+f^{\prime}(z)(y-z) & \mathsf{Taylor+lower} & \textsf{Lem:}\ref{lemi:Taylor}(1,2) \\ \hline
+	6 & (1-t)f(x)+tf(y)\ge f(z) & \mathsf{combine} & \mathsf{addMon}(4,5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & f(\tau x+(1-\tau)y)\le\tau f(x)+(1-\tau)f(y) & \mathsf{conclusion} & \textsf{Def:}\ref{defi:Convex}(2,6) \\ \hline
+	8 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,7) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:expconvex} (\textsf{expconvex})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & f(t):=e^{t}\wedge f^{\prime\prime}=e^{t}>0 & \mathsf{def} & \mathsf{def} \\ \hline
+	2 & C^{2}(f)\wedge f^{\prime\prime}\ge0 & \mathsf{regularity} & \mathsf{Eq}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \mathsf{convex}(f) & \mathsf{convexity} & \textsf{Lem:}\ref{lemi:SecondDerivCriterion}(2) \\ \hline
+	4 & e^{\tau x+(1-\tau)y}\le\tau e^{x}+(1-\tau)e^{y} & \mathsf{conclusion} & \textsf{Def:}\ref{defi:Convex}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,4) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:Young} (\textsf{Young})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & 1<p,q<\infty,\;1/p+1/q=1,\;a,b>0 & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & t:=1/p,\;x:=\log a^{p},\;y:=\log b^{q} & \mathsf{intro} & \mathsf{intro} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & e^{tx+(1-t)y}\le te^{x}+(1-t)e^{y} & \mathsf{expconvex} & \textsf{Lem:}\ref{lemi:expconvex}(2) \\ \hline
+	4 & e^{(1/p)\log a^{p}+(1/q)\log b^{q}}\le\tfrac1p e^{\log a^{p}}+\tfrac1q e^{\log b^{q}} & \mathsf{substitute} & \mathsf{Eq}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & ab\le\tfrac{a^{p}}{p}+\tfrac{b^{q}}{q} & \mathsf{conclusion} & \mathsf{Eq}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:YoungEps} (\textsf{YoungEps})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & a,b>0,\;\epsilon>0,\;1<p,q<\infty,\;1/p+1/q=1 & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & ab=((\epsilon p)^{1/p}a)(b/(\epsilon p)^{1/p}) & \mathsf{factor} & \mathsf{Eq} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & ab\le\epsilon a^{p}+\frac{b^{q}}{q(\epsilon p)^{q/p}} & \mathsf{Young} & \textsf{Lem:}\ref{lemi:Young}(2) \\ \hline
+	4 & C(\epsilon):=(\epsilon p)^{-q/p}/q & \mathsf{define} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & ab\le\epsilon a^{p}+C(\epsilon)b^{q} & \mathsf{conclusion} & \mathsf{Eq}(3,4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:CauchySchwarz} (\textsf{CauchySchwarz})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & x,y\in\R^{n} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & y=0\Rightarrow|x\cdot y|=0=|x||y| & \mathsf{trivial} & \mathsf{Eq}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & y\neq0\Rightarrow0\le|x-\epsilon y|^{2}=|x|^{2}-2\epsilon x\cdot y+\epsilon^{2}|y|^{2} & \mathsf{nonneg} & \textsf{Ax:}\ref{axi:R-mul-compat}(1) \\ \hline
+	4 & 2\epsilon x\cdot y\le|x|^{2}+\epsilon^{2}|y|^{2} & \mathsf{add} & \mathsf{addMon}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \epsilon=|x|/|y|\Rightarrow x\cdot y\le|x||y| & \mathsf{choose} & \mathsf{Eq}(4) \\ \hline
+	6 & -x\cdot y\le|x||y| & \mathsf{substitute} & \mathsf{Eq}(3,\dots,5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & |x\cdot y|\le|x||y| & \mathsf{conclusion} & \mathsf{Eq}(2,5,6) \\ \hline
+	8 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,7) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:CauchySchwarzA} (\textsf{CauchySchwarzA})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & A>0\wedge A^{T}=A\wedge x,y\in\R^{n} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & (u,v)\mapsto u^{T}Av\;\mathsf{inner\ product} & \mathsf{inner} & \textsf{Def:}\ref{defi:InnerProduct}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & |x^{T}Ay|\le(x^{T}Ax)^{1/2}(y^{T}Ay)^{1/2} & \mathsf{Cauchy-Schwarz} & \textsf{Lem:}\ref{lemi:CauchySchwarz}(2) \\ \hline
+	4 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,3) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:BanachFP} (\textsf{BanachFP})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{contraction}(T)\wedge\mathsf{complete}(X) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \exists\theta<1,\;d(Tx,Ty)\le\theta d(x,y) & \mathsf{def} & \mathsf{def}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & x_{n+1}:=T(x_{n}) & \mathsf{iterate} & \mathsf{def} \\ \hline
+	4 & d(x_{n+1},x_{n})\le\theta^{n}d(x_{1},x_{0}) & \mathsf{geometric} & \mathsf{Eq}(2,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & d(x_{n},x_{m})\le\tfrac{\theta^{n}}{1-\theta}d(x_{1},x_{0}) & \mathsf{bound} & \mathsf{Eq}(4) \\ \hline
+	6 & \mathsf{Cauchy}(x_{n}) & \mathsf{Cauchy} & \textsf{Def:}\ref{defi:Cauchy}(5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \exists x^{*},\;x_{n}\to x^{*} & \mathsf{limit} & \textsf{Ax:}\ref{axi:R-complete}(6) \\ \hline
+	8 & Tx^{*}=x^{*}\wedge\forall y,\;Ty=y\to y=x^{*} & \mathsf{fixed+unique} & \mathsf{Eq}(2,3,7) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	9 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,8) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:SeparatingHyperplane} (\textsf{SeparatingHyperplane})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{convex}(C)\wedge\mathsf{closed}(C)\wedge p\in\partial C & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \exists(p_{k}),\;p_{k}\notin C\wedge p_{k}\to p & \mathsf{exterior} & \mathsf{def}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \exists(\pi_{k}\subset C),\;\|p_{k}-\pi_{k}\|=\mathsf{dist}(p_{k},C) & \mathsf{projection} & \exists\mathsf{E}(2) \\ \hline
+	4 & \forall(z\in C),\;(p_{k}-\pi_{k})\cdot(z-\pi_{k})\le0 & \mathsf{convexity} & \textsf{Def:}\ref{defi:Convex}(1,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & u_{k}:=\tfrac{p_{k}-\pi_{k}}{\|p_{k}-\pi_{k}\|},\;\|u_{k}\|=1 & \mathsf{normalize} & \mathsf{def} \\ \hline
+	6 & \exists u_{k_{j}}\to u,\;\|u\|=1 & \mathsf{BW} & \textsf{Pos:}\ref{posi:BW}(5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \forall(z\in C),\;u\cdot(z-p)\le0 & \mathsf{conclusion} & \mathsf{Eq}(4,5,6) \\ \hline
+	8 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,7) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:Baire} (\textsf{Baire})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{complete}(X)\wedge U_{n}\;\mathsf{open\ dense} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \bar{B}(x_{0},r_{0})\subset U_{1} & \mathsf{nested} & \mathsf{def}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \bar{B}(x_{n},r_{n})\subset U_{n}\cap B(x_{n-1},r_{n-1}),\;r_{n}\to0 & \mathsf{recursion} & \exists\mathsf{E}(2) \\ \hline
+	4 & \mathsf{Cauchy}(x_{n})\Rightarrow\exists x^{*} & \mathsf{complete} & \textsf{Ax:}\ref{axi:R-complete}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & x^{*}\in\bigcap_{n}U_{n} & \mathsf{conclusion} & \mathsf{Eq}(3,4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:OpenMap} (\textsf{OpenMap})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & T\in\mathcal{L}(X,Y)\wedge\mathsf{surjective}(T) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & X=\bigcup_{n}\bar{B}(0,n),\;Y=\bigcup_{n}T(\bar{B}(0,n)) & \mathsf{cover} & \mathsf{Eq}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \exists n,\;\overline{T(B(0,n))}\;\mathsf{nonempty\ interior} & \mathsf{Baire} & \textsf{Lem:}\ref{lemi:Baire}(2) \\ \hline
+	4 & \exists r>0,\;\bar{B}_{Y}(0,r)\subseteq T(\bar{B}(0,n)) & \mathsf{ball} & \exists\mathsf{E}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & T(B(0,1))\supseteq B_{Y}(0,r/n)\Rightarrow\mathsf{open}(T) & \mathsf{conclusion} & \mathsf{Eq}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:HardyLittlewood} (\textsf{HardyLittlewood})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & f\in L^{1}_{\mathrm{loc}} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & M(f)(x):=\sup_{r>0}\mathsf{avgB}(|f|,x,r) & \mathsf{maximal} & \textsf{Def:}\ref{defi:avg-ball}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \|\mathsf{WeakL}^{1}(M(f))\|\le C\|f\|_{L^{1}} & \mathsf{weak\ type} & \mathsf{def}(2) \\ \hline
+	4 & \mathsf{avgB}(|f-f(x)|,x,r)\to0\;\mathsf{a.e.} & \mathsf{conclusion} & \mathsf{Eq}(1,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,4) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:Riesz} (\textsf{Riesz})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u^{*}\in H^{*} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & N(u^{*})\;\mathsf{closed\ subspace} & \mathsf{kernel} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & u^{*}=0\Rightarrow u=0 & \mathsf{trivial} & \mathsf{Eq}(1) \\ \hline
+	4 & u^{*}\neq0\Rightarrow\exists w\in N(u^{*})^{\perp},\;\|w\|=1 & \mathsf{perp} & \textsf{Def:}\ref{defi:Sperp}(2) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & u:=\overline{u^{*}(w)}\,w\Rightarrow\forall v,\;u^{*}(v)=(u,v) & \mathsf{representation} & \textsf{Def:}\ref{defi:perp}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:LaxMilgram} (\textsf{LaxMilgram})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{coercive}(a)\wedge\mathsf{bounded}(a)\wedge(f:H^{*}) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \exists! (A:H\to H),\;\forall (u:H),\;\forall (v:H),\;a(u,v)=(Au,v) & \mathsf{Riesz} & \textsf{Lem:}\ref{lemi:Riesz}(2) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \|Au\|\ge c\|u\| & \mathsf{coercivity} & \mathsf{Eq}(1,2) \\ \hline
+	4 & A\;\mathsf{injective}\wedge\mathsf{bdd}(A) & \mathsf{injectivity} & \mathsf{Eq}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & R(A)\;\mathsf{closed}\wedge A\;\mathsf{surjective} & \mathsf{closed\ range} & \mathsf{Eq}(1,4) \\ \hline
+	6 & \exists! (u:H),\;Au=h\wedge h=\mathsf{Riesz}(f) & \mathsf{existence} & \exists\mathsf{E}(5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:BoundsSpectrum} (\textsf{BoundsSpectrum})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & S\;\mathsf{bounded\ self-adjoint} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \eta>M\Rightarrow(\eta I-S)\;\mathsf{coercive}\Rightarrow\mathsf{bijective} & \mathsf{coercive} & \textsf{Lem:}\ref{lemi:LaxMilgram}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \eta<m\Rightarrow(S-\eta I)\;\mathsf{coercive}\Rightarrow\mathsf{bijective} & \mathsf{coercive} & \textsf{Lem:}\ref{lemi:LaxMilgram}(1) \\ \hline
+	4 & \sigma(S)\subset[m,M] & \mathsf{bounded} & \forall\mathsf{E}(2,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & M\in\sigma(S)\wedge m\in\sigma(S) & \mathsf{attained} & \mathsf{RAA+Eq}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:WeakDerivRules} (\textsf{WeakDerivRules})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u,w\in W^{1,p}(U),\;\phi\in\mathcal{D}(U) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \int_{U}(u+w)D\phi=\int_{U}uD\phi+\int_{U}wD\phi & \mathsf{linearity} & \mathsf{Eq}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & =-(\int_{U}Du\cdot\phi+\int_{U}Dw\cdot\phi)=-(\int_{U}(Du+Dw)\phi) & \mathsf{WeakDeriv\ def} & \textsf{Def:}\ref{defi:WeakDeriv}(1) \\ \hline
+	4 & \mathsf{WeakDeriv}(D(u+w))=Du+Dw & \mathsf{conclusion} & \mathsf{Eq}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \mathsf{WeakDeriv}(D(u\phi))=u^{\prime}\phi+uD\phi & \mathsf{product} & \textsf{Lem:}\ref{lemi:ProductRule}(1) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:Poincare} (\textsf{Poincare})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \partial U\in C^{0},\;u\in H_{0}^{1}(U) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & u\;\mathsf{extends\ by\ 0\ across}\;\partial U & \mathsf{def} & \textsf{Def:}\ref{defi:H01}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & u(x)=\int_{-\infty}^{x_{1}}u_{x_{1}}(t,x^{\prime})\,dt & \mathsf{FTC} & \textsf{Lem:}\ref{lemi:FTC}(2) \\ \hline
+	4 & |u(x)|^{2}\le\mathrm{diam}(U)\int_{-\infty}^{x_{1}}|u_{x_{1}}|^{2}\,dt & \mathsf{Cauchy-Schwarz} & \textsf{Lem:}\ref{lemi:CauchySchwarz}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \int_{U}|u|^{2}\le C_{P}(U)^{2}\int_{U}|\nabla u|^{2} & \mathsf{integrate} & \mathsf{Eq}(4) \\ \hline
+	6 & \|u\|_{L^{2}}\le C_{P}(U)\|\nabla u\|_{L^{2}} & \mathsf{conclusion} & \mathsf{Eq}(5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:TraceInequality} (\textsf{TraceInequality})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u\in H^{1}(U) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \exists\mathsf{Tr}:H^{1}\to L^{2}(\partial U)\;\mathsf{lin.\ cont.},\;\mathsf{Tr}\circ\mathsf{Ext}=\mathsf{id} & \mathsf{trace} & \textsf{Pos:}\ref{posi:Trace} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \|\mathsf{Tr}(u)\|_{L^{2}(\partial U)}\le\|\mathsf{Tr}\|\cdot\|u\|_{H^{1}(U)} & \mathsf{bounded} & \mathsf{Eq}(2) \\ \hline
+	4 & \|u\|_{L^{2}(\partial U)}=\|\mathsf{Tr}(u)\|_{L^{2}(\partial U)} & \mathsf{identification} & \mathsf{def}(2) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \|u\|_{L^{2}(\partial U)}\le C_{T}\|u\|_{H^{1}(U)} & \mathsf{conclusion} & \mathsf{Eq}(3,4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:SobolevEmbedding} (\textsf{SobolevEmbedding})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u\in W^{1,p}(U),\;p>n & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \|u\|_{C^{0,1-n/p}(U)}\le C_{M}\|u\|_{W^{1,p}(U)} & \mathsf{Morrey} & \textsf{Pos:}\ref{posi:Morrey} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & u\in C^{0,1-n/p}(U) & \mathsf{embedding} & \mathsf{Eq}(2) \\ \hline
+	4 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,3) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:EnergyEstimateElliptic} (\textsf{EnergyEstimateElliptic})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & f\in L^{2}(U),\;u\;\mathsf{weak\ sol} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & B[u,u]=\langle f,u\rangle & \mathsf{def} & \textsf{Def:}\ref{defi:PoissonWeakSol}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \|\nabla u\|_{L^{2}}^{2}=\langle f,u\rangle & \mathsf{Dirichlet\ form} & \textsf{Def:}\ref{defi:EllipticForm}(2) \\ \hline
+	4 & \langle f,u\rangle\le\|f\|_{L^{2}}\|u\|_{L^{2}}\le C_{P}(U)\|f\|_{L^{2}}\|\nabla u\|_{L^{2}} & \mathsf{Holder+Poincare} & \textsf{Lem:}\ref{lemi:Poincare}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \|\nabla u\|_{L^{2}}\le C_{P}(U)\|f\|_{L^{2}} & \mathsf{cancel} & \mathsf{Eq}(4) \\ \hline
+	6 & \|u\|_{H_{0}^{1}}\le C\|f\|_{L^{2}} & \mathsf{conclusion} & \textsf{Lem:}\ref{lemi:Poincare}(5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Lemma \protect\ref{lemi:EllipticInteriorReg-Step} (\textsf{EllipticInteriorReg-Step})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u\in H^{1},\;-\Delta u=f\in L^{2} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & V\subset\subset U,\;\zeta\in\mathcal{D}(U),\;\zeta\equiv1\;\mathsf{on}\;V & \mathsf{cutoff} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & B[\zeta u,\zeta u]=-\int_{U}f\zeta^{2}u-\int_{U}u\nabla\zeta\cdot\nabla(\zeta u) & \mathsf{weak\ sol} & \textsf{Def:}\ref{defi:PoissonWeakSol}(1) \\ \hline
+	4 & \|D^{2}(\zeta u)\|_{L^{2}}\le C(\|f\|_{L^{2}}+\|u\|_{H^{1}}) & \mathsf{energy} & \textsf{Lem:}\ref{lemi:EnergyEstimateElliptic}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,4) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:BanachAlaoglu} (\textsf{BanachAlaoglu})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{Banach}(X) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \bar{B}_{X^{*}}(0,1)\subset\prod_{x\in X}[-\|x\|,\|x\|] & \mathsf{embed} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \prod_{x}[-\|x\|,\|x\|]\;\mathsf{compact} & \mathsf{Tychonoff} & \textsf{Pos:}\ref{posi:Tych} \\ \hline
+	4 & \bar{B}_{X^{*}}(0,1)\;\mathsf{closed} & \mathsf{closed} & \mathsf{def}(2) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \bar{B}_{X^{*}}(0,1)\;\mathsf{weak}^{\ast}\text{-}\mathsf{compact} & \mathsf{conclusion} & \mathsf{Eq}(3,4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:Kakutani} (\textsf{Kakutani})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{reflexive}(X) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \bar{B}_{X}(0,1)\subseteq X=(X^{*})^{*} & \mathsf{reflexivity} & \textsf{Def:}\ref{defi:Reflexive}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \bar{B}_{X^{**}}(0,1)\;\mathsf{weak}^{\ast}\text{-}\mathsf{compact} & \mathsf{Banach-Alaoglu} & \textsf{Thm:}\ref{thmi:BanachAlaoglu} \\ \hline
+	4 & \bar{B}_{X}(0,1)\;\mathsf{weakly\ compact} & \mathsf{conclusion} & \mathsf{Eq}(2,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,4) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:InverseFT} (\textsf{InverseFT})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & Jf(x_{0})\neq0,\;\mathrm{WLOG}\;x_{0}=0,\;f(0)=0,\;Df(0)=I & \mathsf{normalize} & \mathsf{def} \\ \hline
+	2 & f(x)=x+R(x),\;\|DR\|\le\tfrac12 & \mathsf{decompose} & \mathsf{def}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \|f(x)-f(y)\|\ge\tfrac12\|x-y\| & \mathsf{estimate} & \textsf{Pos:}\ref{posi:MVT}(2) \\ \hline
+	4 & \forall z\;\mathsf{near}\;0,\;\exists x,\;f(x)=z & \mathsf{surjectivity} & \textsf{Lem:}\ref{lemi:BanachFP}(2) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & g:=f^{-1},\;Dg(z)=Df(g(z))^{-1} & \mathsf{chain\ rule} & \textsf{Lem:}\ref{lemi:ChainRule}(4) \\ \hline
+	6 & f\in C^{k}\Rightarrow g\in C^{k} & \mathsf{conclusion} & \forall\mathsf{I}(5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:ImplicitFT} (\textsf{ImplicitFT})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & f(x_{0},y_{0})=z_{0},\;D_{y}f(x_{0},y_{0})\;\mathsf{invertible} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & F(x,y):=(f(x,y),x) & \mathsf{define} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \det DF=\pm\det D_{y}f\neq0 & \mathsf{Jacobian} & \mathsf{def}(2) \\ \hline
+	4 & F\;\mathsf{locally\ invertible},\;F^{-1}\in C^{1} & \mathsf{inverse\ FT} & \textsf{Thm:}\ref{thmi:InverseFT}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & g(x):=\mathsf{2nd}(F^{-1}(z_{0},x))\Rightarrow f(x,g(x))=z_{0} & \mathsf{solve} & \mathsf{Eq}(4) \\ \hline
+	6 & f\in C^{k}\Rightarrow g\in C^{k} & \mathsf{conclusion} & \forall\mathsf{E}(4) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:ClosedGraph} (\textsf{ClosedGraph})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{closed}(A)\wedge\mathsf{linear}(A)\wedge\mathsf{Banach}(X,Y) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & G(A):=\{(u,Au)\}\;\mathsf{closed\ in}\;X\times Y & \mathsf{graph} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & X\times Y\;\mathsf{Banach} & \mathsf{product} & \textsf{Def:}\ref{defi:Banach}(1) \\ \hline
+	4 & P:G(A)\to X,\;(u,Au)\mapsto u\;\mathsf{bijective} & \mathsf{projection} & \mathsf{def}(2) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & P^{-1}\;\mathsf{bounded} & \mathsf{open\ map} & \textsf{Lem:}\ref{lemi:OpenMap}(4) \\ \hline
+	6 & \mathsf{Bdd}(A) & \mathsf{conclusion} & \textsf{Def:}\ref{defi:Bdd}(5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:GaussGreen} (\textsf{GaussGreen})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & U\;\mathsf{smooth},\;u\in C^{1}(\bar{U}) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \{\zeta_{k}\}\;\mathsf{partition\ of\ unity},\;y=\Phi(x)\;\mathsf{flattens} & \mathsf{partition} & \textsf{Def:}\ref{defi:Ckbnd}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \int_{y_{n}>0}\partial_{y_{n}}(\zeta u)=\int_{y_{n}=0}\zeta u & \mathsf{FTC} & \textsf{Lem:}\ref{lemi:FTC}(2) \\ \hline
+	4 & \int_{U}(\zeta u)_{x_{n}}=\int_{\partial U}\zeta u\nu^{n} & \mathsf{transform} & \mathsf{Eq}(2,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \int_{U}u_{x_{i}}=\int_{\partial U}u\nu^{i}\wedge\int_{U}\mathsf{div}\,\mathbf{u}=\int_{\partial U}\mathbf{u}\cdot\nu & \mathsf{conclusion} & \mathsf{Eq}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:IntParts} (\textsf{IntParts})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u,v\in C^{1}(\bar{U}) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \int_{U}(uv)_{x_{i}}=\int_{\partial U}uv\nu^{i} & \mathsf{Gauss-Green} & \textsf{Thm:}\ref{thmi:GaussGreen}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & (uv)_{x_{i}}=u_{x_{i}}v+uv_{x_{i}} & \mathsf{product} & \textsf{Lem:}\ref{lemi:ProductRule}(1) \\ \hline
+	4 & \int_{U}u_{x_{i}}v=-\int_{U}uv_{x_{i}}+\int_{\partial U}uv\nu^{i} & \mathsf{conclusion} & \mathsf{Eq}(2,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,4) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:GreenI} (\textsf{GreenI})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u\in C^{2}(\bar{U}) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \int_{U}u_{x_{i}x_{i}}=\int_{\partial U}u_{x_{i}}\nu^{i} & \mathsf{IBP} & \textsf{Thm:}\ref{thmi:IntParts}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \int_{U}\Delta u=\int_{\partial U}\partial u/\partial\nu & \mathsf{conclusion} & \textsf{Def:}\ref{defi:Lap}(2) \\ \hline
+	4 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,3) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:GreenII} (\textsf{GreenII})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u,v\in C^{2}(\bar{U}) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \int_{U}u_{x_{i}}v_{x_{i}}=-\int_{U}uv_{x_{i}x_{i}}+\int_{\partial U}uv_{x_{i}}\nu^{i} & \mathsf{IBP} & \textsf{Thm:}\ref{thmi:IntParts}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \int_{U}\nabla v\cdot\nabla u=-\int_{U}u\Delta v+\int_{\partial U}u\partial v/\partial\nu & \mathsf{conclusion} & \textsf{Def:}\ref{defi:grad}(2) \\ \hline
+	4 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,3) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:GreenIII} (\textsf{GreenIII})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u,v\in C^{2}(\bar{U}) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \int_{U}\nabla u\cdot\nabla v=-\int_{U}v\Delta u+\int_{\partial U}v\partial u/\partial\nu & \mathsf{Green\ II} & \textsf{Thm:}\ref{thmi:GreenII}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \int_{U}(u\Delta v-v\Delta u)=\int_{\partial U}(u\partial v/\partial\nu-v\partial u/\partial\nu) & \mathsf{conclusion} & \mathsf{Eq}(2) \\ \hline
+	4 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,3) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:Coarea} (\textsf{Coarea})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{Lipschitz}(u)\wedge\mathsf{Measurable}(f) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \exists f_{k}\;\mathsf{simple},\;f_{k}\to f\;\mathsf{a.e.} & \mathsf{approx} & \textsf{Def:}\ref{defi:Simple}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \int f_{k}|\nabla u|=\int(\int_{\{u=r\}}f_{k}\,dS)\,dr & \mathsf{simple\ case} & \mathsf{def}(2) \\ \hline
+	4 & \int f_{k}|\nabla u|\uparrow\int f|\nabla u|\wedge\int(\int f_{k})\uparrow\int(\int f) & \mathsf{monotone} & \textsf{Thm:}\ref{thmi:MonotoneConv}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \int f|\nabla u|=\int(\int_{\{u=r\}}f\,dS)\,dr & \mathsf{conclusion} & \mathsf{Eq}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:Polar} (\textsf{Polar})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & x_{0}=0,\;u(x):=|x|,\;|\nabla u|=1\;\mathsf{a.e.} & \mathsf{normalize} & \mathsf{def} \\ \hline
+	2 & \int f|\nabla u|=\int_{0}^{\infty}(\int_{\partial B(0,r)}f\,dS)\,dr & \mathsf{Coarea} & \textsf{Thm:}\ref{thmi:Coarea}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \int f=\int_{0}^{\infty}(\int_{\partial B(0,r)}f\,dS)\,dr & \mathsf{conclusion} & \mathsf{Eq}(1,2) \\ \hline
+	4 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,3) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:MovingRegions} (\textsf{MovingRegions})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & X(\tau,\cdot):U(0)\to U(\tau),\;\partial_{\tau}X=\mathbf{v} & \mathsf{flow} & \mathsf{def} \\ \hline
+	2 & \int_{U(\tau)}f=\int_{U(0)}f(X(\tau,y),\tau)J\,dy,\;J:=\det\partial_{y}X & \mathsf{change\ var.} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \partial_{\tau}J=J\mathsf{div}(\mathbf{v}) & \mathsf{Jacobi} & \textsf{Lem:}\ref{lemi:JacobiFormula}(2) \\ \hline
+	4 & \partial_{\tau}[fJ]=[f_{\tau}+\nabla f\cdot\mathbf{v}]J+fJ\mathsf{div}(\mathbf{v}) & \mathsf{product} & \textsf{Lem:}\ref{lemi:ProductRule}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \tfrac{d}{d\tau}\int_{U(\tau)}f=\int_{U(\tau)}[f_{\tau}+\mathsf{div}(f\mathbf{v})] & \mathsf{transport} & \mathsf{Eq}(2,4) \\ \hline
+	6 & =\int_{\partial U(\tau)}f\mathbf{v}\cdot\nu+\int_{U(\tau)}f_{\tau} & \mathsf{conclusion} & \textsf{Thm:}\ref{thmi:GaussGreen}(5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:MollifierProps} (\textsf{MollifierProps})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & f\in L^{1}_{\mathrm{loc}},\;f^{\epsilon}=\eta_{\epsilon}*f & \mathsf{hypothesis} & \textsf{Def:}\ref{defi:moll-f}(1) \\ \hline
+	2 & D^{\alpha}f^{\epsilon}(x)=\int D^{\alpha}\eta_{\epsilon}(x-y)f(y)\,dy & \mathsf{derivative} & \mathsf{def}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & f^{\epsilon}\in C^{\infty} & \mathsf{smoothness} & \forall\mathsf{I}(2) \\ \hline
+	4 & |f^{\epsilon}(x)-f(x)|\le C\mathsf{avgB}(|f-f(x)|)\to0 & \mathsf{Hardy-Littlewood} & \textsf{Lem:}\ref{lemi:HardyLittlewood}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & f^{\epsilon}\to f\;\mathsf{a.e.},\;f\in C\Rightarrow\mathsf{unif\ on\ compacta} & \mathsf{conclusion} & \mathsf{Eq}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:LebesgueExistence} (\textsf{LebesgueExistence})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{Box}(I),\;\mathsf{vol}(I),\;\mathsf{outmeas} & \mathsf{def} & \mathsf{def} \\ \hline
+	2 & \mathsf{outmeas}\;\mathsf{monotone}\wedge\mathsf{countably\ subadditive} & \mathsf{properties} & \mathsf{Eq}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \mathcal{M}\;\mathsf{Carath\'eodory\ sigma-algebra} & \mathsf{def} & \mathsf{def} \\ \hline
+	4 & \mathsf{SigmaAlgebra}(\mathcal{M}) & \mathsf{sigma} & \textsf{Def:}\ref{defi:SigmaAlgebra}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & |\cdot|:=\mathsf{outmeas}|_{\mathcal{M}}\;\mathsf{countably\ additive},\;|B|=\mathsf{vol}(B) & \mathsf{measure} & \mathsf{Eq}(2,4) \\ \hline
+	6 & \mathsf{open}(U),\mathsf{closed}(F)\in\mathcal{M} & \mathsf{conclusion} & \mathsf{Eq}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:MonotoneConv} (\textsf{MonotoneConv})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & 0\le f_{1}\le f_{2}\le\cdots,\;f:=\sup_{k}f_{k} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \int f_{k}\uparrow L\le\int f & \mathsf{limit} & \mathsf{def}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & 0\le s\le f\;\mathsf{simple},\;E_{k}:=\{f_{k}\ge(1-\epsilon)s\}\uparrow X & \mathsf{approx} & \textsf{Def:}\ref{defi:Simple}(1) \\ \hline
+	4 & (1-\epsilon)\int_{E_{k}}s\le L\Rightarrow\int s\le L & \mathsf{monotone} & \mathsf{Eq}(2,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \int f=L=\lim\int f_{k} & \mathsf{conclusion} & \mathsf{Eq}(2,4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:Fatou} (\textsf{Fatou})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & f_{k}\ge0\;\mathsf{measurable} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & g_{k}:=\inf_{j\ge k}f_{j}\;\mathsf{nondecreasing} & \mathsf{infimum} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \int g_{k}\uparrow\int\liminf f_{k} & \mathsf{monotone\ conv} & \textsf{Thm:}\ref{thmi:MonotoneConv}(2) \\ \hline
+	4 & \int g_{k}\le\inf_{j\ge k}\int f_{j}\Rightarrow\int\liminf f_{k}\le\liminf\int f_{k} & \mathsf{conclusion} & \mathsf{Eq}(2,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,4) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:DominatedConv} (\textsf{DominatedConv})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & |f_{k}|\le g,\,g\in L^{1},\,f_{k}\to f\;\mathsf{a.e.} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \int(g+f)\le\liminf\int(g+f_{k})\Rightarrow\int f\le\liminf\int f_{k} & \mathsf{Fatou} & \textsf{Thm:}\ref{thmi:Fatou}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \int(g-f)\le\liminf\int(g-f_{k})\Rightarrow\limsup\int f_{k}\le\int f & \mathsf{Fatou} & \textsf{Thm:}\ref{thmi:Fatou}(1) \\ \hline
+	4 & \int f\le\liminf\int f_{k}\le\limsup\int f_{k}\le\int f & \mathsf{squeeze} & \mathsf{Eq}(2,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \int f_{k}\to\int f & \mathsf{conclusion} & \mathsf{Eq}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:Holder} (\textsf{Holder})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \|u\|_{L^{p}}=\|v\|_{L^{q}}=1 & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & |uv|\le|u|^{p}/p+|v|^{q}/q\;\mathsf{a.e.} & \mathsf{Young} & \textsf{Lem:}\ref{lemi:Young}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \int|uv|\le\|u\|_{L^{p}}^{p}/p+\|v\|_{L^{q}}^{q}/q=1 & \mathsf{integrate} & \mathsf{Eq}(2) \\ \hline
+	4 & \int|uv|\le\|u\|_{L^{p}}\|v\|_{L^{q}} & \mathsf{homogeneity} & \mathsf{Eq}(1,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,4) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:Minkowski} (\textsf{Minkowski})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u,v\in L^{p} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \|u+v\|_{L^{p}}^{p}\le\int|u+v|^{p-1}(|u|+|v|) & \mathsf{triangle} & \mathsf{Eq} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \int|u+v|^{p-1}|u|\le\|u+v\|_{L^{p}}^{p-1}\|u\|_{L^{p}} & \mathsf{Holder} & \textsf{Thm:}\ref{thmi:Holder}(2) \\ \hline
+	4 & \int|u+v|^{p-1}|v|\le\|u+v\|_{L^{p}}^{p-1}\|v\|_{L^{p}} & \mathsf{Holder} & \textsf{Thm:}\ref{thmi:Holder}(2) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \|u+v\|_{L^{p}}\le\|u\|_{L^{p}}+\|v\|_{L^{p}} & \mathsf{conclusion} & \mathsf{Eq}(2,3,4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:GenHolder} (\textsf{GenHolder})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & 1\le p_{1},\dots,p_{m}\le\infty,\;\sum 1/p_{k}=1 & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & m=2\Rightarrow\mathsf{GenHolder} & \mathsf{base} & \textsf{Thm:}\ref{thmi:Holder}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \mathsf{IH}:m-1\;\mathsf{case},\;q_{j}:=p_{j}/(1-1/p_{1}) & \mathsf{induction} & \mathsf{Hyp} \\ \hline
+	4 & \int|u_{1}\cdots u_{m}|\le\|u_{1}\|_{L^{p_{1}}}\|u_{2}\cdots u_{m}\|_{L^{1/(1-1/p_{1})}} & \mathsf{Holder} & \textsf{Thm:}\ref{thmi:Holder}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \|u_{2}\cdots u_{m}\|_{L^{1/(1-1/p_{1})}}\le\prod_{k\ge2}\|u_{k}\|_{L^{p_{k}}} & \mathsf{IH} & \mathsf{Eq}(3) \\ \hline
+	6 & \int|u_{1}\cdots u_{m}|\le\prod\|u_{k}\|_{L^{p_{k}}} & \mathsf{conclusion} & \mathsf{Eq}(4,5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:Interpolation} (\textsf{Interpolation})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & 1/r=\theta/s+(1-\theta)/t & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \int|u|^{r}=\int|u|^{\theta r}|u|^{(1-\theta)r}\le(\int|u|^{s})^{\theta r/s}(\int|u|^{t})^{(1-\theta)r/t} & \mathsf{Holder} & \textsf{Thm:}\ref{thmi:Holder}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \|u\|_{L^{r}}\le\|u\|_{L^{s}}^{\theta}\|u\|_{L^{t}}^{1-\theta} & \mathsf{conclusion} & \mathsf{Eq}(1,2) \\ \hline
+	4 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,3) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:LebesgueDiff} (\textsf{LebesgueDiff})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & f\in L^{1}_{\mathrm{loc}},\;u(x):=\mathsf{avgB}(|f-f(x)|,x,r) & \mathsf{hypothesis} & \textsf{Def:}\ref{defi:avg-ball} \\ \hline
+	2 & \mathsf{avgB}(|f-f(x_{0})|,x_{0},r)\to0\;\mathsf{a.e.} & \mathsf{Hardy-Littlewood} & \textsf{Lem:}\ref{lemi:HardyLittlewood}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \mathsf{avgB}(f,x_{0},r)\to f(x_{0})\;\mathsf{a.e.} & \mathsf{conclusion} & \mathsf{Eq}(2) \\ \hline
+	4 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,3) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:Egoroff} (\textsf{Egoroff})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & f_{k}\to f\;\mathsf{a.e.},\;|A|<\infty & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & A_{j}^{m}:=\bigcap_{k\ge j}\{|f_{k}-f|<1/m\} & \mathsf{sets} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & A_{j}^{m}\uparrow\tilde{A}^{m}\;\mathsf{a.e.}\;A & \mathsf{increasing} & \mathsf{Eq}(1,2) \\ \hline
+	4 & \exists j(m),\;|A\setminus A_{j(m)}^{m}|<\epsilon/2^{m} & \mathsf{measure} & \exists\mathsf{E}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & E:=\bigcap_{m}A_{j(m)}^{m}\Rightarrow|A\setminus E|\le\epsilon\wedge\mathsf{unif\ on}\;E & \mathsf{conclusion} & \mathsf{Eq}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:Bochner} (\textsf{Bochner})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{strongly\ measurable}(\mathbf{f}) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \exists\mathbf{s}_{k}\;\mathsf{simple},\;\mathbf{s}_{k}\to\mathbf{f} & \mathsf{approx} & \textsf{Def:}\ref{defi:StronglyMeasurable}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \int\|\mathbf{s}_{k}-\mathbf{f}\|\to0 & \mathsf{dominated} & \textsf{Thm:}\ref{thmi:DominatedConv}(2) \\ \hline
+	4 & \mathsf{summable}(\mathbf{f})\Leftrightarrow\mathsf{summable}(\|\mathbf{f}\|)\wedge\|\int\mathbf{f}\|\le\int\|\mathbf{f}\| & \mathsf{conclusion} & \mathsf{Eq}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,4) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:Pettis} (\textsf{Pettis})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{strongly\ meas}(\mathbf{f})\Rightarrow\mathsf{weakly\ meas}+\mathsf{almost\ sep} & \mathsf{forward} & \textsf{Def:}\ref{defi:StronglyMeasurable}(1) \\ \hline
+	2 & \mathsf{weakly\ meas}+\mathsf{almost\ sep}\Rightarrow\mathsf{strongly\ meas}(\mathbf{f}) & \mathsf{reverse} & \wedge\mathsf{I}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \mathsf{strongly\ meas}\Leftrightarrow\mathsf{weakly\ meas}+\mathsf{almost\ sep} & \mathsf{conclusion} & \mathsf{Eq}(1,2) \\ \hline
+	4 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,3) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:Fredholm} (\textsf{Fredholm})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{CompactOp}(K) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \dim N(I-K)=\infty\Rightarrow\exists\mathsf{ONB},\;Ku_{k}=u_{k},\;\|u_{k}-u_{l}\|=\sqrt2 & \mathsf{contradiction} & \textsf{Def:}\ref{defi:ONB}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \|Ku_{k}-Ku_{l}\|=\sqrt2\Rightarrow\neg\mathsf{compact}(K) & \mathsf{noncompact} & \bot\mathsf{I}(2) \\ \hline
+	4 & \dim N(I-K)<\infty,\;R(I-K)\;\mathsf{closed},\;R(I-K)=\mathsf{Sperp}(N(I-K^{*})) & \mathsf{combine} & \mathsf{Eq}(2,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & N(I-K)=\{0\}\Leftrightarrow R(I-K)=H,\;\dim N(I-K)=\dim N(I-K^{*}) & \mathsf{conclusion} & \mathsf{Eq}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:SpectrumCompact} (\textsf{SpectrumCompact})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{CompactOp}(K)\wedge\dim H=\infty & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & 0\notin\sigma(K)\Rightarrow I=K\circ K^{-1}\;\mathsf{compact}\Rightarrow\neg\dim H=\infty & \mathsf{contradiction} & \textsf{Def:}\ref{defi:sigma}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & 0\in\sigma(K) & \mathsf{zero} & \mathsf{RAA}(2) \\ \hline
+	4 & \eta\in\sigma(K)\setminus\{0\}\Rightarrow\mathsf{eigenvalue} & \mathsf{Fredholm} & \textsf{Thm:}\ref{thmi:Fredholm}(4) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \sigma(K)\setminus\{0\}\;\mathsf{tends\ to}\;0 & \mathsf{conclusion} & \mathsf{Eq}(3,4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:SupportingHyperplanes} (\textsf{SupportingHyperplanes})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{convex}(f)\wedge x\in\R^{n} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \mathsf{epi}(f)\;\mathsf{convex},\;(x,f(x))\in\partial\mathsf{epi}(f) & \mathsf{epigraph} & \textsf{Def:}\ref{defi:Convex}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \exists(r,-\alpha)\neq0,\;(r,-\alpha)\cdot((z,t)-(x,f(x)))\le0 & \mathsf{separating} & \textsf{Lem:}\ref{lemi:SeparatingHyperplane}(1,2) \\ \hline
+	4 & \alpha>0\Rightarrow f(z)\ge f(x)+r\cdot(z-x) & \mathsf{conclusion} & \mathsf{Eq}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \forall x\;\exists r,\;\forall y,\;f(y)\ge f(x)+r\cdot(y-x) & \mathsf{quantify} & \forall\mathsf{I}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:Jensen} (\textsf{Jensen})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{convex}(f)\wedge\mathsf{open\ bounded}(U)\wedge\mathsf{summable}(\mathbf{u}) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \forall p\;\exists r\;\forall q,\;f(q)\ge f(p)+r\cdot(q-p) & \mathsf{support} & \textsf{Thm:}\ref{thmi:SupportingHyperplanes}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & p:=\mathsf{avgE}(\mathbf{u},U),\;q:=\mathbf{u}(x) & \mathsf{intro} & \mathsf{def}(2) \\ \hline
+	4 & \int_{U}f(\mathbf{u})\ge|U|f(p)+r\cdot(\int\mathbf{u}-|U|p)=|U|f(p) & \mathsf{integrate} & \textsf{Def:}\ref{defi:avg-set}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & f(\mathsf{avgE}(\mathbf{u},U))\le\mathsf{avgE}(f\circ\mathbf{u},U) & \mathsf{conclusion} & \mathsf{Eq}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:ArzelaAscoli} (\textsf{ArzelaAscoli})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{unif.\ bdd}(f_{k})\wedge\mathsf{equicont}(f_{k}) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \exists\{x_{1},\dots,x_{N}\}\;\mathsf{epsilon-net\ in}\;K & \mathsf{net} & \exists\mathsf{E}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \exists\{k_{j}\},\;\forall i,\;f_{k_{j}}(x_{i})\;\mathsf{converges} & \mathsf{diagonal} & \exists\mathsf{E}(2) \\ \hline
+	4 & |f_{k_{j}}(x)-f_{k_{l}}(x)|\le2\epsilon+|f_{k_{j}}(x_{i})-f_{k_{l}}(x_{i})| & \mathsf{equicont} & \mathsf{Eq}(2,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & f_{k_{j}}\to f\;\mathsf{unif} & \mathsf{conclusion} & \mathsf{Eq}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:WeakCompact} (\textsf{WeakCompact})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{reflexive}(X)\wedge\mathsf{bdd}(u_{k}) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \bar{B}(0,M)\;\mathsf{weakly\ compact} & \mathsf{Kakutani} & \textsf{Thm:}\ref{thmi:Kakutani}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \exists\{u_{k_{j}}\},\;u_{k_{j}}\rightharpoonup u & \mathsf{subsequence} & \mathsf{Eq}(2) \\ \hline
+	4 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,3) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:RellichKondrachov} (\textsf{RellichKondrachov})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & U\;\mathsf{bounded},\;q<p^{*} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \{u_{k}\}\;\mathsf{bdd\ in}\;W^{1,p} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \exists u_{k_{j}}\rightharpoonup u\;\mathsf{in}\;W^{1,p} & \mathsf{weak\ compact} & \textsf{Thm:}\ref{thmi:WeakCompact}(1) \\ \hline
+	4 & \|u_{k_{j}}\|_{W^{1,p}}\le C & \mathsf{uniform\ bound} & \mathsf{Eq}(2,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \|u_{k_{j}}-u\|_{L^{q}}\to0 & \mathsf{diagonal+embedding} & \mathsf{Eq}(3,4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:CompactAdjoint} (\textsf{CompactAdjoint})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{CompactOp}(K) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \|u_{k}\|\;\mathsf{bdd}\Rightarrow\exists u_{k_{j}}\rightharpoonup u & \mathsf{weak\ compact} & \textsf{Thm:}\ref{thmi:WeakCompact}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \|K^{*}(u_{k_{j}}-u)\|^{2}=(KK^{*}(u_{k_{j}}-u),u_{k_{j}}-u) & \mathsf{adjoint} & \textsf{Def:}\ref{defi:adjoint}(1) \\ \hline
+	4 & KK^{*}(u_{k_{j}}-u)\to0\Rightarrow\|K^{*}(u_{k_{j}}-u)\|\to0 & \mathsf{compactness} & \textsf{Def:}\ref{defi:CompactOp}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \mathsf{CompactOp}(K^{*}) & \mathsf{conclusion} & \textsf{Def:}\ref{defi:CompactOp}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:SpectralThm} (\textsf{SpectralThm})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \mathsf{Separable}(H)\wedge\mathsf{CompactOp}(S)\wedge\mathsf{Symmetric}(S) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & H_{k}:=N(S-\eta_{k}I)\;\mathsf{finite\ dim},\;H_{k}\perp H_{l} & \mathsf{eigenspaces} & \textsf{Thm:}\ref{thmi:Fredholm}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \tilde{H}:=\overline{\bigoplus H_{k}},\;\tilde{S}:=S|_{\tilde{H}^{\perp}},\;\sigma(\tilde{S})=\{0\} & \mathsf{decompose} & \textsf{Def:}\ref{defi:Sperp}(2) \\ \hline
+	4 & (\tilde{S}u,u)=0\;\forall u\Rightarrow\tilde{S}=0 & \mathsf{trivial} & \textsf{Lem:}\ref{lemi:BoundsSpectrum}(4) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \tilde{H}^{\perp}\subset N(S)\subset\tilde{H}\Rightarrow\tilde{H}=H & \mathsf{completeness} & \mathsf{Eq}(3,4) \\ \hline
+	6 & S\;\mathsf{has\ an\ ONB\ of\ eigenvectors} & \mathsf{conclusion} & \mathsf{Eq}(2,5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:PoissonExistence} (\textsf{PoissonExistence})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & f\in H^{-1}(U) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & B[u,v]:=\int_{U}\nabla u\cdot\nabla v & \mathsf{Dirichlet\ form} & \textsf{Def:}\ref{defi:EllipticForm}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & B\;\mathsf{bounded\ on}\;H_{0}^{1}\times H_{0}^{1},\;\|B\|\le1 & \mathsf{Cauchy-Schwarz} & \textsf{Lem:}\ref{lemi:CauchySchwarz}(1) \\ \hline
+	4 & B\;\mathsf{coercive\ on}\;H_{0}^{1},\;B[u,u]\ge(1+C_{P}(U)^{2})^{-1}\|u\|_{H^{1}}^{2} & \mathsf{Poincare} & \textsf{Lem:}\ref{lemi:Poincare}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & f\in H^{-1}=(H_{0}^{1})^{*} & \mathsf{def} & \textsf{Def:}\ref{defi:Xstar}(1) \\ \hline
+	6 & \exists! (u:H_{0}^{1}),\;\forall (v:H_{0}^{1}),\;B[u,v]=\langle f,v\rangle & \mathsf{Lax-Milgram} & \textsf{Lem:}\ref{lemi:LaxMilgram}(3,4,5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & -\Delta u=f\;\mathsf{weak} & \mathsf{conclusion} & \textsf{Def:}\ref{defi:PoissonWeakSol}(6) \\ \hline
+	8 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,7) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:PoissonUniqueness} (\textsf{PoissonUniqueness})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u_{1},u_{2}\in H_{0}^{1}\;\mathsf{weak\ sol} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & w:=u_{1}-u_{2}\in H_{0}^{1},\;B[w,v]=0\;\forall v & \mathsf{linearity} & \textsf{Def:}\ref{defi:EllipticForm}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & B[w,w]=0 & \mathsf{choose}\;v=w & \mathsf{Eq}(2) \\ \hline
+	4 & B[w,w]\ge\theta\|w\|_{H^{1}}^{2} & \mathsf{coercivity} & \textsf{Def:}\ref{defi:PoissonWeakSol}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \|w\|_{H^{1}}=0 & \mathsf{combine} & \mathsf{Eq}(3,4) \\ \hline
+	6 & u_{1}=u_{2}\;\mathsf{a.e.} & \mathsf{conclusion} & \mathsf{Eq}(5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:DirichletPrinciple} (\textsf{DirichletPrinciple})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u\in H_{0}^{1}(U),\;\mathsf{weak\ sol} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & w\in H_{0}^{1}\;\mathsf{arbitrary} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & I[u+w]-I[u]=\tfrac12\|\nabla w\|^{2}+B[u,w]-\langle f,w\rangle & \mathsf{expand} & \textsf{Def:}\ref{defi:DirichletEnergy}(1) \\ \hline
+	4 & B[u,w]=\langle f,w\rangle & \mathsf{weak\ sol} & \textsf{Def:}\ref{defi:PoissonWeakSol}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & I[u+w]-I[u]=\tfrac12\|\nabla w\|^{2}\ge0 & \mathsf{simplify} & \mathsf{Eq}(3,4) \\ \hline
+	6 & u\;\mathsf{minimises}\;I & \mathsf{conclusion} & \mathsf{Eq}(5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \mathsf{converse:\;}I[u]\le I[u+w]\;\forall w\Rightarrow B[u,w]=\langle f,w\rangle & \mathsf{first\ variation} & \mathsf{Eq}(3) \\ \hline
+	8 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,7) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:EllipticInteriorReg} (\textsf{EllipticInteriorReg})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u\in H^{1},\;f\in L^{2},\;-\Delta u=f & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & V\subset\subset U,\;\zeta\in\mathcal{D}(U),\;\zeta\equiv1\;\mathsf{on}\;V & \mathsf{cutoff} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & B[\zeta u,\zeta u]=-\int_{U}f\zeta^{2}u-\int_{U}u\nabla\zeta\cdot\nabla(\zeta u) & \mathsf{weak\ sol} & \textsf{Def:}\ref{defi:PoissonWeakSol}(1) \\ \hline
+	4 & \|\nabla(\zeta u)\|_{L^{2}}^{2}\le C(\|f\|_{L^{2}}^{2}+\|u\|_{L^{2}}^{2}) & \mathsf{energy} & \textsf{Lem:}\ref{lemi:EnergyEstimateElliptic}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & w:=\zeta u,\;B[w,w]\ge\theta\|\nabla w\|^{2} & \mathsf{coercivity} & \textsf{Def:}\ref{defi:PoissonWeakSol}(1) \\ \hline
+	6 & B[D_{i}^{h}w,D_{i}^{h}w]=-\int_{U}D_{i}^{h}f\cdot D_{i}^{h}w-\int_{U}D_{i}^{h}(u\nabla\zeta)\cdot D_{i}^{h}w & \mathsf{difference\ quotient} & \mathsf{Eq}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \|D_{i}^{h}w\|_{L^{2}}\le C(\|f\|_{L^{2}}+\|u\|_{H^{1}}) & \mathsf{uniform\ in}\;h & \mathsf{Eq}(5,6) \\ \hline
+	8 & \|D^{2}(\zeta u)\|_{L^{2}}\le C(\|f\|_{L^{2}}+\|u\|_{H^{1}}) & \mathsf{combine} & \mathsf{Eq}(7) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	9 & u\in H_{\mathrm{loc}}^{2}(U) & \mathsf{localise} & \mathsf{Eq}(8) \\ \hline
+	10 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,9) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:EllipticBoundaryReg} (\textsf{EllipticBoundaryReg})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & \partial U\in C^{2},\;f\in L^{2},\;g\in H^{3/2}(\partial U) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \exists! (u\in H^{2}),\;-\Delta u=f\wedge\mathsf{Tr}(u)=g\wedge\|u\|_{H^{2}}\le C(\|f\|_{L^{2}}+\|g\|_{H^{3/2}}) & \mathsf{boundary\ regularity} & \textsf{Pos:}\ref{posi:EllipticBoundaryReg-Step} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \top & \mathsf{close} & \to\mathsf{I}(1,2) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:MaximumPrinciple} (\textsf{MaximumPrinciple})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u\in C^{2}(U)\cap C^{0}(\bar{U}),\;\Delta u\ge0 & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \epsilon>0,\;u_{\epsilon}:=u+\epsilon|x|^{2} & \mathsf{perturb} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \Delta u_{\epsilon}\ge2n\epsilon>0 & \mathsf{compute} & \textsf{Def:}\ref{defi:Lap}(2) \\ \hline
+	4 & u_{\epsilon}\;\mathsf{cannot\ attain\ interior\ max} & \mathsf{RAA+2nd\ deriv} & \mathsf{Eq}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \max_{\bar{U}}u_{\epsilon}=\max_{\partial U}u_{\epsilon} & \mathsf{boundary} & \mathsf{Eq}(4) \\ \hline
+	6 & \epsilon\to0\Rightarrow\max_{\bar{U}}u\le\max_{\partial U}u & \mathsf{limit} & \mathsf{Eq}(5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:HopfLemma} (\textsf{HopfLemma})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u\in C^{2}(U)\cap C^{0}(\bar{U}),\;\Delta u\ge0,\;u(x_{0})>u(x)\;\forall x\in U & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & v(x):=e^{-\lambda|x|^{2}}-e^{-\lambda R^{2}},\;\Delta v>0 & \mathsf{aux} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & w_{\epsilon}:=u-u(x_{0})+\epsilon v & \mathsf{def} & \mathsf{def} \\ \hline
+	4 & \Delta w_{\epsilon}>0,\;w_{\epsilon}<0\;\mathsf{on}\;\partial B(x_{0},r)\setminus\{x_{0}\} & \mathsf{max\ principle} & \textsf{Thm:}\ref{thmi:MaximumPrinciple}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \partial u/\partial\nu(x_{0})\ge-\epsilon\partial v/\partial\nu(x_{0})>0 & \mathsf{limit} & \mathsf{Eq}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:StrongMaxPrinciple} (\textsf{StrongMaxPrinciple})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u\in C^{2}(U),\;\Delta u\ge0,\;u\;\mathsf{attains\ interior\ max\ at}\;x_{0} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & u\;\mathsf{not\ constant}\Rightarrow\exists B(x_{0},r)\subset U,\;\sup_{\partial B}u<u(x_{0}) & \mathsf{contradiction} & \mathsf{def}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \partial u/\partial\nu(x_{0})>0 & \mathsf{Hopf} & \textsf{Thm:}\ref{thmi:HopfLemma}(1,2) \\ \hline
+	4 & \mathsf{contradiction\ with\ interior\ max}\Rightarrow u\;\mathsf{constant} & \mathsf{conclusion} & \mathsf{RAA}(1,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,4) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:HeatWeakExistence} (\textsf{HeatWeakExistence})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & f\in L^{2}(0,T;H^{-1}),\;u_{0}\in L^{2} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \{\psi_{k}\}\;\mathsf{ONB\ of}\;H_{0}^{1},\;u_{m}:=\sum_{k\le m}d_{k}(t)\psi_{k} & \mathsf{Galerkin} & \textsf{Def:}\ref{defi:ONB}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & (u_{m}^{\prime},\psi_{k})+B[u_{m},\psi_{k}]=\langle f,\psi_{k}\rangle,\;u_{m}(0)=P_{m}u_{0} & \mathsf{ODE\ system} & \mathsf{def}(2) \\ \hline
+	4 & \tfrac{d}{dt}\|u_{m}\|^{2}+2B[u_{m},u_{m}]=2\langle f,u_{m}\rangle & \mathsf{energy\ identity} & \mathsf{Eq}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \|u_{m}(t)\|^{2}+\int_{0}^{T}\|\nabla u_{m}\|^{2}\le C(\|f\|^{2}+\|u_{0}\|^{2}) & \mathsf{integrate+Gronwall} & \mathsf{Eq}(4) \\ \hline
+	6 & \|u_{m}^{\prime}\|_{L^{2}(0,T;H^{-1})}\le C(\|f\|+\|u_{0}\|) & \mathsf{dual\ norm} & \mathsf{Eq}(3,5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \exists u_{m_{j}}\rightharpoonup u\;\mathsf{in}\;L^{2}(0,T;H_{0}^{1}),\;u_{m_{j}}^{\prime}\rightharpoonup u_{t}\;\mathsf{in}\;L^{2}(0,T;H^{-1}) & \mathsf{compactness} & \textsf{Thm:}\ref{thmi:WeakCompact}(4) \\ \hline
+	8 & u\;\mathsf{weak\ sol},\;u(0)=u_{0} & \mathsf{pass\ to\ limit} & \mathsf{Eq}(3,7) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	9 & \mathsf{uniqueness\ via\ energy\ on}\;w=u_{1}-u_{2} & \mathsf{Gronwall} & \mathsf{Eq}(4) \\ \hline
+	10 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,9) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:HeatEnergyDecay} (\textsf{HeatEnergyDecay})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u\;\mathsf{weak\ sol\ heat},\;f=0 & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \tfrac{d}{dt}\|u\|_{L^{2}}^{2}=-2\|\nabla u\|_{L^{2}}^{2} & \mathsf{energy} & \textsf{Def:}\ref{defi:ParabolicWeakSol}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & \|\nabla u\|_{L^{2}}^{2}\ge\lambda_{1}\|u\|_{L^{2}}^{2} & \mathsf{Poincare+eigenvalue} & \textsf{Lem:}\ref{lemi:Poincare}(3) \\ \hline
+	4 & \tfrac{d}{dt}\|u\|^{2}\le-2\lambda_{1}\|u\|^{2} & \mathsf{combine} & \mathsf{Eq}(2,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & \|u(t)\|_{L^{2}}\le e^{-\lambda_{1}t}\|u_{0}\|_{L^{2}} & \mathsf{Gronwall} & \mathsf{Eq}(4) \\ \hline
+	6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:WaveEnergyConservation} (\textsf{WaveEnergyConservation})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & u\;\mathsf{weak\ sol\ wave},\;f=0 & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & E(t):=\tfrac12\|u_{t}\|^{2}+\tfrac12\|\nabla u\|^{2} & \mathsf{energy} & \mathsf{def} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & u_{t}\in L^{2}(0,T;L^{2}),\;u_{tt}\in L^{2}(0,T;H^{-1}) & \mathsf{regularity} & \textsf{Def:}\ref{defi:WaveWeakSol}(1) \\ \hline
+	4 & E^{\prime}(t)=(u_{tt},u_{t})+(\nabla u,\nabla u_{t}) & \mathsf{chain\ rule} & \mathsf{Eq}(2) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & (u_{tt},u_{t})+B[u,u_{t}]=\langle 0,u_{t}\rangle=0 & \mathsf{wave\ eq} & \textsf{Def:}\ref{defi:WaveWeakSol}(1) \\ \hline
+	6 & E^{\prime}(t)=0\;\mathsf{for\ a.e.}\;t & \mathsf{combine} & \mathsf{Eq}(4,5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & E(t)=E(0)\;\mathsf{for\ a.e.}\;t & \mathsf{integrate} & \mathsf{Eq}(6) \\ \hline
+	8 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,7) \\ \hline
+	\end{array}$
+	\medskip
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:WaveWeakExistence} (\textsf{WaveWeakExistence})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & f\in L^{2}(0,T;L^{2}),\;u_{0}\in H_{0}^{1},\;u_{1}\in L^{2} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & \{\psi_{k}\}\;\mathsf{ONB\ of}\;H_{0}^{1} & \mathsf{eigenbasis} & \textsf{Def:}\ref{defi:ONB}(1) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & u_{m}:=\sum_{k\le m}d_{k}(t)\psi_{k},\;u_{m}(0)=P_{m}u_{0},\;u_{m}^{\prime}(0)=P_{m}u_{1} & \mathsf{Galerkin} & \mathsf{def}(2) \\ \hline
+	4 & (u_{m}^{\prime\prime},\psi_{k})+B[u_{m},\psi_{k}]=\langle f,\psi_{k}\rangle & \mathsf{ODE\ system} & \mathsf{def}(3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & E_{m}(t):=\tfrac12\|u_{m}^{\prime}\|^{2}+\tfrac12\|\nabla u_{m}\|^{2},\;E_{m}^{\prime}(t)=\langle f,u_{m}^{\prime}\rangle & \mathsf{energy\ identity} & \textsf{Thm:}\ref{thmi:WaveEnergyConservation}(1) \\ \hline
+	6 & E_{m}(t)\le E_{m}(0)+\int_{0}^{T}\|f\|\|u_{m}^{\prime}\| & \mathsf{Gronwall} & \mathsf{Eq}(5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & E_{m}(t)\le C(\|f\|_{L^{2}}^{2}+\|u_{0}\|_{H^{1}}^{2}+\|u_{1}\|^{2}) & \mathsf{uniform\ in}\;m & \mathsf{Eq}(6) \\ \hline
+	8 & \exists u_{m_{j}}\rightharpoonup^{*}u,\;u_{m_{j}}^{\prime}\rightharpoonup^{*}u_{t},\;u_{m_{j}}^{\prime\prime}\rightharpoonup^{*}u_{tt} & \mathsf{compactness} & \textsf{Thm:}\ref{thmi:WeakCompact}(4) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	9 & u\;\mathsf{solves}\;u_{tt}-\Delta u=f\;\mathsf{weak},\;u(0)=u_{0},\;u_{t}(0)=u_{1} & \mathsf{pass\ to\ limit} & \mathsf{Eq}(4,8) \\ \hline
+	10 & \mathsf{uniqueness\ via\ energy\ on}\;w=u_{1}-u_{2} & \mathsf{Gronwall} & \mathsf{Eq}(7) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	11 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,10) \\ \hline
+	\end{array}$
+	\setstretch{1}
+	
+	\subsection*{Proof of Theorem \protect\ref{thmi:DuhamelPrinciple} (\textsf{DuhamelPrinciple})}
+	\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	1 & f\in L^{2}(0,T;H^{-1}) & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+	2 & S(t)\;\textsf{C}_{0}\text{-}\mathsf{semigroup\ with}\;S^{\prime}(t)=\Delta S(t) & \mathsf{generator} & \textsf{Pos:}\ref{posi:HeatSemigroupGenerator} \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	3 & u(t):=\int_{0}^{t}S(t-s)f(s)\,ds & \mathsf{def} & \mathsf{def} \\ \hline
+	4 & u_{t}(t)=S(t-t)f(t)+\int_{0}^{t}S^{\prime}(t-s)f(s)\,ds=f(t)+\int_{0}^{t}\Delta S(t-s)f(s)\,ds & \mathsf{differentiate} & \mathsf{Eq}(2,3) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	5 & =f(t)+\Delta u(t) & \mathsf{linearity} & \mathsf{Eq}(3,4) \\ \hline
+	6 & u_{t}-\Delta u=f,\;u(0)=0 & \mathsf{conclusion} & \mathsf{Eq}(3,5) \\ \hline
+	\end{array}$
+	\par\nointerlineskip\noindent$\begin{array}{|m{0.5cm}|l|r|c|}
+	\hline
+	7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+	\end{array}$
+
+	\section{Scripts}
+	
+	\label{sec:scripts}
+	
+	\noindent Each tree records, for one result, the entries used by its proof,
+	transitively closed. Names coincide with the names that appear in the
+	statement tables. Leaves are either postulates (unproved statements admitted
+	inside proofs), axioms of the ordered field $\R$ (primitive structure), or
+	primitive definitions. In the trees below the prefix \verb|Ld | carries the
+	depth of the node (root at \verb|L0|) and the name is indented \verb|2*d|
+	spaces after the pipe, so every chain can be read straight down a column of
+	increasing depth labels. Trees are typeset in a two-column grid, each tree
+	inside its own \verb|minipage| so that the depth-ordered chains can be
+	compared side by side.
+	\noindent \text{ \ } \newline
+	\medskip \noindent%
+	\begin{minipage}[t]{\linewidth}
+		\vspace{0pt}
+		
+		\noindent\begin{minipage}[t]{0.48\linewidth}
+			\vspace{0pt}
+			\textbf{Foundational leaves (postulates).}
+			
+			\smallskip
+			
+			\begin{Verbatim}[frame=single,framerule=0.7pt,
+			rulecolor=\color{blue!60!black},framesep=8pt,
+			fontsize=\scriptsize,xleftmargin=6pt,xrightmargin=6pt]
+			MVT   MVTI   IBP   BW   Tych
+			Morrey   Trace
+			EllipticBoundaryReg-Step
+			HeatSemigroupGenerator
+			\end{Verbatim}
+		\end{minipage}\hfill
+		\begin{minipage}[t]{0.55\linewidth}
+			\vspace{0pt}
+			\textbf{Foundational leaves (axioms of the ordered field R)}
+			
+			\smallskip
+			
+			\begin{Verbatim}[frame=single,framerule=0.7pt,
+			rulecolor=\color{blue!60!black},framesep=8pt,
+			fontsize=\scriptsize,xleftmargin=6pt,xrightmargin=6pt]
+			ax:R-comm      ax:R-assoc
+			ax:R-order     ax:R-complete
+			ax:R-mul       ax:R-add
+			\end{Verbatim}
+		\end{minipage}
+		\medskip
+		
+		\noindent\textbf{Elementary definition leaves used in the trees.}
+		
+		\smallskip
+		
+		\noindent\begin{minipage}[t]{\linewidth}
+			\vspace{0pt}
+			\begin{Verbatim}[frame=single,framerule=0.7pt,
+			rulecolor=\color{blue!60!black},framesep=8pt,
+			fontsize=\scriptsize,xleftmargin=6pt,xrightmargin=6pt]
+			Def:littleo        Def:InnerProduct
+			Def:Convex         Def:SigmaAlgebra
+			Def:Simple         Def:Sperp
+			Def:perp           Def:avg-ball
+			Def:avg-set        Def:moll-f
+			Def:Bdd            Def:Banach
+			Def:Reflexive      Def:adjoint
+			Def:CompactOp      Def:ONB
+			Def:sigma          Def:Lap
+			Def:grad           Def:Ckbnd
+			Def:Symmetric      Def:StronglyMeasurable
+			Def:WeakDeriv      Def:SobolevWkp
+			Def:SobolevHk      Def:H01
+			Def:EllipticForm   Def:Elliptic
+			Def:PoissonWeakSol Def:ParabolicWeakSol
+			Def:WaveWeakSol    Def:DirichletEnergy
+			\end{Verbatim}
+		\end{minipage}
+		
+	\end{minipage}
+	
+	\medskip
+	
+	\noindent\textbf{Analytic core.}
+	
+	\noindent%
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | FTC
+			L1 |   MVT
+		\end{verbatimbox}
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | Taylor
+			L1 |   IBP
+			L1 |   MVTI
+			L1 |   FTC
+			L2 |     MVT
+		\end{verbatimbox}
+	\end{minipage}
+	
+	\medskip
+	
+	\noindent\textbf{Hilbert space layer.}
+	
+	\noindent%
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | Riesz
+			L1 |   Def:Sperp
+			L1 |   Def:perp
+		\end{verbatimbox}
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | LaxMilgram
+			L1 |   Riesz
+			L2 |     Def:Sperp
+			L2 |     Def:perp
+		\end{verbatimbox}
+	\end{minipage}
+	
+	\medskip
+	
+	\noindent\textbf{PDE existence and regularity.}
+	
+	\noindent%
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | Poincare
+			L1 |   FTC
+			L1 |   CauchySchwarz
+			L2 |     ax:R-mul
+		\end{verbatimbox}
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | PoissonUniqueness
+			L1 |   Def:EllipticForm
+			L1 |   Def:PoissonWeakSol
+		\end{verbatimbox}
+	\end{minipage}
+	
+	\medskip
+	
+	\noindent%
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | PoissonExistence
+			L1 |   Def:EllipticForm
+			L1 |   Def:PoissonWeakSol
+			L1 |   Poincare
+			L2 |     FTC
+			L2 |     CauchySchwarz
+			L1 |   LaxMilgram
+			L2 |     Riesz
+			L3 |       Def:Sperp
+			L3 |       Def:perp
+		\end{verbatimbox}
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | DirichletPrinciple
+			L1 |   Def:DirichletEnergy
+			L1 |   PoissonExistence
+			L2 |     LaxMilgram
+			L3 |       Riesz
+			L4 |         Def:Sperp
+			L4 |         Def:perp
+		\end{verbatimbox}
+	\end{minipage}
+	
+	\medskip
+	
+	\noindent%
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | EllipticInteriorReg
+			L1 |   EnergyEstimateElliptic
+			L2 |     Poincare
+			L3 |       FTC
+			L3 |       CauchySchwarz
+			L1 |   Def:Lap
+		\end{verbatimbox}
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | EllipticBoundaryReg
+			L1 |   EllipticBoundaryReg-Step
+			L1 |   Trace
+		\end{verbatimbox}
+	\end{minipage}
+	
+	\medskip
+	
+	\noindent\textbf{Compactness and maximum principles.}
+	
+	\noindent%
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | RellichKondrachov
+			L1 |   WeakCompact
+			L2 |     Kakutani
+			L3 |       BanachAlaoglu
+			L4 |         Tych
+		\end{verbatimbox}
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | MaximumPrinciple
+			L1 |   Def:Lap
+		\end{verbatimbox}
+	\end{minipage}
+	
+	\medskip
+	
+	\noindent%
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | HopfLemma
+			L1 |   MaximumPrinciple
+			L2 |     Def:Lap
+		\end{verbatimbox}
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | StrongMaxPrinciple
+			L1 |   HopfLemma
+			L2 |     MaximumPrinciple
+			L3 |       Def:Lap
+		\end{verbatimbox}
+	\end{minipage}
+	
+	\medskip
+	
+	\noindent\textbf{Heat and wave equations.}
+	
+	\noindent%
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | HeatWeakExistence
+			L1 |   Poincare
+			L2 |     FTC
+			L2 |     CauchySchwarz
+			L1 |   WeakCompact
+			L2 |     Kakutani
+			L3 |       BanachAlaoglu
+			L4 |         Tych
+		\end{verbatimbox}
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | HeatEnergyDecay
+			L1 |   ParabolicWeakSol
+			L1 |   Poincare
+			L2 |     FTC
+			L2 |     CauchySchwarz
+		\end{verbatimbox}
+	\end{minipage}
+	
+	\medskip
+	
+	\noindent%
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | WaveEnergyConservation
+			L1 |   Def:WaveWeakSol
+			L1 |   Def:EllipticForm
+		\end{verbatimbox}
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | WaveWeakExistence
+			L1 |   WaveEnergyConservation
+			L1 |   WeakCompact
+			L2 |     Kakutani
+			L3 |       BanachAlaoglu
+			L4 |         Tych
+		\end{verbatimbox}
+	\end{minipage}
+	
+	\medskip
+	
+	\noindent%
+	\begin{minipage}[t]{0.48\linewidth}
+		\vspace{0pt}
+		\begin{verbatimbox}
+			L0 | DuhamelPrinciple
+			L1 |   HeatSemigroupGenerator
+			L1 |   HeatWeakExistence
+			L2 |     Poincare
+			L2 |     WeakCompact
+			L3 |       Kakutani
+			L4 |         BanachAlaoglu
+			L5 |           Tych
+		\end{verbatimbox}
+	\end{minipage}
+	
+	\medskip
+	\section{Conclusion}
+\setstretch{2}
+	\noindent The document presents the dependency-ordered exposition of PDE
+	theory (prerequisites plus the solution layer). All entries are organised into six parts (Axioms, Postulates,
+	Definitions, Statements, Proofs, Scripts) and the choice strength of
+	every result is recorded in the class column as \textsf{ZF},
+	\textsf{ZF+DC}, or \textsf{ZFC}. Within the Statements part, Lemmas and
+	Theorems form a single dependency layer, so long as each entry appears
+	only after all entries it depends on. In particular \textsf{Riesz} is
+	stated among the Lemmas because \textsf{LaxMilgram} depends on it,
+	\textsf{LaxMilgram} precedes \textsf{BoundsSpectrum} for the same
+	reason, \textsf{WaveEnergyConservation} precedes \textsf{WaveWeakExistence},
+	and \textsf{RellichKondrachov} is stated among the Theorems (after
+	\textsf{WeakCompact}) because its proof uses the weak compactness
+	principle.
+	
+	Two closure properties are worth flagging. First, the boundary
+	regularity of the Dirichlet problem is admitted as a postulate
+	(\textsf{EllipticBoundaryReg-Step}) rather than derived from the interior
+	regularity theorem, because the latter only yields
+	$H^{2}_{\mathrm{loc}}$. Second, the heat semigroup $S(t)$ used in the
+	proof of Duhamel's principle is introduced through the postulate
+	\textsf{HeatSemigroupGenerator}, which records the generator identity
+	$S^{\prime}(t)=\Delta S(t)$ as an external input rather than deriving it
+	from the Galerkin construction. Both postulates are tagged
+	\textsf{ZF+DC} and are the only assumptions of their respective proofs
+	that are not established elsewhere in the document.
+	
+	Every lemma and theorem stated in the Statements section has a
+	corresponding proof table in the Proofs section, and the proofs are
+	presented in exactly the same order as the statements.
+	
+	% ============================================================
+	\begin{thebibliography}{9}
+		\bibitem{brezis2011} H.~Brezis. \newblock \emph{Functional Analysis, Sobolev
+			Spaces and Partial Differential Equations}. \newblock
+		Springer, New York, 2011. \newblock
+		\url{https://doi.org/10.1007/978-0-387-70914-7}. \medskip
+		
+		\bibitem{evans2010} L.~C. Evans. \newblock \emph{Partial Differential
+			Equations}, 2nd ed. \newblock
+		Graduate Studies in Mathematics, vol.~19, AMS, Providence, RI, 2010.
+		\newblock
+		\url{https://doi.org/10.1090/gsm/019}. \medskip
+		
+		\bibitem{herrlich2006} H.~Herrlich. \newblock \emph{Axiom of Choice}.
+		\newblock
+		Lecture Notes in Mathematics, vol.~1876, Springer, Berlin, 2006. \newblock
+		\url{https://doi.org/10.1007/11601562}. \medskip
+		
+		\bibitem{kelley1950} J.~L. Kelley. \newblock The Tychonoff product theorem
+		implies the axiom of choice. \newblock
+		\emph{Fund. Math.} \textbf{37} (1950), 75--76. \newblock
+		\url{https://doi.org/10.4064/fm-37-1-75-76}. \medskip
+		
+		\bibitem{simpson2009} S.~G. Simpson. \newblock \emph{Subsystems of Second
+			Order Arithmetic}, 2nd ed. \newblock
+		Perspectives in Logic, Cambridge University Press, Cambridge, 2009.
+		\newblock
+		\url{https://doi.org/10.1017/CBO9780511581007}. \medskip
+		
+		\bibitem{solovay1970} R.~M. Solovay. \newblock A model of set theory in
+		which every set of reals is Lebesgue measurable. \newblock
+		\emph{Ann.\ of Math.} \textbf{92} (1970), 1--56. \newblock
+		\url{https://doi.org/10.2307/1970696}.
+	\end{thebibliography}
+	
+\end{document}

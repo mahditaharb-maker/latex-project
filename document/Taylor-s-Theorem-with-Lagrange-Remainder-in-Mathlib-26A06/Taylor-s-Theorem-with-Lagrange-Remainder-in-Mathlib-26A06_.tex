@@ -59,23 +59,16 @@
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
 \usepackage{xcolor}
 \usepackage{fancyvrb}
-\usepackage{listings}
 
 \setcounter{MaxMatrixCols}{10}
 %TCIDATA{OutputFilter=Latex.dll}
 %TCIDATA{Version=5.50.0.2960}
 %TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
 %TCIDATA{BibliographyScheme=Manual}
-%TCIDATA{LastRevised=Wednesday, October 14, 2026 13:19:21}
+%TCIDATA{LastRevised=Friday, October 16, 2026 19:30:10}
 %TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
 
-\lstset{
-	upquote=true,
-	columns=fullflexible,
-	keepspaces=true,
-	breaklines=true,
-	basicstyle=\ttfamily\footnotesize
-}
+
 \IfFileExists{tcilatex.tex}{\input{tcilatex}}{}
 \DeclareUnicodeCharacter{03B9}{\ensuremath{\iota}}
 \DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
@@ -226,9 +219,9 @@
 \boldmath
 
 \begin{document}
-\title{\bfseries\Large\emph{Taylor's Theorem with Lagrange Remainder in
+\title{\bfseries{\Large \emph{Taylor's Theorem with Lagrange Remainder in
 Mathlib\\
-[10pt]  {A Dependency-Guided Formal Exposition}}}
+[10pt] {A Dependency-Guided Formal Exposition}}}}
 \author{ 
 \bfseries{\large \hspace{1.5in} Brahimi Mahdi Tahar\newline
 		\text{ \  } \newline
@@ -238,31 +231,31 @@ Mathlib\\
 }
 
 \begin{abstract}
-\setstretch{1.5}We present a dependency-guided exposition of  Taylor's
-theorem with Lagrange remainder as formalised in Mathlib.  The paper roots a
-depth-5 dependency tree at the iterated-derivative  statement  \textsf{%
+\setstretch{1.5}We present a dependency-guided exposition of Taylor's
+theorem with Lagrange remainder as formalised in Mathlib. The paper roots a
+depth-5 dependency tree at the iterated-derivative statement \textsf{%
 taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange%
 \allowbreak \_iterated\allowbreak Deriv}, shows that it is obtained by
-combining  the scalar Lagrange-remainder theorem  \textsf{%
-taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange}  with
-the iterated-derivative machinery of  \textsf{iterated\allowbreak
-Deriv\allowbreak Within} and the  $C^{n}$-regularity interface \textsf{%
-ContDiffOn}.  At Mathlib commit \texttt{0c1d5a7e}{}, the declaration itself
-has  \textsf{\#print\ axioms} output  \textsf{[propext,\allowbreak\
-Quot\allowbreak.sound]}:  the \emph{proof term} does not invoke  \textsf{%
-Classical\allowbreak.choice}. We also give a schematic  Lean skeleton that
-mirrors the structure of the Mathlib proof.  We distinguish the \emph{%
-proof-term axiom closure} from the  \emph{definitional closure} of the
-statement, which does reach  \textsf{Classical\allowbreak.choice} through
-the  \textsf{Real\allowbreak.linear\allowbreak Order} instance ---  the
-distinction is precisely what the depth-5 tree makes visible.  The paper
-complements the corpus-scale axiom-profile  measurement~\cite{close2026axiom}
-by exhibiting a  concrete, mathematically significant theorem whose proof
-term sits  inside the choice-free corner of Mathlib, while its statement's 
-definitional closure does not.  Every numerical claim in the paper is either
-quoted verbatim from  a citable source or derived from those quotes by
-elementary  arithmetic; the sole exception is the direct-use count $D=206$, 
-labelled explicitly as the authors' own count on the same corpus  snapshot
+combining the scalar Lagrange-remainder theorem \textsf{taylor\allowbreak%
+\_mean\allowbreak\_remainder\allowbreak\_lagrange} with the
+iterated-derivative machinery of \textsf{iterated\allowbreak
+Deriv\allowbreak Within} and the $C^{n}$-regularity interface \textsf{%
+ContDiffOn}. At Mathlib commit \texttt{0c1d5a7e}{}, the declaration itself
+has \textsf{\#print\ axioms} output \textsf{[propext,\allowbreak\
+Quot\allowbreak.sound]}: the \emph{proof term} does not invoke \textsf{%
+Classical\allowbreak.choice}. We also give a schematic Lean skeleton that
+mirrors the structure of the Mathlib proof. We distinguish the \emph{%
+proof-term axiom closure} from the \emph{definitional closure} of the
+statement, which does reach \textsf{Classical\allowbreak.choice} through the 
+\textsf{Real\allowbreak.linear\allowbreak Order} instance --- the
+distinction is precisely what the depth-5 tree makes visible. The paper
+complements the corpus-scale axiom-profile measurement~\cite{close2026axiom}
+by exhibiting a concrete, mathematically significant theorem whose proof
+term sits inside the choice-free corner of Mathlib, while its statement's
+definitional closure does not. Every numerical claim in the paper is either
+quoted verbatim from a citable source or derived from those quotes by
+elementary arithmetic; the sole exception is the direct-use count $D=206$,
+labelled explicitly as the authors' own count on the same corpus snapshot
 (Section~\ref{sec:introduction}, provenance table).
 \end{abstract}
 
@@ -293,31 +286,30 @@ inequalities, and change of variables.
 contributions.
 
 \begin{enumerate}
-\item \emph{A dependency tree.} We expand the iterated-derivative 
-Lagrange-remainder theorem to depth~5 using the MathlibGraph edge  dataset 
-\cite{mathlibgraph2026, mathlibgraph, network-structure-mathlib}.  The
-printed excerpt is chosen so that all four kernel-adjacent names  reached by
-the closure --- \textsf{propext}, \textsf{funext},  \textsf{%
-Quot\allowbreak.sound} and  \textsf{Classical\allowbreak.choice} --- appear
-inside it, and so  that the reader can see where each is reached  (Section~%
-\ref{sec:tree}).
+\item \emph{A dependency tree.} We expand the iterated-derivative
+Lagrange-remainder theorem to depth~5 using the MathlibGraph edge dataset 
+\cite{mathlibgraph2026, mathlibgraph, network-structure-mathlib}. The
+printed excerpt is chosen so that all four kernel-adjacent names reached by
+the closure --- \textsf{propext}, \textsf{funext}, \textsf{%
+Quot\allowbreak.sound} and \textsf{Classical\allowbreak.choice} --- appear
+inside it, and so that the reader can see where each is reached (Section~\ref%
+{sec:tree}).
 
-\item \emph{Statement tables and a proof strategy.} We collect the  fourteen
-definitions, thirteen lemmas, thirteen theorems, two  propositions and two
-corollaries that make up the hierarchy  (Sections~\ref{sec:definitions}--\ref%
-{sec:statements}), verify each  signature against the Mathlib4 documentation
-browser  \cite{mathlib4-docs} and the source file \cite{mathlib4-taylor},
-and  give the five-step reduction from the iterated statement to the scalar 
+\item \emph{Statement tables and a proof strategy.} We collect the fourteen
+definitions, thirteen lemmas, thirteen theorems, two propositions and two
+corollaries that make up the hierarchy (Sections~\ref{sec:definitions}--\ref%
+{sec:statements}), verify each signature against the Mathlib4 documentation
+browser \cite{mathlib4-docs} and the source file \cite{mathlib4-taylor}, and
+give the five-step reduction from the iterated statement to the scalar
 Lagrange form (Section~\ref{sec:proofs}).
 
-\item \emph{A Lean skeleton and the proof-term axiom closure.} For the 
-Mathlib declaration at commit \texttt{0c1d5a7e}{}, the  \textsf{\#print\
-axioms} output is  $\{\mathsf{propext},\allowbreak\ \mathsf{%
-Quot\allowbreak.sound}\}$:  the \emph{proof term} depends only on those two
-kernel-adjacent names  and does not invoke \textsf{Classical%
-\allowbreak.choice}. We also give  a Lean~4 schematic skeleton for the
-iterated theorem that mirrors the  structure of the Mathlib proof (Section~%
-\ref{sec:lean-skeleton}).
+\item \emph{A Lean skeleton and the proof-term axiom closure.} For the
+Mathlib declaration at commit \texttt{0c1d5a7e}{}, the \textsf{\#print\
+axioms} output is $\{\mathsf{propext},\allowbreak\ \mathsf{%
+Quot\allowbreak.sound}\}$: the \emph{proof term} depends only on those two
+kernel-adjacent names and does not invoke \textsf{Classical\allowbreak.choice%
+}. We also give a Lean~4 schematic skeleton for the iterated theorem that
+mirrors the structure of the Mathlib proof (Section~\ref{sec:lean-skeleton}).
 \end{enumerate}
 
 \smallskip\noindent\textbf{Choice-freeness: two distinct notions.} We must
@@ -325,20 +317,20 @@ be precise about what ``choice-free'' means, because the two notions diverge
 for the theorem under study.
 
 \begin{itemize}
-\item The \emph{proof-term axiom closure} of a declaration  $d$ is the set
-of Lean kernel axioms reported by  \textsf{\#print\ axioms\ $d$}. For  
-\textsf{taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange%
-\allowbreak \_iterated\allowbreak Deriv} this is  $\{\mathsf{propext}%
-,\allowbreak\ \mathsf{Quot\allowbreak.sound}\}$:  the proof term does not
-invoke  \textsf{Classical\allowbreak.choice}. 
+\item The \emph{proof-term axiom closure} of a declaration $d$ is the set of
+Lean kernel axioms reported by \textsf{\#print\ axioms\ $d$}. For \textsf{%
+taylor\allowbreak\_mean\allowbreak\_remainder\allowbreak\_lagrange%
+\allowbreak \_iterated\allowbreak Deriv} this is $\{\mathsf{propext}%
+,\allowbreak\ \mathsf{Quot\allowbreak.sound}\}$: the proof term does not
+invoke \textsf{Classical\allowbreak.choice}.
 
-\item The \emph{definitional closure} of $d$ is the set of  declarations
-reachable from $d$ along the definitional /  instance edges recorded in
-MathlibGraph. For the same theorem, this  closure \emph{does} contain  
-\textsf{Classical\allowbreak.choice}, reached through the  \textsf{%
-Real\allowbreak.linear\allowbreak Order} instance of  $\mathbb{R}$
-(classically constructed). The explicit path is  shown in Section~\ref%
-{sec:tree}:  \textsf{Real}~$\to$~\textsf{Real\allowbreak.linear\allowbreak
+\item The \emph{definitional closure} of $d$ is the set of declarations
+reachable from $d$ along the definitional / instance edges recorded in
+MathlibGraph. For the same theorem, this closure \emph{does} contain \textsf{%
+Classical\allowbreak.choice}, reached through the \textsf{%
+Real\allowbreak.linear\allowbreak Order} instance of $\mathbb{R}$
+(classically constructed). The explicit path is shown in Section~\ref%
+{sec:tree}: \textsf{Real}~$\to$~\textsf{Real\allowbreak.linear\allowbreak
 Order}~$\to$~ \textsf{Classical\allowbreak.propDecidable}~$\to$~ \textsf{%
 Classical\allowbreak.choice}.
 \end{itemize}
@@ -346,17 +338,17 @@ Classical\allowbreak.choice}.
 \noindent A corpus-scale study of the axiom profile of $707{,}053$ Mathlib
 declarations \cite{close2026axiom} reports $23$ distinct axiom profiles
 across the library and shows that \textsf{Classical\allowbreak.choice}
-reaches about half the corpus ($50.84\,\%$).\footnote{
-The exact definition of ``axiom profile'' in  \cite{close2026axiom} is not a
-subset of the four names that  \textsf{\#print\ axioms} reports on most
-Mathlib declarations ---  of which only three are kernel primitives (\textsf{%
-propext},  \textsf{Quot\allowbreak.sound}, \textsf{Classical%
-\allowbreak.choice};  \textsf{funext} is derivable from \textsf{%
-Quot\allowbreak.sound}):  $2^{4}=16<23$, so Close's profiles must include
-further Lean  primitives (e.g.\ \textsf{Classical\allowbreak.propComplete},  
-\textsf{proof\allowbreak\_irrel\allowbreak\_heq}) or an additional 
-structural axis. The number $23$ is reproduced verbatim from that  source
-and is not used as a load-bearing claim in this paper.}
+reaches about half the corpus ($50.84\,\%$).\footnote{%
+The exact definition of ``axiom profile'' in \cite{close2026axiom} is not a
+subset of the four names that \textsf{\#print\ axioms} reports on most
+Mathlib declarations --- of which only three are kernel primitives (\textsf{%
+propext}, \textsf{Quot\allowbreak.sound}, \textsf{Classical\allowbreak.choice%
+}; \textsf{funext} is derivable from \textsf{Quot\allowbreak.sound}): $%
+2^{4}=16<23$, so Close's profiles must include further Lean primitives
+(e.g.\ \textsf{Classical\allowbreak.propComplete}, \textsf{%
+proof\allowbreak\_irrel\allowbreak\_heq}) or an additional structural axis.
+The number $23$ is reproduced verbatim from that source and is not used as a
+load-bearing claim in this paper.}
 
 \smallskip\noindent\textbf{Reading of the numbers.} Writing $N = 707{,}053$
 for the corpus size and $D = 206$ for the number of declarations that invoke 
@@ -367,7 +359,7 @@ throughout this paper are then:
 \begin{equation*}
 \text{direct-use rate} \;=\;\frac{D}{N} \;=\;\frac{206}{707{,}053}
 \;\approx\;0.0291\,\%, \qquad \text{fan-out} \;=\;\frac{rN}{D} \;=\;\frac{359%
-{,}466}{206} \;\approx\;1745, 
+{,}466}{206} \;\approx\;1745,
 \end{equation*}
 and the complement $1 - r \;=\; 49.16\,\%$. \textbf{The complement measures 
 \emph{definitional-closure non-reach}}, that is, the fraction of Mathlib
@@ -577,7 +569,7 @@ recursively on \textsf{Nat}: $\mathsf{iteratedDerivWithin}\,f\,0\,s=f$ and,
 for every $n$ of type $\mathbb{N}$, 
 \begin{equation*}
 \mathsf{iteratedDerivWithin}\,f\,(n+1)\,s \;=\;\mathsf{derivWithin}\,\bigl(%
-\mathsf{iteratedDerivWithin}\,f\,n\,s\bigr)\,s . 
+\mathsf{iteratedDerivWithin}\,f\,n\,s\bigr)\,s .
 \end{equation*}
 This is the operator that the root theorem unwinds.
 
@@ -1007,7 +999,7 @@ unique\allowbreak Diff\allowbreak On\allowbreak\_Icc} (\hyperlink{lem:uniqueIcc}
 \textsf{ContDiffOn.differentiableOn\allowbreak\_iterated\allowbreak
 Deriv\allowbreak Within} (\hyperlink{lem:diffiter}{Lem 3});
 
-\item if $F=\mathbb{R}$, apply the scalar Lagrange-remainder theorem (
+\item if $F=\mathbb{R}$, apply the scalar Lagrange-remainder theorem ( 
 \hyperlink{thm:scalar}{Thm 2}) directly. For general $F$, apply \hyperlink{thm:scalar}%
 {Thm 2} to $\Lambda\circ f$ for each continuous linear functional $\Lambda:%
 \mathsf{ContinuousLinearMap}\;\mathbb{R}\;F\;\mathbb{R}$ in a separating
@@ -1568,10 +1560,10 @@ mathlib\allowbreak \_edges.csv} \cite{mathlibgraph2026}: \medskip
 % FIX-53: use \mbox{--} to force two ASCII hyphens, and disable
 %         hyphenation of the surrounding typewriter font locally.
 
-\noindent{\ttfamily\hyphenchar\font=-1  python gen\_tree.py \allowbreak 
+\noindent{\ttfamily\hyphenchar\font=-1 python gen\_tree.py \allowbreak
 taylor\_\allowbreak mean\_\allowbreak remainder\_\allowbreak
-lagrange\_\allowbreak iteratedDeriv \allowbreak  \mbox{--}depth 5
-\allowbreak  \mbox{--}out \allowbreak  taylor\_\allowbreak mean\_\allowbreak
+lagrange\_\allowbreak iteratedDeriv \allowbreak \mbox{--}depth 5 \allowbreak %
+\mbox{--}out \allowbreak taylor\_\allowbreak mean\_\allowbreak
 remainder\_\allowbreak lagrange\_\allowbreak iteratedDeriv.tree.depth5.txt}
 
 \medskip
@@ -1592,10 +1584,10 @@ Lean~4 session against Mathlib commit \texttt{0c1d5a7e}{} and running
 
 \noindent All arithmetic in the paper is elementary; no step requires
 numerical analysis beyond the four-quantity provenance table of Section~\ref%
-{sec:introduction}. We invite the reader to substitute their own count for $D
-$ and to re-run the two tree invocations above; no load-bearing claim in the
-paper depends on the numerical value of $D$ or on the precise node budget of
-the printed excerpt.
+{sec:introduction}. We invite the reader to substitute their own count for $%
+D $ and to re-run the two tree invocations above; no load-bearing claim in
+the paper depends on the numerical value of $D$ or on the precise node
+budget of the printed excerpt.
 
 \begin{thebibliography}{99}
 \bibitem{close2026axiom} Larsen James Close. \newblock
