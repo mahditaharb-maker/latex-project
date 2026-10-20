@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "The Dependency Ordered Formal Exposition of PDE.synctex"
+title: "Pure O Sequences in Codimension Three 05E40"
 message: "If you use this work, please cite it as below."
 type: software
 authors:
@@ -10,5 +10,5 @@ authors:
 license: MIT
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.23382214
+    value: 10.5281/zenodo.23484636
     description: "Zenodo DOI for this work"

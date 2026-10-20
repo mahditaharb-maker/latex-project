@@ -1,14 +1,16 @@
 cd /d E:\archives\Processings\Repositors\GitHubSync\repos\latex-project
 
+Fcsjw8UCivTDgn6cl37PdaVnEqYmmDWR9uPfMiGJqweMW4Qg7HzNbEXwaosr
+
 rem --- Sandbox test that wipes state on success ---
-set ZENODO_TOKEN=pCo1sQIegUb43DaRMMNf04kMo67aVVTc81H2fHvMZvSlAAVbox8SissIClFm
+set ZENODO_TOKEN=Fcsjw8UCivTDgn6cl37PdaVnEqYmmDWR9uPfMiGJqweMW4Qg7HzNbEXwaosr
 D:\Python38\python.exe zenodo_doi.py --sandbox --dry-run
 zenodo_doi.bat --sandbox --reset-on-success
 
 rem --- Production: state file is already gone from the sandbox run ---
-set ZENODO_TOKEN=pCo1sQIegUb43DaRMMNf04kMo67aVVTc81H2fHvMZvSlAAVbox8SissIClFm
+set ZENODO_TOKEN=Fcsjw8UCivTDgn6cl37PdaVnEqYmmDWR9uPfMiGJqweMW4Qg7HzNbEXwaosr
 zenodo_doi.bat
 
 
 
-MhEwqaOgdUfG9LChOaVtS8zGXrazdeeA1nBAYaBnCtgLzwpcrOrUfgCg8epU
+VSOKt5r1DN9MjyssiCbRSg4vVZZA7haqFL8IIef5Y0VumYHtjjqLdwX8yWwC

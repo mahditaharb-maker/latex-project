@@ -1,0 +1,2545 @@
+% =============================================================
+% Pure O-Sequences in Codimension Three
+% A Dependency-Ordered Formal Exposition
+% =============================================================
+
+
+\documentclass[11pt,reqno]{amsart}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsfonts}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{titlesec,amsmath,amssymb,amsthm,ragged2e,float}
+\usepackage{array}
+\usepackage{graphicx,setspace}
+\usepackage[margin=0.5in]{geometry}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{xcolor}
+\usepackage{fancyvrb}
+
+\setcounter{MaxMatrixCols}{10}
+%TCIDATA{OutputFilter=Latex.dll}
+%TCIDATA{Version=5.50.0.2960}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{BibliographyScheme=Manual}
+%TCIDATA{LastRevised=Monday, October 19, 2026 22:01:17}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+
+\IfFileExists{tcilatex.tex}{\input{tcilatex}}{}
+\DeclareUnicodeCharacter{03B9}{\ensuremath{\iota}}
+\DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
+\DeclareUnicodeCharacter{2203}{\ensuremath{\exists}}
+\DeclareUnicodeCharacter{2218}{\ensuremath{\circ}}
+\DeclareUnicodeCharacter{2264}{\ensuremath{\leq}}
+\DeclareUnicodeCharacter{2265}{\ensuremath{\geq}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\to}}
+\DeclareUnicodeCharacter{21A6}{\ensuremath{\mapsto}}
+\DeclareUnicodeCharacter{2260}{\ensuremath{\neq}}
+\DeclareUnicodeCharacter{00D7}{\ensuremath{\times}}
+\DeclareUnicodeCharacter{2115}{\ensuremath{\mathbb{N}}}
+\DeclareUnicodeCharacter{211D}{\ensuremath{\mathbb{R}}}
+\DeclareUnicodeCharacter{27E8}{\ensuremath{\langle}}
+\DeclareUnicodeCharacter{27E9}{\ensuremath{\rangle}}
+\providecommand{\R}{\mathbb{R}}
+\providecommand{\N}{\mathbb{N}}
+\providecommand{\Z}{\mathbb{Z}}
+\allowdisplaybreaks
+\hbadness=10000
+\vbadness=10000
+\vfuzz=5pt
+\hfuzz=30pt
+\fvset{frame=lines,framerule=0.7pt,rulecolor=\color{blue!60!black},
+	framesep=5pt,fontsize=\scriptsize,xleftmargin=6pt,xrightmargin=6pt}
+\RecustomVerbatimEnvironment{verbatim}{Verbatim}{}
+\DefineVerbatimEnvironment{verbatimbox}{Verbatim}{
+	frame=single,framerule=0.7pt,rulecolor=\color{blue!60!black},
+	framesep=5pt,fontsize=\scriptsize,xleftmargin=6pt,xrightmargin=6pt}
+\subjclass{\textbf{2020 Mathematics Subject Classification.}\,
+	Primary 05E40, 13D40, 05A20;
+	Secondary 06A07, 05A17, 13F55.}
+\makeatletter
+\def\@setsubjclass{\ifx\@subjclass\@empty\else\@subjclass\fi}
+\makeatother
+\keywords{Hilbert functions, pure $O$-sequences, log-concavity, unimodality,
+	monomial ideals, order ideals, codimension three, socle degree, type,
+	Macaulay's theorem}
+\renewcommand{\abstractname}{\fontsize{16}{18}\selectfont Abstract}
+\newcommand{\abstractfont}{\normalfont\fontsize{11}{13.2}\selectfont}
+\newcommand{\abstractheadingsep}{\vspace{1em}}
+\makeatletter
+\renewenvironment{abstract}{\ifx\maketitle\relax
+	\ClassWarning{\@classname}{Abstract should precede
+		\protect\maketitle\space in AMS document classes; reported}\fi
+	\global\setbox\abstractbox=\vtop \bgroup
+	\abstractfont
+	{\centering\abstractname\par}\abstractheadingsep
+	\list{}{\labelwidth\z@\leftmargin3pc \rightmargin\leftmargin
+		\listparindent\normalparindent \itemindent\z@
+		\parsep\z@ \@plus\p@\let\fullwidthdisplay\relax}\item\relax
+}{  \endlist\egroup
+	\ifx\@setabstract\relax \@setabstracta \fi}
+\makeatother
+\setcounter{secnumdepth}{3}
+\newcommand{\SecAbove}{2.6ex plus 0.6ex minus 0.15ex}
+\newcommand{\SecBelow}{2.0ex plus 0.6ex minus 0.15ex}
+\newcommand{\SubsecAbove}{2.0ex plus 0.5ex minus 0.15ex}
+\newcommand{\SubsecBelow}{1.2ex plus 0.4ex minus 0.15ex}
+\newcommand{\SubsubsecAbove}{2.0ex plus 0.5ex minus 0.15ex}
+\newcommand{\SubsubsecBelow}{1.2ex plus 0.4ex minus 0.15ex}
+\makeatletter
+\titleformat{\section}{\normalfont\fontsize{16}{18}\selectfont\bfseries}
+{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalfont\fontsize{14}{16}\selectfont\bfseries}
+{\thesubsection}{0.5em}{}
+\titleformat{\subsubsection}{\normalfont\fontsize{12}{14}\selectfont\bfseries}
+{\thesubsubsection}{0.5em}{}
+\titlespacing*{\section}{\z@}{\SecAbove}{\SecBelow}
+\titlespacing*{\subsection}{\z@}{\SubsecAbove}{\SubsecBelow}
+\titlespacing*{\subsubsection}{\z@}{\SubsubsecAbove}{\SubsubsecBelow}
+\makeatother
+\setlength{\arraycolsep}{3pt}
+\renewcommand{\arraystretch}{1.3}
+\newcolumntype{r}{>{\centering\arraybackslash\scriptsize$}m{3cm}<{$}}
+\newcolumntype{l}{>{\raggedright\arraybackslash\scriptsize$}m{12cm}<{$}}
+\newcolumntype{c}{>{\centering\arraybackslash\scriptsize$}m{2cm}<{$}}
+\newcounter{axctr}\newcounter{posctr}\newcounter{defctr}
+\newcounter{lemctr}\newcounter{thmctr}\newcounter{propctr}\newcounter{corctr}
+\renewcommand{\theaxctr}{\arabic{axctr}}
+\renewcommand{\theposctr}{\arabic{posctr}}
+\renewcommand{\thedefctr}{\arabic{defctr}}
+\renewcommand{\thelemctr}{\arabic{lemctr}}
+\renewcommand{\thethmctr}{\arabic{thmctr}}
+\renewcommand{\thepropctr}{\arabic{propctr}}
+\renewcommand{\thecorctr}{\arabic{corctr}}
+\newcommand{\swpax}[2]{\refstepcounter{axctr}\hypertarget{#1}{\mbox{\textbf{Ax\,\theaxctr}}}\label{#2}}
+\newcommand{\swppos}[2]{\refstepcounter{posctr}\hypertarget{#1}{\mbox{\textbf{Pos\,\theposctr}}}\label{#2}}
+\newcommand{\swpdef}[2]{\refstepcounter{defctr}\hypertarget{#1}{\mbox{\textbf{Def\,\thedefctr}}}\label{#2}}
+\newcommand{\swplem}[2]{\refstepcounter{lemctr}\hypertarget{#1}{\mbox{\textbf{Lem\,\thelemctr}}}\label{#2}}
+\newcommand{\swpthm}[2]{\refstepcounter{thmctr}\hypertarget{#1}{\mbox{\textbf{Thm\,\thethmctr}}}\label{#2}}
+\newcommand{\tagged}[2]{\hypertarget{#1}{\mbox{\textbf{#2}}}}
+\newcommand{\refto}[2]{\hyperlink{#1}{#2}}
+\newcommand{\mcite}[1]{\text{\cite{#1}}}
+\makeatletter
+\let\orig@maketitle\maketitle
+\renewcommand{\maketitle}{\begingroup
+	\let\MakeUppercase\@firstofone
+	\let\uppercase\@firstofone
+	\orig@maketitle
+	\endgroup}
+\makeatother
+\makeatletter
+\newlength{\titleToAuthorSkip}
+\newlength{\authorToAbstractSkip}
+\setlength{\titleToAuthorSkip}{10pt plus 4pt minus 2pt}
+\setlength{\authorToAbstractSkip}{20pt plus 6pt minus 3pt}
+\renewcommand{\@maketitle}{\normalfont\normalsize
+	\let\@makefnmark\relax
+	\let\@thefnmark\relax
+	\ifx\@empty\@subjclass\else
+	\@footnotetext{\@setsubjclass}\fi
+	\ifx\@empty\@keywords\else
+	\@footnotetext{\@setkeywords}\fi
+	\ifx\@empty\@thanks\else
+	\@footnotetext{\@setthanks}\fi
+	\@settitle
+	\ifx\@empty\@authors\else
+	\vspace{\titleToAuthorSkip}\@setauthors\fi
+	\ifx\@empty\@date\else
+	\vspace{6pt}\@setdate\fi
+	\ifx\@empty\@abstract\else
+	\vspace{\authorToAbstractSkip}\fi
+	\@setabstract}
+\makeatother
+\pagestyle{plain}
+\renewcommand{\seriesdefault}{\bfdefault}
+\boldmath
+
+\begin{document}
+\title{ \bfseries{\Large \emph{Pure $O$-Sequences in Codimension Three.}}\\
+[5pt] \emph{A Dependency-Ordered Formal Exposition} }
+\author{ 
+\bfseries{\large \hspace{1.5in} Brahimi Mahdi Tahar\newline
+			\text{ \  } \newline
+			\text{ \  } \hspace{0.5in}\text{ \  } University of Mohamed Boudiaf of M'sila, Algeria\newline
+			\text{ \  } \newline
+			\href{mailto:mahditahar.brahimi@univ-msila.dz}{mahditahar.brahimi@univ-msila.dz}}
+}
+\maketitle
+
+\begin{abstract}
+\bfseries
+\setstretch{1.3}{\small This document is a step-indexed, dependency-ordered
+presentation of eight problems on \emph{pure $O$-sequences}, following
+\cite{stanley1978, bmmnz2012, zanello2024}. Every result appears only after
+all results it depends on. Entries are split into postulates (unproved
+classical statements used inside proofs) and axioms of the ambient
+set-theoretic foundation (\textsf{ZF} with dependent choice where noted).
+The document covers the prerequisite layer (monomial combinatorics, order
+ideals, principal $O$-sequences, log-concavity and unimodality, Macaulay's
+two-variable theorem) and the eight-problem layer built on it: an explicit
+codimension-$3$ example; the type-$1$ log-concavity theorem; first-half
+log-concavity in codimension $3$; unimodality and log-concavity of type-$2$
+sequences in codimension $3$ --- the main result, which (subject to the
+formal verification reported in §\ref{sec:verification}) resolves the
+principal remaining open case identified by Zanello; eventual
+non-log-concavity for every codimension $r\ge3$ and every type $t\ge5$; and
+the existence of the least such threshold. The codimension-$r\ge5$ type-$2$
+unimodality question (P6) is stated but not resolved. Each entry is
+annotated with the choice strength of its proof: \textsf{ZF},
+\textsf{ZF+DC}, or \textsf{ZFC}.}
+\end{abstract}
+
+\noindent \text{ \ } \newline
+
+\begin{center}
+\begin{minipage}[c]{0.50\linewidth}
+		\vspace{0pt}
+		\begin{Verbatim}[frame=single,framerule=0.7pt,
+		rulecolor=\color{blue!60!black},framesep=8pt,
+		fontsize=\fontsize{8}{9}\selectfont,
+		formatcom=\color{red}\bfseries,
+		xleftmargin=6pt,xrightmargin=6pt]
+		Root theorems (nothing depends on them):
+		P1   P2   P3   P4   P5   P7   P8
+		(P6 is stated but open)
+
+		Postulates (external inputs):
+		pos:conv-LC
+		pos:Macaulay2
+		\end{Verbatim}
+	\end{minipage}\hfill 
+\begin{minipage}[c]{0.43\linewidth}
+		\vspace{0pt}
+		\begin{Verbatim}[frame=single,framerule=0.7pt,
+		rulecolor=\color{blue!60!black},framesep=8pt,
+		fontsize=\fontsize{8}{9}\selectfont,
+		formatcom=\color{red}\bfseries,
+		xleftmargin=6pt,xrightmargin=6pt]
+		Deepest chains (by depth):
+		L0 | P5
+		L1 |   delta2-dich
+		L2 |     Lem:delta2-formula
+		L1 |   LU-dich
+		L2 |     delta2-dich
+		L1 |   Lem:LC-core-alg
+
+		L0 | P2
+		L1 |   principal-OSeq
+		L2 |     pos:conv-LC
+		L1 |   principal-pos
+
+		L0 | P7
+		L1 |   exists-non-lc-r3
+		L1 |   embed-preserves
+		\end{Verbatim}
+	\end{minipage}
+
+\medskip \noindent \text{ \ } \\[0pt]
+{\small \refstepcounter{figure}%
+\textcolor{red}{\textbf{Figure \thefigure.}\enspace
+			Summary of root theorems, postulates, and the deepest dependency
+			chains.}} \label{fig:summary}
+\end{center}
+
+\newpage \pagestyle{plain} \pagenumbering{arabic} \setstretch{1.3}
+
+% ============================================================
+
+\section{Introduction}
+
+% ============================================================
+\noindent The document is organised into six parts: \emph{Axioms}, \emph{%
+Postulates}, \emph{Definitions}, \emph{Statements} (Lemmas, Theorems), \emph{%
+Proofs}, and \emph{Scripts}. Following the reverse-mathematics convention of 
+\cite{simpson2009}, entries are split into two primitive layers: \emph{%
+axioms of the ambient foundation} and \emph{postulates} (unproved classical
+statements admitted inside proofs). Every entry in a later part may depend
+only on earlier entries, and no entry may depend on anything outside the
+union of axioms and postulates. Lemmas and Theorems form a single dependency
+layer: an entry may depend on an earlier Lemma or Theorem, so long as the
+global order is respected.
+
+\medskip \noindent The eight problems concern pure $O$-sequences $\Gamma
+\subset \N^r$, i.e.\ finite order ideals of monomials whose maximal elements
+all have a common total degree (the \emph{socle degree} $e$); the \emph{type}
+is the number of maximal elements. The pure $O$-sequence is $h_\Gamma(d) =
+\#\{m\in\Gamma : |m|=d\}$. Interest in these sequences originates with
+Stanley's work on Hilbert functions of monomial level algebras \cite%
+{stanley1978}, was formalised in the Boij--Migliore--
+Mir\'o-Roig--Nagel--Zanello memoir \cite{bmmnz2012}, and the remaining open
+cases were reviewed by Zanello \cite{zanello2024}. Problem P5 ---
+log-concavity of pure $O$-sequences in codimension $3$ and type $2$ --- was
+the principal remaining open case, and is resolved here (subject to the
+verification statement in  \ref{sec:verification}).
+
+\medskip \noindent Choice-strength tags record the strength needed to make
+the given proof go through; they are upper bounds on the logical strength of
+each entry and are not claimed to be tight.
+
+% ============================================================
+
+\section{Axioms}
+
+% ============================================================
+\noindent We work in standard first-order logic with the axioms of \textsf{ZF%
+}; where noted, the Axiom of Dependent Choice is available. Both are
+primitive structure and are not proved below.
+
+\noindent \text{ \ } \newline
+
+\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{axctr}\hypertarget{ax:DC}{\mbox{\textbf{Ax\,\theaxctr}}}%
+\label{axi:DC} & \mathsf{ax{:}DC}:\forall (X:\mathsf{Set}),\;\forall (R:X\to
+X\to\mathsf{Prop}),\;(\forall (x:X),\;\exists
+(y:X),\;R(x,y))\Rightarrow\exists (f:\N\to X),\;\forall (n:\N%
+),\;R(f(n),f(n+1)) & \mathsf{Dependent}\allowbreak \mathsf{Choice} & \mathsf{%
+ZFC} \\ \hline
+\end{array}%
+$
+
+\medskip
+
+% ============================================================
+
+\section{Postulates}
+
+% ============================================================
+\noindent Unproved classical statements admitted inside proofs (postulates).
+Both are standard results whose derivations from the axioms are classical;
+they are cited here rather than re-proved.
+
+\noindent \text{ \ } \newline
+
+\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{posctr}\hypertarget{pos:conv-LC}{\mbox{\textbf{Pos\,%
+\theposctr}}}\label{posi:conv-LC} & \mathsf{convLC}:\forall (a:\N\to\N%
+),\;\forall (b:\N\to\N),\;\mathsf{LC}(a)\wedge\mathsf{LC}(b)\Rightarrow%
+\mathsf{LC}(a*b) & \mathsf{Convolution}\allowbreak \mathsf{of}\allowbreak 
+\mathsf{Log-Concave} & \mathsf{ZF+DC} \\ \hline
+\refstepcounter{posctr}\hypertarget{pos:Macaulay2}{\mbox{\textbf{Pos\,%
+\theposctr}}}\label{posi:Macaulay2} & \mathsf{Macaulay2}:\forall (X:\N\to%
+\mathsf{Finset}(\N)),\;(\forall i,\;X_{i}\subseteq\{0,\dots,i\}\wedge\mathsf{%
+down}(X))\Rightarrow|X_{i+1}|\le|X_{i}|\vee|X_{i}|=i+1 & \mathsf{Macaulay}%
+\allowbreak \mathsf{2}\text{-}\mathsf{variable} & \mathsf{ZF} \\ \hline
+\end{array}%
+$
+
+\medskip \noindent\textbf{Provenance.} The convolution theorem for
+log-concave sequences is due to Karlin \cite{karlin1968}; a modern proof
+appears in Liggett \cite{liggett1997}, Theorem~2.3. Macaulay's theorem in
+two variables is stated and proved in Macaulay \cite{macaulay1927}; see
+Bruns--Herzog \cite{brunsherzog1993}, Theorem~4.2.10 for the modern
+statement. Both are admitted here to keep the exposition focused on the
+eight-problem layer.
+
+\medskip
+
+% ============================================================
+
+\section{Definitions}
+
+% ============================================================
+\noindent \text{ \ } \newline
+
+\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{defctr}\hypertarget{def:Monomial}{\mbox{\textbf{Def\,%
+\thedefctr}}}\label{defi:Monomial} & \mathsf{Def{:}Monomial}:\mathbf{M}^{r}:=%
+\N^{r} & \mathsf{Monomial}\allowbreak \mathsf{in}\allowbreak r\;\mathsf{vars}
+& \mathsf{ZF} \\ \hline
+\refstepcounter{defctr}\hypertarget{def:totalDeg}{\mbox{\textbf{Def\,%
+\thedefctr}}}\label{defi:totalDeg} & \mathsf{Def{:}deg}:\forall (m:\mathbf{M}%
+^{r}),\;|m|=\sum_{i=1}^{r}m_{i} & \mathsf{Total}\allowbreak \mathsf{Degree}
+& \mathsf{ZF} \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{defctr}\hypertarget{def:OrderIdeal}{\mbox{\textbf{Def\,%
+\thedefctr}}}\label{defi:OrderIdeal} & \mathsf{Def{:}Ideal}:\Gamma\subseteq%
+\mathbf{M}^{r}\wedge(\forall n\in\Gamma,\;\forall m\le n,\;m\in\Gamma) & 
+\mathsf{Order}\allowbreak \mathsf{Ideal} & \mathsf{ZF} \\ \hline
+\refstepcounter{defctr}\hypertarget{def:divisorsFinset}{\mbox{\textbf{Def\,%
+\thedefctr}}}\label{defi:divisorsFinset} & \mathsf{Def{:}divs}:\forall (g:%
+\mathbf{M}^{r}),\;\mathsf{divs}(g)=\{m:\mathbf{M}^{r}\mid m\le g\} & \mathsf{%
+Divisors} & \mathsf{ZF} \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{defctr}\hypertarget{def:generatedOrderIdeal}{%
+\mbox{\textbf{Def\,\thedefctr}}}\label{defi:generatedOrderIdeal} & \mathsf{%
+Def{:}genIdeal}:\forall (G:\mathsf{Finset}(\mathbf{M}^{r})),\;\Gamma(G)=%
+\bigcup_{g\in G}\mathsf{divs}(g) & \mathsf{Generated}\allowbreak \mathsf{%
+Ideal} & \mathsf{ZF} \\ \hline
+\refstepcounter{defctr}\hypertarget{def:IsMaximalIn}{\mbox{\textbf{Def\,%
+\thedefctr}}}\label{defi:IsMaximalIn} & \mathsf{Def{:}max}:\forall (m:%
+\mathbf{M}^{r}),\;\mathsf{IsMax}(m)\Leftrightarrow m\in\Gamma\wedge\forall
+n\in\Gamma,\;m\le n\Rightarrow n=m & \mathsf{Maximal}\allowbreak \mathsf{%
+Element} & \mathsf{ZF} \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{defctr}\hypertarget{def:maximalMonomials}{%
+\mbox{\textbf{Def\,\thedefctr}}}\label{defi:maximalMonomials} & \mathsf{Def{:%
+}maxSet}:\mathsf{Max}(\Gamma)=\{m\in\Gamma\mid\mathsf{IsMax}(m)\} & \mathsf{%
+Maximal}\allowbreak \mathsf{Monomials} & \mathsf{ZF} \\ \hline
+\refstepcounter{defctr}\hypertarget{def:IsPure}{\mbox{\textbf{Def\,%
+\thedefctr}}}\label{defi:IsPure} & \mathsf{Def{:}pure}:\forall (m,n:\mathbf{M%
+}^{r}),\;m,n\in\mathsf{Max}(\Gamma)\Rightarrow|m|=|n| & \mathsf{Purity} & 
+\mathsf{ZF} \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{defctr}\hypertarget{def:PureOrderIdeal}{\mbox{\textbf{Def\,%
+\thedefctr}}}\label{defi:PureOrderIdeal} & \mathsf{Def{:}POI}:(\Gamma,%
+\mathsf{pure},\mathsf{Max}(\Gamma)\ne\emptyset) & \mathsf{Pure}\allowbreak 
+\mathsf{Order}\allowbreak \mathsf{Ideal} & \mathsf{ZF} \\ \hline
+\refstepcounter{defctr}\hypertarget{def:typePO}{\mbox{\textbf{Def\,%
+\thedefctr}}}\label{defi:typePO} & \mathsf{Def{:}type}:\mathsf{type}(P)=|%
+\mathsf{Max}(\Gamma)| & \mathsf{Type} & \mathsf{ZF} \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{defctr}\hypertarget{def:socleDegree}{\mbox{\textbf{Def\,%
+\thedefctr}}}\label{defi:socleDegree} & \mathsf{Def{:}socle}:\mathsf{socle}%
+(P)=|m_{0}|\wedge m_{0}\in\mathsf{Max}(\Gamma) & \mathsf{Socle}\allowbreak 
+\mathsf{Degree} & \mathsf{ZF+DC} \\ \hline
+\refstepcounter{defctr}\hypertarget{def:pureOSequence}{\mbox{\textbf{Def\,%
+\thedefctr}}}\label{defi:pureOSequence} & \mathsf{Def{:}OSeq}:\forall (d:\N%
+),\;h_{\Gamma}(d)=|\{m\in\Gamma:|m|=d\}| & \mathsf{Pure}\allowbreak O\text{-}%
+\mathsf{Sequence} & \mathsf{ZF} \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{defctr}\hypertarget{def:IsUnimodal}{\mbox{\textbf{Def\,%
+\thedefctr}}}\label{defi:IsUnimodal} & \mathsf{Def{:}unim}:\exists j\le
+e,\;(\forall i<j,\;h_{i}\le h_{i+1})\wedge(\forall i\ge j,\;i<e\Rightarrow
+h_{i+1}\le h_{i}) & \mathsf{Unimodality} & \mathsf{ZF} \\ \hline
+\refstepcounter{defctr}\hypertarget{def:IsLogConcaveUpTo}{%
+\mbox{\textbf{Def\,\thedefctr}}}\label{defi:IsLogConcaveUpTo} & \mathsf{Def{:%
+}logc}:\forall i\in(0,e),\;h_{i-1}\cdot h_{i+1}\le h_{i}^{2} & \mathsf{Log}%
+\text{-}\mathsf{Concavity} & \mathsf{ZF} \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{defctr}\hypertarget{def:ExistsNonLogConcave}{%
+\mbox{\textbf{Def\,\thedefctr}}}\label{defi:ExistsNonLogConcave} & \mathsf{%
+Def{:}nonLC}:\exists P:\mathsf{PureOrderIdeal}_{r},\;\mathsf{type}%
+(P)=t\wedge\neg\mathsf{LC}(\mathsf{socle}(P),h_{P}) & \mathsf{Exists}%
+\allowbreak \mathsf{Non}\text{-}\mathsf{LC}\allowbreak \mathsf{Seq.} & 
+\mathsf{ZF+DC} \\ \hline
+\end{array}%
+$
+
+\medskip
+
+% ============================================================
+
+\section{Statements}
+
+% ============================================================
+
+\subsection{Lemmas}
+
+\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{lemctr}\hypertarget{lem:LC-core-alg}{\mbox{\textbf{Lem\,%
+\thelemctr}}}\label{lemi:LC-core-alg} & \mathsf{LCcore}:\forall (x,y,z:\Z%
+),\;x\ge0\wedge z\le2\wedge(z=1\Rightarrow y^{2}\ge x)\wedge(z=2\Rightarrow
+y^{2}\ge2x)\Rightarrow y^{2}\ge xz & \mathsf{LC}\text{-}\mathsf{Core}%
+\allowbreak \mathsf{Inequality} & \mathsf{ZF} \\ \hline
+\refstepcounter{lemctr}\hypertarget{lem:delta2-formula}{\mbox{\textbf{Lem\,%
+\thelemctr}}}\label{lemi:delta2-formula} & \mathsf{delta2Formula}:\forall (m:%
+\N^{3}),\;\forall (t:\N),\;t>0\Rightarrow\Delta^{2}h_{m}(t)=\mathbf{1}_{t\le
+m_{0}}+\mathbf{1}_{t\le m_{1}}+\mathbf{1}_{t\le m_{2}}-\mathbf{1}_{t\le
+m_{0}+m_{1}+1}-\mathbf{1}_{t\le m_{1}+m_{2}+1}-\mathbf{1}_{t\le
+m_{0}+m_{2}+1}+\mathbf{1}_{t\le|m|+2} & \mathsf{Second}\text{-}\mathsf{%
+Difference}\allowbreak \mathsf{Formula} & \mathsf{ZF} \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{lemctr}\hypertarget{lem:principal-OSeq}{\mbox{\textbf{Lem\,%
+\thelemctr}}}\label{lemi:principal-OSeq} & \mathsf{principalOSeq}:\forall (g:%
+\mathbf{M}^{r}),\;\mathsf{LC}(|g|,h_{g})\wedge(\forall d\le|g|,\;h_{g}(d)>0)
+& \mathsf{Principal}\allowbreak O\text{-}\mathsf{Sequence} & \mathsf{ZF+DC}
+\\ \hline
+\refstepcounter{lemctr}\hypertarget{lem:principal-pos}{\mbox{\textbf{Lem\,%
+\thelemctr}}}\label{lemi:principal-pos} & \mathsf{principalPos}:\forall (g:%
+\mathbf{M}^{r}),\;\forall (d:\N),\;d\le|g|\Rightarrow\exists (m\le g),\;|m|=d
+& \mathsf{Principal}\allowbreak \mathsf{Positivity} & \mathsf{ZF} \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{lemctr}\hypertarget{lem:two-max-decomp}{\mbox{\textbf{Lem\,%
+\thelemctr}}}\label{lemi:two-max-decomp} & \mathsf{twoMaxDecomp}:\forall (P:%
+\mathsf{PureOrderIdeal}_{3}),\;\mathsf{type}(P)=2\Rightarrow\exists
+(m_{1},m_{2}:\mathbf{M}^{3}),\;P.\Gamma=\mathsf{divs}(m_{1})\cup\mathsf{divs}%
+(m_{2}) & \mathsf{Two}\text{-}\mathsf{Maximal}\allowbreak \mathsf{%
+Decomposition} & \mathsf{ZF} \\ \hline
+\refstepcounter{lemctr}\hypertarget{lem:shift-reduce}{\mbox{\textbf{Lem\,%
+\thelemctr}}}\label{lemi:shift-reduce} & \mathsf{shiftReduce}:\forall
+(m_{1},m_{2}:\mathbf{M}^{3}),\;m_{2}(x)>m_{1}(x)\wedge(\forall y\ne
+x,\;m_{2}(y)\le m_{1}(y))\Rightarrow\forall
+d,\;h_{\Gamma}(d)=h_{m_{1}}(d)+h_{m_{1}^{\prime}}(d-c) & \mathsf{Shift}%
+\allowbreak \mathsf{Reduction} & \mathsf{ZF} \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{lemctr}\hypertarget{lem:delta2-dich}{\mbox{\textbf{Lem\,%
+\thelemctr}}}\label{lemi:delta2-dich} & \mathsf{delta2Dich}:\forall (g:%
+\mathbf{M}^{r}),\;\forall (t:\N),\;t>0\Rightarrow\Delta^{2}h_{g}(t)\le1%
+\wedge(\Delta^{2}h_{g}(t)=1\Rightarrow\mathsf{L}(t)\vee\mathsf{U}(t)) & 
+\mathsf{Second}\text{-}\mathsf{Difference}\allowbreak \mathsf{Dichotomy} & 
+\mathsf{ZF+DC} \\ \hline
+\refstepcounter{lemctr}\hypertarget{lem:LU-dich}{\mbox{\textbf{Lem\,%
+\thelemctr}}}\label{lemi:LU-dich} & \mathsf{LUDich}:\forall (m_{1},m_{2}:%
+\mathbf{M}^{3}),\;\mathsf{maxChoice}\Rightarrow\Delta^{2}H(d)\le2 & \mathsf{%
+Sum}\text{-}\mathsf{Second}\text{-}\mathsf{Difference} & \mathsf{ZF+DC} \\ 
+\hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{lemctr}\hypertarget{lem:exists-non-lc-r3}{%
+\mbox{\textbf{Lem\,\thelemctr}}}\label{lemi:exists-non-lc-r3} & \mathsf{%
+existsNonLC}_{\mathrm{r3}}:\forall (t\ge5),\;\exists (P:\mathsf{%
+PureOrderIdeal}_{3}),\;\mathsf{type}(P)=t\wedge\neg\mathsf{LC}(\mathsf{socle}%
+(P),h_{P}) & \mathsf{Non}\text{-}\mathsf{LC}\allowbreak \mathsf{Construction}%
+_{3} & \mathsf{ZF+DC} \\ \hline
+\refstepcounter{lemctr}\hypertarget{lem:embed-preserves}{\mbox{\textbf{Lem\,%
+\thelemctr}}}\label{lemi:embed-preserves} & \mathsf{embedPres}:\forall
+(r\ge3),\;\forall (t\ge5),\;\exists (P:\mathsf{PureOrderIdeal}_{r}),\;%
+\mathsf{type}(P)=t\wedge\neg\mathsf{LC}(\mathsf{socle}(P),h_{P}) & \mathsf{%
+Embedding}\allowbreak \mathsf{Preserves}\allowbreak \mathsf{Non}\text{-}%
+\mathsf{LC} & \mathsf{ZF+DC} \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{lemctr}\hypertarget{lem:least-threshold}{\mbox{\textbf{Lem\,%
+\thelemctr}}}\label{lemi:least-threshold} & \mathsf{leastThreshold}:\forall
+(r\ge3),\;\exists (t_{0}:\N),\;\mathsf{IsLeast}(t_{0},\{t\mid\mathsf{%
+existsNonLC}(r,t)\}) & \mathsf{Least}\allowbreak \mathsf{Threshold} & 
+\mathsf{ZF} \\ \hline
+\end{array}%
+$
+
+\medskip
+
+\subsection{Theorems}
+
+\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{thmctr}\hypertarget{thm:P1}{\mbox{\textbf{Thm\,\thethmctr}}}%
+\label{thmi:P1} & \mathsf{P1}:h_{\Gamma_{1}}(0)=1\wedge
+h_{\Gamma_{1}}(1)=3\wedge h_{\Gamma_{1}}(2)=4\wedge h_{\Gamma_{1}}(3)=2 & 
+\mathsf{Explicit}\allowbreak \mathsf{Example} & \mathsf{ZF} \\ \hline
+\refstepcounter{thmctr}\hypertarget{thm:P2}{\mbox{\textbf{Thm\,\thethmctr}}}%
+\label{thmi:P2} & \mathsf{P2}:\forall (r:\N),\;\forall (P:\mathsf{%
+PureOrderIdeal}_{r}),\;\mathsf{type}(P)=1\Rightarrow\mathsf{LC}(\mathsf{socle%
+}(P),h_{P})\wedge\mathsf{UM}(\mathsf{socle}(P),h_{P}) & \mathsf{Type}\text{-}%
+1\;\mathsf{Log}\text{-}\mathsf{Concavity} & \mathsf{ZF+DC} \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{thmctr}\hypertarget{thm:P3}{\mbox{\textbf{Thm\,\thethmctr}}}%
+\label{thmi:P3} & \mathsf{P3}:\forall (P:\mathsf{PureOrderIdeal}%
+_{3}),\;\forall (i:\N),\;0<i\wedge i\le\mathsf{socle}(P)/2\Rightarrow
+h_{P}(i-1)\cdot h_{P}(i+1)\le h_{P}(i)^{2} & \mathsf{First}\text{-}\mathsf{%
+Half}\allowbreak \mathsf{Log}\text{-}\mathsf{Concavity} & \mathsf{ZF+DC} \\ 
+\hline
+\refstepcounter{thmctr}\hypertarget{thm:P4}{\mbox{\textbf{Thm\,\thethmctr}}}%
+\label{thmi:P4} & \mathsf{P4}:\forall (P:\mathsf{PureOrderIdeal}_{3}),\;%
+\mathsf{type}(P)=2\Rightarrow\mathsf{UM}(\mathsf{socle}(P),h_{P}) & \mathsf{%
+Type}\text{-}2\allowbreak \mathsf{Unimodality} & \mathsf{ZF+DC} \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{thmctr}\hypertarget{thm:P5}{\mbox{\textbf{Thm\,\thethmctr}}}%
+\label{thmi:P5} & \mathsf{P5}:\forall (P:\mathsf{PureOrderIdeal}_{3}),\;%
+\mathsf{type}(P)=2\Rightarrow\mathsf{LC}(\mathsf{socle}(P),h_{P}) & \mathsf{%
+Main}\allowbreak \mathsf{Theorem} & \mathsf{ZF+DC} \\ \hline
+\refstepcounter{thmctr}\hypertarget{thm:P6}{\mbox{\textbf{Thm\,\thethmctr}}}%
+\label{thmi:P6} & \mathsf{P6}:\forall (r\ge5),\;\forall (P:\mathsf{%
+PureOrderIdeal}_{r}),\;\mathsf{type}(P)=2\Rightarrow\mathsf{UM}(\mathsf{socle%
+}(P),h_{P}) & \mathsf{Open}\allowbreak \mathsf{(codim}\ge5\mathsf{)} & 
+\mathsf{open} \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|c|l|r|c|}
+\hline
+\refstepcounter{thmctr}\hypertarget{thm:P7}{\mbox{\textbf{Thm\,\thethmctr}}}%
+\label{thmi:P7} & \mathsf{P7}:\forall (r\ge3),\;\exists (T\ge1),\;\forall
+(t\ge T),\;\mathsf{existsNonLC}(r,t) & \mathsf{Eventual}\allowbreak \mathsf{%
+Non}\text{-}\mathsf{LC} & \mathsf{ZF+DC} \\ \hline
+\refstepcounter{thmctr}\hypertarget{thm:P8}{\mbox{\textbf{Thm\,\thethmctr}}}%
+\label{thmi:P8} & \mathsf{P8}:\forall (r\ge3),\;\exists (t_{0}:\N),\;\mathsf{%
+IsLeast}(t_{0},\{t\mid\mathsf{existsNonLC}(r,t)\}) & \mathsf{Least}%
+\allowbreak \mathsf{Threshold} & \mathsf{ZF+DC} \\ \hline
+\end{array}%
+$
+
+\medskip
+
+% ============================================================
+
+\section{Proofs}
+
+% ============================================================
+\noindent We give proofs of every Lemma and every Theorem in the Statements
+section, in the same order, except for Theorem~P6, which is open (see the
+last subsection for the reason).
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Lemma \protect\ref{lemi:LC-core-alg} (\textsf{LCcore})}
+
+% ------------------------------------------------------------
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & x,y,z\in\Z,\;x\ge0,\;z\le2 & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+2 & z\le0\vee z=1\vee z=2 & \mathsf{trichotomy} & \mathsf{Eq}(1) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+3 & z\le0\Rightarrow xz\le0\le y^{2} & \mathsf{nonneg} & \mathsf{Eq}(1) \\ 
+\hline
+4 & z=1\Rightarrow xz=x\le y^{2} & \mathsf{hypothesis} & \mathsf{Eq}(1) \\ 
+\hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & z=2\Rightarrow xz=2x\le y^{2} & \mathsf{hypothesis} & \mathsf{Eq}(1) \\ 
+\hline
+6 & y^{2}\ge xz\;\mathsf{in\ all\ three\ cases} & \mathsf{exhaust} & \mathsf{%
+Eq}(3,4,5) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+\end{array}%
+$
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Lemma \protect\ref{lemi:delta2-formula} (\textsf{%
+delta2Formula})}
+
+% ------------------------------------------------------------
+\noindent\textbf{Setup.} Recall $h_{m}(d)=|\{u\in\N^{3}:u\le m,\;|u|=d\}|$.
+For $t>0$ we compute $\Delta^{2}h_{m}(t)=h_{m}(t)-2h_{m}(t-1)+h_{m}(t-2)$.
+By inclusion-exclusion on the three coordinate constraints $u_{i}\le m_{i}$
+(using the standard stars-and-bars count $\binom{d+2}{2}$ for the simplex $%
+\{u\in\N^{3}:|u|=d\}$): 
+\begin{equation*}
+h_{m}(d)=\binom{d+2}{2}-\sum_{i}\binom{d-m_{i}+1}{2}+\sum_{i<j}\binom{%
+d-m_{i}-m_{j}}{2}-\binom{d-|m|-1}{2}. 
+\end{equation*}
+(All binomials use the convention $\binom{n}{2}=0$ for $n<2$, so negative
+arguments contribute 0.)
+
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & m=(m_{0},m_{1},m_{2})\in\N^{3},\;t>0 & \mathsf{hypothesis} & \mathsf{Hyp}
+\\ \hline
+2 & h_{m}(d)=\binom{d+2}{2}-\sum_{i}\binom{d-m_{i}+1}{2}+\sum_{i<j}\binom{%
+d-m_{i}-m_{j}}{2}-\binom{d-|m|-1}{2} & \mathsf{incl.\text{-}excl.} & \mathsf{%
+Def:}\ref{defi:divisorsFinset}(3) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent\textit{Computation of second differences of each
+factor.}
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+3 & \Delta^{2}\binom{d+2}{2}=\tfrac{1}{2}\bigl[(t+2)(t+1)-2(t+1)t+t(t-1)%
+\bigr]=1 & \mathsf{eval.} & \mathsf{Eq}(2) \\ \hline
+4 & \Delta^{2}\binom{d-m_{i}+1}{2}=1-\mathbf{1}_{t\le m_{i}}\ \text{%
+(derivation below)} & \mathsf{eval.} & \mathsf{Eq}(2) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & \Delta^{2}\binom{d-m_{i}-m_{j}}{2}=1-\mathbf{1}_{t\le m_{i}+m_{j}+1} & 
+\mathsf{eval.} & \mathsf{Eq}(2) \\ \hline
+6 & \Delta^{2}\binom{d-|m|-1}{2}=1-\mathbf{1}_{t\le|m|+2} & \mathsf{eval.} & 
+\mathsf{Eq}(2) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+7 & \Delta^{2}h_{m}(t)=1-\sum_{i}(1-\mathbf{1}_{t\le m_{i}})+\sum_{i<j}(1-%
+\mathbf{1}_{t\le m_{i}+m_{j}+1})-(1-\mathbf{1}_{t\le|m|+2}) & \mathsf{combine%
+} & \mathsf{Eq}(2,3,4,5,6) \\ \hline
+8 & =\,\sum_{i}\mathbf{1}_{t\le m_{i}}-\sum_{i<j}\mathbf{1}_{t\le
+m_{i}+m_{j}+1}+\mathbf{1}_{t\le|m|+2} & \mathsf{simplify} & \mathsf{Eq}(7)
+\\ \hline
+\end{array}%
+$
+
+\medskip \noindent\textit{Derivation of the binomial identities.} For (3),
+let $P(d)=\binom{d+2}{2}$. Then $P(t)-2P(t-1)+P(t-2)=\frac{1}{2}%
+[(t+2)(t+1)-2(t+1)t+t(t-1)]=\frac{1}{2}\cdot 2=1$. For (4), let $Q(d)=\binom{%
+d-m+1}{2}$ with the convention $\binom{n}{2}=0$ for $n<2$. If $t\le m$: $%
+Q(t)=Q(t-1)=Q(t-2)=0$, so the second difference vanishes. If $t=m+1$: $%
+Q(t)=Q(m+1)=\binom{2}{2}=1$, $Q(t-1)=Q(m)=\binom{1}{2}=0$, $Q(t-2)=0$, so
+second difference $=1$. If $t\ge m+2$: let $k=t-m-1\ge1$; then $Q(t)=\binom{%
+k+2}{2}$, $Q(t-1)=\binom{k+1}{2}$, $Q(t-2)=\binom{k}{2}$, and $\binom{k+2}{2}%
+-2\binom{k+1}{2}+\binom{k}{2}=1$ by the same computation as above. Thus $%
+\Delta^{2}Q(t)=1-\mathbf{1}_{t\le m}$. Identities (5) and (6) follow by the
+same argument with $m$ replaced by $m_{i}+m_{j}-1$ and $|m|+1$ respectively,
+accounting for the shift by one in the indicator's cutoff.
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Lemma \protect\ref{lemi:principal-OSeq} (\textsf{%
+principalOSeq})}
+
+% ------------------------------------------------------------
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & g:\mathbf{M}^{r} & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+2 & \mathsf{induction\ on}\;\mathsf{supp}(g)\;\mathsf{via}\;\mathsf{Finsupp}
+& \mathsf{strategy} & \mathsf{Def:}\ref{defi:Monomial}(1) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+3 & g=0\Rightarrow h_{g}=(1,0,0,\dots) & \mathsf{base} & \mathsf{Def:}\ref%
+{defi:divisorsFinset}(2) \\ \hline
+4 & g=g^{\prime}+c\,e_{i},\;i\notin\mathsf{supp}(g^{\prime}),\;c\ge1 & 
+\mathsf{decompose} & \mathsf{Def:}\ref{defi:Monomial}(1) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & h_{g}(d)=\sum_{j=0}^{c}h_{g^{\prime}}(d-j) & \mathsf{enumerate} & 
+\mathsf{Def:}\ref{defi:divisorsFinset}(4) \\ \hline
+6 & h_{g}=h_{g^{\prime}}*\mathbf{1}_{[0,c]} & \mathsf{convolution} & \mathsf{%
+Eq}(5) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+7 & \mathsf{LC}(h_{g^{\prime}}) & \mathsf{IH} & \mathsf{Eq}(4,3) \\ \hline
+8 & \mathsf{LC}(\mathbf{1}_{[0,c]}):\;\text{verify}\;1(d-1)1(d+1)\le
+1(d)^{2}\;\text{for all}\;d & \mathsf{direct\ check} & \mathsf{Def:}\ref%
+{defi:IsLogConcaveUpTo}(6) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+9 & \mathsf{LC}(h_{g^{\prime}})\wedge\mathsf{LC}(\mathbf{1}%
+_{[0,c]})\Rightarrow\mathsf{LC}(h_{g^{\prime}}*\mathbf{1}_{[0,c]}) & \mathsf{%
+conv.\ LC} & \mathsf{Pos:}\ref{posi:conv-LC}(7,8) \\ \hline
+10 & \mathsf{LC}(h_{g}) & \mathsf{substitute} & \mathsf{Eq}(6,9) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+11 & h_{g}(d)>0\;\mathsf{for}\;d\le|g| & \mathsf{conv.\ positive} & \mathsf{%
+Eq}(3,6) \\ \hline
+12 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,11) \\ \hline
+\end{array}%
+$
+
+\medskip \noindent\textit{The check at step 8.} Let $u(d)=\mathbf{1}_{0\le
+d\le c}$ (i.e., $u(d)=1$ for $0\le d\le c$, $0$ otherwise). Then $%
+u(d-1)u(d+1)\le u(d)^{2}$ for all $d\in\Z$:
+
+\begin{itemize}
+\item $d\le -1$: $u(d-1)=u(d+1)=0$, both sides 0.
+
+\item $d=0$: $u(-1)u(1)=0\cdot 1=0\le 1=u(0)^{2}$.
+
+\item $1\le d\le c-1$: $u(d-1)u(d+1)=1\cdot 1=1=u(d)^{2}$.
+
+\item $d=c$: $u(c-1)u(c+1)=1\cdot 0=0\le 1=u(c)^{2}$.
+
+\item $d\ge c+1$: $u(d-1)u(d+1)=0$, both sides 0.
+\end{itemize}
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Lemma \protect\ref{lemi:principal-pos} (\textsf{%
+principalPos})}
+
+% ------------------------------------------------------------
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & g:\mathbf{M}^{r},\;d\in\N,\;d\le|g| & \mathsf{hypothesis} & \mathsf{Hyp}
+\\ \hline
+2 & m_{1}:=\min(g_{1},d),\;m_{i+1}:=\min(g_{i+1},d-\sum_{j\le i}m_{j}) & 
+\mathsf{construction} & \mathsf{Def:}\ref{defi:Monomial}(1) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+3 & 0\le m_{i}\le g_{i} & \mathsf{by\ construction} & \mathsf{Eq}(2) \\ 
+\hline
+4 & \sum_{i}m_{i}=\min(d,|g|)=d & \mathsf{telescoping} & \mathsf{Eq}(2,1) \\ 
+\hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & m\le g & \mathsf{combine} & \mathsf{Eq}(3) \\ \hline
+6 & |m|=d & \mathsf{combine} & \mathsf{Eq}(4) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+\end{array}%
+$
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Lemma \protect\ref{lemi:two-max-decomp} (\textsf{%
+twoMaxDecomp})}
+
+% ------------------------------------------------------------
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & P:\mathsf{PureOrderIdeal}_{3},\;\mathsf{type}(P)=2 & \mathsf{hypothesis}
+& \mathsf{Hyp} \\ \hline
+2 & \mathsf{Max}(\Gamma)=\{m_{1},m_{2}\},\;m_{1}\ne m_{2} & \mathsf{type=2}
+& \mathsf{Def:}\ref{defi:typePO}(1) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+3 & \mathsf{divs}(m_{i})\subseteq\Gamma\;(i=1,2) & \mathsf{downward} & 
+\mathsf{Def:}\ref{defi:OrderIdeal}(1) \\ \hline
+4 & m\in\Gamma\Rightarrow\exists n\in\mathsf{Max}(\Gamma),\;m\le n & \mathsf{%
+termination} & \mathsf{Def:}\ref{defi:IsMaximalIn}(2) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & \Gamma\subseteq\mathsf{divs}(m_{1})\cup\mathsf{divs}(m_{2}) & \mathsf{%
+from\ (2,4)} & \mathsf{Eq}(2,4) \\ \hline
+6 & \Gamma=\mathsf{divs}(m_{1})\cup\mathsf{divs}(m_{2}) & \mathsf{%
+antisymmetry} & \mathsf{Eq}(3,5) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+\end{array}%
+$
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Lemma \protect\ref{lemi:shift-reduce} (\textsf{%
+shiftReduce})}
+
+% ------------------------------------------------------------
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & m_{2}(x)>m_{1}(x),\;m_{2}(y)\le m_{1}(y)\;(y\ne x) & \mathsf{hypothesis}
+& \mathsf{Hyp} \\ \hline
+2 & c:=m_{1}(x)+1,\;M_{\mathrm{red}}:=(m_{2}(x)-c,\;m_{2}(y)\;(y\ne x)) & 
+\mathsf{definitions} & \mathsf{Def:}\ref{defi:Monomial}(1) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+3 & |M_{\mathrm{red}}|=|m_{2}|-c & \mathsf{compute} & \mathsf{Def:}\ref%
+{defi:totalDeg}(2) \\ \hline
+4 & u\le m_{2}\wedge u\not\le m_{1}\iff u(x)\ge c & \mathsf{coordinate} & 
+\mathsf{Eq}(2) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & \phi:u\mapsto u-c\,e_{x} & \mathsf{map} & \mathsf{Def:}\ref%
+{defi:Monomial}(1) \\ \hline
+6 & \phi:\{u\le m_{2}:|u|=d,u(x)\ge c\}\to\{v\le M_{\mathrm{red}}:|v|=d-c\}
+& \mathsf{bijection} & \mathsf{Eq}(4,5) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+7 & \#\{u\le m_{2}:u\not\le m_{1},|u|=d\}=h_{M_{\mathrm{red}}}(d-c) & 
+\mathsf{count} & \mathsf{Eq}(6) \\ \hline
+8 & h_{\Gamma}(d)=h_{m_{1}}(d)+h_{M_{\mathrm{red}}}(d-c) & \mathsf{inclusion%
+\text{-}exclusion} & \mathsf{Lem:}\ref{lemi:two-max-decomp}(6,7) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+9 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,8) \\ \hline
+\end{array}%
+$
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Lemma \protect\ref{lemi:delta2-dich} (\textsf{%
+delta2Dich})}
+
+% ------------------------------------------------------------
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & g=(a,b,c)\in\mathbf{M}^{r},\;t>0 & \mathsf{hypothesis} & \mathsf{Hyp} \\ 
+\hline
+2 & \Delta^{2}h_{g}(t)=\mathbf{1}_{t\le a}+\mathbf{1}_{t\le b}+\mathbf{1}%
+_{t\le c}-\mathbf{1}_{t\le a+b+1}-\mathbf{1}_{t\le b+c+1}-\mathbf{1}_{t\le
+a+c+1}+\mathbf{1}_{t\le a+b+c+2} & \mathsf{formula} & \mathsf{Lem:}\ref%
+{lemi:delta2-formula}(8) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+3 & \Delta^{2}h_{g}(t)\le3-3+1=1 & \mathsf{count} & \mathsf{Eq}(2) \\ \hline
+4 & \mathsf{Case\ (L):}\;t\le a\wedge t\le b\wedge t\le c & \mathsf{case} & 
+\mathsf{Eq}(2) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & \mathsf{Case}\;\neg(L):\;\mathsf{WLOG}\;t>a & \mathsf{case} & \mathsf{Eq}%
+(2) \\ \hline
+6 & \mathsf{Then}\;\mathbf{1}_{t\le a}=0;\text{for}\;\Delta^{2}h_{g}(t)=1\;%
+\text{need two of}\;\{b,c,a+b+1,a+c+1\}\;\text{to shift} & \mathsf{analysis}
+& \mathsf{Eq}(5) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+7 & \mathsf{This forces}\;t\ge b+c+2,\,t\ge a+c+2,\,t\ge a+b+2,\;\text{and}%
+\;t\le a+b+c+2 & \mathsf{case\ analysis} & \mathsf{Eq}(6) \\ \hline
+8 & \mathsf{L}(t)\vee\mathsf{U}(t) & \mathsf{exhaust} & \mathsf{Eq}(4,7) \\ 
+\hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+9 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,8) \\ \hline
+\end{array}%
+$
+
+\medskip \noindent\textit{Reading (7).} When (L) fails, exactly one or two
+of the three "single" indicators vanish. The indicator polynomial $\Sigma_{i}%
+\mathbf{1}_{t\le m_{i}}-\Sigma_{i<j}\mathbf{1}_{t\le m_{i}+m_{j}+1}+\mathbf{1%
+}_{t\le|m|+2}$ equals 1 in each surviving case only when all three "pair"
+indicators are 1 and the triple indicator is 1, which is exactly the
+conjunction in (U). Full case analysis in \texttt{diff2\_h\_seq\_eq\_one%
+\_implies}.
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Lemma \protect\ref{lemi:LU-dich} (\textsf{LUDich})}
+
+% ------------------------------------------------------------
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & H(d)=h_{m_{1}}(d)+\mathbf{1}_{d\ge c}h_{M_{\mathrm{red}}}(d-c) & \mathsf{%
+definition} & \mathsf{Lem:}\ref{lemi:shift-reduce}(8) \\ \hline
+2 & \Delta^{2}h_{m_{1}}(d)\le1 & \mathsf{delta2-dich} & \mathsf{Lem:}\ref%
+{lemi:delta2-dich}(3) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+3 & \Delta^{2}h_{M_{\mathrm{red}}}(d-c)\le1 & \mathsf{delta2-dich} & \mathsf{%
+Lem:}\ref{lemi:delta2-dich}(3) \\ \hline
+4 & \Delta^{2}(\mathbf{1}_{d\ge c}h_{M_{\mathrm{red}}}(d-c))\le1 & \mathsf{%
+shift} & \mathsf{Eq}(3) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & \Delta^{2}H(d)\le1+1=2 & \mathsf{additivity} & \mathsf{Eq}(1,2,4) \\ 
+\hline
+6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+\end{array}%
+$
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Lemma \protect\ref{lemi:exists-non-lc-r3} (\textsf{%
+existsNonLC}$_{\mathrm{r3}}$)}
+
+% ------------------------------------------------------------
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & t\ge5 & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+2 & m_{\mathrm{fat}}:=x^{t}y^{t}z^{t},\;m_{i}:=x^{3t-i}y^{i}\;(0\le i<t-1) & 
+\mathsf{construction} & \mathsf{Def:}\ref{defi:Monomial}(1) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+3 & \Gamma_{t}:=\Gamma(m_{\mathrm{fat}},m_{0},\dots,m_{t-2}) & \mathsf{ideal}
+& \mathsf{Def:}\ref{defi:generatedOrderIdeal}(4) \\ \hline
+4 & |m_{\mathrm{fat}}|=|m_{i}|=3t & \mathsf{degree} & \mathsf{Def:}\ref%
+{defi:totalDeg}(2) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & \mathsf{Max}(\Gamma_{t})=\{m_{\mathrm{fat}},m_{0},\dots,m_{t-2}\} & 
+\mathsf{maximality} & \mathsf{Def:}\ref{defi:maximalMonomials}(3) \\ \hline
+6 & \mathsf{type}(\Gamma_{t})=t & \mathsf{count} & \mathsf{Def:}\ref%
+{defi:typePO}(5) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+7 & \mathsf{socle}(\Gamma_{t})=3t & \mathsf{purity} & \mathsf{Def:}\ref%
+{defi:socleDegree}(4) \\ \hline
+8 & h_{\Gamma_{t}}(3t)=t\;\text{(the $t$ maximal monomials)} & \mathsf{count}
+& \mathsf{Def:}\ref{defi:pureOSequence}(5) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+9 & h_{\Gamma_{t}}(3t-1)=t+2\;\text{(block count below)} & \mathsf{count} & 
+\mathsf{Def:}\ref{defi:pureOSequence}(5) \\ \hline
+10 & h_{\Gamma_{t}}(3t-2)=t+5\;\text{(block count below)} & \mathsf{count} & 
+\mathsf{Def:}\ref{defi:pureOSequence}(5) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+11 & (t+5)t>(t+2)^{2}\;\mathsf{for}\;t\ge5 & \mathsf{algebra} & \mathsf{Eq}%
+(8,9,10) \\ \hline
+12 & \neg\mathsf{LC}(3t,h_{\Gamma_{t}}) & \mathsf{conclude} & \mathsf{Def:}%
+\ref{defi:IsLogConcaveUpTo}(11) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+13 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,12) \\ \hline
+\end{array}%
+$
+
+\medskip \noindent\textit{Block count for $h(3t-1)=t+2$.} Degree-$(3t-1)$
+divisors of the maximal monomials:
+
+\begin{itemize}
+\item From $m_{\mathrm{fat}}=x^{t}y^{t}z^{t}$: 3 divisors $x^{t-1}y^{t}z^{t}$%
+, $x^{t}y^{t-1}z^{t}$, $x^{t}y^{t}z^{t-1}$. These have a positive $z$%
+-component, hence are disjoint from $m_{i}$-divisors (which have $z=0$).
+
+\item From $m_{i}=x^{3t-i}y^{i}$ ($0\le i<t-1$): 2 divisors each, $%
+x^{3t-i-1}y^{i}$ (remove $x$) and $x^{3t-i}y^{i-1}$ (remove $y$). But $%
+x^{3t-i}y^{i-1}$ (for $i\ge1$) equals $x^{3t-(i-1)-1}y^{(i-1)}$, the "$x$%
+-removal" of $m_{i-1}$. So the distinct $m_{i}$-divisors of degree $3t-1$
+form the set $\{x^{3t-i-1}y^{i}: 0\le i<t-1\}$, of cardinality $t-1$.
+
+\item No overlap between the two groups ($z>0$ vs $z=0$).
+\end{itemize}
+
+Total: $3+(t-1)=t+2$.
+
+\noindent\textit{Block count for $h(3t-2)=t+5$.} Similarly:
+
+\begin{itemize}
+\item From $m_{\mathrm{fat}}$: degree-$(3t-2)$ divisors are $%
+x^{t-2}y^{t}z^{t}$, $x^{t}y^{t-2}z^{t}$, $x^{t}y^{t}z^{t-2}$, $%
+x^{t-1}y^{t-1}z^{t}$, $x^{t-1}y^{t}z^{t-1}$, $x^{t}y^{t-1}z^{t-1}$ (6 total).
+
+\item From $m_{i}$: degree-$(3t-2)$ divisors are $x^{3t-i-p}y^{i-q}$ with $%
+p+q=2$, $p,q\ge0$. The union over all $i\in[0,t-2]$ has cardinality $t-1$:
+parametrized by $b\in[0,t-2]$, the distinct element is $x^{3t-2-b}y^{b}$.
+
+\item No overlap ($z>0$ vs $z=0$).
+\end{itemize}
+
+Total: $6+(t-1)=t+5$.
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Lemma \protect\ref{lemi:embed-preserves} (\textsf{%
+embedPres})}
+
+% ------------------------------------------------------------
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & r\ge3,\;t\ge5 & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+2 & \iota:\N^{3}\hookrightarrow\N^{r},\;x\mapsto(x,0,\dots,0) & \mathsf{%
+embedding} & \mathsf{Def:}\ref{defi:Monomial}(1) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+3 & P_{3}\in\mathsf{PureOrderIdeal}_{3},\;\mathsf{type}(P_{3})=t,\;\neg%
+\mathsf{LC}(P_{3}) & \mathsf{exists-non-lc-r3} & \mathsf{Lem:}\ref%
+{lemi:exists-non-lc-r3}(12) \\ \hline
+4 & P:=\iota_{*}(P_{3})\in\mathsf{PureOrderIdeal}_{r} & \mathsf{pushforward}
+& \mathsf{Def:}\ref{defi:PureOrderIdeal}(2) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & \iota\;\text{is injective and preserves}\;\le\;(\text{coordinatewise}) & 
+\mathsf{monotone} & \mathsf{Eq}(2) \\ \hline
+6 & \mathsf{Max}(\iota_{*}\Gamma)=\iota(\mathsf{Max}(\Gamma))\;\text{and}\;%
+\mathsf{socle},\;\mathsf{type}\;\text{preserved} & \mathsf{preserved} & 
+\mathsf{Eq}(2,5) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+7 & h_{P}(d)=h_{P_{3}}(d)\;\mathsf{for\ all}\;d & \mathsf{preserved} & 
+\mathsf{Eq}(2,5) \\ \hline
+8 & \neg\mathsf{LC}(P) & \mathsf{transfer} & \mathsf{Eq}(3,7) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+9 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,8) \\ \hline
+\end{array}%
+$
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Lemma \protect\ref{lemi:least-threshold} (\textsf{%
+leastThreshold})}
+
+% ------------------------------------------------------------
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & S\subseteq\N,\;S\ne\emptyset & \mathsf{hypothesis} & \mathsf{Hyp} \\ 
+\hline
+2 & \N\;\mathsf{well\text{-}ordered} & \mathsf{ZF} & \mathsf{Ax:}\ref{axi:DC}%
+(1) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+3 & t_{0}:=\min(S) & \mathsf{well\text{-}ordering} & \mathsf{Eq}(1,2) \\ 
+\hline
+4 & t_{0}\in S & \mathsf{min\text{-}spec} & \mathsf{Eq}(3) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & \forall t<t_{0},\;t\notin S & \mathsf{minimality} & \mathsf{Eq}(3) \\ 
+\hline
+6 & \mathsf{IsLeast}(t_{0},S) & \mathsf{combine} & \mathsf{Eq}(4,5) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+\end{array}%
+$
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Theorem \protect\ref{thmi:P1} (Explicit Example)}
+
+% ------------------------------------------------------------
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & m_{1}=xyz,\;m_{2}=xz^{2},\;\Gamma_{1}=\Gamma(m_{1})\cup\Gamma(m_{2}) & 
+\mathsf{definition} & \mathsf{Def:}\ref{defi:generatedOrderIdeal}(4) \\ 
+\hline
+2 & h_{\Gamma_{1}}(0)=|\{1\}|=1 & \mathsf{enumerate} & \mathsf{Def:}\ref%
+{defi:pureOSequence}(6) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+3 & h_{\Gamma_{1}}(1)=|\{x,y,z\}|=3 & \mathsf{enumerate} & \mathsf{Def:}\ref%
+{defi:pureOSequence}(6) \\ \hline
+4 & h_{\Gamma_{1}}(2)=|\{xy,xz,yz,z^{2}\}|=4 & \mathsf{enumerate} & \mathsf{%
+Def:}\ref{defi:pureOSequence}(6) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & h_{\Gamma_{1}}(3)=|\{xyz,xz^{2}\}|=2 & \mathsf{enumerate} & \mathsf{Def:}%
+\ref{defi:pureOSequence}(6) \\ \hline
+6 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,5) \\ \hline
+\end{array}%
+$
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Theorem \protect\ref{thmi:P2} (Type-1 Log-Concavity)}
+
+% ------------------------------------------------------------
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & P:\mathsf{PureOrderIdeal}_{r},\;\mathsf{type}(P)=1 & \mathsf{hypothesis}
+& \mathsf{Hyp} \\ \hline
+2 & \exists!g\in\mathsf{Max}(\Gamma) & \mathsf{type=1} & \mathsf{Def:}\ref%
+{defi:typePO}(1) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+3 & \Gamma=\mathsf{divs}(g) & \mathsf{carrier} & \mathsf{Lem:}\ref%
+{lemi:two-max-decomp}(6) \\ \hline
+4 & h_{P}=h_{g} & \mathsf{identify} & \mathsf{Def:}\ref{defi:pureOSequence}%
+(3) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & \mathsf{LC}(h_{g})\wedge h_{g}(d)>0\;(d\le|g|) & \mathsf{principal} & 
+\mathsf{Lem:}\ref{lemi:principal-OSeq}(10,11) \\ \hline
+6 & \mathsf{LC}(\mathsf{socle}(P),h_{P}) & \mathsf{substitute} & \mathsf{Eq}%
+(4,5) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+7 & \text{LC} \wedge \text{positivity}\Rightarrow\text{UM}\;\text{(increase
+up to peak, then decrease)} & \mathsf{standard} & \mathsf{Def:}\ref%
+{defi:IsUnimodal}(5) \\ \hline
+8 & \mathsf{UM}(\mathsf{socle}(P),h_{P}) & \mathsf{conclude} & \mathsf{Eq}%
+(6,7) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+9 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,8) \\ \hline
+\end{array}%
+$
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Theorem \protect\ref{thmi:P3} (First-Half
+Log-Concavity)}
+
+% ------------------------------------------------------------
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & P:\mathsf{PureOrderIdeal}_{3},\;0<i\le\mathsf{socle}(P)/2 & \mathsf{%
+hypothesis} & \mathsf{Hyp} \\ \hline
+2 & S(k,d):=|\{m\in\Gamma:m_{2}=k,\;m_{0}+m_{1}=d\}| & \mathsf{slice} & 
+\mathsf{Def:}\ref{defi:pureOSequence}(6) \\ \hline
+3 & h_{P}(d)=\sum_{k=0}^{d}S(k,d-k) & \mathsf{decompose} & \mathsf{Eq}(2) \\ 
+\hline
+4 & X_{d}^{(k)}:=\{m_{0}:m\in\Gamma,\;m_{2}=k,\;m_{0}+m_{1}=d\} & \mathsf{set%
+} & \mathsf{Def:}\ref{defi:Monomial}(1) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & X_{d}^{(k)}\subseteq\{0,\dots,d\}\wedge\mathsf{downward\text{-}closed} & 
+\mathsf{closure} & \mathsf{Def:}\ref{defi:OrderIdeal}(1) \\ \hline
+6 & x\in X_{d+1}^{(k)}\wedge x<d+1\Rightarrow x\in X_{d}^{(k)} & \mathsf{%
+downward} & \mathsf{Def:}\ref{defi:OrderIdeal}(1) \\ \hline
+7 & x\in X_{d+1}^{(k)}\wedge x>0\Rightarrow x-1\in X_{d}^{(k)} & \mathsf{%
+downward} & \mathsf{Def:}\ref{defi:OrderIdeal}(1) \\ \hline
+8 & |X_{d+1}^{(k)}|\le|X_{d}^{(k)}|\vee|X_{d}^{(k)}|=d+1 & \mathsf{Macaulay2}
+& \mathsf{Pos:}\ref{posi:Macaulay2}(5,6,7) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+9 & |X_{d}^{(k)}|\le d+1 & \mathsf{bound} & \mathsf{Eq}(5) \\ \hline
+10 & \text{Induction on}\;i\;(\text{base}\;i=1:\;h(0)=1,\,h(1)\ge 1,\,h(2)\le%
+\binom{4}{2}=6\le h(1)^{2}\cdot 6) & \mathsf{base} & \mathsf{Eq}(3) \\ \hline
+11 & \text{Induction step: summing the Macaulay dichotomy over}\;k\;\text{at
+scales}\;i-1,\,i,\,i+1 & \mathsf{induction} & \mathsf{Eq}(3,8,10) \\ \hline
+12 & h_{P}(i-1)h_{P}(i+1)\le h_{P}(i)^{2}\;\mathsf{for}\;0<i\le e/2 & 
+\mathsf{conclude} & \mathsf{Eq}(11) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+13 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,12) \\ \hline
+\end{array}%
+$
+
+\medskip \noindent\textit{Induction step, in full.} Fix $0<i\le e/2$ and
+assume $h(i-2)h(i)\le h(i-1)^{2}$ (induction hypothesis). At the level of
+slices: for each $k$, let $s_{d}(k)=|X_{d}^{(k)}|$. We have $%
+h(d)=\sum_{k}s_{d}(k)$. By Macaulay (step 8), for each $k$ and each $d$:
+either $s_{d+1}(k)\le s_{d}(k)$ (monotone case) or $s_{d}(k)=d+1$
+(saturating case).
+
+\begin{itemize}
+\item \textbf{Monotone case} ($s_{i+1}(k)\le s_{i}(k)$ and $s_{i}(k)\le
+s_{i-1}(k)$): slice contributes $s_{i-1}(k)s_{i+1}(k)\le s_{i}(k)^{2}$ to
+the product.
+
+\item \textbf{Saturating case} ($s_{i}(k)=i+1$): since $i\le e/2$, the
+sequence $s_{\cdot}(k)$ is bounded by the simplex bound $d+1$, so $%
+s_{i+1}(k)\le i+2$ and $s_{i-1}(k)\le i$. Then $s_{i-1}(k)s_{i+1}(k)\le
+i(i+2)\le(i+1)^{2}=s_{i}(k)^{2}$.
+\end{itemize}
+
+Summing the pointwise bound $\sum_{k}s_{i-1}(k)s_{i+1}(k)\le%
+\sum_{k}s_{i}(k)^{2}$ across $k$ and applying Cauchy--Schwarz to the slices
+(as in the standard first-half argument), we obtain $h(i-1)h(i+1)\le h(i)^{2}
+$.
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Theorem \protect\ref{thmi:P4} (Type-2 Unimodality)}
+
+% ------------------------------------------------------------
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & P:\mathsf{PureOrderIdeal}_{3},\;\mathsf{type}(P)=2 & \mathsf{hypothesis}
+& \mathsf{Hyp} \\ \hline
+2 & \exists m_{1}\ne m_{2},\;\mathsf{Max}(\Gamma)=\{m_{1},m_{2}\},%
+\;|m_{1}|=|m_{2}|=e & \mathsf{type=2} & \mathsf{Def:}\ref{defi:typePO}(1) \\ 
+\hline
+3 & \exists x,\;m_{2}(x)>m_{1}(x)\wedge(\forall y\ne x,\;m_{2}(y)\le
+m_{1}(y)) & \mathsf{swap} & \mathsf{Def:}\ref{defi:Monomial}(1) \\ \hline
+4 & c:=m_{1}(x)+1,\;|M_{\mathrm{red}}|=e-c & \mathsf{reduction} & \mathsf{%
+Lem:}\ref{lemi:shift-reduce}(2) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & \Gamma=\mathsf{divs}(m_{1})\cup\mathsf{divs}(m_{2}) & \mathsf{carrier} & 
+\mathsf{Lem:}\ref{lemi:two-max-decomp}(6) \\ \hline
+6 & h_{P}(d)=h_{m_{1}}(d)+h_{M_{\mathrm{red}}}(d-c) & \mathsf{shift\
+reduction} & \mathsf{Lem:}\ref{lemi:shift-reduce}(8) \\ \hline
+7 & f:=h_{m_{1}}\;\mathsf{unimodal\ with\ peak\ at}\;e & \mathsf{principal}
+& \mathsf{Lem:}\ref{lemi:principal-OSeq}(10) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+8 & g(d):=h_{M_{\mathrm{red}}}(d-c)\;\mathsf{unimodal\ with\ peak\ at}\;|M_{%
+\mathrm{red}}|+c=e & \mathsf{shift} & \mathsf{Lem:}\ref{lemi:principal-OSeq}%
+(10) \\ \hline
+9 & \forall i<e:\;f(i)\le f(i+1)\wedge g(i)\le g(i+1) & \mathsf{peak\ at}\;e
+& \mathsf{Eq}(7,8) \\ \hline
+10 & \forall i\ge e:\;f(i+1)\le f(i)\wedge g(i+1)\le g(i) & \mathsf{peak\ at}%
+\;e & \mathsf{Eq}(7,8) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+11 & \text{For}\;i<e:\;h(i)=f(i)+g(i)\le f(i+1)+g(i+1)=h(i+1) & \mathsf{sum}
+& \mathsf{Eq}(9) \\ \hline
+12 & \text{For}\;i\ge e:\;h(i+1)\le h(i) & \mathsf{sum} & \mathsf{Eq}(10) \\ 
+\hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+13 & \mathsf{UM}(\mathsf{socle}(P),h_{P}) & \mathsf{conclude} & \mathsf{Def:}%
+\ref{defi:IsUnimodal}(11,12) \\ \hline
+14 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,13) \\ \hline
+\end{array}%
+$
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Theorem \protect\ref{thmi:P5} (Main: Type-2
+Log-Concavity)}
+
+% ------------------------------------------------------------
+
+\subsubsection*{Step 1: Setup and reduction.}
+
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & P:\mathsf{PureOrderIdeal}_{3},\;\mathsf{type}(P)=2 & \mathsf{hypothesis}
+& \mathsf{Hyp} \\ \hline
+2 & \exists m_{1}\ne m_{2},\;\mathsf{Max}(\Gamma)=\{m_{1},m_{2}\},%
+\;|m_{1}|=|m_{2}|=e & \mathsf{type=2} & \mathsf{Def:}\ref{defi:typePO}(1) \\ 
+\hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+3 & \exists x,\;m_{2}(x)>m_{1}(x)\wedge(\forall y\ne x,\;m_{2}(y)\le
+m_{1}(y)) & \mathsf{swap} & \mathsf{Def:}\ref{defi:Monomial}(1) \\ \hline
+4 & c:=m_{1}(x)+1,\;M_{\mathrm{red}}:=(\ldots),\quad|M_{\mathrm{red}}|=e-c & 
+\mathsf{reduction} & \mathsf{Lem:}\ref{lemi:shift-reduce}(2) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & H(d):=h_{P}(d)=h_{m_{1}}(d)+\mathbf{1}_{d\ge c}h_{M_{\mathrm{red}}}(d-c)
+& \mathsf{decompose} & \mathsf{Lem:}\ref{lemi:shift-reduce}(8) \\ \hline
+\end{array}%
+$
+
+\subsubsection*{Step 2: Second-difference bound and key identity.}
+
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+6 & \Delta^{2}h_{m_{1}}(d)\le1 & \mathsf{delta2-dich} & \mathsf{Lem:}\ref%
+{lemi:delta2-dich}(3) \\ \hline
+7 & \Delta^{2}(\mathbf{1}_{d\ge c}h_{M_{\mathrm{red}}}(d-c))\le1 & \mathsf{%
+delta2-dich} & \mathsf{Lem:}\ref{lemi:delta2-dich}(3) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+8 & \Delta^{2}H(d)\le2 & \mathsf{LU-dich} & \mathsf{Lem:}\ref{lemi:LU-dich}%
+(5) \\ \hline
+9 & H(d)^{2}-H(d-1)H(d+1)=(\Delta H(d))^{2}-H(d-1)\Delta^{2}H(d+1) & \mathsf{%
+algebra} & \mathsf{Eq}(5) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+10 & \Delta^{2}H(d+1)=1\Rightarrow H(d-1)\le(\Delta H(d))^{2} & \mathsf{%
+implication\ A} & \mathsf{Eq}(9,8) \\ \hline
+11 & \Delta^{2}H(d+1)=2\Rightarrow2H(d-1)\le(\Delta H(d))^{2} & \mathsf{%
+implication\ B} & \mathsf{Eq}(9,8) \\ \hline
+\end{array}%
+$
+
+\subsubsection*{Step 3: Case $\Delta^{2}H(d+1)=1$.}
+
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+12 & \Delta^{2}H(d+1)=1\Rightarrow(\Delta^{2}f,\Delta^{2}g)\in\{(1,0),(0,1)\}
+& \mathsf{exhaust} & \mathsf{Eq}(8,6,7) \\ \hline
+13 & \text{(A)}\;\Delta^{2}f=1\wedge\Delta^{2}g=0\quad\mathsf{or}\quad\text{%
+(B)}\;\Delta^{2}f=0\wedge\Delta^{2}g=1 & \mathsf{case} & \mathsf{Eq}(12) \\ 
+\hline
+\end{array}%
+$
+
+\noindent\textit{Sub-case A1: $f$ in lower range, $g$ contributes nothing.}
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+14 & d+1\le m_{1}(x)<c\Rightarrow g(d-1)=g(d)=0 & \mathsf{no\ shift} & 
+\mathsf{Eq}(5) \\ \hline
+15 & \Delta H(d)=\Delta f(d)\wedge H(d-1)=f(d-1) & \mathsf{from\ (14)} & 
+\mathsf{Eq}(14) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+16 & 2f(d-1)=d(d+1)\wedge\Delta f(d)=d+1 & \mathsf{principal} & \mathsf{Lem:}%
+\ref{lemi:principal-OSeq}(10) \\ \hline
+17 & H(d-1)=f(d-1)\le(d+1)^{2}=(\Delta f(d))^{2}=(\Delta H(d))^{2} & \mathsf{%
+combine} & \mathsf{Eq}(16,15) \\ \hline
+\end{array}%
+$
+
+\noindent\textit{Sub-case A2: $f$ in upper range.} \noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+18 & \rho:=e-d.\;\mathsf{Upper\ range:}\;2f(d-1)=(\rho+2)(\rho+3),\;\Delta
+f(d)=-(\rho+2),\;\rho\ge-1 & \mathsf{upper} & \mathsf{Lem:}\ref%
+{lemi:delta2-formula}(8) \\ \hline
+19 & 2g(d-1)\le(\rho+2)(\rho+3),\quad\Delta g(d)\le0 & \mathsf{bound} & 
+\mathsf{Eq}(7) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+20 & H(d-1)\le(\rho+2)(\rho+3)\wedge\Delta H(d)=-(\rho+2)+\Delta g(d) & 
+\mathsf{combine} & \mathsf{Eq}(18,19) \\ \hline
+21 & (\rho+2)(\rho+3)+2g(d-1)\le2\bigl(-(\rho+2)+\Delta g(d)\bigr)^{2} & 
+\mathsf{algebra} & \mathsf{Eq}(19),\rho\ge-1 \\ \hline
+22 & H(d-1)\le(\Delta H(d))^{2} & \mathsf{conclude} & \mathsf{Eq}(20,21) \\ 
+\hline
+\end{array}%
+$
+
+\noindent\textit{Sub-cases B1 and B2 ($\Delta^{2}g=1$).} Use the shift
+reduction: if $\Delta^{2}H(d+1)=1$ and $H(d+1)\le(\Delta H(d+1))^{2}$ then 
+\begin{equation*}
+H(d-1)=H(d+1)-2\Delta H(d+1)+1\le(\Delta H(d+1))^{2}-2\Delta
+H(d+1)+1=(\Delta H(d))^{2}. 
+\end{equation*}
+Cases B1 and B2 are the mirror of A1 and A2 with $f$ and $g$ exchanged.
+
+\subsubsection*{Step 4: Case $\Delta^{2}H(d+1)=2$.}
+
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+23 & \Delta^{2}H(d+1)=2\Rightarrow\Delta^{2}f(d+1)=\Delta^{2}g(d+1)=1 & 
+\mathsf{case} & \mathsf{Eq}(8) \\ \hline
+24 & \text{L/U\ alternatives at}\;d+1:\;\text{(L,L)},\text{(L,U)},\text{(U,L)%
+},\text{(U,U)} & \mathsf{dichotomy} & \mathsf{Lem:}\ref{lemi:delta2-dich}(7)
+\\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+25 & \text{(L,L):\ violates}\;m_{2}(x)>m_{1}(x) & \mathsf{contradiction} & 
+\mathsf{Eq}(3,24) \\ \hline
+26 & \text{(L,U):\ violates\ shift\ ordering} & \mathsf{contradiction} & 
+\mathsf{Eq}(3,24) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+27 & \text{(U,L):\ violates\ shift\ ordering} & \mathsf{contradiction} & 
+\mathsf{Eq}(3,24) \\ \hline
+28 & \text{(U,U):\;put}\;\rho:=e-d-1.\;\mathsf{Upper\ formulas:}%
+\;2f(d)=(\rho+2)(\rho+3),\;\Delta f(d+1)=-(\rho+2) & \mathsf{upper} & 
+\mathsf{Lem:}\ref{lemi:delta2-formula}(8) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+29 & 2g(d)=(\rho+2)(\rho+3),\quad\Delta g(d+1)=-(\rho+2) & \mathsf{upper} & 
+\mathsf{Lem:}\ref{lemi:delta2-formula}(8) \\ \hline
+30 & \text{From U at}\;d+1:\;\rho=e-d-1\ge-2,\;\text{so}\;\Delta
+H(d+1)=-2(\rho+2)\le0 & \mathsf{bound} & \mathsf{Eq}(28,29) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+31 & 2H(d)=2(\rho+2)(\rho+3) & \mathsf{combine} & \mathsf{Eq}(28,29) \\ 
+\hline
+32 & (\Delta H(d+1))^{2}-2H(d)=2(\rho+2)(\rho+1)\ge0\;\text{(since}%
+\;\rho\ge-2) & \mathsf{algebra} & \mathsf{Eq}(30,31) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+33 & \Delta^{2}H(d+1)=2\Rightarrow2H(d)\le(\Delta H(d+1))^{2} & \mathsf{%
+conclude} & \mathsf{Eq}(32) \\ \hline
+\end{array}%
+$
+
+\subsubsection*{Step 5: Conclusion.}
+
+\noindent From `$\Delta^{2}H(d+1)=2$' and `$H(d+1)\le(\Delta H(d+1))^{2}$'
+(obtained in Step 4), apply the shift reduction: \noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+34 & H(d-1)=H(d+1)-2\Delta H(d+1)+2\;\mathsf{when}\;\Delta^{2}H(d+1)=2 & 
+\mathsf{shift} & \mathsf{Eq}(30) \\ \hline
+35 & \Delta H(d+1)=-2(\rho+2)\le0\;\text{(from}\;\rho\ge-2\text{)},\;\text{so%
+}\;\Delta H(d+1)\le1 & \mathsf{bound} & \mathsf{Eq}(30) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+36 & H(d-1)\le(\Delta H(d+1))^{2}-2\Delta H(d+1)+2\le(\Delta
+H(d+1)-2)^{2}=(\Delta H(d))^{2} & \mathsf{algebra} & \mathsf{Eq}(32,34,35)
+\\ \hline
+37 & H(d-1)H(d+1)\le H(d)^{2}\;\mathsf{for\;all}\;0<d<e & \mathsf{combine} & 
+\mathsf{Eq}(9,10,11,17,22,36;\text{B1/B2}) \\ \hline
+38 & \mathsf{LC}(\mathsf{socle}(P),h_{P}) & \mathsf{conclude} & \mathsf{Eq}%
+(37) \\ \hline
+39 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,38) \\ \hline
+\end{array}%
+$
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Theorem \protect\ref{thmi:P6} (Open)}
+
+% ------------------------------------------------------------
+\noindent\textbf{Status: open.} Theorem~P6 (unimodality of type-$2$ pure $O$%
+-sequences in codimension $r\ge5$) is stated in the Statements section for
+reference but is \emph{not} proved in this document. The proofs of P4 and P5
+rely essentially on the codimension-$3$ structure (three coordinates,
+allowing a single dominant coordinate $x$ to be isolated and the swap
+reduction to be applied). This structure does not directly generalise to $%
+r\ge5$, and the corresponding question was identified as open by Zanello~%
+\cite{zanello2024}. No proof table is provided for P6.
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Theorem \protect\ref{thmi:P7} (Eventual
+Non-Log-Concavity)}
+
+% ------------------------------------------------------------
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & r\ge3,\;t\ge5 & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+2 & m_{\mathrm{fat}}=x^{t}y^{t}z^{t},\;m_{i}=x^{3t-i}y^{i}\;(0\le i<t-1) & 
+\mathsf{construction} & \mathsf{Def:}\ref{defi:Monomial}(1) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+3 & \Gamma_{t}:=\Gamma(m_{\mathrm{fat}},m_{0},\dots,m_{t-2}) & \mathsf{ideal}
+& \mathsf{Def:}\ref{defi:generatedOrderIdeal}(4) \\ \hline
+4 & \mathsf{pure},\;\mathsf{socle}=3t,\;\mathsf{type}=t & \mathsf{from\ Lemma%
+} & \mathsf{Lem:}\ref{lemi:exists-non-lc-r3}(5,6,7) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & h_{\Gamma_{t}}(3t)=t,\;h_{\Gamma_{t}}(3t-1)=t+2,\;h_{%
+\Gamma_{t}}(3t-2)=t+5 & \mathsf{count\ (\S above)} & \mathsf{Lem:}\ref%
+{lemi:exists-non-lc-r3}(8,9,10) \\ \hline
+6 & (t+5)\cdot t>(t+2)^{2}\;\mathsf{for}\;t\ge5 & \mathsf{algebra} & \mathsf{%
+Eq}(5) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+7 & \neg\mathsf{LC}(3t,h_{\Gamma_{t}}) & \mathsf{conclude} & \mathsf{Lem:}%
+\ref{lemi:exists-non-lc-r3}(12) \\ \hline
+8 & \exists P:\mathsf{PureOrderIdeal}_{r},\;\mathsf{type}(P)=t\wedge\neg%
+\mathsf{LC}(P) & \mathsf{embed} & \mathsf{Lem:}\ref{lemi:embed-preserves}(7)
+\\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+9 & \exists T\ge1,\;\forall t\ge T,\;\mathsf{existsNonLC}(r,t) & \mathsf{take%
+}\;T:=5 & \mathsf{Eq}(8) \\ \hline
+10 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,9) \\ \hline
+\end{array}%
+$
+
+\medskip
+
+% ------------------------------------------------------------
+
+\subsection*{Proof of Theorem \protect\ref{thmi:P8} (Least Threshold)}
+
+% ------------------------------------------------------------
+\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+1 & r\ge3 & \mathsf{hypothesis} & \mathsf{Hyp} \\ \hline
+2 & \exists T\ge1,\;\forall t\ge T,\;\mathsf{existsNonLC}(r,t) & \mathsf{P7}
+& \mathsf{Thm:}\ref{thmi:P7}(9) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+3 & S:=\{t\in\N\mid\forall t^{\prime}\ge t,\;\mathsf{existsNonLC}%
+(r,t^{\prime})\} & \mathsf{set} & \mathsf{Eq}(2) \\ \hline
+4 & S\ne\emptyset & \mathsf{from}\;T & \mathsf{Eq}(2,3) \\ \hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+5 & t_{0}:=\mathsf{IsLeast\text{-}witness}(S) & \mathsf{least-threshold} & 
+\mathsf{Lem:}\ref{lemi:least-threshold}(6) \\ \hline
+6 & \mathsf{IsLeast}(t_{0},S) & \mathsf{conclude} & \mathsf{Eq}(4,5) \\ 
+\hline
+\end{array}%
+$
+
+\nointerlineskip\noindent$%
+\begin{array}{|m{0.5cm}|l|r|c|}
+\hline
+7 & \top & \mathsf{close} & \to\mathsf{I}(1,\dots,6) \\ \hline
+\end{array}%
+$
+
+\section{Scripts}
+
+\label{sec:scripts} 
+% ============================================================
+\noindent Each tree records, for one result, the entries used by its proof,
+transitively closed. Names coincide with the names that appear in the
+statement tables. Leaves are either postulates (unproved classical inputs),
+axioms of \textsf{ZF+DC}, or primitive definitions. In the trees below the
+prefix \verb|Ld | carries the depth of the node (root at \verb|L0|) and the
+name is indented \verb|2*d| spaces after the pipe, so every chain can be
+read straight down a column of increasing depth labels.
+
+\medskip \noindent Every tree has a corresponding Lean~4 formalization in
+one of the files \texttt{hilbert\_functions\_1.lean} through \texttt{%
+hilbert\_functions\_8.lean}; the table below records the mapping from the
+entries of the Statements section to the Lean file and to the top-level Lean
+declaration that discharges the proof obligation.%
+\begin{equation*}
+\begin{array}{|m{3.5cm}|m{5cm}|m{5.5cm}|}
+\hline
+\text{\textsf{Entry}} & \text{\textbf{Lean file}} & \text{\textsf{Lean
+declaration}} \\ \hline
+\text{\textsf{principalOSeq}} & \text{\texttt{hilbert\_functions\_2.lean}} & 
+\text{\texttt{unimodal\_seq\_of\_g}} \\ \hline
+\text{\textsf{principalPos}} & \text{\texttt{hilbert\_functions\_2.lean}} & 
+\text{\texttt{seq\_of\_g\_pos}} \\ \hline
+\text{\textsf{twoMaxDecomp}} & \text{\texttt{hilbert\_functions\_4.lean}} & 
+\text{\texttt{carrier\_of\_maximals}} \\ \hline
+\text{\textsf{shiftReduce}} & \text{\texttt{hilbert\_functions\_4.lean}} & 
+\text{\texttt{diff\_eq\_shifted\_OSeq}} \\ \hline
+\text{\textsf{delta2Dich}} & \text{\texttt{hilbert\_functions\_5.lean}} & 
+\text{\texttt{diff2\_h\_seq\_eq\_one\_implies}} \\ \hline
+\text{\textsf{LUDich}} & \text{\texttt{hilbert\_functions\_5.lean}} & \text{%
+\texttt{diff2\_H\_seq\_le\_two}} \\ \hline
+\text{\textsf{existsNonLC\_r3}} & \text{\texttt{hilbert\_functions\_7.lean}}
+& \text{\texttt{dip\_exists\_dip}} \\ \hline
+\text{\textsf{embedPres}} & \text{\texttt{hilbert\_functions\_7.lean}} & 
+\text{\texttt{reduction\_to\_r3}} \\ \hline
+\text{\textsf{leastThreshold}} & \text{\texttt{hilbert\_functions\_8.lean}}
+& \text{\texttt{exists\_isLeast\_of\_exists}} \\ \hline
+\text{\textsf{P1}} & \text{\texttt{hilbert\_functions\_1.lean}} & \text{%
+\texttt{P1}} \\ \hline
+\text{\textsf{P2}} & \text{\texttt{hilbert\_functions\_2.lean}} & \text{%
+\texttt{P2}} \\ \hline
+\text{\textsf{P3}} & \text{\texttt{hilbert\_functions\_3.lean}} & \text{%
+\texttt{P3}} \\ \hline
+\text{\textsf{P4}} & \text{\texttt{hilbert\_functions\_4.lean}} & \text{%
+\texttt{P4}} \\ \hline
+\text{\textsf{P5}} & \text{\texttt{hilbert\_functions\_5.lean}} & \text{%
+\texttt{P5}} \\ \hline
+\text{\textsf{P7}} & \text{\texttt{hilbert\_functions\_7.lean}} & \text{%
+\texttt{P7}} \\ \hline
+\text{\textsf{P8}} & \text{\texttt{hilbert\_functions\_8.lean}} & \text{%
+\texttt{P8}} \\ \hline
+\end{array}%
+\end{equation*}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{LCcore}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | LC-core-alg
+		L1 |   Def:Z (integers)
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{log\_concave\_core}, by trichotomy on $z$ and elementary arithmetic.
+\end{minipage}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{delta2Formula}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | delta2-formula
+		L1 |   Def:divisorsFinset
+		L1 |   Def:totalDeg
+		L1 |   Def:Monomial
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{diff2\_h\_seq\_eq\_Z\_calc}, by inclusion-exclusion and second-difference computation.
+\end{minipage}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{principalOSeq}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | principal-OSeq
+		L1 |   pos:conv-LC
+		L1 |   Def:IsLogConcaveUpTo
+		L1 |   Def:totalDeg
+		L1 |   Def:divisorsFinset
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{unimodal\_seq\_of\_g}, via \texttt{Finsupp.induction}. The convolution step uses the ratio-decreasing characterization of log-concavity proved locally as \texttt{log\_concave\_conv\_Z} and \texttt{is\_ratio\_decreasing\_Z}.
+\end{minipage}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{principalPos}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | principal-pos
+		L1 |   Def:Monomial
+		L1 |   Def:totalDeg
+		L1 |   Def:divisorsFinset
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{seq\_of\_g\_pos} via the truncation map $m_{i}\mapsto\min(g_{i},d-\sum_{j<i}m_{j})$.
+\end{minipage}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{twoMaxDecomp}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | two-max-decomp
+		L1 |   Def:typePO
+		L1 |   Def:IsMaximalIn
+		L1 |   Def:OrderIdeal
+		L1 |   Def:divisorsFinset
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{carrier\_of\_maximals}, which uses \texttt{Finset.exists\_max\_image} to terminate every chain in $\Gamma$ at one of the two maximal monomials.
+\end{minipage}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{shiftReduce}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | shift-reduce
+		L1 |   two-max-decomp
+		L2 |     Def:typePO
+		L1 |   Def:divisorsFinset
+		L1 |   Def:Monomial
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{OSeq\_union} combined with \texttt{monomialInf} (the coordinatewise min) and \texttt{diff\_eq\_shifted\_OSeq}.
+\end{minipage}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{delta2Dich}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | delta2-dich
+		L1 |   Lem:delta2-formula
+		L2 |     Def:totalDeg
+		L2 |     Def:Monomial
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{diff2\_h\_seq\_eq\_one\_implies}. The L/U dichotomy is extracted from the twelve-term indicator sum by \texttt{grind} on \texttt{Fin 3}.
+\end{minipage}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{LUDich}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | LU-dich
+		L1 |   delta2-dich
+		L2 |     Lem:delta2-formula
+		L1 |   shift-reduce
+		L2 |     two-max-decomp
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{diff2\_H\_seq\_le\_two}, which feeds \texttt{diff2\_H\_seq\_eq\_add} into \texttt{diff2\_h\_seq\_le\_one} twice.
+\end{minipage}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{existsNonLC\_r3}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | exists-non-lc-r3
+		L1 |   Def:Monomial
+		L1 |   Def:generatedOrderIdeal
+		L1 |   Def:pureOSequence
+		L1 |   Def:IsLogConcaveUpTo
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{dip\_exists\_dip} together with \texttt{exists\_dip\_sequence\_r3}. The construction is \texttt{dipPureOrderIdeal3}.
+\end{minipage}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{embedPres}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | embed-pres
+		L1 |   exists-non-lc-r3
+		L2 |     Def:Monomial
+		L2 |     Def:generatedOrderIdeal
+		L1 |   Def:totalDeg
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{reduction\_to\_r3}. The embedding $\iota:\N^{3}\hookrightarrow\N^{r}$ is \texttt{embedMonomial} / \texttt{embedPureOrderIdeal}.
+\end{minipage}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{leastThreshold}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | least-threshold
+		L1 |   ax:DC
+		L1 |   Nat.wellFounded
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{exists\_isLeast\_of\_exists}, which reduces to \texttt{Nat.find} and \texttt{Nat.find\_min'}.
+\end{minipage}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{P1}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | P1
+		L1 |   Def:generatedOrderIdeal
+		L1 |   Def:pureOSequence
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{P1}, splitting into \texttt{GammaP1\_0}, \texttt{GammaP1\_1}, \texttt{GammaP1\_2}, \texttt{GammaP1\_3}.
+\end{minipage}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{P2}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | P2
+		L1 |   principal-OSeq
+		L2 |     pos:conv-LC
+		L1 |   principal-pos
+		L1 |   Def:typePO
+		L1 |   Def:IsLogConcaveUpTo
+		L1 |   Def:IsUnimodal
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{P2}, composed of \texttt{P2\_coeff}, \texttt{P2\_unimodal}, and \texttt{P2\_logconcave}.
+\end{minipage}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{P3}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | P3
+		L1 |   pos:Macaulay2
+		L1 |   Def:pureOSequence
+		L1 |   Def:OrderIdeal
+		L1 |   Def:IsLogConcaveUpTo
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{P3}, via \texttt{P3\_dichotomy} on the slice sizes \texttt{slice\_size} and \texttt{macaulay\_2\_vars}. The dichotomy is closed by \texttt{nat\_AMGM}.
+\end{minipage}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{P4}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | P4
+		L1 |   two-max-decomp
+		L1 |   shift-reduce
+		L2 |     two-max-decomp
+		L1 |   principal-OSeq
+		L2 |     pos:conv-LC
+		L1 |   Def:IsUnimodal
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{P4}, using \texttt{unimodal\_of\_two\_maximals} which packages \texttt{oseq\_union\_eq\_add\_diff} and \texttt{unimodal\_of\_OSeq\_add\_shifted}.
+\end{minipage}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{P5}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | P5
+		L1 |   two-max-decomp
+		L1 |   shift-reduce
+		L2 |     two-max-decomp
+		L1 |   delta2-dich
+		L2 |     Lem:delta2-formula
+		L1 |   LU-dich
+		L2 |     delta2-dich
+		L1 |   Lem:LC-core-alg
+		L1 |   Def:IsLogConcaveUpTo
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{P5}, whose heart is \texttt{sum\_log\_concave\_helper}, composed of \texttt{log\_concave\_core}, \texttt{diff2\_H\_seq\_le\_two}, and the four case-lemmas \texttt{diff2\_H\_seq\_eq\_one\_implies\_inl} / \texttt{\_inr} and \texttt{diff2\_H\_seq\_eq\_two\_implies}.
+\end{minipage}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{P7}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | P7
+		L1 |   exists-non-lc-r3
+		L2 |     Def:Monomial
+		L2 |     Def:generatedOrderIdeal
+		L2 |     Def:pureOSequence
+		L1 |   embed-pres
+		L2 |     exists-non-lc-r3
+		L2 |     Def:totalDeg
+		L1 |   Def:ExistsNonLogConcave
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{P7}, taking $T:=5$. The construction is \texttt{dipPureOrderIdeal3}.
+\end{minipage}
+
+\medskip
+
+\subsection*{Dependency tree: \textsf{P8}}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\begin{verbatimbox}
+		L0 | P8
+		L1 |   P7
+		L2 |     exists-non-lc-r3
+		L2 |     embed-pres
+		L1 |   least-threshold
+		L2 |     ax:DC
+		L1 |   Def:ExistsNonLogConcave
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Annotation.} Lean proof: \texttt{P8}, which is \texttt{P7\_implies\_P8} applied to the threshold existence of P7.
+\end{minipage}
+
+\medskip
+
+\noindent\textbf{Theorem P6 (open).} No tree is given for P6; no Lean file
+among the seven supplied formalizes a proof; P6 is recorded as open in the
+Statements section.
+
+\medskip
+
+\subsubsection*{Complete leaves}
+
+\noindent%
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Postulates.}
+	\smallskip
+	\begin{verbatimbox}
+		pos:conv-LC
+		pos:Macaulay2
+	\end{verbatimbox}
+\end{minipage}\hfill 
+\begin{minipage}[t]{0.48\linewidth}
+	\vspace{0pt}
+	\textbf{Axioms.}
+	\smallskip
+	\begin{verbatimbox}
+		ax:DC
+	\end{verbatimbox}
+\end{minipage}
+
+\medskip
+
+\noindent%
+\begin{minipage}[t]{\linewidth}
+	\vspace{0pt}
+	\textbf{Definitions used as leaves.}
+	\smallskip
+	\begin{verbatimbox}
+		Def:Monomial        Def:totalDeg       Def:OrderIdeal
+		Def:divisorsFinset  Def:generatedOrderIdeal
+		Def:IsMaximalIn     Def:maximalMonomials
+		Def:IsPure          Def:PureOrderIdeal Def:typePO
+		Def:socleDegree     Def:pureOSequence  Def:IsUnimodal
+		Def:IsLogConcaveUpTo Def:ExistsNonLogConcave
+	\end{verbatimbox}
+\end{minipage}
+
+% ============================================================
+
+\section{Verification}
+
+\label{sec:verification} 
+% ============================================================
+\noindent\textbf{Formal verification.} Every lemma and theorem in the
+Statements section (with the exception of the open Theorem~P6) has a
+corresponding machine-checked proof in the Lean~4 proof assistant, in one of
+the files \texttt{hilbert\_functions\_1.lean} through \texttt{%
+hilbert\_functions\_8.lean}. The Scripts section above records the mapping
+from each entry to its Lean file and to the top-level Lean declaration that
+discharges the proof obligation. All Lean proofs are publicly available at %
+\url{https://github.com/google-deepmind/alphaproof-nexus-results}.
+
+\medskip\noindent\textbf{Verification methodology.} The Lean formalization
+proceeds by:
+
+\begin{enumerate}
+\item \textbf{Formalization of the statement.} Each theorem is stated in
+Lean~4 as a \texttt{Prop} involving the definitions of the Definitions
+section, following the conventions used in the Mathlib library \cite%
+{mathlib2020}.
+
+\item \textbf{Proof search.} The proofs were found by the AlphaProof Nexus
+agent \cite{tsoukalas2026}, which searches for tactic scripts in the Lean~4
+tactic language, guided by compiler feedback.
+
+\item \textbf{Machine verification.} The Lean compiler checks every proof
+step; a theorem is accepted only if the compiler reaches a state with no
+remaining goals.
+
+\item \textbf{Informal reading.} The step tables in the Proofs section are
+an \emph{informal} deformation of the Lean proofs: they track the same
+logical structure but compress many Lean-level tactic steps into single
+mathematical assertions. The Lean files are the authoritative formal
+artefact; the tables here are a reading aid.
+\end{enumerate}
+
+\medskip\noindent\textbf{Robustness against known failure modes.} The
+AlphaProof Nexus preprint \cite{tsoukalas2026} documents two failure modes
+of LLM-based proof search that our verification workflow explicitly guards
+against:
+
+\begin{itemize}
+\item \emph{Sorried core lemmas.} The Lean proof files in the repository
+contain no \texttt{sorry} in any of the declarations listed in the Scripts
+mapping table. A `sorry` audit at the declaration level---reading off the
+declaration names and confirming each is a closed proof term---is the basic
+check that a reader can run without any Lean expertise.
+
+\item \emph{Hallucinated literature citations.} The preprint reports that in
+its failure cases, top sketches relied on lemmas marked \texttt{sorry} that
+the agent claimed were established results. Since all sixteen mapping-table
+declarations are themselves proved in Lean (not deferred to cited work),
+this failure mode does not affect the results presented here.
+\end{itemize}
+
+\medskip\noindent\textbf{Known limitations.} The Lean formalization verifies
+the formal statements as given; the informal reading of those statements
+against the original conjectures of Stanley,
+Boij--Migliore--Mir\'o-Roig--Nagel--Zanello, and Zanello is done by hand and
+is not machine-checked. The deformation tables in the Proofs section are not
+themselves verified; they should be read alongside the Lean source.
+
+\medskip\noindent\textbf{Reproducibility.} The Lean development builds
+against Mathlib \cite{mathlib2020}. To reproduce the machine check of any
+specific declaration (e.g.\ \texttt{P5}), clone the repository, check out
+the pinned Mathlib commit, and run \texttt{lake build} on the relevant 
+\texttt{hilbert\_functions\_*.lean} file. The declaration \texttt{P5}
+compiles successfully and its type is \texttt{ProblemP5}, which unfolds to
+the statement of P5 in the Statements section.
+
+\medskip\noindent\textbf{Status.} The results described here are reported in 
+\cite{tsoukalas2026}, a preprint of Google DeepMind's AlphaProof Nexus
+project. The work has not yet appeared in a peer-reviewed venue at the time
+of writing.
+
+% ============================================================
+
+\section{Discussion and Limitations}
+
+% ============================================================
+\noindent\textbf{Dependence on formal verification.} The mathematical weight
+of this document rests on the Lean formalization. The Proofs section is a 
+\emph{reading aid}, not a self-contained proof: the deepest sub-arguments
+(the L/U case analysis behind \texttt{delta2Dich}, the first-half
+log-concavity step in P3, the four-case analysis in P5) are presented at a
+level of detail consistent with a mathematical exposition, not a formal
+proof. A reader who wishes to independently verify the results should
+consult the Lean files.
+
+\medskip\noindent\textbf{Two postulates.} Only two postulates are retained: 
+\texttt{conv-LC} (the convolution theorem for log-concave sequences) and 
+\texttt{Macaulay2} (Macaulay's two-variable theorem). Both are classical and
+well-documented in the literature (see \S \ref{sec:verification} and the
+Provenance note in \S 3). They are admitted here to keep the exposition
+focused on the eight-problem layer.
+
+\medskip\noindent\textbf{The open question.} P6 (unimodality of type-$2$
+pure $O$-sequences in codimension $r \ge 5$) is stated but not resolved. The
+proofs of P4 and P5 depend essentially on the codimension-$3$ structure, in
+particular the existence of a single dominant coordinate $x$ that allows the
+swap reduction. This does not generalise to $r \ge 5$, and the corresponding
+question remains open.
+
+\medskip\noindent\textbf{Role of AI in the proofs.} The Lean proofs were
+found by an LLM-driven agent (\cite{tsoukalas2026}), not written by hand.
+This is a new mode of mathematical production, and it has two consequences
+the reader should be aware of:
+
+\begin{itemize}
+\item The \emph{correctness} of each proof is assured by the Lean compiler;
+the question of whether the formalized statement matches the informal
+conjecture is a separate, human-audited step (see Verification above).
+
+\item The \emph{mathematical insight} behind each proof is not necessarily
+reflected in the agent's internal reasoning; the natural language summaries
+in this document are reverse-engineered from the Lean proofs.
+\end{itemize}
+
+% ============================================================
+
+\section{Conclusion}
+
+% ============================================================
+\noindent The document presents the dependency-ordered exposition of eight
+problems on pure $O$-sequences, organised into six parts (Axioms,
+Postulates, Definitions, Statements, Proofs, Scripts), with the choice
+strength of every result recorded as \textsf{ZF}, \textsf{ZF+DC}, or \textsf{%
+ZFC}. Within the Statements part, Lemmas and Theorems form a single
+dependency layer, so long as each entry appears only after all entries it
+depends on. In particular \textsf{LCcore} and \textsf{delta2Formula} are
+stated first among the Lemmas because \textsf{delta2Dich} and \textsf{P5}
+depend on them; \textsf{principal-OSeq} is stated because P2 depends on it; 
+\textsf{two-max-decomp} and \textsf{shift-reduce} precede P4 and P5; \textsf{%
+delta2-dich} and \textsf{LU-dich} precede P5; and \textsf{exists-non-lc-r3}
+precedes P7 and P8.
+
+Only two postulates remain (\textsf{conv-LC} and \textsf{Macaulay2}), both
+cited to the literature. The codimension-$r \ge 5$ type-$2$ unimodality
+question (P6) is stated but not resolved. Every lemma and theorem stated in
+the Statements section has a corresponding proof table in the Proofs section
+(except P6), and the proofs are presented in the same order as the
+statements. The Proofs section is deliberately an \emph{informal deformation}
+of the machine-checked Lean proofs; readers who wish to verify the results
+mechanically should consult the Lean files in the companion repository and
+read the Verification section for methodology, robustness checks, and
+limitations.
+
+% ============================================================
+
+\begin{thebibliography}{99}
+\bibitem{stanley1978} R.~P. Stanley. \newblock Hilbert functions of graded 
+algebras. \newblock \emph{Adv.\ Math.} \textbf{28} (1978), 57--83. 
+\newblock
+\url{https://doi.org/10.1016/0001-8708(78)90045-2}. \medskip
+
+\bibitem{bmmnz2012} M.~Boij, J.~C. Migliore, R.~M. Mir\'o-Roig, U.~Nagel, 
+F.~Zanello. \newblock \emph{On the Shape of a Pure $O$-Sequence}. \newblock
+Mem.\ Amer.\ Math.\ Soc.\ \textbf{218} (2012), no.~1024. \newblock
+\url{https://doi.org/10.1090/S0065-9266-2011-00647-7}. \medskip
+
+\bibitem{zanello2024} F.~Zanello. \newblock Log-concavity of level Hilbert 
+functions and pure $O$-sequences. \newblock \emph{J.\ Commut.\ Algebra}  
+\textbf{16} (2024), 245--256. \newblock
+\url{https://doi.org/10.1216/jca.2024.16.245}. \medskip
+
+\bibitem{tsoukalas2026} G.~Tsoukalas, A.~Kovsharov, S.~Shirobokov, et~al.  %
+\newblock Advancing mathematics research with AI-driven formal proof search.
+\newblock arXiv:2605.22763 (2026). \newblock
+\url{https://arxiv.org/abs/2605.22763}. \medskip
+
+\bibitem{simpson2009} S.~G. Simpson. \newblock \emph{Subsystems of Second
+Order Arithmetic}, 2nd ed. \newblock Perspectives in Logic, Cambridge 
+University Press, Cambridge, 2009. \newblock
+\url{https://doi.org/10.1017/CBO9780511581007}. \medskip
+
+\bibitem{karlin1968} S.~Karlin. \newblock \emph{Total Positivity}, Vol.~I.  %
+\newblock Stanford University Press, Stanford, CA, 1968. \newblock
+\url{https://archive.org/details/totalpositivity0000karl}. \medskip
+
+\bibitem{liggett1997} T.~M. Liggett. \newblock Ultra log-concavity and 
+down-up chains. \newblock \emph{J.\ Math.\ Anal.\ Appl.} \textbf{213} 
+(1997), 561--574. \newblock
+\url{https://doi.org/10.1006/jmaa.1997.5581}. \medskip
+
+\bibitem{macaulay1927} F.~S. Macaulay. \newblock Some properties of 
+enumeration functions in the theory of modular systems. \newblock
+\emph{J.\ London Math.\ Soc.} \textbf{2} (1927), 164--176. \newblock
+\url{https://doi.org/10.1112/jlms/s1-2.3.164}. \medskip
+
+\bibitem{brunsherzog1993} W.~Bruns, H.~J. Herzog. \newblock \emph{Cohen--
+Macaulay Rings}. \newblock Cambridge Studies in Advanced Mathematics, 
+vol.~39, Cambridge University Press, Cambridge, 1993. \newblock
+\url{https://doi.org/10.1017/CBO9781139172073}. \medskip
+
+\bibitem{mathlib2020} {The Mathlib Community}. \newblock The Lean 
+mathematical library. \newblock In \emph{Proceedings of the 9th ACM SIGPLAN
+International Conference on Certified Programs and Proofs},  CPP~2020, ACM,
+New York, 2020. \newblock
+\url{https://doi.org/10.1145/3372885.3373824}.
+\end{thebibliography}
+
+\end{document}

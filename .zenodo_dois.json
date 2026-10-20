@@ -6,19 +6,26 @@
     "id": 23405210,
     "published": "2026-10-15 22:00:55"
   },
+  "Pure-O-Sequences-in-Codimension-Three-05E40": {
+    "concept_doi": "10.5281/zenodo.23484636",
+    "doi": "10.5281/zenodo.23484637",
+    "files_hash": "a24d08b1f920c66a2ed6b239824f007b87846518cb0440fc8e0083547aad38a6",
+    "id": 23484637,
+    "published": "2026-10-19 22:33:57"
+  },
   "Taylor-s-Theorem-with-Lagrange-Remainder-in-Mathlib-26A06": {
     "concept_doi": "10.5281/zenodo.23375843",
-    "doi": "10.5281/zenodo.23375844",
-    "files_hash": "48b7e8e3cbe920ce73c6ce07f6ab816fd110d0aa7273b1528c78964f120c007c",
-    "id": 23375844,
-    "published": "2026-10-14 19:09:17"
+    "doi": "10.5281/zenodo.23479754",
+    "files_hash": "3f50c0647de6eb5a3b7e7d904410f9c260abdfa82d547b7951e27236f6ef7ebd",
+    "id": 23479754,
+    "published": "2026-10-19 17:46:06"
   },
-  "The-Dependency-Ordered-Formal-Exposition-of-PDE": {
+  "The-Dependency-Ordered-Formal-Exposition-of-PDE_": {
     "concept_doi": "10.5281/zenodo.23375876",
-    "doi": "10.5281/zenodo.23381971",
-    "files_hash": "09c119f8bb27d0204cf1776e14eba694a3e44225d4e34e90fdd2b78cca54f4d7",
-    "id": 23381971,
-    "published": "2026-10-15 01:20:32"
+    "doi": "10.5281/zenodo.23479763",
+    "files_hash": "dd8a27ecf634ea91daaf39690edf715f9d01753068a5114d8975b6d9802e9a94",
+    "id": 23479763,
+    "published": "2026-10-19 17:46:15"
   },
   "The-Fundamental-Theorem-of-Calculus-in-Mathlib-26A42": {
     "concept_doi": "10.5281/zenodo.23375880",
