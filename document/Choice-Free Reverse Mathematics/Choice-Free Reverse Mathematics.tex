@@ -1,7 +1,7 @@
 \documentclass[11pt,reqno]{amsart}
 
 %==============================================================================
-% PACKAGES  (deduplicated; lmodern first; xcolor before hyperref/tikz; hyperref last)
+% PACKAGES  — deduplicated; graphicx before hyperref; cleveref last
 %==============================================================================
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
@@ -19,7 +19,12 @@ headheight=15pt,headsep=40pt]{geometry}
 \usepackage{fancyvrb}
 \usepackage{fancyhdr}
 \usepackage{titlesec,titletoc}
-\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\usepackage[colorlinks=true,
+linkcolor=blue,
+citecolor=green,
+urlcolor=magenta]{hyperref}
+\usepackage{cleveref}
 
 \hypersetup{pageanchor=false}
 
@@ -158,10 +163,20 @@ headheight=15pt,headsep=40pt]{geometry}
 \makeatother
 
 %==============================================================================
-% TOC
+% TOC  (titletoc only; tocloft removed to avoid \@starttoc clash)
 %==============================================================================
+
+
+
+\titlecontents{part}[1.5em]
+{\vspace{0.15em}\large}
+{\let\oldlabel\thecontentslabel\def\thecontentslabel{\oldlabel.}\contentslabel{1.5em}}
+{\hspace*{-2.5em}}
+{\titlerule*[0.5pc]{.}\contentspage}
+
+
 \titlecontents{section}[1.5em]
-{\vspace{0.15em}\footnotesize}
+{\vspace{0.15em}\small}
 {\let\oldlabel\thecontentslabel\def\thecontentslabel{\oldlabel.}\contentslabel{1.5em}}
 {\hspace*{-2.5em}}
 {\titlerule*[0.5pc]{.}\contentspage}
@@ -190,6 +205,15 @@ headheight=15pt,headsep=40pt]{geometry}
 \renewcommand{\thethmctr}{\arabic{thmctr}}
 \renewcommand{\thepropctr}{\arabic{propctr}}
 \renewcommand{\thecorctr}{\arabic{corctr}}
+
+\renewcommand{\theHaxctr}{\thesection.\arabic{axctr}}
+\renewcommand{\theHposctr}{\thesection.\arabic{posctr}}
+\renewcommand{\theHdefctr}{\thesection.\arabic{defctr}}
+\renewcommand{\theHlemctr}{\thesection.\arabic{lemctr}}
+\renewcommand{\theHthmctr}{\thesection.\arabic{thmctr}}
+\renewcommand{\theHpropctr}{\thesection.\arabic{propctr}}
+\renewcommand{\theHcorctr}{\thesection.\arabic{corctr}}
+
 \newcommand{\swpax}[2]{\refstepcounter{axctr}\hypertarget{#1}{\mbox{\textbf{Ax\,\theaxctr}}}\label{#2}}
 \newcommand{\swppos}[2]{\refstepcounter{posctr}\hypertarget{#1}{\mbox{\textbf{Pos\,\theposctr}}}\label{#2}}
 \newcommand{\swpdef}[2]{\refstepcounter{defctr}\hypertarget{#1}{\mbox{\textbf{Def\,\thedefctr}}}\label{#2}}
@@ -203,12 +227,12 @@ headheight=15pt,headsep=40pt]{geometry}
 %==============================================================================
 % THEOREM ENVIRONMENTS
 %==============================================================================
-\newtheoremstyle{blueplain}%
+\newtheoremstyle{redplain}%
 {2pt plus 1pt minus 0.5pt}%
 {1pt plus 0.5pt minus 0.3pt}%
-{\itshape}{}{\bfseries\color{blue}}{.}{\newline}%
-{\thmname{#1}\thmnumber{ #2}\thmnote{ {\bfseries\color{blue}(#3)}}}
-\theoremstyle{blueplain}
+{\itshape}{}{\bfseries\color{red}}{.}{\newline}%
+{\thmname{#1}\thmnumber{ #2}\thmnote{ {\bfseries\color{red}(#3)}}}
+\theoremstyle{redplain}
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{corollary}[theorem]{Corollary}
@@ -218,6 +242,39 @@ headheight=15pt,headsep=40pt]{geometry}
 \renewenvironment{proof}[1][Proof]{\noindent\textbf{#1.}\ }{\ }
 
 \renewcommand{\theHtheorem}{\thesection.\arabic{theorem}}
+
+%==============================================================================
+% HYPERREF + CLEVEREF COUNTER NAMES
+%==============================================================================
+\providecommand{\axctrautorefname}{Axiom}
+\providecommand{\posctrautorefname}{Postulate}
+\providecommand{\defctrautorefname}{Definition}
+\providecommand{\lemctrautorefname}{Lemma}
+\providecommand{\thmctrautorefname}{Theorem}
+\providecommand{\propctrautorefname}{Proposition}
+\providecommand{\corctrautorefname}{Corollary}
+
+\crefname{axctr}{axiom}{axioms}
+\crefname{posctr}{postulate}{postulates}
+\crefname{defctr}{definition}{definitions}
+\crefname{lemctr}{lemma}{lemmas}
+\crefname{thmctr}{theorem}{theorems}
+\crefname{propctr}{proposition}{propositions}
+\crefname{corctr}{corollary}{corollaries}
+
+\Crefname{axctr}{Axiom}{Axioms}
+\Crefname{posctr}{Postulate}{Postulates}
+\Crefname{defctr}{Definition}{Definitions}
+\Crefname{lemctr}{Lemma}{Lemmas}
+\Crefname{thmctr}{Theorem}{Theorems}
+\Crefname{propctr}{Proposition}{Propositions}
+\Crefname{corctr}{Corollary}{Corollaries}
+
+\newcommand{\thmref}[1]{\hyperref[#1]{Theorem~\ref*{#1}}}
+\newcommand{\lemref}[1]{\hyperref[#1]{Lemma~\ref*{#1}}}
+\newcommand{\corref}[1]{\hyperref[#1]{Corollary~\ref*{#1}}}
+\newcommand{\propref}[1]{\hyperref[#1]{Proposition~\ref*{#1}}}
+\newcommand{\defref}[1]{\hyperref[#1]{Definition~\ref*{#1}}}
 
 %==============================================================================
 % TITLE BLOCK
@@ -250,9 +307,22 @@ headheight=15pt,headsep=40pt]{geometry}
 	\@setabstract}
 \makeatother
 
+% Customize \part heading in the document body (titlesec; unchanged)
+\titleformat{\part}[display]
+{\normalfont\Huge\centering\sffamily\bfseries}
+{Part \thepart}
+{1em}
+{}
+\renewcommand{\contentsname}{%
+	\texorpdfstring{%
+		{\color{blue!60!black}%
+			\sffamily\Large\selectfont\bfseries
+			Contents}}%
+	{Contents}}
 \renewcommand{\seriesdefault}{\bfdefault}
 \boldmath
 \begin{document}
+
 
 \title{\bfseries\Huge
 	\emph{Choice-Free Reverse Mathematics.}\\[10pt]
@@ -270,7 +340,7 @@ headheight=15pt,headsep=40pt]{geometry}
 
 \begin{abstract}
 \thispagestyle{empty}\setstretch{1.5}
-Part~I develops classical single-variable real analysis in Barrow's geometric language of areas\comma ordinates\comma and subtangents. Part~II classifies each theorem in reverse mathematics. MVT and Rolle are $\textsf{RCA}_0$ via Hardin--Velleman; the mean-value theorem for integrals\comma the inverse-function theorem (Yokoyama's strong-$C^1$ form)\comma and the $\ln$/$\exp$ chain are $\textsf{RCA}_0$; IVT\comma EVT\comma Darboux\comma and the weighted MVT are $\textsf{WKL}_0$ as proved here. All $C^k$ hypotheses are read as strong $C^k$-coding. No entry uses Cauchy completeness or any form of Choice.
+\autoref{part:part1} develops classical single-variable real analysis in Barrow's geometric language of areas\comma ordinates\comma and subtangents. \autoref{part:part2} classifies each theorem in reverse mathematics. MVT and Rolle are $\textsf{RCA}_0$ via Hardin--Velleman; the mean-value theorem for integrals\comma the inverse-function theorem (Yokoyama's strong-$C^1$ form)\comma and the $\ln$/$\exp$ chain are $\textsf{RCA}_0$; IVT\comma EVT\comma Darboux\comma and the weighted MVT are $\textsf{WKL}_0$ as proved here. All $C^k$ hypotheses are read as strong $C^k$-coding. No entry uses Cauchy completeness or any form of Choice.
 \end{abstract}
 
 \begin{figure}[H]
@@ -506,12 +576,12 @@ Part~I develops classical single-variable real analysis in Barrow's geometric la
 \setstretch{1.3}
 \noindent Barrow's \emph{Geometrical Lectures} (1670) give the first calculus textbook and the first geometric proof of the Fundamental Theorem of Calculus; see \cite{Barrow1916,Lopez2026}.
 
-Part~I develops the classical theorems of single-variable real analysis --- EVT\comma IVT\comma Fermat\comma Rolle\comma MVT and its refinements\comma convexity\comma inverse function\comma the Fundamental Theorems of Calculus\comma and the $\ln$/$\exp$ addition and image theorems --- in Barrow's geometric idiom\comma with figures and geometric proofs.
+\autoref{part:part1} develops the classical theorems of single-variable real analysis --- EVT\comma IVT\comma Fermat\comma Rolle\comma MVT and its refinements\comma convexity\comma inverse function\comma the Fundamental Theorems of Calculus\comma and the $\ln$/$\exp$ addition and image theorems --- in Barrow's geometric idiom\comma with figures and geometric proofs.
 
-Part~II classifies each theorem in reverse mathematics. Every axiom\comma postulate\comma definition and statement of Part~I reappears as a tagged entry with a dependency table and an exact strength. Classification: all entries are $\textsf{RCA}_0$ except IVT\comma EVT\comma Darboux\comma and the weighted MVT\comma which are $\textsf{WKL}_0$. No entry uses Cauchy completeness or any form of Choice \cite{Propp2012,Jech1973}. Coding conventions are in \S\ref{sec:coding}.
+\autoref{part:part2} classifies each theorem in reverse mathematics. Every axiom\comma postulate\comma definition and statement of \autoref{part:part1} reappears as a tagged entry with a dependency table and an exact strength. Classification: all entries are $\textsf{RCA}_0$ except IVT\comma EVT\comma Darboux\comma and the weighted MVT\comma which are $\textsf{WKL}_0$. No entry uses Cauchy completeness or any form of Choice \cite{Propp2012,Jech1973}. Coding conventions are in \S\ref{sec:coding}.
 
 \part{A Geometric Development of Classical Real Analysis}
-
+\label{part:part1}
 \noindent Following Barrow \cite[Lecture~X, \S 11]{Barrow1916}\comma we state and prove the classical theorems in Barrow's geometric idiom. See \cite{Lopez2026} for commentary.
 
 \section{Axioms, definitions and geometric conventions}
@@ -585,11 +655,11 @@ f(A\cup B)=f(A)\cup f(B).
 \exp:=\ln^{-1}:\R\to\R_{>0}.
 \end{equation}
 
-\paragraph{$\textsf{\underline{Barrow-tangency.}}$}\text{\ } Let $G$ be differentiable at $x_0$\comma and let $L(u)=m(u-x_0)+G(x_0)$ be the line through $(x_0\comma G(x_0))$ of slope $m$. If $L\le G$ (or $L\ge G$) on a punctured neighbourhood of $x_0$\comma then
+\paragraph{$\textsf{\underline{Barrow-tangency.}}$}\text{\ } Let $G$ be differentiable at $x_0$\comma and let $L(u)=m(u-x_0)+G(x_0)$ be the line through $(x_0\comma G(x_0))$ of slope $m$. If $L\le G$ (or $L\ge G$) on a punctured neighbourhood of $x_0$\comma then\footnote{The two-sided hypothesis strengthens Barrow's one-sided criterion\comma which fails at inflections \cite{Lopez2026}. Every use in \autoref{part:part1} is in a convex or concave setting\comma where the two-sided hypothesis holds.}
 \begin{equation}\label{eq:barrow-tangency}
 m=G'(x_0).
 \end{equation}
-\footnote{The two-sided hypothesis strengthens Barrow's one-sided criterion\comma which fails at inflections \cite{Lopez2026}. Every use in Part~I is in a convex or concave setting\comma where the two-sided hypothesis holds.}
+
 
 \section{Statements of the classical theorems}
 
@@ -623,7 +693,7 @@ m=G'(x_0).
 
 \begin{theorem}[Rolle]
 	\label{thm:rolle}
-	If $f$ is continuous on $[a\comma b]$\comma differentiable on $(a\comma b)$\comma and $f(a)=f(b)$\comma then $\exists c\in(a\comma b):\,f'(c)=0$.
+	If $f$ is continuous on $[a\comma b]$\comma differentiable on $(a\comma b)$\comma and $f(a)=f(b)$\comma then \begin{equation}\exists c\in(a\comma b):\,f'(c)=0.\end{equation}
 \end{theorem}
 
 \begin{theorem}[Mean-Value Theorem]
@@ -670,7 +740,7 @@ m=G'(x_0).
 
 \begin{theorem}[L'H\^opital]
 	\label{thm:lhopital}
-	Let $f\comma g$ be differentiable near $a$\comma with $f(a)=g(a)=0$\comma $g'\ne0$ near $a$\comma and $\lim_{x\to a}f'(x)/g'(x)=L$. Then
+	Let $f\comma g$ be differentiable near $a$\comma with $f(a)=g(a)=0$\comma $g'\ne0$ near $a$\comma and $$\lim_{x\to a}f'(x)/g'(x)=L.$$ Then
 	\begin{equation}\label{eq:lhopital}
 	\lim_{x\to a}f(x)/g(x)=L.
 	\end{equation}
@@ -784,13 +854,11 @@ m=G'(x_0).
 	\exp(\R)=\R_{>0}\comma\qquad \ln(\R_{>0})=\R.
 	\end{equation}
 \end{theorem}
-
 \section{Geometrical proofs}
-
 \subsection{Topological theorems}
 
-\begin{proof}[Proof of Theorem~\ref{thm:evt}]
-	$S=f([a\comma b])$ is nonempty and bounded; let $M=\sup S$\comma $m=\inf S$. Were $M$ unattained\comma $1/(M-f)$ would be continuous and unbounded on $[a\comma b]$; contradiction. So $M=f(x_{\max})$; symmetrically $m=f(x_{\min})$\comma giving \eqref{eq:evt}.\hfill$\square$
+\begin{proof}[Proof of \autoref{thm:evt}]
+	$S=f([a\comma b])$ is nonempty and bounded; let $M=\sup S$\comma $m=\inf S$. Were $M$ unattained\comma $1/(M-f)$ would be continuous and unbounded on $[a\comma b]$; contradiction. So $M=f(x_{\max})$; symmetrically $m=f(x_{\min})$\comma giving \autoref{eq:evt}.\hfill$\square$
 \end{proof}
 
 \begin{figure}[H]
@@ -808,8 +876,8 @@ m=G'(x_0).
 	\label{fig:evt}
 \end{figure}
 
-\begin{proof}[Proof of Theorem~\ref{thm:ivt}]
-	Assume $f(a)<0<f(b)$ and let $c=\sup\{x\in[a\comma b]:f(x)<0\}$. By continuity $f(c)\le 0$; if $f(c)<0$ then $f<0$ on a neighbourhood of $c$ intersected with $[a\comma b]$, contradicting the definition of $c$ as an upper bound; hence \eqref{eq:ivt} holds.\hfill$\square$
+\begin{proof}[Proof of \autoref{thm:ivt}]
+	Assume $f(a)<0<f(b)$ and let $c=\sup\{x\in[a\comma b]:f(x)<0\}$. By continuity $f(c)\le 0$; if $f(c)<0$ then $f<0$ on a neighbourhood of $c$ intersected with $[a\comma b]$, contradicting the definition of $c$ as an upper bound; hence \autoref{eq:ivt} holds.\hfill$\square$
 \end{proof}
 
 \begin{figure}[H]
@@ -831,7 +899,7 @@ m=G'(x_0).
 
 \subsection{Differentiation theorems}
 
-\begin{proof}[Proof of Theorem~\ref{thm:fermat}]
+\begin{proof}[Proof of \autoref{thm:fermat}]
 	If $c$ is a local max: $(f(c+h)-f(c))/h\le0$ for $h>0^+$ gives $f'(c)\le0$; for $h<0^-$\comma $\ge0$ gives $f'(c)\ge0$. So $f'(c)=0$.\hfill$\square$
 \end{proof}
 
@@ -848,7 +916,7 @@ m=G'(x_0).
 	\label{fig:fermat}
 \end{figure}
 
-\begin{proof}[Proof of Theorem~\ref{thm:rolle}]
+\begin{proof}[Proof of \autoref{thm:rolle}]
 	By EVT\comma $f$ attains $M\comma m$. If $M=m$\comma $f$ constant. Otherwise\comma $f(a)=f(b)$ forces an interior extremum $c$; Fermat gives $f'(c)=0$.\hfill$\square$
 \end{proof}
 
@@ -866,7 +934,7 @@ m=G'(x_0).
 	\label{fig:rolle}
 \end{figure}
 
-\begin{proof}[Proof of Theorem~\ref{thm:mvt} (Barrow's sliding tangent)]
+\begin{proof}[Proof of \autoref{thm:mvt} (Barrow's sliding tangent)]
 	Let $L$ be the chord line\comma $g=f-L$. Then $g(a)=g(b)=0$; by EVT\comma $g$ attains $M\comma m$.
 	\emph{Case $M>0$:} maximum at $c\in(a\comma b)$; the translate $L+M$ touches $f$ at $C$ and lies above; by concave Barrow-tangency\comma slope $=f'(c)=L'(c)=(f(b)-f(a))/(b-a)$.
 	\emph{Case $M=0$:} if $f=L$ identically\comma trivial; otherwise $m<0$ with minimum at interior $c$ and the same argument via convex Barrow-tangency. So $d_c\parallel d_{a\comma b}$.\hfill$\square$
@@ -892,16 +960,16 @@ m=G'(x_0).
 	\label{fig:mvt}
 \end{figure}
 
-\begin{proof}[Proof of Theorem~\ref{thm:const}]
+\begin{proof}[Proof of \autoref{thm:const}]
 	MVT on $[a\comma x]$: $f(x)-f(a)=f'(c)(x-a)=0$.\hfill$\square$
 \end{proof}
 
-\begin{proof}[Proof of Theorem~\ref{thm:monotone}]
+\begin{proof}[Proof of \autoref{thm:monotone}]
 	MVT on $[x_1\comma x_2]$: $f(x_2)-f(x_1)=f'(c)(x_2-x_1)$; sign of $f'(c)$ gives the result.\hfill$\square$
 \end{proof}
 
-\begin{proof}[Proof of Theorem~\ref{thm:cauchy-mvt}]
-	$h:=(f(b)-f(a))g-(g(b)-g(a))f$ satisfies $h(a)=h(b)$\comma so Rolle gives $c$ with $(f(b)-f(a))g'(c)=(g(b)-g(a))f'(c)$; $g'$ and $g(b)-g(a)$ are nonzero\comma so \eqref{eq:cauchy-mvt}.\hfill$\square$
+\begin{proof}[Proof of \autoref{thm:cauchy-mvt}]
+	$h:=(f(b)-f(a))g-(g(b)-g(a))f$ satisfies $h(a)=h(b)$\comma so Rolle gives $c$ with $(f(b)-f(a))g'(c)=(g(b)-g(a))f'(c)$; $g'$ and $g(b)-g(a)$ are nonzero\comma so \autoref{eq:cauchy-mvt}.\hfill$\square$
 \end{proof}
 
 \begin{figure}[H]
@@ -920,7 +988,7 @@ m=G'(x_0).
 	\label{fig:cauchy-mvt}
 \end{figure}
 
-\begin{proof}[Proof of Theorem~\ref{thm:darboux}]
+\begin{proof}[Proof of \autoref{thm:darboux}]
 	$g=f-\lambda x$ has $g'(a)<0<g'(b)$. Small $h$ gives $g(a+h)<g(a)$ and $g(b-h)<g(b)$; by EVT the minimum of $g$ is interior\comma at $c$. Fermat: $g'(c)=0$\comma i.e.\ $f'(c)=\lambda$.\hfill$\square$
 \end{proof}
 
@@ -940,11 +1008,11 @@ m=G'(x_0).
 	\label{fig:darboux}
 \end{figure}
 
-\begin{proof}[Proof of Theorem~\ref{thm:lhopital}]
+\begin{proof}[Proof of \autoref{thm:lhopital}]
 	Cauchy MVT on $[a\comma x]$: $f(x)/g(x)=f'(c_x)/g'(c_x)$; $c_x\to a$ as $x\to a^+$. Symmetric for $x\to a^-$. So the limit is $L$.\hfill$\square$
 \end{proof}
 
-\begin{proof}[Proof of Theorem~\ref{thm:taylor}]
+\begin{proof}[Proof of \autoref{thm:taylor}]
 	$P:=\sum f^{(k)}(a)(t-a)^k/k!$; choose $M$ with $f(x)=P(x)+M(x-a)^{n+1}$; $h=f-P-M(t-a)^{n+1}$ has $h^{(j)}(a)=0$\comma $h(x)=0$. Rolle $n+1$ times: $h^{(n+1)}(c)=0$\comma so $M=f^{(n+1)}(c)/(n+1)!$.\hfill$\square$
 \end{proof}
 
@@ -964,8 +1032,8 @@ m=G'(x_0).
 	\label{fig:taylor}
 \end{figure}
 
-\begin{proof}[Proof of Theorem~\ref{thm:convexity}]
-	$g=f-f(x_0)-f'(x_0)(x-x_0)$ has $g''\ge0$; $g'$ nondecreasing and $g'(x_0)=0$\comma so $g'\le0$ before and $\ge0$ after $x_0$; with $g(x_0)=0$\comma $g\ge0$. Hence \eqref{eq:convexity}.\hfill$\square$
+\begin{proof}[Proof of \autoref{thm:convexity}]
+	$g=f-f(x_0)-f'(x_0)(x-x_0)$ has $g''\ge0$; $g'$ nondecreasing and $g'(x_0)=0$\comma so $g'\le0$ before and $\ge0$ after $x_0$; with $g(x_0)=0$\comma $g\ge0$. Hence \autoref{eq:convexity}.\hfill$\square$
 \end{proof}
 
 \begin{figure}[H]
@@ -980,7 +1048,7 @@ m=G'(x_0).
 	\label{fig:convexity}
 \end{figure}
 
-\begin{proof}[Proof of Theorem~\ref{thm:inverse}]
+\begin{proof}[Proof of \autoref{thm:inverse}]
 	Let $c:=f'(x_0)\ne0$. Since $x_0\in I^\circ$\comma choose $\rho>0$ with $(x_0-\rho\comma x_0+\rho)\subseteq I$. \emph{Local surjectivity.} Assume without loss of generality that $f$ is strictly increasing on $I$ (the strictly decreasing case is symmetric). Choose $x_0^-\comma x_0^+\in(x_0-\rho\comma x_0+\rho)$ with $x_0^-<x_0<x_0^+$; then $f(x_0^-)<y_0<f(x_0^+)$. By the intermediate value theorem applied to the continuous function $f$ on the closed subinterval $[x_0^-\comma x_0^+]\subseteq I$\comma every $y\in(f(x_0^-)\comma f(x_0^+))$ is attained at some $x\in(x_0^-\comma x_0^+)\subseteq I$. Hence $(f(x_0^-)\comma f(x_0^+))\subseteq f(I)$ is an open neighbourhood of $y_0$\comma and $f^{-1}$ is defined on it.
 
 	\emph{Continuity of $f^{-1}$ at $y_0$.} Differentiability of $f$ at $x_0$ gives, for some $\delta_0\in(0\comma\rho)$ and all $x$ with $|x-x_0|<\delta_0$\comma
@@ -998,7 +1066,7 @@ m=G'(x_0).
 	\[
 	(f^{-1})'(y_0)=\lim_{y\to y_0}\frac{f^{-1}(y)-f^{-1}(y_0)}{y-y_0}=\lim_{x\to x_0}\frac{x-x_0}{f(x)-f(x_0)}=\frac{1}{f'(x_0)}\comma
 	\]
-	which is \eqref{eq:inverse}.\hfill$\square$
+	which is \autoref{eq:inverse}.\hfill$\square$
 \end{proof}
 
 \begin{figure}[H]
@@ -1018,8 +1086,8 @@ m=G'(x_0).
 
 \subsection{Integration theorems}
 
-\begin{proof}[Proof of Lemma~\ref{lem:barrow-area}]
-	For $\mathrm{d}x>0$\comma $f(x_0)\le f\le f(x_0+\mathrm{d}x)$ on the interval; inscribed/circumscribed rectangles bound $A$. For $\mathrm{d}x<0$\comma use \eqref{eq:oriented-area}.\hfill$\square$
+\begin{proof}[Proof of \autoref{lem:barrow-area}]
+	For $\mathrm{d}x>0$\comma $f(x_0)\le f\le f(x_0+\mathrm{d}x)$ on the interval; inscribed/circumscribed rectangles bound $A$. For $\mathrm{d}x<0$\comma use \autoref{eq:oriented-area}.\hfill$\square$
 \end{proof}
 
 \begin{figure}[H]
@@ -1039,16 +1107,16 @@ m=G'(x_0).
 	\label{fig:area-ineq}
 \end{figure}
 
-\begin{proof}[Proof of Lemma~\ref{lem:mvt-int}]
+\begin{proof}[Proof of \autoref{lem:mvt-int}]
 	$G(t)=A_{x_0}^t$ is differentiable with $G'=f$; MVT on the interval gives $\theta$ with $A_{x_0}^{x_0+\mathrm{d}x}=f(\theta)\mathrm{d}x$.\hfill$\square$
 \end{proof}
 
-\begin{proof}[Proof of Theorem~\ref{thm:fftc}]
-	Fix $x_0\in(a\comma b)$ and $\varepsilon>0$. Let $h\ne0$ with $x_0+h\in[a\comma b]$\comma and let $I_h$ be the closed interval with endpoints $x_0$ and $x_0+h$. Since $f$ is continuous at $x_0$\comma for $|h|$ sufficiently small there are constants $m_\varepsilon\comma M_\varepsilon$ with $m_\varepsilon\le f(u)\le M_\varepsilon$ on $I_h$\comma $|m_\varepsilon-f(x_0)|<\varepsilon$\comma $|M_\varepsilon-f(x_0)|<\varepsilon$. By integral monotonicity applied on $I_h$ to the constant functions $m_\varepsilon$ and $M_\varepsilon$\comma for $h>0$ one has $m_\varepsilon h\le A_{x_0}^{x_0+h}\le M_\varepsilon h$; for $h<0$ the same inequality holds with both directions reversed (the oriented convention \eqref{eq:oriented-area} changes the sign of both $A_{x_0}^{x_0+h}$ and $h$). In either case\comma dividing by $h$ preserves the direction of the inequality (both sides change sign together with $h$)\comma giving
+\begin{proof}[Proof of \autoref{thm:fftc}]
+	Fix $x_0\in(a\comma b)$ and $\varepsilon>0$. Let $h\ne0$ with $x_0+h\in[a\comma b]$\comma and let $I_h$ be the closed interval with endpoints $x_0$ and $x_0+h$. Since $f$ is continuous at $x_0$\comma for $|h|$ sufficiently small there are constants $m_\varepsilon\comma M_\varepsilon$ with $m_\varepsilon\le f(u)\le M_\varepsilon$ on $I_h$\comma $|m_\varepsilon-f(x_0)|<\varepsilon$\comma $|M_\varepsilon-f(x_0)|<\varepsilon$. By integral monotonicity applied on $I_h$ to the constant functions $m_\varepsilon$ and $M_\varepsilon$\comma for $h>0$ one has $m_\varepsilon h\le A_{x_0}^{x_0+h}\le M_\varepsilon h$; for $h<0$ the same inequality holds with both directions reversed (the oriented convention \autoref{eq:oriented-area} changes the sign of both $A_{x_0}^{x_0+h}$ and $h$). In either case\comma dividing by $h$ preserves the direction of the inequality (both sides change sign together with $h$)\comma giving
 	\[
 	m_\varepsilon\;\le\;\frac{A_a^{x_0+h}-A_a^{x_0}}{h}\;\le\;M_\varepsilon\comma
 	\]
-	where the numerator uses additivity \eqref{eq:lin-int}. Since $\varepsilon>0$ was arbitrary and $m_\varepsilon\comma M_\varepsilon\to f(x_0)$ as $\varepsilon\to0$\comma the squeeze yields $\frac{d}{dx}A_a^x|_{x_0}=f(x_0)$; since $x_0\in(a\comma b)$ was arbitrary\comma \eqref{eq:fftc} holds on $(a\comma b)$\comma and the one-sided cases at $x=a\comma b$ follow by one-sided limits.\hfill$\square$
+	where the numerator uses additivity \autoref{eq:lin-int}. Since $\varepsilon>0$ was arbitrary and $m_\varepsilon\comma M_\varepsilon\to f(x_0)$ as $\varepsilon\to0$\comma the squeeze yields $\frac{d}{dx}A_a^x|_{x_0}=f(x_0)$; since $x_0\in(a\comma b)$ was arbitrary\comma \autoref{eq:fftc} holds on $(a\comma b)$\comma and the one-sided cases at $x=a\comma b$ follow by one-sided limits.\hfill$\square$
 \end{proof}
 
 \begin{figure}[H]
@@ -1080,7 +1148,7 @@ m=G'(x_0).
 	\label{fig:barrow109}
 \end{figure}
 
-\begin{proof}[Proof of Theorem~\ref{thm:second-ftc}]
+\begin{proof}[Proof of \autoref{thm:second-ftc}]
 	$G(x)=\int_a^x f$ has $G'=f$; so $(F-G)'=0$ and $F-G$ is constant; $F(b)-F(a)=\int_a^b f$.\hfill$\square$
 \end{proof}
 
@@ -1098,21 +1166,21 @@ m=G'(x_0).
 	\label{fig:second-ftc}
 \end{figure}
 
-\begin{proof}[Proof of Theorem~\ref{thm:ibp}]
+\begin{proof}[Proof of \autoref{thm:ibp}]
 	$(fg)'=f'g+fg'$; integrate with Second FTC.\hfill$\square$
 \end{proof}
 
-\begin{proof}[Proof of Theorem~\ref{thm:subst}]
-	Let $F'=f$. Chain rule: $(F\circ g)'=f(g)g'$; Second FTC on both sides yields \eqref{eq:subst}.\hfill$\square$
+\begin{proof}[Proof of \autoref{thm:subst}]
+	Let $F'=f$. Chain rule: $(F\circ g)'=f(g)g'$; Second FTC on both sides yields \autoref{eq:subst}.\hfill$\square$
 \end{proof}
 
-\begin{proof}[Proof of Theorem~\ref{thm:weighted-mvt}]
+\begin{proof}[Proof of \autoref{thm:weighted-mvt}]
 	$m\le f\le M$ and $w\ge0$ give $m\int w\le\int fw\le M\int w$; so $A:=\int fw/\int w\in[m\comma M]$; by IVT $f(c)=A$.\hfill$\square$
 \end{proof}
 
 \subsection{The logarithm and the exponential}
 
-\begin{proof}[Proof of Theorem~\ref{thm:log}]
+\begin{proof}[Proof of \autoref{thm:log}]
 	$\ln(ab)-\ln(b)=\int_b^{ab}\mathrm{d}t/t$; the map $(t\comma y)\mapsto(t/b\comma by)$ preserves area and preserves $y=1/t$\comma so this equals $\int_1^a\mathrm{d}u/u=\ln a$.\hfill$\square$
 \end{proof}
 
@@ -1136,11 +1204,11 @@ m=G'(x_0).
 	\label{fig:hyperbola}
 \end{figure}
 
-\begin{proof}[Proof of Theorem~\ref{thm:exp}]
-	$\ln(\exp u\exp v)=\ln(\exp u)+\ln(\exp v)=u+v=\ln(\exp(u+v))$; injectivity of $\ln$ gives \eqref{eq:exp}.\hfill$\square$
+\begin{proof}[Proof of \autoref{thm:exp}]
+	$\ln(\exp u\exp v)=\ln(\exp u)+\ln(\exp v)=u+v=\ln(\exp(u+v))$; injectivity of $\ln$ gives \autoref{eq:exp}.\hfill$\square$
 \end{proof}
 
-\begin{proof}[Proof of Theorem~\ref{thm:image}]
+\begin{proof}[Proof of \autoref{thm:image}]
 	Sign-Law gives $\exp(\R_{<0})={]}0\comma1[$\comma $\exp(\{0\})=\{1\}$\comma $\exp(\R_{>0})={]}1\comma\infty[$; Image-Union gives $\exp(\R)=\R_{>0}$. Bijectivity gives $\ln(\R_{>0})=\R$.\hfill$\square$
 \end{proof}
 
@@ -1174,15 +1242,15 @@ m=G'(x_0).
 
 \section{Remarks on the geometric development}
 
-Barrow's sliding-tangent MVT proof is retained for its historical content; the Barrow-tangency principle \eqref{eq:barrow-tangency} is eliminable via Rolle and Monotone + MVT. The FFTC proof uses only area additivity \eqref{eq:lin-int} and rectangle comparison \eqref{eq:barrow-area}; no Riemann-sum limit is invoked\comma as emphasized by Barrow \cite{Barrow1916} and confirmed in Part~II.
+Barrow's sliding-tangent MVT proof is retained for its historical content; the Barrow-tangency principle \autoref{eq:barrow-tangency} is eliminable via Rolle and Monotone + MVT. The FFTC proof uses only area additivity \autoref{eq:lin-int} and rectangle comparison \autoref{eq:barrow-area}; no Riemann-sum limit is invoked\comma as emphasized by Barrow \cite{Barrow1916} and confirmed in \autoref{part:part2}.
 
 \subsection*{Dependency summary}
 
 EVT\comma IVT $\to$ Fermat $\to$ Rolle $\to$ MVT $\to$ Const\comma Monotone\comma Cauchy\comma Darboux\comma Taylor\comma Convexity\comma Inverse. Second FTC from FFTC + Const. IBP\comma Subst\comma Weighted MVT from Second FTC or IVT/IntMono. Log from IntAdd + Similarity; Exp from Log; Image from LnBij + Sign-Law + ImgUnion. Barrow-area + MVTInt $\to$ FFTC $\to$ Log.
 
 \part{Reverse-Mathematical Analysis in $\mathsf{RCA}_0$}
-
-\noindent Every Part~I entry reappears as a tagged statement with a dependency table and an exact strength in $\{\textsf{FOL}\comma\textsf{RCA}_0\comma\textsf{WKL}_0\comma\textsf{ACA}_0\comma\textsf{ZF}\comma\textsf{ZFC}\}$. Geometric proofs are at most $\textsf{WKL}_0$ as written; \S\ref{sec:core-proofs} gives the matching $\textsf{RCA}_0$-strength tables via Hardin--Velleman\comma Yokoyama\comma or direct argument.
+\label{part:part2}
+\noindent Every \autoref{part:part1} entry reappears as a tagged statement with a dependency table and an exact strength in $\{\textsf{FOL}\comma\textsf{RCA}_0\comma\textsf{WKL}_0\comma\textsf{ACA}_0\comma\textsf{ZF}\comma\textsf{ZFC}\}$. Geometric proofs are at most $\textsf{WKL}_0$ as written; \S\ref{sec:core-proofs} gives the matching $\textsf{RCA}_0$-strength tables via Hardin--Velleman\comma Yokoyama\comma or direct argument.
 
 \section{Coding conventions}
 \label{sec:coding}
@@ -1190,7 +1258,7 @@ EVT\comma IVT $\to$ Fermat $\to$ Rolle $\to$ MVT $\to$ Const\comma Monotone\comm
 \noindent Following Yokoyama \cite{Yokoyama2010}\comma we distinguish:
 \begin{itemize}
 	\item \emph{Pointwise differentiability:} the limit exists for each $x\in I$; no derivative function needed. Hardin--Velleman's Rolle and MVT in $\textsf{RCA}_0$ use this.
-	\item \emph{Strong $C^k$-coding:} $C^k_{\mathrm{strong}}(I)(f):\iff\exists g_0\comma\dots\comma g_k:\ g_0=f\wedge\forall j<k\comma\ g_{j+1}=g_j'$. All $C^k$ hypotheses in Part~II mean strong $C^k$-coding.
+	\item \emph{Strong $C^k$-coding:} $C^k_{\mathrm{strong}}(I)(f):\iff\exists g_0\comma\dots\comma g_k:\ g_0=f\wedge\forall j<k\comma\ g_{j+1}=g_j'$. All $C^k$ hypotheses in \autoref{part:part2} mean strong $C^k$-coding.
 	\item \emph{Inverse function:} Yokoyama \cite[Thm.~3.22]{Yokoyama2010} in $\textsf{RCA}_0$ for strong $C^1$-functions with $f'\ne0$ on $I$\comma $x_0\in I^\circ$. The pointwise form is not $\textsf{RCA}_0$-provable.
 \end{itemize}
 
@@ -1218,7 +1286,7 @@ $\textsf{RCA}_0$ = recursive comprehension + $\Sigma^0_1$-induction; no choice.
 
 \setcounter{theorem}{0}
 \begin{remark}[Proofs vs.\ classification]
-Part~I proofs use $\sup$\comma $\inf$\comma LUB (\textsf{ax:R-complete}). MVT is $\textsf{RCA}_0$ via Hardin--Velleman. IVT\comma EVT are $\textsf{WKL}_0$-equivalent over $\textsf{RCA}_0$ and remain $\textsf{WKL}_0$.
+\autoref{part:part1} proofs use $\sup$\comma $\inf$\comma LUB (\textsf{ax:R-complete}). MVT is $\textsf{RCA}_0$ via Hardin--Velleman. IVT\comma EVT are $\textsf{WKL}_0$-equivalent over $\textsf{RCA}_0$ and remain $\textsf{WKL}_0$.
 \end{remark}
 
 \subsection{Illustrative theorems}
@@ -1333,7 +1401,7 @@ Lean~4 and Mathlib \cite{Lean4}: about $70.4\%$ of declarations depend on \texts
 
 \medskip
 
-\noindent The Cut axiom enters no Part~II proof; it is $\textsf{ZF}$-realizable via Dedekind cuts without choice.
+\noindent The Cut axiom enters no \autoref{part:part2} proof; it is $\textsf{ZF}$-realizable via Dedekind cuts without choice.
 
 \section{Postulates}
 \label{sec:postulates}
@@ -1709,7 +1777,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 
 \setcounter{theorem}{1}
 \begin{remark}[EVT tag]
-	EVT $\equiv\textsf{WKL}_0$ over $\textsf{RCA}_0$ \cite{Simpson2009}. Entries whose printed proofs invoke EVT transitively: Rolle\comma MVT\comma Const\comma Monotone\comma CauchyMVT\comma LHopital\comma Taylor\comma Convexity\comma Darboux\comma WeightedMVT; Part~I proofs are at most $\textsf{WKL}_0$ as written. Rolle and MVT are $\textsf{RCA}_0$ via Hardin--Velleman \cite{HardinVelleman2001}; the descendants inherit $\textsf{RCA}_0$ under strong-$C^k$-coding. Darboux and WeightedMVT are $\textsf{WKL}_0$ as stated. Fermat\comma FFTC\comma SecondFTC\comma IBP\comma Subst\comma BarrowArea\comma MVTInt\comma Inverse\comma and the $\ln$/$\exp$ chain are $\textsf{RCA}_0$ (direct; \cite{HardinVelleman2001,Yokoyama2010} for Inverse and MVTInt). IVT is $\textsf{WKL}_0$-equivalent for the $\sup$ form; the neighbourhood argument below uses only continuity.
+	EVT $\equiv\textsf{WKL}_0$ over $\textsf{RCA}_0$ \cite{Simpson2009}. Entries whose printed proofs invoke EVT transitively: Rolle\comma MVT\comma Const\comma Monotone\comma CauchyMVT\comma LHopital\comma Taylor\comma Convexity\comma Darboux\comma WeightedMVT; \autoref{part:part1} proofs are at most $\textsf{WKL}_0$ as written. Rolle and MVT are $\textsf{RCA}_0$ via Hardin--Velleman \cite{HardinVelleman2001}; the descendants inherit $\textsf{RCA}_0$ under strong-$C^k$-coding. Darboux and WeightedMVT are $\textsf{WKL}_0$ as stated. Fermat\comma FFTC\comma SecondFTC\comma IBP\comma Subst\comma BarrowArea\comma MVTInt\comma Inverse\comma and the $\ln$/$\exp$ chain are $\textsf{RCA}_0$ (direct; \cite{HardinVelleman2001,Yokoyama2010} for Inverse and MVTInt). IVT is $\textsf{WKL}_0$-equivalent for the $\sup$ form; the neighbourhood argument below uses only continuity.
 \end{remark}
 
 \section{Proofs}
@@ -1717,7 +1785,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 
 \noindent Starred subsections\comma one per proof\comma in statement order. Each proof is a four-column dependency table: first row \textsf{Hyp}\comma last row $\to\textsf{I}(1\comma\dots\comma N-1)$. Justifications use only \textsf{Hyp}\comma \textsf{def}\comma \textsf{intro}\comma \textsf{Ax:}\comma \textsf{Pos:}\comma \textsf{Def:}\comma \textsf{Lem:}\comma \textsf{Thm:}\comma $\textsf{Eq}(\dots)$\comma or a logical rule ($\to\textsf{I}\comma\wedge\textsf{E}\comma\vee\textsf{E}\comma\forall\textsf{I}\comma\forall\textsf{E}\comma\exists\textsf{I}\comma\exists\textsf{E}\comma\neg\textsf{I}\comma\neg\textsf{E}\comma\bot\textsf{I}\comma\bot\textsf{E}\comma\textsf{RAA}\comma\textsf{DNE}\comma\textsf{LEM}$). No external citation appears inside a proof table.
 
-\subsection*{Proof of Theorem \protect\ref{thmi:evt} (\textsf{EVT})}
+\subsection*{Proof of \autoref{thmi:evt} (\textsf{EVT})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -1735,7 +1803,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 6 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma5) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Theorem \protect\ref{thmi:ivt} (\textsf{IVT})}
+\subsection*{Proof of \autoref{thmi:ivt} (\textsf{IVT})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -1770,7 +1838,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 \noindent\textsf{Coding note (IVT).} In row~3, $S=\{x\in[a,b]:f(x)<0\}$ is read as a $\Sigma^0_1$ set of \emph{codes} for reals, so \textsf{Pos{:}$\Sigma^0_1$Choice} (row~7) applies at the level of codes. In row~4, $P=\{x\in[a,b]:-f(x)\le0\}$ is the $\Pi^0_1$ complement of $S$ in $[a,b]$; \textsf{Pos{:}$\Pi^0_1$Sup} applied to $P$ yields $\inf P$, and $\sup S=-\inf P$ (cf.\ Simpson \cite[\S IV.2]{Simpson2009}).
 \medskip
 
-\subsection*{Proof of Theorem \protect\ref{thmi:fermat} (\textsf{Fermat})}
+\subsection*{Proof of \autoref{thmi:fermat} (\textsf{Fermat})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -1792,7 +1860,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 7 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma6) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Theorem \protect\ref{thmi:rolle} (\textsf{Rolle})}
+\subsection*{Proof of \autoref{thmi:rolle} (\textsf{Rolle})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -1804,7 +1872,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 3 & \top & \textsf{close} & \to\textsf{I}(1\comma2) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Theorem \protect\ref{thmi:mvt} (\textsf{MVT})}
+\subsection*{Proof of \autoref{thmi:mvt} (\textsf{MVT})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -1826,7 +1894,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 7 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma6) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Theorem \protect\ref{thmi:const} (\textsf{Const})}
+\subsection*{Proof of \autoref{thmi:const} (\textsf{Const})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -1843,7 +1911,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 5 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma4) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Theorem \protect\ref{thmi:monotone} (\textsf{Monotone})}
+\subsection*{Proof of \autoref{thmi:monotone} (\textsf{Monotone})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -1865,7 +1933,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 7 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma6) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Theorem \protect\ref{thmi:cauchy-mvt} (\textsf{CauchyMVT})}
+\subsection*{Proof of \autoref{thmi:cauchy-mvt} (\textsf{CauchyMVT})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -1886,7 +1954,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 9 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma8) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Theorem \protect\ref{thmi:darboux} (\textsf{Darboux})}
+\subsection*{Proof of \autoref{thmi:darboux} (\textsf{Darboux})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -1914,7 +1982,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 10 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma9) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Theorem \protect\ref{thmi:lhopital} (\textsf{LHopital})}
+\subsection*{Proof of \autoref{thmi:lhopital} (\textsf{LHopital})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -1938,7 +2006,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 9 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma8) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Theorem \protect\ref{thmi:taylor} (\textsf{Taylor})}
+\subsection*{Proof of \autoref{thmi:taylor} (\textsf{Taylor})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -1981,7 +2049,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 16 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma15) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Theorem \protect\ref{thmi:convexity} (\textsf{Convexity})}
+\subsection*{Proof of \autoref{thmi:convexity} (\textsf{Convexity})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -2009,7 +2077,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 10 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma9) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Theorem \protect\ref{thmi:inverse} (\textsf{Inverse})}
+\subsection*{Proof of \autoref{thmi:inverse} (\textsf{Inverse})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -2021,7 +2089,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 3 & \top & \textsf{close} & \to\textsf{I}(1\comma2) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Lemma \protect\ref{lemi:barrow-area} (\textsf{BarrowArea})}
+\subsection*{Proof of \autoref{lemi:barrow-area} (\textsf{BarrowArea})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -2038,7 +2106,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 8 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma7) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Lemma \protect\ref{lemi:mvt-int} (\textsf{MVTInt})}
+\subsection*{Proof of \autoref{lemi:mvt-int} (\textsf{MVTInt})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -2060,7 +2128,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 7 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma6) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Theorem \protect\ref{thmi:fftc} (\textsf{FFTC})}
+\subsection*{Proof of \autoref{thmi:fftc} (\textsf{FFTC})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -2086,7 +2154,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 11 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma10) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Theorem \protect\ref{thmi:second-ftc} (\textsf{SecondFTC})}
+\subsection*{Proof of \autoref{thmi:second-ftc} (\textsf{SecondFTC})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -2104,7 +2172,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 6 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma5) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Theorem \protect\ref{thmi:ibp} (\textsf{IBP})}
+\subsection*{Proof of \autoref{thmi:ibp} (\textsf{IBP})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -2121,7 +2189,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 8 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma7) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Theorem \protect\ref{thmi:subst} (\textsf{Subst})}
+\subsection*{Proof of \autoref{thmi:subst} (\textsf{Subst})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -2138,7 +2206,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 8 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma7) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Theorem \protect\ref{thmi:weighted-mvt} (\textsf{WeightedMVT})}
+\subsection*{Proof of \autoref{thmi:weighted-mvt} (\textsf{WeightedMVT})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -2155,7 +2223,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 8 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma7) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Lemma \protect\ref{lemi:pos-closed-mul} (\textsf{PosClosedMul})}
+\subsection*{Proof of \autoref{lemi:pos-closed-mul} (\textsf{PosClosedMul})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -2174,7 +2242,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 7 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma6) \\ \hline
 \end{array}$
 
-\subsection*{Proof of Lemma \protect\ref{lemi:log-property} (\textsf{LogProperty})}
+\subsection*{Proof of \autoref{lemi:log-property} (\textsf{LogProperty})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -2203,7 +2271,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 14 & \ln(a)+\ln(b)=\ln(ab) & \textsf{rearrange} & \textsf{Eq}(13) \\ \hline
 15 & \top & \textsf{close} & \to\textsf{I}(1\comma\dots\comma14) \\ \hline
 \end{array}$
-\subsection*{Proof of Lemma \protect\ref{lemi:exp-property} (\textsf{ExpProperty})}
+\subsection*{Proof of \autoref{lemi:exp-property} (\textsf{ExpProperty})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -2227,7 +2295,7 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 \medskip
 \noindent{\footnotesize\textsf{Citation note (\textsf{ExpProperty}).} Row~5 cites \textsf{Lem:PosClosedMul(3)}: current-table row~3 ($a,b>0$) supplies the positivity input to \textsf{PosClosedMul}, yielding $ab>0$ at row~5. Row~6 cites \textsf{Lem:LogProperty(3,4,5)}: current-table row~3 ($a,b>0$) supplies \textsf{LogProperty}'s positivity precondition; row~4 ($\ln a=u$, $\ln b=v$) supplies the logarithmic values; row~5 ($ab>0$) makes $\ln(ab)$ well-typed in \textsf{LogProperty}'s conclusion. Including row~3 is explicit rather than redundant: \textsf{LogProperty}'s hypothesis $a,b:\R_{>0}$ is satisfied by row~3, even though $a=_{\mathrm{def}}\exp u$ already forces $a>0$.}
 \medskip
-\subsection*{Proof of Theorem \protect\ref{thmi:image-exp-ln} (\textsf{ImageExpLn})}
+\subsection*{Proof of \autoref{thmi:image-exp-ln} (\textsf{ImageExpLn})}
 
 \noindent$\begin{array}{|C|L|R|R|}
 \hline
@@ -2485,12 +2553,12 @@ C^{1}_{\mathrm{strong}}(I)(f)\wedge(\forall x\in I,\,f^{\prime}(x)\neq0)\wedge\m
 
 \medskip
 
-\noindent \setstretch{1.5} Bounds coincide: every $\textsf{RCA}_0$ tag has an $\textsf{RCA}_0$ proof in \S\ref{sec:core-proofs} (direct\comma or Hardin--Velleman\comma or Yokoyama); every $\textsf{WKL}_0$ tag has the classical proof. Part~I's geometric proofs of Rolle\comma MVT\comma Const\comma Monotone\comma CauchyMVT\comma LHopital\comma Taylor\comma Convexity are at most $\textsf{WKL}_0$ as written; the gap is disclosed in the EVT remark and does not affect any tag. No proof of Part~II uses the Cut axiom.
+\noindent \setstretch{1.5} Bounds coincide: every $\textsf{RCA}_0$ tag has an $\textsf{RCA}_0$ proof in \S\ref{sec:core-proofs} (direct\comma or Hardin--Velleman\comma or Yokoyama); every $\textsf{WKL}_0$ tag has the classical proof. \autoref{part:part1}'s geometric proofs of Rolle\comma MVT\comma Const\comma Monotone\comma CauchyMVT\comma LHopital\comma Taylor\comma Convexity are at most $\textsf{WKL}_0$ as written; the gap is disclosed in the EVT remark and does not affect any tag. No proof of \autoref{part:part2} uses the Cut axiom.
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-\noindent Classical analysis developed in Barrow's geometry (Part~I) is classified in reverse mathematics (Part~II):
+\noindent Classical analysis developed in Barrow's geometry (\autoref{part:part1}) is classified in reverse mathematics (\autoref{part:part2}):
 \begin{itemize}
 	\item 14 field axioms: $\textsf{ZF}$\comma no choice.
 	\item Postulates: $\textsf{RCA}_0$-provable or first-order logical.
@@ -2505,12 +2573,12 @@ IVT\comma EVT\comma and sequential IVT/MVT are $\textsf{WKL}_0$ \cite{Simpson200
 Hahn--Banach and Weierstrass are $\textsf{WKL}_0$ \cite{Simpson2009}. 
 Separation is $\textsf{ACA}_0$ \cite{Humphreys2015}. 
 Banach--Alaoglu\comma Tychonoff\comma and well-ordering are $\textsf{ZFC}$ \cite{Alaoglu1940,Kelley1950,Jech1973}. 
-Every Part~I entry is choice-free.
+Every \autoref{part:part1} entry is choice-free.
 
 \subsection{Dependency analysis }
 The core chain has depth 3 with longest path $ax{:}R\text{-}order\to PosClosedMul\to LogProperty\to ExpProperty$; differentiation and integration chains reach depth 4. 
 
-The load-bearing nodes are \textsf{ax:R-order}\comma \textsf{ax:R-mul-inv}\comma \textsf{Def:ln}\comma \textsf{Def:exp}\comma \textsf{Pos:LnBij}\comma and \textsf{PosClosedMul}. The join of predecessor strengths never exceeds $\textsf{WKL}_0$ and never reaches $\textsf{ZF}+\textsf{DC}_\R$. Classical theorems are exactly those whose proofs need only area additivity \eqref{eq:lin-int}\comma rectangle comparison \eqref{eq:barrow-area}\comma the differentiating postulates \eqref{eq:product-rule}--\eqref{eq:chain-rule}\comma and (for the four $\textsf{WKL}_0$ entries) the standard $\textsf{WKL}_0$-strength principles. No choice principle is needed.
+The load-bearing nodes are \textsf{ax:R-order}\comma \textsf{ax:R-mul-inv}\comma \textsf{Def:ln}\comma \textsf{Def:exp}\comma \textsf{Pos:LnBij}\comma and \textsf{PosClosedMul}. The join of predecessor strengths never exceeds $\textsf{WKL}_0$ and never reaches $\textsf{ZF}+\textsf{DC}_\R$. Classical theorems are exactly those whose proofs need only area additivity \autoref{eq:lin-int}\comma rectangle comparison \autoref{eq:barrow-area}\comma the differentiating postulates \autoref{eq:product-rule}--\autoref{eq:chain-rule}\comma and (for the four $\textsf{WKL}_0$ entries) the standard $\textsf{WKL}_0$-strength principles. No choice principle is needed.
 
 \subsection{Formal verification}
 Lean~4 and Mathlib \cite{Lean4} contain many of these results; about $70.4\%$ of Mathlib declarations depend on \textsf{Classical.choice}\comma and $13.1\%$ of theorems have a choice-free statement with a choice-dependent proof \cite{Crossref2026}. The classification above is strictly stronger: it certifies the choice-free proofs.
