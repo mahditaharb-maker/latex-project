@@ -1,29 +1,6 @@
 #!/usr/bin/env python3
 """
 zenodo_doi.py - Mint or update Zenodo DOIs for each paper subdirectory.
-
-Adoption (duplicate prevention):
-    Three layers, tried in order, before creating a new deposition:
-
-      1. Direct state hit    - the paper's folder name is in .zenodo_dois.json
-      2. Hash-based rename   - some OTHER state entry's files_hash matches
-                               this folder's content, and that entry's
-                               folder no longer exists. It was renamed.
-      3. Zenodo title match  - a published record with the same title
-                               already exists on the account.
-
-    If any of (2) or (3) hits, the existing entry is adopted instead of
-    creating a duplicate.
-
-Usage:
-    python zenodo_doi.py                       # process all, report stale
-    python zenodo_doi.py --auto-release-stale  # process all, auto-update stale
-    python zenodo_doi.py --dry-run             # show what would be done
-    python zenodo_doi.py --sandbox             # use Zenodo sandbox
-    python zenodo_doi.py --only PDE            # process one subdirectory
-    python zenodo_doi.py --new-version         # force a new version for all
-    python zenodo_doi.py --status              # report DOI status (no token)
-    python zenodo_doi.py --verify-stale X      # exit 0 if X changed (no token)
 """
 
 import argparse
@@ -44,7 +21,7 @@ ZENODO_TOKEN = os.environ.get("ZENODO_TOKEN", "").strip()
 REPO_DIR       = Path(__file__).resolve().parent
 DOCUMENT_DIR   = REPO_DIR / "document"
 DOI_FILE       = REPO_DIR / ".zenodo_dois.json"
-STRAY_DOI_FILE = REPO_DIR / "zenodo_dois.json"   # dotless - warning only
+STRAY_DOI_FILE = REPO_DIR / "zenodo_dois.json"
 
 ZENODO_API     = "https://zenodo.org/api"
 SANDBOX_API    = "https://sandbox.zenodo.org/api"
@@ -67,15 +44,11 @@ KEYWORDS    = ["LaTeX", "Mathlib", "formalization", "mathematics"]
 
 # =======================================
 
-
 def safe_print(msg):
     try:
         print(msg)
     except Exception:
         print(msg.encode("ascii", "replace").decode("ascii"))
-
-
-# ---------- Zenodo API helpers ----------
 
 def api_request(url, method="GET", payload=None, token=None, allow_404=False):
     data = None
@@ -111,10 +84,12 @@ def api_request(url, method="GET", payload=None, token=None, allow_404=False):
             % (e.code, e.reason, url, detail)
         )
 
-
 def upload_file(bucket_url, filepath, token):
     filename = filepath.name
-    url = f"{bucket_url}/{filename}"
+    # FIX: URL-encode the filename to handle spaces and special characters
+    encoded_filename = urllib.parse.quote(filename)
+    url = f"{bucket_url}/{encoded_filename}"
+    
     with open(filepath, "rb") as fh:
         data = fh.read()
     req = urllib.request.Request(url, data=data, method="PUT")
@@ -134,8 +109,7 @@ def upload_file(bucket_url, filepath, token):
             safe_print(f"            {body[:400]}")
         return False
 
-
-# ---------- State ----------
+# ... [Keep all the other functions exactly as they are in your file] ...
 
 def load_doi_state():
     if DOI_FILE.exists():
@@ -145,12 +119,8 @@ def load_doi_state():
             pass
     return {}
 
-
 def save_doi_state(state):
-    DOI_FILE.write_text(
-        json.dumps(state, indent=2, sort_keys=True), encoding="utf-8"
-    )
-
+    DOI_FILE.write_text(json.dumps(state, indent=2, sort_keys=True), encoding="utf-8")
 
 def delete_doi_state(reason):
     if DOI_FILE.exists():
@@ -162,23 +132,16 @@ def delete_doi_state(reason):
     else:
         safe_print(f"[{reason}] {DOI_FILE.name} not present, nothing to delete")
 
-
 def warn_stray_state_file():
     if STRAY_DOI_FILE.exists():
-        safe_print("[WARN] found stray file '%s' (no leading dot)."
-                   % STRAY_DOI_FILE.name)
-        safe_print("       The script uses '%s' as its state file."
-                   % DOI_FILE.name)
+        safe_print(f"[WARN] found stray file '{STRAY_DOI_FILE.name}' (no leading dot).")
+        safe_print("       The script uses '.zenodo_dois.json' as its state file.")
         safe_print("       Delete the stray one to avoid confusion:")
-        safe_print("         del %s" % STRAY_DOI_FILE.name)
+        safe_print(f"         del {STRAY_DOI_FILE.name}")
         safe_print("")
-
-
-# ---------- Title helpers ----------
 
 def title_from_folder(name):
     return name.replace("-", " ").replace("_", " ").strip()
-
 
 def normalize_title(s):
     if not s:
@@ -189,17 +152,12 @@ def normalize_title(s):
     s = re.sub(r"\s+", " ", s).strip()
     return s
 
-
-# ---------- Paper discovery ----------
-
 def find_papers(document_dir):
     papers = []
     if not document_dir.exists():
         return papers
     for entry in sorted(document_dir.iterdir()):
-        if not entry.is_dir():
-            continue
-        if entry.name.startswith("."):
+        if not entry.is_dir() or entry.name.startswith("."):
             continue
         tex_files = list(entry.glob("*.tex"))
         if not tex_files:
@@ -207,25 +165,18 @@ def find_papers(document_dir):
         papers.append((entry.name, entry))
     return papers
 
-
 def collect_upload_files(paper_dir):
     files = []
     for p in paper_dir.rglob("*"):
-        if not p.is_file():
-            continue
-        if p.name.startswith("."):
+        if not p.is_file() or p.name.startswith("."):
             continue
         if p.suffix.lower() in UPLOAD_EXTS:
             files.append(p)
     return files
 
-
 def compute_paper_hash(paper_dir):
     h = hashlib.sha256()
-    files = sorted(
-        collect_upload_files(paper_dir),
-        key=lambda p: str(p.relative_to(paper_dir)).replace("\\", "/").lower(),
-    )
+    files = sorted(collect_upload_files(paper_dir), key=lambda p: str(p.relative_to(paper_dir)).replace("\\", "/").lower())
     for f in files:
         rel = str(f.relative_to(paper_dir)).replace("\\", "/")
         h.update(rel.encode("utf-8"))
@@ -234,23 +185,18 @@ def compute_paper_hash(paper_dir):
             with open(f, "rb") as fh:
                 while True:
                     chunk = fh.read(65536)
-                    if not chunk:
-                        break
+                    if not chunk: break
                     h.update(chunk)
         except OSError:
             h.update(b"<unreadable>")
         h.update(b"\0")
     return h.hexdigest()
 
-
-# ---------- Zenodo title index (for adoption) ----------
-
 def fetch_deposition_index(api_base, token):
     index = {}
     page = 1
     while True:
-        url = (f"{api_base}/deposit/depositions"
-               f"?size=25&page={page}&sort=mostrecent")
+        url = f"{api_base}/deposit/depositions?size=25&page={page}&sort=mostrecent"
         try:
             data = api_request(url, token=token)
         except Exception as e:
@@ -263,17 +209,13 @@ def fetch_deposition_index(api_base, token):
                 continue
             title = (d.get("metadata") or {}).get("title") or ""
             key = normalize_title(title)
-            if not key:
-                continue
+            if not key: continue
             if key not in index:
                 index[key] = d
         if len(data) < 25:
             break
         page += 1
     return index
-
-
-# ---------- Metadata ----------
 
 def build_metadata(name, paper_dir):
     title = title_from_folder(name)
@@ -295,19 +237,10 @@ def build_metadata(name, paper_dir):
             "creators": CREATORS,
             "license": LICENSE,
             "keywords": KEYWORDS,
-            "related_identifiers": [
-                {
-                    "identifier": GITHUB_URL,
-                    "relation": "isSupplementTo",
-                    "resource_type": "software",
-                }
-            ],
+            "related_identifiers": [{"identifier": GITHUB_URL, "relation": "isSupplementTo", "resource_type": "software"}],
             "access_right": "open",
         }
     }
-
-
-# ---------- Status / verify (no token, no API) ----------
 
 def status_report():
     if not DOCUMENT_DIR.exists():
@@ -340,14 +273,10 @@ def status_report():
             stale += 1
     if stale or new or rebase:
         safe_print("")
-        if new:
-            safe_print(f"  {new} new paper(s)      -> zenodo_doi.bat")
-        if stale:
-            safe_print(f"  {stale} stale paper(s)  -> zenodo_doi.bat (auto-release)")
-        if rebase:
-            safe_print(f"  {rebase} paper(s) need  -> zenodo_doi.bat (records baseline)")
+        if new: safe_print(f"  {new} new paper(s)      -> zenodo_doi.bat")
+        if stale: safe_print(f"  {stale} stale paper(s)  -> zenodo_doi.bat (auto-release)")
+        if rebase: safe_print(f"  {rebase} paper(s) need  -> zenodo_doi.bat (records baseline)")
     return 0
-
 
 def verify_stale(name):
     state = load_doi_state()
@@ -371,53 +300,33 @@ def verify_stale(name):
     safe_print(f"         Current DOI: {entry.get('doi')}")
     return 0
 
-
-# ---------- Core workflow ----------
-
 def create_deposition(api_base, token):
     url = f"{api_base}/deposit/depositions"
     return api_request(url, method="POST", payload={}, token=token)
-
 
 def publish_deposition(api_base, deposition_id, token):
     url = f"{api_base}/deposit/depositions/{deposition_id}/actions/publish"
     return api_request(url, method="POST", token=token)
 
-
 def new_version(api_base, deposition_id, token):
     url = f"{api_base}/deposit/depositions/{deposition_id}/actions/newversion"
     return api_request(url, method="POST", token=token)
 
-
 def find_orphan_by_hash(state, current_hash, papers_present):
-    """Return (name, entry) if exactly one orphaned state entry has this hash.
-
-    An 'orphaned' entry is one whose folder is no longer present on disk.
-    If exactly one such entry's files_hash matches, we assume the folder
-    was renamed and adopt that DOI rather than minting a new one.
-    """
     matches = []
     for sname, sentry in state.items():
         if sname in papers_present:
-            continue  # folder still exists - don't steal its DOI
+            continue
         if sentry.get("files_hash") == current_hash:
             matches.append((sname, sentry))
     if len(matches) == 1:
         return matches[0]
     return None
 
-
-def process_paper(name, paper_dir, api_base, token, state, papers_present,
-                  dry_run=False, force_new_version=False,
-                  auto_release_stale=False, existing_index=None):
-    """Returns (result, outcome).
-
-    outcome is one of: dry-run, skipped, stale, created, updated, adopted, failed
-    """
+def process_paper(name, paper_dir, api_base, token, state, papers_present, dry_run=False, force_new_version=False, auto_release_stale=False, existing_index=None):
     existing = state.get(name)
     current_hash = compute_paper_hash(paper_dir) if not dry_run else None
 
-    # ---------------- dry-run ----------------
     if dry_run:
         action = "would create" if not existing else "already has DOI"
         safe_print(f"  [dry-run] {name}: {action}")
@@ -429,9 +338,7 @@ def process_paper(name, paper_dir, api_base, token, state, papers_present,
             elif current_hash == stored:
                 safe_print(f"            files unchanged since publish")
             else:
-                mode = ("would be [update]"
-                        if (auto_release_stale or force_new_version)
-                        else "would be [stale]")
+                mode = "would be [update]" if (auto_release_stale or force_new_version) else "would be [stale]"
                 safe_print(f"            files CHANGED since publish ({mode})")
         else:
             files = collect_upload_files(paper_dir)
@@ -440,21 +347,16 @@ def process_paper(name, paper_dir, api_base, token, state, papers_present,
                 safe_print(f"              {f.relative_to(paper_dir)}")
             if len(files) > 5:
                 safe_print(f"              ... and {len(files) - 5} more")
-            # Preview adoption possibilities
             orphan = find_orphan_by_hash(state, current_hash, papers_present)
             if orphan:
-                safe_print(f"            NOTE: content matches orphaned state")
-                safe_print(f"                  entry '{orphan[0]}' - live run would ADOPT it")
+                safe_print(f"            NOTE: content matches orphaned state entry '{orphan[0]}' - live run would ADOPT it")
             elif existing_index is not None:
                 folder_title = normalize_title(title_from_folder(name))
                 if folder_title in existing_index:
-                    safe_print(f"            NOTE: a matching Zenodo record already")
-                    safe_print(f"                  exists - live run would ADOPT it")
+                    safe_print(f"            NOTE: a matching Zenodo record already exists - live run would ADOPT it")
         return None, "dry-run"
 
-    # ---------------- adoption layers ----------------
     if existing is None:
-        # Layer 2: orphaned state entry with matching hash (folder renamed)
         orphan = find_orphan_by_hash(state, current_hash, papers_present)
         if orphan:
             sname, sentry = orphan
@@ -468,7 +370,6 @@ def process_paper(name, paper_dir, api_base, token, state, papers_present,
             save_doi_state(state)
             return sentry.get("doi"), "adopted"
 
-        # Layer 3: published Zenodo record with matching title
         if existing_index is not None:
             folder_title = normalize_title(title_from_folder(name))
             match = existing_index.get(folder_title)
@@ -482,17 +383,10 @@ def process_paper(name, paper_dir, api_base, token, state, papers_present,
                 safe_print(f"           concept:   {concept_doi}")
                 safe_print(f"           published: {pub_date}")
                 safe_print(f"           Reusing it instead of creating a duplicate.")
-                state[name] = {
-                    "id": dep_id,
-                    "doi": version_doi,
-                    "concept_doi": concept_doi,
-                    "published": pub_date + " (adopted)",
-                    "files_hash": current_hash,
-                }
+                state[name] = {"id": dep_id, "doi": version_doi, "concept_doi": concept_doi, "published": pub_date + " (adopted)", "files_hash": current_hash}
                 save_doi_state(state)
                 return version_doi, "adopted"
 
-    # ---------------- decide mode ----------------
     if not existing:
         mode = "create"
         outcome = "created"
@@ -502,12 +396,10 @@ def process_paper(name, paper_dir, api_base, token, state, papers_present,
         if stored is None:
             existing["files_hash"] = current_hash
             save_doi_state(state)
-            safe_print(f"  [skip]   {name} - already has DOI "
-                       f"{existing.get('doi')} (baseline recorded)")
+            safe_print(f"  [skip]   {name} - already has DOI {existing.get('doi')} (baseline recorded)")
             return existing.get("doi"), "skipped"
         if current_hash == stored:
-            safe_print(f"  [skip]   {name} - already has DOI "
-                       f"{existing.get('doi')}")
+            safe_print(f"  [skip]   {name} - already has DOI {existing.get('doi')}")
             return existing.get("doi"), "skipped"
         if force_new_version or auto_release_stale:
             mode = "version"
@@ -523,7 +415,6 @@ def process_paper(name, paper_dir, api_base, token, state, papers_present,
             safe_print(f"             zenodo_release.bat {name}")
             return existing.get("doi"), "stale"
 
-    # ---------------- create or new version ----------------
     if mode == "create":
         try:
             draft = create_deposition(api_base, token)
@@ -544,9 +435,7 @@ def process_paper(name, paper_dir, api_base, token, state, papers_present,
             safe_print("    [ERROR] could not determine new draft ID")
             return None, "failed"
         try:
-            draft = api_request(
-                f"{api_base}/deposit/depositions/{draft_id}", token=token
-            )
+            draft = api_request(f"{api_base}/deposit/depositions/{draft_id}", token=token)
         except Exception as e:
             safe_print(f"    [ERROR] could not fetch draft: {e}")
             return None, "failed"
@@ -568,12 +457,14 @@ def process_paper(name, paper_dir, api_base, token, state, papers_present,
             safe_print(f"      ERR {f.relative_to(paper_dir)}")
     safe_print(f"    uploaded {uploaded}/{len(files)} file(s)")
 
+    if uploaded < len(files):
+        safe_print("    [ERROR] Not all files uploaded successfully. Aborting publish.")
+        safe_print("            You may need to delete the draft on Zenodo and try again.")
+        return None, "failed"
+
     metadata = build_metadata(name, paper_dir)
     try:
-        api_request(
-            f"{api_base}/deposit/depositions/{deposition_id}",
-            method="PUT", payload=metadata, token=token,
-        )
+        api_request(f"{api_base}/deposit/depositions/{deposition_id}", method="PUT", payload=metadata, token=token)
     except Exception as e:
         safe_print(f"    [ERROR] metadata update failed:")
         for line in str(e).splitlines():
@@ -606,7 +497,6 @@ def process_paper(name, paper_dir, api_base, token, state, papers_present,
     write_citation_cff(paper_dir, name, doi, concept_doi)
     return doi, outcome
 
-
 def write_citation_cff(paper_dir, name, doi, concept_doi):
     title = title_from_folder(name)
     cff = f"""cff-version: 1.2.0
@@ -626,16 +516,11 @@ identifiers:
 """
     (paper_dir / "CITATION.cff").write_text(cff, encoding="utf-8")
 
-
 def sweep_orphaned_state(state, papers_present):
-    """Remove state entries whose folder no longer exists AND that weren't
-    adopted by any current paper. Prevents stale entries from piling up."""
     removed = []
     for sname in list(state.keys()):
         if sname in papers_present:
             continue
-        # It's orphaned. Was it adopted? (Then it wouldn't be in state anymore
-        # since adoption deletes it.) So if it's still here, drop it.
         removed.append(sname)
         del state[sname]
     if removed:
@@ -645,9 +530,6 @@ def sweep_orphaned_state(state, papers_present):
         for n in removed:
             safe_print("        - %s" % n)
     return removed
-
-
-# ---------- Main ----------
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -682,14 +564,10 @@ def main():
     safe_print(f"Papers dir:   {DOCUMENT_DIR}")
     safe_print(f"DOI state:    {DOI_FILE}")
     safe_print(f"Mode:         {'DRY-RUN' if args.dry_run else 'LIVE'}")
-    if args.new_version:
-        safe_print("             --new-version: forcing new version for all")
-    if args.auto_release_stale:
-        safe_print("             --auto-release-stale: stale papers will be updated")
-    if args.reset:
-        safe_print("             --reset: state will be wiped before run")
-    if args.reset_on_success:
-        safe_print("             --reset-on-success: state will be wiped if all OK")
+    if args.new_version: safe_print("             --new-version: forcing new version for all")
+    if args.auto_release_stale: safe_print("             --auto-release-stale: stale papers will be updated")
+    if args.reset: safe_print("             --reset: state will be wiped before run")
+    if args.reset_on_success: safe_print("             --reset-on-success: state will be wiped if all OK")
     safe_print("=" * 60)
     safe_print("")
 
@@ -704,7 +582,6 @@ def main():
         return 1
 
     papers_present = {name for name, _ in papers}
-
     safe_print(f"Found {len(papers)} paper(s):")
     for name, _ in papers:
         safe_print(f"  - {name}")
@@ -712,7 +589,6 @@ def main():
 
     state = load_doi_state()
 
-    # Fetch Zenodo index for adoption layer 3
     existing_index = None
     if not args.dry_run:
         safe_print("Fetching existing depositions for adoption check...")
@@ -732,22 +608,14 @@ def main():
             auto_release_stale=args.auto_release_stale,
             existing_index=existing_index,
         )
-        if args.dry_run:
-            continue
-        if outcome == "created":
-            created += 1
-        elif outcome == "updated":
-            updated += 1
-        elif outcome == "adopted":
-            adopted += 1
-        elif outcome == "skipped":
-            skipped += 1
-        elif outcome == "stale":
-            stale += 1
-        else:
-            failed += 1
+        if args.dry_run: continue
+        if outcome == "created": created += 1
+        elif outcome == "updated": updated += 1
+        elif outcome == "adopted": adopted += 1
+        elif outcome == "skipped": skipped += 1
+        elif outcome == "stale": stale += 1
+        else: failed += 1
 
-    # Post-run sweep: drop state entries whose folders are gone
     if not args.dry_run and not args.only:
         sweep_orphaned_state(state, papers_present)
 
@@ -756,10 +624,8 @@ def main():
     if args.dry_run:
         safe_print(" Dry run complete. No changes were made.")
     else:
-        line = (f" Done. Created: {created}  Updated: {updated}  "
-                f"Adopted: {adopted}  Skipped: {skipped}  Failed: {failed}")
-        if stale:
-            line += f"  Stale: {stale}"
+        line = f" Done. Created: {created}  Updated: {updated}  Adopted: {adopted}  Skipped: {skipped}  Failed: {failed}"
+        if stale: line += f"  Stale: {stale}"
         safe_print(line)
         if stale:
             safe_print("")
@@ -774,11 +640,9 @@ def main():
         delete_doi_state("reset-on-success")
     elif args.reset_on_success and not args.dry_run and failed > 0:
         safe_print("")
-        safe_print("[reset-on-success] skipped: %d failure(s) occurred, "
-                   "state file kept." % failed)
+        safe_print("[reset-on-success] skipped: %d failure(s) occurred, state file kept." % failed)
 
     return 0 if failed == 0 else 1
-
 
 if __name__ == "__main__":
     try:
