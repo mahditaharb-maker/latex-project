@@ -86,7 +86,7 @@ def api_request(url, method="GET", payload=None, token=None, allow_404=False):
 
 def upload_file(bucket_url, filepath, token):
     filename = filepath.name
-    # FIX: URL-encode the filename to handle spaces and special characters
+    # URL-encode the filename to handle spaces and special characters
     encoded_filename = urllib.parse.quote(filename)
     url = f"{bucket_url}/{encoded_filename}"
     
@@ -109,7 +109,7 @@ def upload_file(bucket_url, filepath, token):
             safe_print(f"            {body[:400]}")
         return False
 
-# ... [Keep all the other functions exactly as they are in your file] ...
+# ---------- State ----------
 
 def load_doi_state():
     if DOI_FILE.exists():
@@ -140,6 +140,8 @@ def warn_stray_state_file():
         safe_print(f"         del {STRAY_DOI_FILE.name}")
         safe_print("")
 
+# ---------- Title helpers ----------
+
 def title_from_folder(name):
     return name.replace("-", " ").replace("_", " ").strip()
 
@@ -151,6 +153,8 @@ def normalize_title(s):
     s = re.sub(r"[^a-z0-9]+", " ", s)
     s = re.sub(r"\s+", " ", s).strip()
     return s
+
+# ---------- Paper discovery ----------
 
 def find_papers(document_dir):
     papers = []
@@ -192,6 +196,8 @@ def compute_paper_hash(paper_dir):
         h.update(b"\0")
     return h.hexdigest()
 
+# ---------- Zenodo title index (for adoption) ----------
+
 def fetch_deposition_index(api_base, token):
     index = {}
     page = 1
@@ -217,6 +223,8 @@ def fetch_deposition_index(api_base, token):
         page += 1
     return index
 
+# ---------- Metadata ----------
+
 def build_metadata(name, paper_dir):
     title = title_from_folder(name)
     desc = f"Preprint from the {GITHUB_REPO} repository."
@@ -241,6 +249,8 @@ def build_metadata(name, paper_dir):
             "access_right": "open",
         }
     }
+
+# ---------- Status / verify (no token, no API) ----------
 
 def status_report():
     if not DOCUMENT_DIR.exists():
@@ -300,6 +310,8 @@ def verify_stale(name):
     safe_print(f"         Current DOI: {entry.get('doi')}")
     return 0
 
+# ---------- Core workflow ----------
+
 def create_deposition(api_base, token):
     url = f"{api_base}/deposit/depositions"
     return api_request(url, method="POST", payload={}, token=token)
@@ -356,6 +368,7 @@ def process_paper(name, paper_dir, api_base, token, state, papers_present, dry_r
                     safe_print(f"            NOTE: a matching Zenodo record already exists - live run would ADOPT it")
         return None, "dry-run"
 
+    # ---------------- adoption layers ----------------
     if existing is None:
         orphan = find_orphan_by_hash(state, current_hash, papers_present)
         if orphan:
@@ -387,6 +400,7 @@ def process_paper(name, paper_dir, api_base, token, state, papers_present, dry_r
                 save_doi_state(state)
                 return version_doi, "adopted"
 
+    # ---------------- decide mode ----------------
     if not existing:
         mode = "create"
         outcome = "created"
@@ -398,7 +412,7 @@ def process_paper(name, paper_dir, api_base, token, state, papers_present, dry_r
             save_doi_state(state)
             safe_print(f"  [skip]   {name} - already has DOI {existing.get('doi')} (baseline recorded)")
             return existing.get("doi"), "skipped"
-        if current_hash == stored:
+        if current_hash == stored and not force_new_version:
             safe_print(f"  [skip]   {name} - already has DOI {existing.get('doi')}")
             return existing.get("doi"), "skipped"
         if force_new_version or auto_release_stale:
@@ -415,6 +429,7 @@ def process_paper(name, paper_dir, api_base, token, state, papers_present, dry_r
             safe_print(f"             zenodo_release.bat {name}")
             return existing.get("doi"), "stale"
 
+    # ---------------- create or new version ----------------
     if mode == "create":
         try:
             draft = create_deposition(api_base, token)
@@ -530,6 +545,8 @@ def sweep_orphaned_state(state, papers_present):
         for n in removed:
             safe_print("        - %s" % n)
     return removed
+
+# ---------- Main ----------
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)

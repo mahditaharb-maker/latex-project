@@ -1,44 +1,44 @@
 {
   "Choice-Free Reverse Mathematics": {
     "concept_doi": "10.5281/zenodo.23581972",
-    "doi": "10.5281/zenodo.23581973",
+    "doi": "10.5281/zenodo.23582515",
     "files_hash": "e9c587257c4328976b82088c375b54a56dbae121c9f48ad00871c2da0ac3b952",
-    "id": 23581973,
-    "published": "2026-10-23 (adopted)"
+    "id": 23582515,
+    "published": "2026-10-23 01:27:24"
   },
   "Doctoral_Day_15_10_26_Brahimi_MT": {
     "concept_doi": "10.5281/zenodo.23405209",
-    "doi": "10.5281/zenodo.23581975",
+    "doi": "10.5281/zenodo.23582520",
     "files_hash": "7b88f85f0f97bfbaee45d0ed49141fc9aff2e629fc192e859d782592aa868e08",
-    "id": 23581975,
-    "published": "2026-10-23 (adopted)"
+    "id": 23582520,
+    "published": "2026-10-23 01:27:58"
   },
   "Pure-O-Sequences-in-Codimension-Three-05E40": {
     "concept_doi": "10.5281/zenodo.23484636",
-    "doi": "10.5281/zenodo.23581987",
+    "doi": "10.5281/zenodo.23582535",
     "files_hash": "8e88607b15527190f0d33eae06a9d538f07213290834da3cda6391f991b3afa6",
-    "id": 23581987,
-    "published": "2026-10-23 (adopted)"
+    "id": 23582535,
+    "published": "2026-10-23 01:28:06"
   },
   "Taylor-s-Theorem-with-Lagrange-Remainder-in-Mathlib-26A06": {
     "concept_doi": "10.5281/zenodo.23375843",
-    "doi": "10.5281/zenodo.23581990",
+    "doi": "10.5281/zenodo.23582536",
     "files_hash": "6ba4d5e4dc02e67e578772427f07ac5653e2c18c30142d49a48059371d517611",
-    "id": 23581990,
-    "published": "2026-10-23 (adopted)"
+    "id": 23582536,
+    "published": "2026-10-23 01:28:24"
   },
   "The-Dependency-Ordered-Formal-Exposition-of-PDE_": {
     "concept_doi": "10.5281/zenodo.23375876",
-    "doi": "10.5281/zenodo.23582001",
+    "doi": "10.5281/zenodo.23582543",
     "files_hash": "dc35e1dbb0783ea3ed771c53346d17f30d09cc68c263a75766b4cbdcfa64bdc8",
-    "id": 23582001,
-    "published": "2026-10-23 (adopted)"
+    "id": 23582543,
+    "published": "2026-10-23 01:28:32"
   },
   "The-Fundamental-Theorem-of-Calculus-in-Mathlib-26A42": {
     "concept_doi": "10.5281/zenodo.23375880",
-    "doi": "10.5281/zenodo.23582004",
+    "doi": "10.5281/zenodo.23582550",
     "files_hash": "de794f385b3a3ee86113c9639fcc997d10521f5253d68150834e514f7b36869a",
-    "id": 23582004,
-    "published": "2026-10-23 (adopted)"
+    "id": 23582550,
+    "published": "2026-10-23 01:28:41"
   }
 }
