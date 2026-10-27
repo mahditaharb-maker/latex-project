@@ -1,10 +1,10 @@
 {
   "Choice-Free Reverse Mathematics": {
     "concept_doi": "10.5281/zenodo.23581972",
-    "doi": "10.5281/zenodo.23582515",
-    "files_hash": "e9c587257c4328976b82088c375b54a56dbae121c9f48ad00871c2da0ac3b952",
-    "id": 23582515,
-    "published": "2026-10-23 01:27:24"
+    "doi": "10.5281/zenodo.23600701",
+    "files_hash": "67d374001b61382b8ba11c27ce89d24bc5f7d090df226fe229580c4108988590",
+    "id": 23600701,
+    "published": "2026-10-23 17:15:00"
   },
   "Doctoral_Day_15_10_26_Brahimi_MT": {
     "concept_doi": "10.5281/zenodo.23405209",
@@ -22,10 +22,10 @@
   },
   "Taylor-s-Theorem-with-Lagrange-Remainder-in-Mathlib-26A06": {
     "concept_doi": "10.5281/zenodo.23375843",
-    "doi": "10.5281/zenodo.23582536",
-    "files_hash": "6ba4d5e4dc02e67e578772427f07ac5653e2c18c30142d49a48059371d517611",
-    "id": 23582536,
-    "published": "2026-10-23 01:28:24"
+    "doi": "10.5281/zenodo.23600702",
+    "files_hash": "1156ba88860222b31134f11aaec3ba79b2b2d249d6892889dfb11219a69ecba6",
+    "id": 23600702,
+    "published": "2026-10-23 17:15:57"
   },
   "The-Dependency-Ordered-Formal-Exposition-of-PDE_": {
     "concept_doi": "10.5281/zenodo.23375876",
@@ -36,9 +36,9 @@
   },
   "The-Fundamental-Theorem-of-Calculus-in-Mathlib-26A42": {
     "concept_doi": "10.5281/zenodo.23375880",
-    "doi": "10.5281/zenodo.23582550",
-    "files_hash": "de794f385b3a3ee86113c9639fcc997d10521f5253d68150834e514f7b36869a",
-    "id": 23582550,
-    "published": "2026-10-23 01:28:41"
+    "doi": "10.5281/zenodo.23600715",
+    "files_hash": "97b843a2c3bbdc63150a79441dfc89e2549bbb0d18799b4034c2ed04722f0c0c",
+    "id": 23600715,
+    "published": "2026-10-23 17:16:05"
   }
 }
