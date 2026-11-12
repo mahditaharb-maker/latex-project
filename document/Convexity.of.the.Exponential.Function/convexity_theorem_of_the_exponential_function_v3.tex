@@ -26,7 +26,7 @@
 %TCIDATA{Version=5.50.0.2960}
 %TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
 %TCIDATA{BibliographyScheme=Manual}
-%TCIDATA{LastRevised=Friday, November 06, 2026 16:09:24}
+%TCIDATA{LastRevised=Thursday, November 12, 2026 10:12:05}
 %TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
 
 \restylefloat{figure}
@@ -255,6 +255,7 @@
 {\endlist}
 \makeatother
 \numberwithin{equation}{section}
+\newcolumntype{p}[1]{>{\centering\arraybackslash\scriptsize}m{#1}|}
 \begin{document}
 \title{\bfseries{\huge \emph{The Convexity Theorem for the Exponential.}}\\
 [12pt]{\Large \emph{From Weighted AM--GM and Midpoint Identities}}\\
@@ -340,14 +341,12 @@ _{0}$-provable.
 Route 6, although classical in style, stays within the power series and is $%
 \mathsf{RCA}_{0}$-provable.
 \end{abstract}
-
-
-\thispagestyle{empty}
+\hypersetup{pageanchor=false}
+\thispagestyle{empty} \newpage
 \newpage
 \tableofcontents
-
-
-\newpage \thispagestyle{empty} \setstretch{1.2} \hypersetup{pageanchor=false}
+\newpage
+ \setstretch{1.2} 
 \pagestyle{plain} \pagenumbering{arabic} \hypersetup{pageanchor=true}
 
 \section{Introduction}
@@ -549,10 +548,519 @@ where $\mathsf{WKL}$ asserts that every infinite binary tree has an infinite
 path. Real quantifiers in coded statements range over valid Cauchy codes.
 \end{definition}
 
-\section{Constructive proofs}
+
 
 \label{sec:constructive}
 
+\begin{theorem}
+\label{thm:uniform-tail} The exponential exists uniquely. {\scriptsize 
+\begin{equation}
+\forall R\in 
+%TCIMACRO{\U{211d} }%
+%BeginExpansion
+\mathbb{R}
+%EndExpansion
+_{>0},\text{ }\forall n\in 
+%TCIMACRO{\U{2115} }%
+%BeginExpansion
+\mathbb{N}
+%EndExpansion
+,\text{ }\forall x\in 
+%TCIMACRO{\U{211d} }%
+%BeginExpansion
+\mathbb{R}
+%EndExpansion
+,\text{ }|x|\leq R<n+2\Rightarrow \text{ }|\exp x-S_{n}(x)|\leq T_{n}(R)\leq 
+\frac{R^{n+1}}{(n+1)!}\left( 1-\frac{R}{n+2}\right) ^{-1}.
+\label{eq:uniform-tail}
+\end{equation}%
+} For each fixed $R$, the convergence has a computable modulus.
+\end{theorem}
+
+\begin{proof}
+\medskip
+
+\noindent {\ \centering \setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+1 & $R>0,\quad |x|\leq R,\quad \varepsilon >0$ & Arbitrary parameters;
+assumption. \\ \hline
+\medskip 2 & \medskip $B\in \mathbb{N},\quad B\geq \max (1,R)$ & Archimedean
+bound, 1. \\ 
+\end{tabular}%
+}\vspace{-5pt} \noindent
+
+{\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.0}%
+\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+3 & \medskip $b_{n}:=\dfrac{B^{n+1}}{(n+1)!}$\medskip & Definition. \\ \hline
+\medskip 4 & \medskip $n+2\geq 2B$ & Assumption. \\ 
+\end{tabular}%
+} \vspace{-5pt} \noindent
+
+{\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.0}%
+\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+5 & $b_{n+1}/b_{n}=B/(n+2)\leq 1/2$ & Arithmetic, 2--4. \\ \hline
+\medskip 6 & \medskip $\exists N:\ N+2\geq 2B\ \wedge \ b_{N}<\varepsilon /2$
+& Geometric decay, 3--5; discharge 4. \\  
+\end{tabular}%
+} \vspace{-5pt} \noindent \noindent
+
+{\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.0}%
+\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+7 & $\begin{aligned}m>n\ge N\ \Longrightarrow
+|S_m(x)-S_n(x)|\le2b_n<\varepsilon\end{aligned}$ & Finite geometric
+majorant, 5--6. \\ \hline
+\medskip 8 & \medskip $\exists L\in \mathbb{R}:\ S_{n}(x)\longrightarrow L$
+& Modulated Cauchy construction, 7. \\ 
+\end{tabular}%
+} \vspace{-5pt} \noindent \noindent
+
+{\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.0}%
+\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+9 & $\begin{aligned}n+2>R\ \Longrightarrow |L-S_n(x)|\le T_n(R)
+\le\dfrac{R^{n+1}}{(n+1)!}(1-R/(n+2))^{-1}\end{aligned}$ & Geometric tail
+estimate; non-strict limit, 7--8. \\ \hline
+\medskip 10 & \medskip $S_{n}(x)\rightarrow L\ \wedge \ S_{n}(x)\rightarrow
+L^{\prime }$ & Assumption for uniqueness. \\ 
+\end{tabular}%
+} \vspace{-5pt} \noindent \noindent
+
+{\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.0}%
+\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+11 & $\eta >0$ & Arbitrary positive tolerance. \\ \hline
+12 & $\exists n:\ |L-S_{n}(x)|<\eta /2\ \wedge \ |L^{\prime }-S_{n}(x)|<\eta
+/2$ & Limit definition, 10--11. \\ 
+\end{tabular}%
+} \vspace{-5pt} \noindent \noindent
+
+{\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.0}%
+\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+13 & $|L-L^{\prime }|<\eta $ & Triangle inequality, 12. \\ \hline
+\medskip 14 & \medskip $L=L^{\prime }$ & Arbitrary-tolerance criterion,
+11--13. \\ 
+\end{tabular}%
+} \vspace{-5pt} \noindent \noindent
+
+{\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.0}%
+\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+15 & $\exists !L:\ S_{n}(x)\rightarrow L$ & Existence 8; uniqueness 10--14.
+\\ \hline
+16 & \medskip $\begin{gathered}\forall x\in\mathbb R,\, \exists!L:\
+S_n(x)\to L,\, \forall R>0,\, \forall x\in[-R,R],\, \forall n: \\ n+2>R\
+\Longrightarrow |e^x-S_n(x)|\le
+T_n(R)\le\dfrac{R^{n+1}}{(n+1)!}(1-R/(n+2))^{-1}\end{gathered}$ \medskip & 
+Discharge 1; generalization, 6--15. \\ \hline
+\end{tabular}%
+}
+\end{proof}
+
+\begin{theorem}[Series foundations]
+\label{lem:series-foundations} The power series defines a continuous
+positive function on $\mathbb{R}$ with $\exp 0=1$ and 
+\begin{equation*}
+\forall x\in 
+%TCIMACRO{\U{211d} }%
+%BeginExpansion
+\mathbb{R}
+%EndExpansion
+,\forall y\in 
+%TCIMACRO{\U{211d} }%
+%BeginExpansion
+\mathbb{R}
+%EndExpansion
+:\exp (x+y)=\exp x\exp y.
+\end{equation*}
+\begin{equation*}
+\forall h\in 
+%TCIMACRO{\U{211d} }%
+%BeginExpansion
+\mathbb{R}
+%EndExpansion
+_{\geq 0}:\text{ }\exp h\geq 1+h.
+\end{equation*}%
+\begin{equation}
+\forall B\in 
+%TCIMACRO{\U{211d} }%
+%BeginExpansion
+\mathbb{R}
+%EndExpansion
+_{\geq 1},\forall u\in \lbrack -B,B],\text{ },\forall v\in \lbrack -B,B]:%
+\text{ }|\exp u-\exp v|\leq \exp (B)|u-v|  \label{eq:exp-lipschitz}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+\smallskip \noindent {\ \setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.18}}
+
+{\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.0}%
+\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+1 & $B\ge1,\quad u,v\in[-B,B]$ & Arbitrary parameters. \\ \hline
+2 & $|u^k-v^k|\le kB^{k-1}|u-v|\quad(k\ge1)$ & Difference-of-powers
+identity; triangle inequality. \\ 
+\end{tabular}%
+} \vspace{-5pt} \noindent
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+3 & $|S_n(u)-S_n(v)|\le |u-v|S_{n-1}(B)\quad(n\ge1)$ & Sum 2 with weights $%
+1/k!$. \\ \hline
+4 & $|e^u-e^v|\le e^B|u-v|$ & Non-strict limit, 3; Theorem~\ref%
+{thm:uniform-tail}. \\ 
+\end{tabular}
+} \vspace{-5pt} \noindent
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+5 & $\exp\text{ is continuous on }\mathbb{R}$ & Arbitrary bounded interval,
+1--4. \\ \hline
+6 & $x,y\in\mathbb{R},\quad |x|\le R,\ |y|\le S$ & Arbitrary parameters and
+integer bounds. \\ 
+\end{tabular}
+} \vspace{-5pt} \noindent
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+7 & $S_N(x+y)=\displaystyle\sum_{i+j\le N}\frac{x^iy^j}{i!j!}$ & Finite
+binomial identity. \\ \hline
+8 & \medskip \medskip $\begin{aligned}\sum_{i+j>2m}\frac{|x|^i|y|^j}{i!j!}
+\le T_m(R)e^S+e^R T_m(S)\to0\end{aligned}$ & Union bound $i>m$ or $j>m$;
+absolute tails. \\  
+\end{tabular}%
+} \vspace{-5pt} \noindent
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+9 & $e^{x+y}=e^xe^y$ & Modulated Cauchy product, 7--8. \\ \hline
+10 & $\forall x,y\in\mathbb{R}:\ e^{x+y}=e^xe^y$ & Generalization, 6--9. \\ 
+\end{tabular}
+} \vspace{-5pt} \noindent
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+11 & $x\in\mathbb{R}$ & Arbitrary parameter. \\ \hline
+12 & $e^0=1,\quad e^xe^{-x}=1,\quad e^x=(e^{x/2})^2\ge0$ & Definition of
+series; 10; square non-negativity. \\ 
+\end{tabular}%
+} \vspace{-5pt} \noindent
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+13 & $C\in\mathbb{Q},\quad C>\max(0,e^{-x})$ & Rational upper bound from the
+tail estimate. \\ \hline
+14 & $1=e^xe^{-x}\le Ce^x$ & Order multiplication, 12--13. \\ 
+\end{tabular}%
+} \vspace{-5pt} \noindent
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+15 & $e^x\ge1/C>0$ & Divide by $C>0$, 14. \\ \hline
+16 & $\forall x\in\mathbb{R}:\ e^x>0$ & Generalization, 11--15. \\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+17 & $h\ge0,\quad n\ge1$ & Arbitrary parameters; assumptions. \\ \hline
+18 & $S_n(h)\ge1+h$ & Non-negative terms in the finite series. \\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+19 & $e^h\ge1+h$ & Non-strict limit, 18. \\ \hline
+20 & $\forall h\ge0:\ e^h\ge1+h$ & Discharge and generalization, 17--19. \\ 
+\hline
+\end{tabular}%
+}
+\end{proof}
+
+\begin{theorem}[Effective inverse construction]
+\label{lem:log-construction} {\setstretch{1.8} The power-series exponential
+is a strictly increasing bijection from $\mathbb{R}$ onto $\mathbb{R}_{>0}$. 
+}%
+\begin{equation*}
+\begin{gathered}\exp:\mathbb R\overset{\sim}{\longrightarrow}\mathbb
+R_{>0},\\
+\log\circ\exp=\mathrm{id}_{\R},\quad\exp\circ\log=\mathrm{id}_{\R_{>0}}.%
+\end{gathered}
+\end{equation*}
+
+{Its inverse $\log $ can be constructed by a modulated rational-interval
+procedure without an exact intermediate value principle or any convexity
+theorem, such that: } 
+\begin{equation*}
+\forall a\in 
+%TCIMACRO{\U{211d} }%
+%BeginExpansion
+\mathbb{R}
+%EndExpansion
+_{>0},\text{ }\forall t\in 
+%TCIMACRO{\U{211d} }%
+%BeginExpansion
+\mathbb{R}
+%EndExpansion
+:a^{t}:=\exp (t\log a).
+\end{equation*}
+
+And,%
+\begin{equation*}
+\forall x\in 
+%TCIMACRO{\U{211d} }%
+%BeginExpansion
+\mathbb{R}
+%EndExpansion
+,\forall t\in 
+%TCIMACRO{\U{211d} }%
+%BeginExpansion
+\mathbb{R}
+%EndExpansion
+:\text{ }\exp (tx)=(\exp x)^{t}.
+\end{equation*}
+\end{theorem}
+
+\begin{proof}
+\smallskip \noindent {\ \setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.18}}
+
+{\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.0}%
+\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+1 & $p<q$ & Arbitrary real parameters; assumption. \\ \hline
+2 & $e^q-e^p=e^p(e^{q-p}-1)\ge e^p(q-p)>0$ & Theorem~\ref%
+{lem:series-foundations}, positivity and multiplication. \\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+3 & $\exp\text{ is strictly increasing}$ & Discharge and generalization,
+1--2. \\ \hline
+4 & $a>0$ & Arbitrary target. \\  
+\end{tabular}%
+} \vspace{-5pt}
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+5 & $\begin{gathered}0<\ell<a<A,\quad M\in\mathbb N_{\ge1},\quad
+1+M>A,\quad(1+M)^{-1}<\ell\end{gathered}$ & Rational bounds and Archimedean
+search, 4. \\ \hline
+6 & $e^{-M}\le(1+M)^{-1}<a<1+M\le e^M$ & Positive-series bound and
+multiplication. \\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+7 & $C\in\mathbb{Q},\quad C>e^M,\quad c:=1/C>0$ & Effective series bound. \\ 
+\hline
+8 & \medskip $e^q-e^p\ge c(q-p)\quad(-M\le p<q\le M)$ & 2--3, 7; $e^p\ge
+e^{-M}\ge c$. \\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+9 & $e^l<a<e^u,\quad l,u\in\mathbb{Q}\cap[-M,M]$ & Bracket invariant;
+initially 6. \\ \hline
+10 & $w=u-l,\quad p=l+w/3,\quad q=l+2w/3$ & Definitions. \\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\nointerlineskip\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+11 & $\begin{gathered}E_p,E_q,a_0\in\mathbb Q, |E_p-e^p|<cw/24,\,
+|E_q-e^q|<cw/24,\,\\ |a_0-a|<cw/24\end{gathered}$ & Cauchy
+approximations, 7--10. \\ \hline
+12 & $d_1:=a_0-E_p,\quad d_2:=E_q-a_0$ & Definitions. \\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\nointerlineskip\noindent { \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+13 & $d_1+d_2=E_q-E_p>cw/4$ & Separation 8; error estimate
+11. \\ \hline
+14 & $d_1>cw/8$ & Decidable rational test: first branch. \\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\nointerlineskip\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+15 & $a-e^p>cw/24>0$ & Error bound 11 and 14. \\ \hline
+16 & $e^p<a<e^u,\quad u-p=2w/3$ & 9--10, 15; keep $[p,u]$. \\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+17 & $d_1\le cw/8$ & Complementary rational branch. \\ \hline
+18 & $d_2>cw/8,\quad e^q-a>cw/24>0$ & 11--13, 17. \\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+19 & $e^l<a<e^q,\quad q-l=2w/3$ & 9--10, 18; keep $[l,q]$. \\ \hline
+20 &  $\exists[l^{\prime },u^{\prime }]\subseteq[l,u]:\ %
+\begin{gathered}e^{l'}<a<e^{u'},\quad u'-l'=2w/3\end{gathered}$ & Rational
+cases, 14--16 and 17--19. \\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+21 & $\begin{gathered}{}[l_j,u_j]\text{ nested},\quad
+u_j-l_j=2M(2/3)^j,\quad e^{l_j}<a<e^{u_j}\end{gathered}$ & Effective
+recursion from 6 and 9--20. \\ \hline
+22 & $\exists y:\ l_j\to y\ \land\ u_j\to y\ \land\ e^y=a$ & Cauchy modulus
+21; continuity and squeeze. \\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+23 & $|p-q|\le C|e^p-e^q|\quad(p,q\in[-M,M])$ & Rational order cases in 8;
+extend by continuity. \\ \hline
+24 & $\exists! y:\ e^y=a$ & Existence 22; uniqueness 23 on a common bracket.
+\\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+25 & $\log a:=y,\quad e^{\log a}=a$ & Unique inverse definition, 24. \\ 
+\hline
+26 & $\log(e^x)=x\quad(x\in\mathbb{R})$ & Uniqueness 24--25; arbitrary
+target. \\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+27 & $0<a<b,\quad p=\log a,\ q=\log b$ & Arbitrary positive inputs; common
+bracket. \\ \hline
+28 & $0<b-a\le D\max(q-p,0),\quad D\in\mathbb{Q},\ D>e^M$ & Rational order
+cases; Lipschitz estimate; continuity. \\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+29 & $q-p>0$ & Positive-gap order consequence, 28. \\ \hline
+30 & $\log\text{ is strictly increasing}$ & Discharge and generalization,
+27--29. \\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+31 & $|\log a-\log b|\le C|a-b|$ & 23, 25 on a common compact positive input
+interval. \\ \hline
+32 & $\log\text{ has compact-uniform moduli}$ & Rational bound $C$, 31;
+generalization. \\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+33 & $a>0,\quad t\in\mathbb{R},\quad a^t:=e^{t\log a}$ & Real-power
+definition. \\ \hline
+34 & $(e^x)^t=e^{t\log(e^x)}=e^{tx}$ & Substitution, 26 and 33. \\ 
+\end{tabular}%
+} \vspace{-5pt}
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{1.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+35 & $(a^{m/n})^n=a^m\quad(m\in\mathbb{N},\ n\ge1)$ & Multiplicativity; 33.
+\\ \hline
+36 & $a^{m/n}=\sqrt[n]{a^m},\quad t\mapsto a^t\text{ continuous}$ & 
+Positive-root uniqueness; composition with $\exp$. \\ 
+\end{tabular}%
+} \vspace{-7pt}
+
+\noindent {\ \centering\setlength{\tabcolsep}{3pt}\renewcommand{%
+\arraystretch}{2.0}\parskip=0pt 
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+37 & $\begin{gathered}\exp:\mathbb R\overset{\sim}{\longrightarrow}\mathbb
+R_{>0},\\
+\log\circ\exp=\mathrm{id}_{\R},\quad\exp\circ\log=\mathrm{id}_{\R_{>0}},\\
+(e^x)^t=e^{tx}\end{gathered}$ & Generalization, 24--36; continuity moduli
+from 31--32. \\ \hline
+\end{tabular}%
+}
+\end{proof}
+\section{Constructive proofs}
 \subsection{ Weighted AM--GM (First proof)}
 
 \begin{lemma}[Weighted AM--GM\comma two variables]
@@ -2333,7 +2841,6 @@ Set.Icc}\ a\ b,\ {} \\
 \quad \quad |x-y|<\delta \rightarrow |f\,x-f\,y|<\varepsilon%
 \end{array}
 & \mathsf{Cont} & \mathsf{RCA}_{0} \\ 
-&  &  & 
 \end{array}%
 $ \noindent $%
 \begin{array}{|c|l|r|c|}
@@ -2345,7 +2852,6 @@ Midpt} & \mathsf{RCA}_{0} \\ \hline
 \refstepcounter{defctr}\hypertarget{def:conv-slope}{\mbox{\textbf{Def\,%
 \thedefctr}}}\label{defi:conv-slope} & \mathsf{Slope}(f,x,y):=(f\,y-f%
 \,x)/(y-x)\ \text{for }x\neq y & \mathsf{Slope} & \mathsf{RCA}_{0} \\ 
-&  &  & 
 \end{array}%
 $ \noindent $%
 \begin{array}{|c|l|r|c|}
@@ -2871,6 +3377,7 @@ $ \noindent $%
 4 & \mathsf{StrictConvexOn}\ \mathbb{R}\ (\mathtt{Real.log}\mathbin{''}%
 \mathsf{Set.Ioi}\ 0)\ \mathtt{Real.exp} & \mathsf{LogInv} & %
 \mbox{Pos:\ref{posi:conv-log-inv}(3, 2, 1)} \\ 
+&  &  & 
 \end{array}
 $ \noindent $%
 \begin{array}{|c|l|r|r|}
@@ -2879,7 +3386,8 @@ $ \noindent $%
 \mathsf{surj} & \mathsf{Eq}(3)\wedge \mbox{Pos:\ref{posi:conv-exp-pos}} \\ 
 \hline
 6 & \mathsf{StrictConvexOn}\ \mathbb{R}\ \mathsf{Set.univ}\ \mathtt{Real.exp}
-& \mathsf{subst} & \mathsf{Eq}(4,5) \\
+& \mathsf{subst} & \mathsf{Eq}(4,5) \\ 
+&  &  & 
 \end{array}
 $ \noindent $%
 \begin{array}{|c|l|r|r|}
