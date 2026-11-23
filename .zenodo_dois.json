@@ -4,48 +4,48 @@
     "doi": "10.5281/zenodo.24144138",
     "files_hash": "4b2dd3fc59a5d5d51f39493ee484537824abc2b724c6ab3529e89667eff32374",
     "id": 24144138,
-    "published": "2026-11-11 19:45:21"
+    "published": "2026-11-11 (adopted)"
   },
   "Convexity.of.the.Exponential.Function": {
     "concept_doi": "10.5281/zenodo.24144144",
-    "doi": "10.5281/zenodo.24181981",
-    "files_hash": "5dd5d410c3eb0a047dc713b9e0d69c3f5011622d73e68f6b0b7a9c4a271d6560",
-    "id": 24181981,
-    "published": "2026-11-13 01:29:34"
+    "doi": "10.5281/zenodo.24182155",
+    "files_hash": "baeee15dc5aebd95a87fce50227b45b34f419076903f5706bdb056d982a4ab44",
+    "id": 24182155,
+    "published": "2026-11-13 01:52:41"
   },
   "Doctoral_Day_15_10_26_Brahimi_MT": {
     "concept_doi": "10.5281/zenodo.23405209",
     "doi": "10.5281/zenodo.23582520",
     "files_hash": "7b88f85f0f97bfbaee45d0ed49141fc9aff2e629fc192e859d782592aa868e08",
     "id": 23582520,
-    "published": "2026-10-23 01:27:58"
+    "published": "2026-10-23 (adopted)"
   },
   "Pure-O-Sequences-in-Codimension-Three-05E40": {
     "concept_doi": "10.5281/zenodo.23484636",
     "doi": "10.5281/zenodo.24144156",
     "files_hash": "29f37b7b76616bc782417936daece933d5ff5e609d6af389385a957d0679fae0",
     "id": 24144156,
-    "published": "2026-11-11 19:45:51"
+    "published": "2026-11-11 (adopted)"
   },
   "Taylor-s-Theorem-with-Lagrange-Remainder-in-Mathlib-26A06": {
     "concept_doi": "10.5281/zenodo.23375843",
     "doi": "10.5281/zenodo.23600702",
     "files_hash": "1156ba88860222b31134f11aaec3ba79b2b2d249d6892889dfb11219a69ecba6",
     "id": 23600702,
-    "published": "2026-10-23 17:15:57"
+    "published": "2026-10-23 (adopted)"
   },
   "The-Dependency-Ordered-Formal-Exposition-of-PDE_": {
     "concept_doi": "10.5281/zenodo.23375876",
     "doi": "10.5281/zenodo.23582543",
     "files_hash": "dc35e1dbb0783ea3ed771c53346d17f30d09cc68c263a75766b4cbdcfa64bdc8",
     "id": 23582543,
-    "published": "2026-10-23 01:28:32"
+    "published": "2026-10-23 (adopted)"
   },
   "The-Fundamental-Theorem-of-Calculus-in-Mathlib-26A42": {
-    "concept_doi": "10.5281/zenodo.23375880",
-    "doi": "10.5281/zenodo.23600715",
+    "concept_doi": "10.5281/zenodo.24182109",
+    "doi": "10.5281/zenodo.24182110",
     "files_hash": "97b843a2c3bbdc63150a79441dfc89e2549bbb0d18799b4034c2ed04722f0c0c",
-    "id": 23600715,
-    "published": "2026-10-23 17:16:05"
+    "id": 24182110,
+    "published": "2026-11-13 01:46:28"
   }
 }

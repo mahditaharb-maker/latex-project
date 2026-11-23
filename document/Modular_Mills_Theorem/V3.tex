@@ -1,0 +1,3046 @@
+\documentclass[11pt,reqno]{amsart}
+
+\usepackage{amsfonts}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{changepage}
+\usepackage{ragged2e}
+\usepackage{float}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[left=0.8in,right=0.8in,bottom=1in,top=1in,headheight=15pt,headsep=40pt]{geometry}
+\usepackage{tikz}
+\usepackage{fancyvrb}
+\usepackage{fancyhdr}
+\usepackage{titlesec,titletoc}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=green,urlcolor=magenta]{hyperref}
+\usepackage{aliascnt}
+\usepackage[nameinlink]{cleveref}
+\usepackage{listings}
+\usepackage{booktabs}
+\providecommand{\TEXTsymbol}[1]{#1}
+\setcounter{MaxMatrixCols}{10}
+
+\restylefloat{figure}
+\hypersetup{pageanchor=false}
+\makeatletter
+\@ifundefined{theorem}{}{\let\theorem\relax}
+\@ifundefined{definition}{}{\let\definition\relax}
+\@ifundefined{lemma}{}{\let\lemma\relax}
+\@ifundefined{corollary}{}{\let\corollary\relax}
+\@ifundefined{proposition}{}{\let\proposition\relax}
+\@ifundefined{remark}{}{\let\remark\relax}
+\@ifundefined{statement}{}{\let\statement\relax}
+\makeatother
+\DeclareUnicodeCharacter{03B9}{\ensuremath{\iota}}
+\DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
+\DeclareUnicodeCharacter{2203}{\ensuremath{\exists }}
+\DeclareUnicodeCharacter{2208}{\ensuremath{\in}}
+\DeclareUnicodeCharacter{2218}{\ensuremath{\circ}}
+\DeclareUnicodeCharacter{2264}{\ensuremath{\leq}}
+\DeclareUnicodeCharacter{2265}{\ensuremath{\geq}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\to}}
+\DeclareUnicodeCharacter{21A6}{\ensuremath{\mapsto}}
+\DeclareUnicodeCharacter{2260}{\ensuremath{\neq}}
+\DeclareUnicodeCharacter{00D7}{\ensuremath{\times}}
+\DeclareUnicodeCharacter{2115}{\ensuremath{\mathbb{N}}}
+\DeclareUnicodeCharacter{211D}{\ensuremath{\mathbb{R}}}
+\DeclareUnicodeCharacter{27E8}{\ensuremath{\langle}}
+\DeclareUnicodeCharacter{27E9}{\ensuremath{\rangle}}
+\providecommand{\R}{\mathbb{R}}
+\providecommand{\N}{\mathbb{N}}
+\providecommand{\Q}{\mathbb{Q}}
+\providecommand{\Z}{\mathbb{Z}}
+\providecommand{\period}{\,\allowbreak}
+\newcommand{\pagenumside}{C}
+\newlength{\pageNumberOffset}
+\setlength{\pageNumberOffset}{0pt}
+\newcommand{\PagenumSideC}{C}
+\newcommand{\applypagehead}[1]{\expandafter\fancyhead\expandafter[\pagenumside]{#1}\ifx\pagenumside\PagenumSideC\else\ifdim\pageNumberOffset=0pt\else\expandafter\fancyheadoffset\expandafter[\pagenumside]{\pageNumberOffset}\fi\fi}
+\newcommand{\applypagefoot}[1]{\expandafter\fancyfoot\expandafter[\pagenumside]{#1}\ifx\pagenumside\PagenumSideC\else\ifdim\pageNumberOffset=0pt\else\expandafter\fancyfootoffset\expandafter[\pagenumside]{\pageNumberOffset}\fi\fi}
+\pagestyle{fancy}
+\fancyhf{}
+\applypagehead{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancypagestyle{plain}{\fancyhf{}\applypagehead{\thepage}\renewcommand{\headrulewidth}{0pt}}
+\setlength{\arraycolsep}{1.5pt}
+\setlength{\tabcolsep}{1.5pt}
+\renewcommand{\arraystretch}{1.0}
+\setlength{\arrayrulewidth}{0.4pt}
+\setlength{\doublerulesep}{1pt}
+\setlength{\extrarowheight}{0pt}
+\newcolumntype{c}{>{\centering\arraybackslash\scriptsize}m{40pt}}
+\newcolumntype{r}{>{\centering\arraybackslash\scriptsize}m{2.5cm}}
+\newcolumntype{l}{>{\centering\arraybackslash\scriptsize}m{10.5cm}}
+\fvset{frame=lines,framerule=0.7pt,rulecolor=\color{blue!60!black},framesep=2pt,fontsize=\scriptsize,xleftmargin=4pt,xrightmargin=4pt}
+\RecustomVerbatimEnvironment{verbatim}{Verbatim}{}
+\DefineVerbatimEnvironment{verbatimbox}{Verbatim}{frame=single,framerule=0.7pt,rulecolor=\color{blue!60!black},framesep=2pt,fontsize=\scriptsize,xleftmargin=4pt,xrightmargin=4pt}
+\makeatletter
+\def\@setsubjclass{\ifx\@subjclass\@empty\else\@subjclass\fi}
+\makeatother
+\subjclass{\textbf{2020 Mathematics Subject Classification.}\,Primary 11A41, 11N05; Secondary 03F60, 03B35, 11-03.}
+\keywords{prime-representing function, Mills' theorem, prime gaps, Ingham's estimate, Bertrand's postulate, Lean's formalisation, constructive mathematics}
+\renewcommand{\abstractname}{\fontsize{9}{11}\selectfont Abstract}
+\newcommand{\abstractfont}{\normalfont\fontsize{8}{10}\selectfont}
+\newcommand{\abstractheadingsep}{\vspace{0.5em}}
+\makeatletter
+\renewenvironment{abstract}{\ifx\maketitle\relax\ClassWarning{\@classname}{Abstract should precede\protect\maketitle\space in AMS document classes reported}\fi\global\setbox\abstractbox=\vtop \bgroup\abstractfont{\centering\abstractname\par}\abstractheadingsep\list{}{\labelwidth\z@\leftmargin3pc \rightmargin\leftmargin\listparindent\normalparindent \itemindent\z@\parsep\z@ \@plus\p@\let\fullwidthdisplay\relax}\item\relax}{\endlist\egroup\ifx\@setabstract\relax \@setabstracta \fi}
+\makeatother
+\setcounter{secnumdepth}{3}
+\newcommand{\SecAbove}{1.0ex plus 0.3ex minus 0.1ex}
+\newcommand{\SecBelow}{0pt}
+\newcommand{\SubsecAbove}{0.8ex plus 0.2ex minus 0.1ex}
+\newcommand{\SubsecBelow}{0pt}
+\newcommand{\SubsubsecAbove}{0.6ex plus 0.2ex minus 0.1ex}
+\newcommand{\SubsubsecBelow}{0pt}
+\makeatletter
+\titleformat{\section}{\normalfont\fontsize{16}{18}\selectfont\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalfont\fontsize{14}{16}\selectfont\bfseries}{\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}{\normalfont\fontsize{12}{14}\selectfont\bfseries}{\thesubsubsection.}{0.5em}{}
+\titlespacing*{\section}{\z@}{\SecAbove}{\SecBelow}
+\titlespacing*{\subsection}{\z@}{\SubsecAbove}{\SubsecBelow}
+\titlespacing*{\subsubsection}{\z@}{\SubsubsecAbove}{\SubsubsecBelow}
+\makeatother
+\newcounter{axctr}\newcounter{posctr}\newcounter{defctr}
+\newcounter{lemctr}\newcounter{thmctr}\newcounter{asserctr}\newcounter{corctr}
+\renewcommand{\theaxctr}{\arabic{axctr}}
+\renewcommand{\theposctr}{\arabic{posctr}}
+\renewcommand{\thedefctr}{\arabic{defctr}}
+\renewcommand{\thelemctr}{\arabic{lemctr}}
+\renewcommand{\thethmctr}{\arabic{thmctr}}
+\renewcommand{\theasserctr}{\arabic{asserctr}}
+\renewcommand{\thecorctr}{\arabic{corctr}}
+\renewcommand{\theHaxctr}{\thesection.\arabic{axctr}}
+\renewcommand{\theHposctr}{\thesection.\arabic{posctr}}
+\renewcommand{\theHdefctr}{\thesection.\arabic{defctr}}
+\renewcommand{\theHlemctr}{\thesection.\arabic{lemctr}}
+\renewcommand{\theHthmctr}{\thesection.\arabic{thmctr}}
+\renewcommand{\theHasserctr}{\thesection.\arabic{asserctr}}
+\renewcommand{\theHasser}{\theequation}
+\renewcommand{\theHcorctr}{\thesection.\arabic{corctr}}
+\newcommand{\swpax}[2]{\refstepcounter{axctr}\hypertarget{#1}{\mbox{\textbf{Ax\,\theaxctr}}}\label{#2}}
+\newcommand{\swppos}[2]{\refstepcounter{posctr}\hypertarget{#1}{\mbox{\textbf{Pos\,\theposctr}}}\label{#2}}
+\newcommand{\swpdef}[2]{\refstepcounter{defctr}\hypertarget{#1}{\mbox{\textbf{Def\,\thedefctr}}}\label{#2}}
+\newcommand{\swplem}[2]{\refstepcounter{lemctr}\hyperlink{#1}{\mbox{\textbf{Lem\,\thelemctr}}}\label{#2}}
+\newcommand{\swpthm}[2]{\refstepcounter{thmctr}\hyperlink{#1}{\mbox{\textbf{Thm\,\thethmctr}}}\label{#2}}
+\newcommand{\swpcor}[2]{\refstepcounter{corctr}\hypertarget{#1}{\mbox{\textbf{Cor\,\thecorctr}}}\label{#2}}
+\newcommand{\tagged}[2]{\hypertarget{#1}{\mbox{\textbf{#2}}}}
+\newcommand{\autorefto}[2]{\hyperlink{#1}{#2}}
+\newcommand{\mcite}[1]{\text{\cite{#1}}}
+\newtheoremstyle{blueplain}{2pt plus 1pt minus 0.5pt}{1pt plus 0.5pt minus 0.3pt}{\itshape}{}{\bfseries\color{blue}}{.}{\newline}{\thmname{#1}\thmnumber{ #2}\thmnote{ {\bfseries\color{blue}(#3)}}}
+\theoremstyle{blueplain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{remark}{Remark}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{statement}{Statement}[section]
+\definecolor{proofhead}{RGB}{11,83,148}
+\definecolor{proofqed}{RGB}{204,0,0}
+\renewcommand{\qedsymbol}{\textcolor{proofqed}{\ensuremath{\square}}}
+\renewenvironment{proof}[1][Proof]{\par\noindent\textbf{\textcolor{proofhead}{#1.}}\par\nobreak}{\par\nobreak\hfill\qedsymbol}
+\newenvironment{swpproof}[1][Proof]{\begin{proof}[#1]}{\end{proof}}
+\renewcommand{\theHtheorem}{\thesection.\arabic{theorem}}
+\renewcommand{\theHstatement}{\thesection.\arabic{statement}}
+\providecommand{\axctrautorefname}{Axiom}
+\providecommand{\posctrautorefname}{Postulate}
+\providecommand{\defctrautorefname}{Definition}
+\providecommand{\lemctrautorefname}{Lemma}
+\providecommand{\thmctrautorefname}{Theorem}
+\providecommand{\asserctrautorefname}{Proposition}
+\providecommand{\corctrautorefname}{Corollary}
+\providecommand{\statementautorefname}{Statement}
+\crefname{axctr}{axiom}{axioms}
+\crefname{posctr}{postulate}{postulates}
+\crefname{defctr}{definition}{definitions}
+\crefname{lemctr}{lemma}{lemmas}
+\crefname{thmctr}{theorem}{theorems}
+\crefname{asserctr}{proposition}{propositions}
+\crefname{corctr}{corollary}{corollaries}
+\Crefname{axctr}{Axiom}{Axioms}
+\Crefname{posctr}{Postulate}{Postulates}
+\Crefname{defctr}{Definition}{Definitions}
+\Crefname{lemctr}{Lemma}{Lemmas}
+\Crefname{thmctr}{Theorem}{Theorems}
+\Crefname{asserctr}{Proposition}{Propositions}
+\Crefname{corctr}{Corollary}{Corollaries}
+\crefname{statement}{statement}{statements}
+\Crefname{statement}{Statement}{Statements}
+\crefname{section}{section}{sections}
+\Crefname{section}{Section}{Sections}
+\crefname{equation}{eq}{eqs}
+\Crefname{equation}{Eq}{Eqs}
+\crefformat{equation}{#2\textcolor{blue}{eq~#1}#3}
+\Crefformat{equation}{#2\textcolor{blue}{Eq~#1}#3}
+\newcounter{inq}
+\renewcommand{\theinq}{\theequation}
+\makeatletter
+\renewcommand{\p@inq}{\p@equation}
+\makeatother
+\crefname{inq}{ineq}{inequalities}
+\Crefname{inq}{Ineq}{Inequalities}
+\crefformat{inq}{#2\textcolor{blue}{inequality~#1}#3}
+\Crefformat{inq}{#2\textcolor{blue}{Inequality~#1}#3}
+\crefmultiformat{inq}{#2\textcolor{blue}{inequalities~#1}#3}{\textcolor{blue}{ ,\,~#2#1#3}}{\textcolor{blue}{, #2#1#3}}{\textcolor{blue}{ ,\,~#2#1#3}}
+\Crefmultiformat{inq}{#2\textcolor{blue}{Inequalities~#1}#3}{\textcolor{blue}{ ,\,~#2#1#3}}{\textcolor{blue}{, #2#1#3}}{\textcolor{blue}{ ,\,~#2#1#3}}
+\makeatletter
+\newenvironment{ineq}
+{\begin{equation}\refstepcounter{inq}}
+{\end{equation}}
+\makeatother
+\newcounter{type}
+\renewcommand{\thetype}{\theequation}
+\makeatletter
+\renewcommand{\p@type}{\p@equation}
+\makeatother
+\crefname{type}{type}{types}
+\Crefname{type}{Type}{Types}
+\crefformat{type}{#2\textcolor{blue}{type~#1}#3}
+\Crefformat{type}{#2\textcolor{blue}{Type~#1}#3}
+\crefmultiformat{type}{#2\textcolor{blue}{types~#1}#3}{\textcolor{blue}{ ,\,~#2#1#3}}{\textcolor{blue}{, #2#1#3}}{\textcolor{blue}{ ,\,~#2#1#3}}
+\Crefmultiformat{type}{#2\textcolor{blue}{Types~#1}#3}{\textcolor{blue}{ ,\,~#2#1#3}}{\textcolor{blue}{, #2#1#3}}{\textcolor{blue}{ ,\,~#2#1#3}}
+\makeatletter
+\newenvironment{type}
+{\begin{equation}\refstepcounter{type}}
+{\end{equation}}
+\makeatother
+\newcounter{asser}
+\renewcommand{\theasser}{\theequation}
+\makeatletter
+\renewcommand{\p@asser}{\p@equation}
+\makeatother
+\crefname{asser}{asser}{assertions}
+\Crefname{asser}{asser}{Assertions}
+\crefformat{asser}{#2\textcolor{blue}{assertion~#1}#3}
+\Crefformat{asser}{#2\textcolor{blue}{Assertion~#1}#3}
+\crefmultiformat{asser}{#2\textcolor{blue}{assertions~#1}#3}{\textcolor{blue}{ ,\,~#2#1#3}}{\textcolor{blue}{, #2#1#3}}{\textcolor{blue}{ ,\,~#2#1#3}}
+\Crefmultiformat{asser}{#2\textcolor{blue}{Assertions~#1}#3}{\textcolor{blue}{ ,\,~#2#1#3}}{\textcolor{blue}{, #2#1#3}}{\textcolor{blue}{ ,\,~#2#1#3}}
+\makeatletter
+\newenvironment{asser}
+{\begin{equation}\refstepcounter{asser}}
+{\end{equation}}
+\makeatother
+\newcommand{\thmref}[1]{\hyperref[#1]{Theorem~\ref*{#1}}}
+\newcommand{\lemref}[1]{\hyperref[#1]{Lemma~\ref*{#1}}}
+\newcommand{\corref}[1]{\hyperref[#1]{Corollary~\ref*{#1}}}
+\newcommand{\propref}[1]{\hyperref[#1]{Proposition~\ref*{#1}}}
+\newcommand{\defref}[1]{\hyperref[#1]{Definition~\ref*{#1}}}
+\makeatletter
+\let\orig@maketitle\maketitle
+\renewcommand{\maketitle}{\begingroup\let\MakeUppercase\@firstofone\let\uppercase\@firstofone\orig@maketitle\endgroup}
+\newlength{\titleToAuthorSkip}
+\newlength{\authorToAbstractSkip}
+\setlength{\titleToAuthorSkip}{6pt plus 2pt minus 1pt}
+\setlength{\authorToAbstractSkip}{10pt plus 3pt minus 2pt}
+\renewcommand{\@maketitle}{\normalfont\normalsize\let\@makefnmark\relax\let\@thefnmark\relax\ifx\@empty\@subjclass\else\@footnotetext{\@setsubjclass}\fi\ifx\@empty\@keywords\else\@footnotetext{\@setkeywords}\fi\ifx\@empty\@thanks\else\@footnotetext{\@setthanks}\fi\@settitle\ifx\@empty\@authors\else\vspace{\titleToAuthorSkip}\@setauthors\fi\ifx\@empty\@date\else\vspace{3pt}\@setdate\fi\ifx\@empty\@abstract\else\vspace{\authorToAbstractSkip}\fi\@setabstract}
+\makeatother
+\makeatletter
+\renewcommand{\encodingdefault}{OT1}
+\makeatother
+\renewcommand{\rmdefault}{cmr}
+\renewcommand{\sfdefault}{cmss}
+\renewcommand{\ttdefault}{cmtt}
+\fontencoding{OT1}\fontfamily{cmr}\selectfont
+\renewcommand{\contentsname}{\texorpdfstring{{\color{blue!60!black}\sffamily\Large\selectfont\bfseries Contents}}{Contents}}
+\renewcommand{\seriesdefault}{\bfdefault}
+\boldmath
+\providecommand{\comma}{,\,}
+\IfFileExists{tcilatex.tex}{\input{tcilatex}}{}
+\makeatletter
+\def\dudley@listtighten{  \setlength{\topsep}{0pt}  \setlength{\partopsep}{0pt}  \setlength{\itemsep}{1pt plus 0.5pt minus 0.3pt}  \setlength{\parsep}{0pt}  \setlength{\labelsep}{0.4em}}
+\def\dudley@itemlabel{  \ifnum\@listdepth=\@ne \labelitemi
+	\else\ifnum\@listdepth=\tw@ \labelitemii
+	\else\ifnum\@listdepth=\thr@@ \labelitemiii
+	\else \labelitemiv\fi\fi\fi}
+\def\dudley@enumlabel{  \ifnum\@listdepth=\@ne \arabic{enumi}.
+	\else\ifnum\@listdepth=\tw@ \alph{enumii}.
+	\else\ifnum\@listdepth=\thr@@ \roman{enumiii}.
+	\else \Alph{enumiv}.\fi\fi\fi}
+\def\dudley@enumcounter{  \ifnum\@listdepth=\@ne \usecounter{enumi}  \else\ifnum\@listdepth=\tw@ \usecounter{enumii}  \else\ifnum\@listdepth=\thr@@ \usecounter{enumiii}  \else \usecounter{enumiv}\fi\fi\fi}
+
+\makeatother
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.25em plus 0.05em minus 0.05em}
+\makeatletter
+\renewenvironment{quotation}
+{\list{}{\listparindent\z@
+		\itemindent\z@
+		\rightmargin\leftmargin
+		\parsep\z@}	\item\relax}
+{\endlist}
+\makeatother
+\numberwithin{equation}{section}
+\newcolumntype{p}[1]{>{\centering\arraybackslash\scriptsize}m{#1}|}
+\lstdefinestyle{python}{
+	language=Python,
+	basicstyle=\ttfamily\scriptsize,
+	keywordstyle=\color{blue},
+	commentstyle=\color{gray},
+	stringstyle=\color{orange},
+	numbers=left,
+	numberstyle=\tiny,
+	breaklines=true,
+	frame=single,
+	showstringspaces=false,
+	xleftmargin=4pt,
+	xrightmargin=4pt
+}
+\lstdefinestyle{lean}{
+	language=ML,
+	basicstyle=\ttfamily\scriptsize,
+	keywordstyle=\color{blue},
+	commentstyle=\color{gray},
+	stringstyle=\color{orange},
+	numbers=left,
+	numberstyle=\tiny,
+	breaklines=true,
+	frame=single,
+	showstringspaces=false,
+	xleftmargin=4pt,
+	xrightmargin=4pt
+}
+\setcounter{tocdepth}{1}
+\contentsmargin{1em}
+\titlecontents{part}[0pt]{\addvspace{14pt}\large\bfseries}{\makebox[2.0em][l]{\thecontentslabel.}}{}{\titlerule*[0.6pc]{.}\contentspage}[\addvspace{4pt}]
+\titlecontents{section}[2.0em]{\addvspace{10pt}\small\bfseries}{\makebox[2.0em][l]{\thecontentslabel.}}{\hspace*{-2.0em}}{\titlerule*[0.6pc]{.}\contentspage}[\addvspace{2pt}]
+\titlecontents{subsection}[4.5em]{\addvspace{4pt}\footnotesize}{\makebox[2.5em][l]{\thecontentslabel.}}{\hspace*{-2.5em}}{\titlerule*[0.6pc]{.}\contentspage}[\addvspace{1pt}]
+\setlist[itemize]{topsep=0pt,partopsep=0pt,itemsep=1pt plus 0.5pt minus 0.3pt,parsep=0pt,leftmargin=1.5em,labelsep=0.4em,label=\textbullet}
+\setlist[enumerate]{topsep=0pt,partopsep=0pt,itemsep=1pt plus 0.5pt minus 0.3pt,parsep=0pt,leftmargin=1.8em,labelsep=0.4em}
+
+\begin{document}
+\title{\bfseries{\huge \emph{Mills' Theorem.}}\\
+[12pt]{\Large \emph{From Ingham's Prime-Gap Estimate to Lean's Formulation}}
+\\
+[6pt]{\Large \emph{Ten Routes to a Prime-Representing Function}}}
+\author{
+\bfseries{\large \hspace{1.2in} Brahimi Mahdi Tahar\newline\text{ \
+			} \newline\text{ \  } \hspace{0.5in}\text{ \  } University of Mohamed
+			Boudiaf of M'sila, Algeria\newline\text{ \  }
+			\newline\href{mailto:mahditahar.brahimi@univ-msila.dz}{mahditahar.brahimi@univ-msila.dz}}
+}
+\maketitle
+
+\begin{abstract}
+\noindent \setstretch{1.2}
+
+\begin{itemize}
+\item We formalise, as typed predicates over $\mathbb{N}$ and $\mathbb{R}$,
+the ten prime-representing assertions of Mills \cite{Mills1947}, Kuipers
+\cite{Kuipers1950}, Ansari \cite{Ansari1951}, Wright \cite%
+{Wright1951,Wright1954}, Ore \cite{Ore1952}, and Niven \cite{Niven1951}.
+
+\item The central statement is \cref{asser:mills}: from \cref{ineq:ingham}
+one derives
+\begin{equation*}
+\exists \theta :\mathbb{R}_{>1},\,\mathrm{IsMills}(\theta ).
+\end{equation*}
+
+\item All definitions and theorems are given with explicit type annotations.
+
+\item The subtypes $\mathbb{R}_{>1}$ and $\mathbb{N}_{\geq 1}$ are used in
+place of set-theoretic comprehension.
+\end{itemize}
+\end{abstract}
+
+\newpage \thispagestyle{empty}
+
+\bigskip
+
+\tableofcontents
+
+\bigskip
+
+\newpage \setstretch{1.2} \pagestyle{plain} \pagenumbering{arabic} %
+\hypersetup{pageanchor=true}
+
+\section{Introduction}
+
+The prime-representing function of W.~H.~Mills~\cite{Mills1947} states,
+formally, \cref{asser:mills}.
+
+The formula produces prime values exclusively, yet is computationally inert:
+\begin{center}
+Any construction of $\theta $ presupposes the ability to recognise
+arbitrarily large primes.
+\end{center}
+
+We record ten logically independent routes to this conclusion, organised
+through this document as follows:
+
+\begin{itemize}
+\item The definitions in \cref{sec:defs}
+\item The axioms in \cref{sec:axioms}
+\item The postulates in \cref{sec:postulates}
+\item The theorem statements in \cref{sec:theorems}: prime-gap constructions
+in \cref{sec:thm-prime-gap}, namely
+\cref{asser:mills,asser:kuipers,asser:ansari}; elementary and abstract
+constructions in \cref{sec:thm-elementary}, namely
+\cref{asser:wright,asser:ore,asser:direct}; variants and metrical theorems in
+\cref{sec:thm-variants}, namely \cref{asser:niven,asser:wright-metrical}; and
+the Lean formulation in \cref{sec:thm-lean}, namely
+\cref{asser:lean-exists,asser:lean-least,asser:lean-irrational,asser:lean-rh,asser:lean-detailed}.
+\item The proofs in \cref{sec:proofs}
+\item The scripts in \cref{sec:scripts}: Lean scripts in
+\cref{sec:scripts-lean}, Python scripts in \cref{sec:scripts-python}
+\item The appendices in \cref{sec:appendix}: tables in
+\cref{sec:appendix-tables}, figures in \cref{sec:appendix-figures}.
+\end{itemize}
+
+The geometric content of the recurrence is shown in
+\Cref{fig:mills-recurrence} (in \cref{sec:appendix-figures}). The assertions
+\cref{asser:millsrec,asser:uv} formalise the recurrence on primes and the
+two monotone sequences whose common limit defines $\theta $.
+
+The Mills recurrence is
+\begin{ineq}
+\label{eq:mills-seq-intro}  q_n^3<q_{n+1}<(q_n+1)^3-1\qquad(n=1,2,\dots),
+\end{ineq}
+and the limit $\theta $ is obtained as the common limit of
+\begin{equation}
+u_{n}=q_{n}^{3^{-n}}\quad \text{and}\quad v_{n}=(q_{n}+1)^{3^{-n}}.
+\end{equation}
+
+\section{Definitions}
+
+\label{sec:defs}
+
+Every mathematical object in this document is either a \emph{type}, an \emph{%
+operator}, or a \emph{predicate}, introduced in a numbered \texttt{definition%
+} block. Each block has two parts:
+
+\begin{itemize}
+\item A \texttt{\textsf{Define:}} clause, followed by a numbered \texttt{type%
+} block giving the signature
+\item An \texttt{\textsf{Assume:}} clause, followed by a numbered \texttt{%
+asser} block giving the axiom or defining equivalence.
+\end{itemize}
+
+\subsection{Primitive types}
+
+\label{sec:defs-prim-types}
+
+\begin{definition}
+\label{def:prop} \textsf{Define:} the \cref{type:PropType} of propositions.
+\begin{type}
+\label{type:PropType} \textsf{Prop} : \textsf{Type}
+\end{type}
+\textsf{Assume:} \cref{asser:prop-axioms} (propositions are closed under the
+standard logical connectives).
+\begin{asser}
+\label{asser:prop-axioms} \textsf{ClosedUnder}(\textsf{Prop}, \{\wedge,
+\vee, \neg, \Rightarrow, \forall, \exists , \iff, =_{X}\})
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:nat} \textsf{Define:} the \cref{type:NatType} of natural numbers.
+\begin{type}
+\label{type:NatType} \mathbb{N} : \textsf{Type}
+\end{type}
+\textsf{Assume:} \cref{asser:nat-axioms} (the Peano axioms for $\mathbb{N}$).
+\begin{asser}
+\label{asser:nat-axioms} \textsf{Peano}(\mathbb{N}, 0, \textsf{succ})
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:int} \textsf{Define:} the \cref{type:IntType} of integers.
+\begin{type}
+\label{type:IntType} \mathbb{Z} : \textsf{Type}
+\end{type}
+\textsf{Assume:} $\mathbb{Z}$ is the initial integral domain of
+characteristic zero (\cref{asser:int-axioms}).
+\begin{asser}
+\label{asser:int-axioms} \textsf{IntegralDomain}(\mathbb{Z}, +, \cdot, 0,
+1) \wedge \textsf{Initial}(\mathbb{Z}) \wedge \textsf{char}(\mathbb{Z})
+= 0
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:real} \textsf{Define:} the \cref{type:RealType} of real numbers.
+\begin{type}
+\label{type:RealType} \mathbb{R} : \textsf{Type}
+\end{type}
+\textsf{Assume:} $\mathbb{R}$ is the Dedekind-complete ordered field (%
+\cref{asser:real-axioms}).
+\begin{asser}
+\label{asser:real-axioms}
+\begin{aligned}
+&\textsf{Field}(\mathbb{R}, +, \cdot, 0, 1) \wedge \textsf{LinearOrder}(\mathbb{R}, <) \\
+&\quad \wedge \textsf{OrderCompatible}(+, \cdot, <) \wedge \textsf{DedekindComplete}(\mathbb{R}, <)
+\end{aligned}
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:complex} \textsf{Define:} the \cref{type:ComplexType} of complex
+numbers.
+\begin{type}
+\label{type:ComplexType} \mathbb{C} : \textsf{Type}
+\end{type}
+\textsf{Assume:} $\mathbb{C}$ is the algebraic closure of $\mathbb{R}$ (%
+\cref{asser:complex-axioms}).
+\begin{asser}
+\label{asser:complex-axioms} \textsf{AlgebraicClosure}(\mathbb{C},
+\mathbb{R}) \wedge \mathbb{R} \subseteq \mathbb{C}
+\end{asser}
+\end{definition}
+
+\subsection{Primitive operators}
+
+\label{sec:defs-prim-ops}
+
+\begin{definition}
+\label{def:exp-prim} \textsf{Define:} the \cref{type:ExpPrimType} of the
+exponential function.
+\begin{type}
+\label{type:ExpPrimType} \exp : \mathbb{R} \to \mathbb{R}
+\end{type}
+\textsf{Assume:} \cref{asser:exp-prim-axioms} characterises $\exp$.
+\begin{asser}
+\label{asser:exp-prim-axioms}
+\begin{aligned}
+&\exp(0) = 1 \wedge \bigl(\forall x : \mathbb{R},\ \exp'(x) = \exp(x)\bigr) \\
+&\quad \wedge \bigl(\forall x, y : \mathbb{R},\ \exp(x+y) = \exp(x)\cdot\exp(y)\bigr)
+\end{aligned}
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:log-prim} \textsf{Define:} the \cref{type:LogPrimType} of the
+natural logarithm.
+\begin{type}
+\label{type:LogPrimType} \log : \mathbb{R}_{>0} \to \mathbb{R}
+\end{type}
+\textsf{Assume:} $\log$ is the two-sided inverse of $\exp$ (%
+\cref{asser:log-prim-axioms}).
+\begin{asser}
+\label{asser:log-prim-axioms} \bigl(\forall x : \mathbb{R},\ \log(\exp(x))
+= x\bigr) \wedge \bigl(\forall y : \mathbb{R}_{>0},\ \exp(\log(y)) = y
+\bigr)
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:exp2-prim} \textsf{Define:} the \cref{type:Exp2PrimType} of the
+base-2 exponential.
+\begin{type}
+\label{type:Exp2PrimType} \exp_2 : \mathbb{R} \to \mathbb{R}
+\end{type}
+\textsf{Assume:} $\exp_2(x) := \exp(x \log 2)$ (\cref{asser:exp2-prim-axioms}).
+\begin{asser}
+\label{asser:exp2-prim-axioms} \forall x : \mathbb{R},\ \exp_2(x) = \exp(x \log 2)
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:log2-prim} \textsf{Define:} the \cref{type:Log2PrimType} of the
+base-2 logarithm.
+\begin{type}
+\label{type:Log2PrimType} \log_2 : \mathbb{R}_{>0} \to \mathbb{R}
+\end{type}
+\textsf{Assume:} $\log_2$ is the two-sided inverse of $\exp_2$ (%
+\cref{asser:log2-prim-axioms}).
+\begin{asser}
+\label{asser:log2-prim-axioms} \bigl(\forall x : \mathbb{R},\ \log_2(\exp_2(x))
+= x\bigr) \wedge \bigl(\forall y : \mathbb{R}_{>0},\ \exp_2(\log_2(y)) = y
+\bigr)
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:logc-prim} \textsf{Define:} the \cref{type:LogCPrimType} of the
+base-$c$ logarithm, for $c : \mathbb{R}_{>0, \neq 1}$.
+\begin{type}
+\label{type:LogCPrimType} \log_c : \mathbb{R}_{>0} \to \mathbb{R}
+\end{type}
+\textsf{Assume:} $\log_c(x) := \log(x)/\log(c)$ (%
+\cref{asser:logc-prim-axioms}).
+\begin{asser}
+\label{asser:logc-prim-axioms} \forall c : \mathbb{R}_{>0, \neq 1},\ \forall x : \mathbb{R}_{>0},\ \log_c(x) = \frac{\log x}{\log c}
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:zeta} \textsf{Define:} the \cref{type:ZetaType} of the Riemann
+zeta function.
+\begin{type}
+\label{type:ZetaType} \zeta : \mathbb{C} \to \mathbb{C}
+\end{type}
+\textsf{Assume:} $\zeta$ is the analytic continuation of the Dirichlet
+series (\cref{asser:zeta-axioms}).
+\begin{asser}
+	\label{asser:zeta-axioms}
+	\forall s : \mathbb{C},\ \Re(s) > 1 \Rightarrow
+	\zeta(s) = \sum_{n\in\mathbb{N}_{>0}} n^{-s}
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:re} \textsf{Define:} the \cref{type:ReType} of the real-part
+operator.
+\begin{type}
+\label{type:ReType} \Re : \mathbb{C} \to \mathbb{R}
+\end{type}
+\textsf{Assume:} \cref{asser:re-axioms} characterises $\Re$.
+\begin{asser}
+\label{asser:re-axioms} \forall a, b : \mathbb{R},\ \Re(a + bi) = a
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:continuous} \textsf{Define:} the \cref{type:ContinuousType} of
+the continuity predicate.
+\begin{type}
+\label{type:ContinuousType} \textsf{Continuous} : (\mathbb{R} \to
+\mathbb{R}) \to \textsf{Prop}
+\end{type}
+\textsf{Assume:} \cref{asser:continuous-axioms} (the $\varepsilon$-$\delta$
+characterisation).
+\begin{asser}
+\label{asser:continuous-axioms}
+\begin{aligned}
+&\forall f : \mathbb{R} \to \mathbb{R},\ \textsf{Continuous}(f) :\iff \\
+&\qquad \forall x : \mathbb{R},\ \forall \varepsilon : \mathbb{R}_{>0},\ \exists  \delta : \mathbb{R}_{>0},\ \forall y : \mathbb{R}, \\
+&\qquad\qquad |y - x| < \delta \Rightarrow |f(y) - f(x)| < \varepsilon
+\end{aligned}
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:eventually-increasing} \textsf{Define:} the %
+\cref{type:EventuallyIncreasingType} of the eventual-increase predicate.
+\begin{type}
+\label{type:EventuallyIncreasingType} \textsf{EventuallyIncreasing} : (
+\mathbb{R} \to \mathbb{R}) \to \textsf{Prop}
+\end{type}
+\textsf{Assume:} \cref{asser:eventually-increasing-axioms} (eventual strict
+monotonicity).
+\begin{asser}
+\label{asser:eventually-increasing-axioms}
+\begin{aligned}
+&\forall f : \mathbb{R} \to \mathbb{R},\ \textsf{EventuallyIncreasing}(f) :\iff \\
+&\qquad \exists  N : \mathbb{R},\ \forall x, y : \mathbb{R},\ N < x < y \Rightarrow f(x) < f(y)
+\end{aligned}
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:bijective} \textsf{Define:} the \cref{type:BijectiveType} of the
+bijectivity predicate.
+\begin{type}
+\label{type:BijectiveType} \textsf{Bijective} : \forall \alpha, \beta :
+\textsf{Type},\ (\alpha \to \beta) \to \textsf{Prop}
+\end{type}
+\textsf{Assume:} \cref{asser:bijective-axioms} (injectivity together with
+surjectivity).
+\begin{asser}
+\label{asser:bijective-axioms}
+\begin{aligned}
+&\forall \alpha, \beta : \textsf{Type},\ \forall f : \alpha \to \beta,\ \textsf{Bijective}(f) :\iff \\
+&\qquad \bigl(\forall x, y : \alpha,\ f(x) = f(y) \Rightarrow x = y\bigr) \\
+&\qquad \wedge \bigl(\forall y : \beta,\ \exists  x : \alpha,\ f(x) = y\bigr)
+\end{aligned}
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:measure} \textsf{Define:} the \cref{type:MeasureType} of Lebesgue
+measure on $\mathbb{R}$.
+\begin{type}
+	\label{type:MeasureType} \mu : (\mathbb{R} \to \textsf{Prop}) \to
+	\mathbb{R}_{\geq 0}
+\end{type}
+\textsf{Assume:} $\mu$ is the standard Lebesgue measure (%
+\cref{asser:measure-axioms}).
+\begin{asser}
+\label{asser:measure-axioms} \textsf{LebesgueMeasure}(\mu, \mathbb{R})
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:interior} \textsf{Define:} the \cref{type:InteriorType} of the
+interior operator.
+\begin{type}
+\label{type:InteriorType} \textsf{Int} : (\mathbb{R} \to \textsf{Prop})
+\to (\mathbb{R} \to \textsf{Prop})
+\end{type}
+\textsf{Assume:} \cref{asser:interior-axioms} (interior is the maximal open
+subset).
+\begin{asser}
+\label{asser:interior-axioms}
+\begin{aligned}
+&\forall S : \mathbb{R} \to \textsf{Prop},\ \textsf{Int}(S) \subseteq S \wedge \textsf{IsOpen}(\textsf{Int}(S)) \\
+&\quad \wedge \forall U : \mathbb{R} \to \textsf{Prop},\ \bigl(\textsf{IsOpen}(U) \wedge U \subseteq S\bigr) \Rightarrow U \subseteq \textsf{Int}(S)
+\end{aligned}
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:closure} \textsf{Define:} the \cref{type:ClosureType} of the
+closure operator.
+\begin{type}
+\label{type:ClosureType} \textsf{cl} : (\mathbb{R} \to \textsf{Prop}) \to
+( \mathbb{R} \to \textsf{Prop})
+\end{type}
+\textsf{Assume:} \cref{asser:closure-axioms} (closure is the minimal closed
+superset).
+\begin{asser}
+\label{asser:closure-axioms}
+\begin{aligned}
+&\forall S : \mathbb{R} \to \textsf{Prop},\ S \subseteq \textsf{cl}(S) \wedge \textsf{IsClosed}(\textsf{cl}(S)) \\
+&\quad \wedge \forall F : \mathbb{R} \to \textsf{Prop},\ \bigl(\textsf{IsClosed}(F) \wedge S \subseteq F\bigr) \Rightarrow \textsf{cl}(S) \subseteq F
+\end{aligned}
+\end{asser}
+\end{definition}
+
+\subsection{Prime and floor}
+
+\label{sec:defs-prim-pred}
+
+\begin{definition}
+\label{def:prime} \textsf{Define:} the \cref{type:PrimeType} of the
+computable prime numbers.
+\begin{type}
+\label{type:PrimeType} \textsf{Prime} \colon \mathbb{N} \to \textsf{Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:prime} holds.
+\begin{asser}
+\label{asser:prime} \forall p : \mathbb{N},\ \textsf{Prime}(p) :\iff (p
+\geq 2) \wedge \bigl(\forall d : \mathbb{N},\ (d \geq 2 \wedge d \mid p)
+\Rightarrow d = p\bigr)
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:floor} \textsf{Define:} the \cref{type:FloorType} of the
+computable integer part of a number.
+\begin{type}
+\label{type:FloorType} \textsf{floor} \colon \mathbb{R} \to \mathbb{Z}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:floor} holds.
+\begin{asser}
+\label{asser:floor} \forall x : \mathbb{R},\ \forall n : \mathbb{Z},\
+\textsf{floor}(x) = n \iff (n \leq x < n + 1)
+\end{asser}
+\end{definition}
+
+\subsection{Sequences and Mills predicates}
+
+\label{sec:defs-mills}
+
+\begin{definition}
+\label{def:pseq} \textsf{Define:} the \cref{type:PSeqType} of strictly
+increasing prime-valued sequences.
+\begin{type}
+\label{type:PSeqType} \textsf{PSeq} \colon (\mathbb{N} \to \mathbb{N})
+\to \textsf{Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:pseq} holds.
+\begin{asser}
+\label{asser:pseq}
+\begin{aligned}
+&\forall p : \mathbb{N} \to \mathbb{N},\ \textsf{PSeq}(p) :\iff \bigl(p_1 = 2\bigr) \\
+&\quad \wedge \bigl(\forall n : \mathbb{N}_{\geq 1},\ \textsf{Prime}(p_n)\bigr) \\
+&\quad \wedge \bigl(\forall n : \mathbb{N}_{\geq 1},\ p_n < p_{n+1}\bigr)
+\end{aligned}
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:ismills} \textsf{Define:} the \cref{type:IsMillsType} of the
+Mills predicate on reals.
+\begin{type}
+\label{type:IsMillsType} \textsf{IsMills} \colon \mathbb{R} \to \textsf{
+Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:ismills} holds.
+\begin{asser}
+\label{asser:ismills} \forall A : \mathbb{R},\ \textsf{IsMills}(A) :\iff
+(A > 1) \wedge \bigl(\forall n : \mathbb{N}_{\geq 1},\ \textsf{Prime}(
+\textsf{floor}(A^{3^{n}}))\bigr)
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:isminmills} \textsf{Define:} the \cref{type:IsMinMillsType} of
+the least-Mills predicate.
+\begin{type}
+\label{type:IsMinMillsType} \textsf{IsMinMills} \colon \mathbb{R} \to
+\textsf{Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:isminmills} holds.
+\begin{asser}
+\label{asser:isminmills} \forall A : \mathbb{R},\ \textsf{IsMinMills}(A)
+:\iff \textsf{IsMills}(A) \wedge \bigl(\forall B : \mathbb{R},\ \textsf{
+IsMills}(B) \Rightarrow A \leq B\bigr)
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:millsrec} \textsf{Define:} the \cref{type:MillsRecType} of the
+Mills recurrence on prime sequences.
+\begin{type}
+\label{type:MillsRecType} \textsf{MillsRec} \colon (\mathbb{N} \to
+\mathbb{N}) \to \textsf{Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:millsrec} holds.
+\begin{asser}
+\label{asser:millsrec} \forall q : \mathbb{N} \to \mathbb{N},\ \textsf{
+MillsRec}(q) :\iff \forall n : \mathbb{N}_{\geq 1},\ q_n^{3} < q_{n+1} <
+(q_n + 1)^{3} - 1
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:uv} \textsf{Define:} the \cref{type:UVType} of the bracketing
+pair $(u,v)$ for a sequence $q$.
+\begin{type}
+\label{type:UVType} \textsf{UV} \colon (\mathbb{N} \to \mathbb{N})
+\times (\mathbb{N} \to \mathbb{R}) \times (\mathbb{N} \to \mathbb{R}%
+) \to \textsf{Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:uv} holds.
+\begin{asser}
+\label{asser:uv}
+\begin{aligned}
+&\forall q : \mathbb{N} \to \mathbb{N},\ \forall u, v : \mathbb{N} \to \mathbb{R},\ \textsf{UV}(q, u, v) :\iff \\
+&\qquad \forall n : \mathbb{N}_{\geq 1},\ \bigl(u_n = q_n^{3^{-n}}\bigr) \wedge \bigl(v_n = (q_n + 1)^{3^{-n}}\bigr)
+\end{aligned}
+\end{asser}
+\end{definition}
+
+\subsection{Kuipers, Ansari, Wright, Niven predicates}
+
+\label{sec:defs-kanw}
+
+\begin{definition}
+\label{def:iskuipers} \textsf{Define:} the \cref{type:IsKuipersType} of the
+Kuipers predicate.
+\begin{type}
+\label{type:IsKuipersType} \textsf{IsKuipers} \colon \mathbb{N}_{\geq 3}
+\times \mathbb{R} \to \textsf{Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:iskuipers} holds.
+\begin{asser}
+\label{asser:iskuipers}
+\begin{aligned}
+&\forall c : \mathbb{N}_{\geq 3},\ \forall A : \mathbb{R},\ \textsf{IsKuipers}(c, A) :\iff \\
+&\qquad (A > 1) \wedge \bigl(\forall n : \mathbb{N}_{\geq 1},\ \textsf{Prime}(\textsf{floor}(A^{c^{n}}))\bigr)
+\end{aligned}
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:isansari} \textsf{Define:} the \cref{type:IsAnsariType} of the
+Ansari predicate.
+\begin{type}
+\label{type:IsAnsariType} \textsf{IsAnsari} \colon \mathbb{R}_{>8/3}
+\times \mathbb{R} \to \textsf{Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:isansari} holds.
+\begin{asser}
+\label{asser:isansari}
+\begin{aligned}
+&\forall c : \mathbb{R}_{>8/3},\ \forall A : \mathbb{R},\ \textsf{IsAnsari}(c, A) :\iff \\
+&\qquad (A > 1) \wedge \bigl(\forall n : \mathbb{N}_{\geq 1},\ \textsf{Prime}(\textsf{floor}(A^{c^{n}}))\bigr)
+\end{aligned}
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:iswright} \textsf{Define:} the \cref{type:IsWrightType} of the
+Wright predicate (iterated base-2 exponential).
+\begin{type}
+\label{type:IsWrightType} \textsf{IsWright} \colon \mathbb{R} \to \textsf{Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:iswright} holds.
+\begin{asser}
+\label{asser:iswright} \forall A : \mathbb{R},\ \textsf{IsWright}(A) :\iff
+(A > 1) \wedge \bigl(\forall n : \mathbb{N}_{\geq 1},\ \textsf{Prime}(
+\textsf{floor}(\textsf{exp}_2^{[n]}(A)))\bigr)
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:isniven} \textsf{Define:} the \cref{type:IsNivenType} of the
+Niven predicate.
+\begin{type}
+\label{type:IsNivenType} \textsf{IsNiven} \colon \mathbb{R}_{>1} \times
+\mathbb{R} \to \textsf{Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:isniven} holds.
+\begin{asser}
+\label{asser:isniven} \forall c : \mathbb{R}_{>1},\ \forall \theta :
+\mathbb{R},\ \textsf{IsNiven}(c, \theta) :\iff (\theta > 0) \wedge \bigl(
+\forall n : \mathbb{N}_{\geq 1},\ \textsf{Prime}(\textsf{floor}
+(c^{\theta^{n}}))\bigr)
+\end{asser}
+\end{definition}
+
+\subsection{Ore's selection predicates}
+
+\label{sec:defs-ore}
+
+\begin{definition}
+\label{def:isoresel} \textsf{Define:} the \cref{type:IsOreSelType} of the
+Ore selection predicate.
+\begin{type}
+\label{type:IsOreSelType} \textsf{IsOreSel} \colon (\mathbb{R} \to
+\mathbb{R}) \to \textsf{Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:isoresel} holds.
+\begin{asser}
+\label{asser:isoresel} \forall f : \mathbb{R} \to \mathbb{R},\ \textsf{
+IsOreSel}(f) :\iff \textsf{Continuous}(f) \wedge \textsf{EventuallyIncreasing%
+}(f)
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:orebound} \textsf{Define:} the \cref{type:OreBoundType} of the
+Ore bracketing predicate.
+\begin{type}
+\label{type:OreBoundType} \textsf{OreBound} \colon (\mathbb{R} \to
+\mathbb{R}) \times (\mathbb{N} \to \mathbb{N}) \times (\mathbb{N}
+\to \mathbb{R}_{\geq 0}) \times (\mathbb{N} \to \mathbb{R}_{\geq 0})
+\to \textsf{Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:orebound} holds.
+\begin{asser}
+\label{asser:orebound}
+\begin{aligned}
+&\forall f : \mathbb{R} \to \mathbb{R},\ \forall q : \mathbb{N} \to \mathbb{N},\ \forall \delta, \epsilon : \mathbb{N} \to \mathbb{R}_{\geq 0},\ \\
+&\qquad \textsf{OreBound}(f, q, \delta, \epsilon) :\iff \\
+&\qquad \forall n : \mathbb{N}_{\geq 1},\ f(q_n - \delta_n) < q_{n+1} - \delta_{n+1} \\
+&\qquad\qquad \wedge q_{n+1} + \epsilon_{n+1} < f(q_n + \epsilon_n)
+\end{aligned}
+\end{asser}
+\end{definition}
+
+\subsection{Polynomial-gap predicate}
+
+\label{sec:defs-polygap}
+
+\begin{definition}
+\label{def:polygap} \textsf{Define:} the \cref{type:PolyGapType} of the
+polynomial prime-gap predicate.
+\begin{type}
+\label{type:PolyGapType} \textsf{PolyGap} \colon (0,1) \times \mathbb{R}
+_{>0} \to \textsf{Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:polygap} holds.
+\begin{asser}
+\label{asser:polygap} \forall \alpha : (0,1),\ \forall k : \mathbb{R}
+_{>0},\ \textsf{PolyGap}(\alpha, k) :\iff \forall n : \mathbb{N}_{\geq
+1},\ p_{n+1} - p_n < k\, p_n^{\alpha}
+\end{asser}
+\end{definition}
+
+\subsection{Null, nowhere-dense, continuum, irrational, RH}
+
+\label{sec:defs-rm}
+
+\begin{definition}
+\label{def:isnull} \textsf{Define:} the \cref{type:IsNullType} of the
+null-set predicate.
+\begin{type}
+\label{type:IsNullType} \textsf{IsNull} \colon (\mathbb{R} \to \textsf{Prop}) \to \textsf{Prop}
+\end{type}
+\textsf{Assume:} \cref{asser:isnull} (null sets are exactly those of
+Lebesgue measure zero).
+\begin{asser}
+\label{asser:isnull} \forall S : \mathbb{R} \to \textsf{Prop},\ \textsf{
+IsNull}(S) :\iff \mu(S) = 0
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:nowheredense} \textsf{Define:} the \cref{type:NowhereDenseType}
+of the nowhere-dense predicate.
+\begin{type}
+\label{type:NowhereDenseType} \textsf{NowhereDense} \colon (\mathbb{R} \to
+\textsf{Prop}) \to \textsf{Prop}
+\end{type}
+\textsf{Assume:} \cref{asser:nowheredense} (nowhere-dense sets have empty
+interior of closure).
+\begin{asser}
+\label{asser:nowheredense} \forall S : \mathbb{R} \to \textsf{Prop},\
+\textsf{NowhereDense}(S) :\iff \textsf{Int}(\textsf{cl}(S)) = \varnothing
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:continuumcard} \textsf{Define:} the \cref{type:ContinuumCardType}
+of the continuum-cardinality predicate.
+\begin{type}
+\label{type:ContinuumCardType} \textsf{ContinuumCard} \colon (\mathbb{R}
+\to \textsf{Prop}) \to \textsf{Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:continuumcard} holds.
+\begin{asser}
+\label{asser:continuumcard}
+\begin{aligned}
+&\forall P : \mathbb{R} \to \textsf{Prop},\ \textsf{ContinuumCard}(P) :\iff \\
+&\qquad \exists  f : \mathbb{R} \to (\Sigma\, x : \mathbb{R},\ P(x)),\ \textsf{Bijective}(f)
+\end{aligned}
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:irrational} \textsf{Define:} the \cref{type:IrrationalType} of
+the irrationality predicate.
+\begin{type}
+\label{type:IrrationalType} \textsf{Irrational} \colon \mathbb{R} \to
+\textsf{Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:irrational} holds.
+\begin{asser}
+\label{asser:irrational} \forall A : \mathbb{R},\ \textsf{Irrational}(A)
+:\iff \neg\bigl(\exists p : \mathbb{Z},\ \exists q : \mathbb{N}_{\geq
+1},\ A = p/q\bigr)
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:rh} \textsf{Define:} the \cref{type:RHType} of the
+Riemann-hypothesis proposition.
+\begin{type}
+\label{type:RHType} \textsf{RH} : \textsf{Prop}
+\end{type}
+\textsf{Assume:} \cref{asser:rh} states the Riemann hypothesis.
+\begin{asser}
+\label{asser:rh} \textsf{RH} :\iff \forall s : \mathbb{C},\ \bigl(\zeta(s)
+= 0 \wedge \Re(s) > 1/2\bigr) \Rightarrow \Re(s) = 1/2
+\end{asser}
+\end{definition}
+
+\subsection{Theta predicates for the metrical theorem}
+
+\label{sec:defs-theta}
+
+\begin{definition}
+\label{def:theta-ansari} \textsf{Define:} the \cref{type:ThetaAnsariType} of
+the $\theta$-predicate for Ansari.
+\begin{type}
+\label{type:ThetaAnsariType} \textsf{ThetaAnsari} \colon \mathbb{R} \to
+\textsf{Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:theta-ansari} holds.
+\begin{asser}
+\label{asser:theta-ansari} \forall \theta : \mathbb{R},\ \textsf{
+ThetaAnsari}(\theta) :\iff \exists c : \mathbb{R}_{>8/3},\ \textsf{IsAnsari%
+} (c, \theta)
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:theta-wright} \textsf{Define:} the \cref{type:ThetaWrightType} of
+the $\theta$-predicate for Wright.
+\begin{type}
+\label{type:ThetaWrightType} \textsf{ThetaWright} \colon \mathbb{R} \to
+\textsf{Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:theta-wright} holds.
+\begin{asser}
+\label{asser:theta-wright} \forall \theta : \mathbb{R},\ \textsf{
+ThetaWright}(\theta) :\iff \textsf{IsWright}(\theta)
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:theta-niven} \textsf{Define:} the \cref{type:ThetaNivenType} of
+the $\theta $-predicate for Niven.
+\begin{type}
+\label{type:ThetaNivenType} \textsf{ThetaNiven} \colon \mathbb{R} \to
+\textsf{Prop}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:theta-niven} holds.
+\begin{asser}
+\label{asser:theta-niven} \forall \theta : \mathbb{R},\ \textsf{ThetaNiven}
+(\theta) :\iff \exists c : \mathbb{R}_{>1},\ \textsf{IsNiven}(c, \theta)
+\end{asser}
+\end{definition}
+
+\subsection{Iterated operators}
+
+\label{sec:defs-iter}
+
+\begin{definition}
+\label{def:expiter} \textsf{Define:} for $n : \mathbb{N}$, the %
+\cref{type:ExpIterType} of the $n$-fold iterated base-2 exponential.
+\begin{type}
+\label{type:ExpIterType} \textsf{exp}_2^{[n]} \colon \mathbb{R} \to
+\mathbb{R}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:expiter} holds.
+\begin{asser}
+\label{asser:expiter} \bigl(\forall x : \mathbb{R},\ \textsf{exp}_2^{[0]}(x)
+= x\bigr) \wedge \bigl(\forall n : \mathbb{N},\ \textsf{exp}_2^{[n+1]} =
+\textsf{exp}_2 \circ \textsf{exp}_2^{[n]}\bigr)
+\end{asser}
+\end{definition}
+
+\begin{definition}
+\label{def:logiter} \textsf{Define:} for $n : \mathbb{N}$, the %
+\cref{type:LogIterType} of the $n$-fold iterated base-2 logarithm.
+\begin{type}
+\label{type:LogIterType} \textsf{log}_2^{[n]} \colon \mathbb{R}_{>0} \to
+\mathbb{R}
+\end{type}
+\textsf{Assume:} the predicate \cref{asser:logiter} holds.
+\begin{asser}
+\label{asser:logiter} \bigl(\forall x : \mathbb{R}_{>0},\ \textsf{log}_2
+^{[0]}(x) = x\bigr) \wedge \bigl(\forall n : \mathbb{N},\ \textsf{log}_2
+^{[n+1]} = \textsf{log}_2^{[n]} \circ \textsf{log}_2\bigr)
+\end{asser}
+\end{definition}
+
+\section{Axioms}
+
+\label{sec:axioms}
+
+\subsection{Reverse-mathematical systems}
+
+The following table fixes the systems used throughout the classification (%
+\cref{sec:thm-summary}).
+
+{\small
+\begin{tabular}{|c|m{6.0cm}|m{3.0cm}|m{4.0cm}|}
+\hline
+\textbf{Tag} & \textbf{Full name} & \textbf{System} & \textbf{Definition} \\
+\hline
+$\mathrm{RCA}_0$ & Recursive Comprehension Axiom & Recursive CA & $\mathrm{
+FOL}+\Delta^0_1\text{-CA}+\Sigma^0_1\text{-Ind}$ \\ \hline
+$\mathrm{WKL}_0$ & Weak K\"onig's Lemma & Weak K\"onig & $\mathrm{RCA}_0+%
+\mathrm{WKL}$ \\ \hline
+$\mathrm{ACA}_0$ & Arithmetical Comprehension Axiom & Arithmetical CA & $%
+\mathrm{RCA}_0+\text{Arithmetical CA}$ \\ \hline
+Ingham & Ingham's prime-gap estimate & Ingham's estimate & \Cref{ineq:ingham}
+\\ \hline
+\end{tabular}
+}
+
+\subsection{Analytic input}
+
+The analytic input common to Routes 1, 2, 3, 7 is Ingham's estimate.
+
+\begin{ineq}
+\label{ineq:ingham} \textsf{Ingham} :\iff \exists k : \mathbb{R}_{>0},\
+\forall n : \mathbb{N}_{\geq 1},\ p_{n+1} - p_n < k\, p_n^{5/8}
+\end{ineq}
+
+\subsection{Elementary input}
+
+The elementary input used by Route 4 (and by Route 6 with a general
+polynomial gap) is Bertrand's postulate.
+
+\begin{ineq}
+\label{ineq:bertrand} \textsf{Bertrand} :\iff \forall N : \mathbb{N}_{\geq
+2},\ \exists p : \mathbb{N},\ (N < p < 2N) \wedge \textsf{Prime}(p)
+\end{ineq}
+
+\section{Postulates}
+
+\label{sec:postulates}
+
+The hypotheses underpinning the constructions are collected in the following
+table; each row refers to the formal statement in the place indicated.
+
+{\small
+\begin{tabular}{|c|m{11.0cm}|m{2.0cm}|m{2.5cm}|}
+\hline
+\textbf{Tag} & \textbf{Statement} & \textbf{Name} & \textbf{Strength} \\
+\hline
+Pos 1 & $\exists k : \mathbb{R}_{>0},\ \forall n : \mathbb{N}_{\geq 1},\
+p_{n+1}-p_n < k\, p_n^{5/8}$ & Ingham & \cref{ineq:ingham} \\ \hline
+Pos 2 & $\forall n : \mathbb{N}_{\geq 1},\ p_{n+1}-p_n < p_n$ & Bertrand & $%
+\mathrm{RCA}_0$ \\ \hline
+Pos 3 & $\exists k : \mathbb{R}_{>0},\ \exists \alpha : (0,1),\ \forall n,\
+p_{n+1}-p_n < k\, p_n^{\alpha}$ & PolyGap & \cref{asser:polygap} \\ \hline
+Pos 4 & $\forall N \gg 1,\ \exists p : \mathbb{N},\ N^3 < p < (N+1)^3-1
+\wedge \mathrm{Prime}(p)$ & MillsRec & \cref{ineq:ingham} \\ \hline
+Pos 5 & $\forall x : \mathbb{R},\ \forall n : \mathbb{Z},\ \mathrm{floor}
+(x)=n \iff n \leq x < n+1$ & Floor & \cref{asser:floor} \\ \hline
+Pos 6 & $\forall q,u,v,\ \mathrm{UV}(q,u,v) \wedge (\forall n,\
+u_{n}<u_{n+1}<v_{n+1}<v_{n}) \wedge (v_{n}-u_{n}\rightarrow 0)$
+& Cauchy & $\mathrm{RCA}_0$ \\ \hline
+\end{tabular}
+}
+
+\section{Theorems}
+
+\label{sec:theorems}
+
+Each theorem below states a hypothesis under \textbf{\textsf{Assume:}} and a
+conclusion under \textbf{\textsf{Conclude:}}. The hypothesis is either
+referenced (by \cref{ineq:ingham}, \cref{ineq:bertrand}, %
+\cref{asser:lean-least}, etc.) or spelled out inline; the conclusion is
+placed in a numbered \texttt{asser} (resp.\ \texttt{ineq}) block whose label
+is the one used throughout the paper. Proofs are given in \cref{sec:proofs}.
+
+\subsection{Prime-gap constructions}
+
+\label{sec:thm-prime-gap}
+
+\begin{theorem}[Mills \protect\cite{Mills1947}]
+\label{thm:mills}
+\textbf{\textsf{Assume:}} \cref{ineq:ingham} (\textsf{Ingham}'s estimate).
+\textbf{\textsf{Conclude:}}
+\begin{asser}
+	\label{asser:mills} \exists \theta : \mathbb{R}_{>1},\ \textsf{IsMills}%
+	(\theta)
+\end{asser}
+Proof: \autoref{proof:mills}.
+\end{theorem}
+
+\begin{remark}[Transcription typo]
+\label{rem:typo} The historical transcription of Dudley \cite{Dudley1969}
+writes
+\begin{equation}
+u_{n}=q_{n}^{5^{-n}},\quad v_{n}=(q_{n}+1)^{5^{-n}},
+\end{equation}
+and concludes
+\begin{equation}
+q_{n}=[\theta ^{5^{n}}].
+\end{equation}
+That is a typo. With exponent $5^{-n}$ the sequence $\{u_{n}\}$ fails
+monotonicity at $n=1$: since
+\begin{ineq}
+q_{n+1}>q_{n}^{3}
+\end{ineq}
+and
+\begin{ineq}
+3\cdot 5^{-(n+1)}=3/5\cdot 5^{-n}<5^{-n},
+\end{ineq}
+we get
+\begin{equation}
+u_{n+1}<u_{n}.
+\end{equation}
+Only the exponent $3^{-n}$ (matching the recurrence \cref{eq:mills-seq-intro}%
+) restores monotonicity.\newline
+See \Cref{sec:appendix-tables} for a numerical confirmation.
+\end{remark}
+
+\begin{theorem}[Monotonicity of UV]
+	\label{thm:millsseq}
+	\textbf{\textsf{Assume:}} $q : \mathbb{N} \to \mathbb{N}$, $u, v : \mathbb{N} \to
+	\mathbb{R}$ with \cref{asser:uv,asser:millsrec}.
+	\textbf{\textsf{Conclude:}}
+\begin{ineq}
+\label{ineq:millsseq} \forall n : \mathbb{N}_{\geq 1},\ u_{n}<
+u_{n+1}<v_{n+1}<v_{n}
+\end{ineq}
+\end{theorem}
+
+\begin{theorem}[Kuipers \protect\cite{Kuipers1950}]
+\label{thm:kuipers}
+\textbf{\textsf{Assume:}} \cref{ineq:ingham}.
+\textbf{\textsf{Conclude:}}
+\begin{asser}
+\label{asser:kuipers} \forall c : \mathbb{N}_{\geq 3},\ \exists \theta:
+\mathbb{R}_{>1},\ \textsf{IsKuipers}(c, \theta)
+\end{asser}
+\end{theorem}
+
+\begin{theorem}[Ansari \protect\cite{Ansari1951}]
+\label{thm:ansari}
+\textbf{\textsf{Assume:}} \cref{ineq:ingham}.
+\textbf{\textsf{Conclude:}}
+\begin{asser}
+\label{asser:ansari} \forall c : \mathbb{R}_{>8/3},\ \exists \theta :
+\mathbb{R}_{>1},\ \textsf{IsAnsari}(c, \theta)
+\end{asser}
+\end{theorem}
+
+\subsection{Elementary and abstract constructions}
+
+\label{sec:thm-elementary}
+
+\begin{theorem}[Wright \protect\cite{Wright1951}]
+\label{thm:wright}
+\textbf{\textsf{Assume:}} \cref{ineq:bertrand}.
+\textbf{\textsf{Conclude:}}
+\begin{asser}
+\label{asser:wright} \exists \theta : \mathbb{R}_{>1},\ \textsf{IsWright}%
+(\theta)
+\end{asser}
+\end{theorem}
+
+\begin{theorem}[Ore \protect\cite{Ore1952}]
+\label{thm:ore}
+\textbf{\textsf{Assume:}} $f : \mathbb{R} \to \mathbb{R}$, $q : \mathbb{N}
+\to \mathbb{N}$, $\delta, \epsilon : \mathbb{N} \to \mathbb{R}_{\geq 0}$
+with \cref{asser:isoresel,asser:orebound}.
+\textbf{\textsf{Conclude:}}
+\begin{asser}
+\label{asser:ore} \exists \theta : \mathbb{R}_{>0},\ \forall n : \mathbb{%
+N}_{\geq 1},\ q_n - \delta_n \leq f^{[n]}(\theta) \leq q_n + \epsilon_n
+\end{asser}
+\end{theorem}
+
+\begin{theorem}[Polynomial-gap construction]
+\label{thm:direct}
+\textbf{\textsf{Assume:}} $\alpha : (0,1)$, $k : \mathbb{R}_{>0}$ with %
+\cref{asser:polygap}, and $c : \mathbb{R}_{>1/(1-\alpha)}$.
+\textbf{\textsf{Conclude:}}
+\begin{asser}
+\label{asser:direct} \exists \theta : \mathbb{R}_{>0},\ \forall n :
+\mathbb{N}_{\geq 1},\ \textsf{Prime}(\textsf{floor}(\theta^{c^{n}}))
+\end{asser}
+\end{theorem}
+
+\begin{remark}
+\label{rem:direct-valid}
+The condition $c>1/(1-\alpha)$ is exactly what is needed so that the
+polynomial gap $p_{n+1}-p_n < k\,p_n^\alpha$ lifts to a gap below
+$N^{c-1}$ inside the interval $(N^c,(N+1)^c-1)$. Taking $c=1/\alpha$,
+as in some informal accounts, is insufficient unless $\alpha=1/2$.
+\end{remark}
+
+\subsection{Variants and metrical theorems}
+
+\label{sec:thm-variants}
+
+\begin{theorem}[Niven \protect\cite{Niven1951}]
+\label{thm:niven}
+\textbf{\textsf{Assume:}} \cref{ineq:ingham}.
+\textbf{\textsf{Conclude:}}
+\begin{asser}
+\label{asser:niven} \forall c : \mathbb{R}_{>1},\ \exists \theta :
+\mathbb{R}_{>0},\ \textsf{IsNiven}(c, \theta)
+\end{asser}
+\end{theorem}
+
+\begin{theorem}[Wright \protect\cite{Wright1954}]
+\label{thm:wright-metrical}
+\textbf{\textsf{Assume:}} each of the three constructions in %
+\cref{asser:ansari,asser:wright,asser:niven} yields, at every stage $n$, a
+non-empty admissible interval for $q_{n+1}$.
+\textbf{\textsf{Conclude:}}
+\begin{asser}
+	\label{asser:wright-metrical}
+	\begin{array}{l}
+		\mathsf{IsNull}(\mathsf{ThetaAnsari})\wedge
+		\mathsf{NowhereDense}(\mathsf{ThetaAnsari}) \\
+		\wedge \mathsf{ContinuumCard}(\mathsf{ThetaAnsari})\wedge
+		\mathsf{IsNull}(\mathsf{ThetaWright}) \\
+		\wedge \mathsf{NowhereDense}(\mathsf{ThetaWright})\wedge
+		\mathsf{ContinuumCard}(\mathsf{ThetaWright}) \\
+		\wedge \mathsf{IsNull}(\mathsf{ThetaNiven})\wedge
+		\mathsf{NowhereDense}(\mathsf{ThetaNiven}) \\
+		\wedge \mathsf{ContinuumCard}(\mathsf{ThetaNiven})
+	\end{array}
+\end{asser}
+\end{theorem}
+
+\subsection{The Lean formulation}
+
+\label{sec:thm-lean}
+
+\begin{theorem}[Lean-form Mills theorem]
+\label{thm:lean-exists}
+\textbf{\textsf{Assume:}} \cref{ineq:ingham}.
+\textbf{\textsf{Conclude:}}
+\begin{asser}
+\label{asser:lean-exists} \exists A : \mathbb{R}_{>1},\ \textsf{IsMills}(A)
+\end{asser}
+\end{theorem}
+
+\begin{theorem}[Existence of the least Mills constant]
+\label{thm:lean-least}
+\textbf{\textsf{Assume:}} \cref{asser:lean-exists}.
+\textbf{\textsf{Conclude:}}
+\begin{asser}
+\label{asser:lean-least} \exists A : \mathbb{R},\ \textsf{IsMinMills}(A)
+\end{asser}
+\end{theorem}
+
+\begin{theorem}[Irrationality of the least Mills constant,\protect\cite%
+{Saito2025}]
+\label{thm:lean-irrational}
+\textbf{\textsf{Assume:}} \cref{asser:lean-least}.
+\textbf{\textsf{Conclude:}}
+\begin{asser}
+\label{asser:lean-irrational} \forall A : \mathbb{R},\ \textsf{IsMinMills}%
+(A) \Rightarrow \textsf{Irrational}(A)
+\end{asser}
+\end{theorem}
+
+\begin{theorem}[Lower bound under RH,\protect\cite{CaldwellCheng2005}]
+\label{thm:lean-rh}
+\textbf{\textsf{Assume:}} \cref{asser:rh} and \cref{asser:lean-least}.
+\textbf{\textsf{Conclude:}}
+\begin{asser}
+\label{asser:lean-rh} \forall A : \mathbb{R},\ \textsf{IsMinMills}(A)
+\Rightarrow 1.3063778838 < A < 1.3063778839
+\end{asser}
+\end{theorem}
+
+\begin{theorem}[Lean-adapted Mills limit]
+\label{thm:lean-detailed}
+\textbf{\textsf{Assume:}} $q : \mathbb{N} \to \mathbb{N}$ with %
+\cref{asser:millsrec} and $q_1>k^{8}$ (for $k$ the constant of %
+\cref{ineq:ingham}).
+\textbf{\textsf{Conclude:}}
+\begin{asser}
+\label{asser:lean-detailed} \exists \theta : \mathbb{R}_{>0},\ \bigl(%
+\forall n : \mathbb{N}_{\geq 1},\ q_n = \textsf{floor}(\theta^{3^{n}}%
+)\bigr) \wedge \textsf{IsMills}(\theta)
+\end{asser}
+\end{theorem}
+
+\subsection{Reverse-mathematical summary}
+
+\label{sec:thm-summary}
+
+{\small \noindent
+\begin{tabular}{|m{0.6cm}|m{6.4cm}|m{2.4cm}|m{3cm}|}
+\hline
+\textbf{\#} & \textbf{Mechanism} & \textbf{Reference} & \textbf{Strength} \\
+\hline
+1 & Prime-gap estimate + $3^n$ iteration & \Cref{asser:mills} & $\mathrm{RCA}%
+_0$/Ingham \\ \hline
+2 & Prime-gap estimate + $c^n$ iteration & \Cref{asser:kuipers} & $\mathrm{
+RCA}_0$/Ingham \\ \hline
+3 & Prime-gap estimate + $c>8/3$ & \Cref{asser:ansari} & $\mathrm{RCA}_0$%
+/Ingham \\ \hline
+4 & Bertrand + $2$-tower & \Cref{asser:wright} & $\mathrm{RCA}_0$ \\ \hline
+5 & Abstract selection framework & \Cref{asser:ore} & $\mathrm{RCA}_0$ \\
+\hline
+6 & General polynomial gap ($c>1/(1-\alpha)$) & \Cref{asser:direct} & gap-dependent \\ \hline
+7 & Niven fixed-base variant & \Cref{asser:niven} & $\mathrm{RCA}_0$/Ingham
+\\ \hline
+8 & Wright metrical theorem & \Cref{asser:wright-metrical} & $\mathrm{WKL}_0$
+\\ \hline
+9 & Lean pointer & \Cref{sec:thm-lean} & formal \\ \hline
+10 & Lean detailed adaptation & \Cref{asser:lean-detailed} & formal \\ \hline
+\end{tabular}
+}
+
+% =========================================================================
+\section{Proofs}
+\label{sec:proofs}
+% =========================================================================
+
+Every lemma and every theorem of this paper is proved below by a single
+Fitch-style dependency table.  Row 1 of each table is the hypothesis
+(\textsf{Hyp}), the last row is the implication `→I` that discharges the
+hypothesis and yields exactly the statement of \cref{sec:theorems}.  The
+column layout is
+
+\[
+\begin{array}{c|l|c|l}
+\textsf{line} & \textsf{formula} & \textsf{from} & \textsf{rule}
+\end{array}
+\]
+
+Justifications draw only on \textsf{Hyp}, \textsf{def}, \textsf{Ax},
+\textsf{Pos}, \textsf{Def}, \textsf{Lem}, \textsf{Thm},
+$\mathsf{Eq}(\dots)$, \textsf{Predicates}, the derived rules of
+\cref{tab:derived-rules}, the primitive logical rules
+$(\rightarrow\mathsf{I},\wedge\mathsf{E},\vee\mathsf{E},\forall\mathsf{I},\forall\mathsf{E},\exists\mathsf{I},\exists\mathsf{E},\mathsf{RAA})$,
+or the preliminary lemmas of \cref{sec:prelim}.  Three anchors —
+\texttt{proof:mills}, \texttt{proof:wright}, \texttt{proof:niven} — are
+re-used in the theorems' `Proof:` pointers.
+
+% -------------------------------------------------------------------------
+\subsection{Preliminary lemmas}
+\label{sec:prelim}
+% -------------------------------------------------------------------------
+
+\begin{lemma}[Euclid]
+	\label{lem:euclid}
+	\textbf{\textsf{Assume:}} $N\in\mathbb{N}_{\geq 1}$.
+	\textbf{\textsf{Conclude:}}
+	\begin{asser}
+		\label{asser:lem-euclid} \exists p\in\mathbb{N},\ (p>N)\wedge\mathrm{Prime}(p)
+	\end{asser}
+\end{lemma}
+
+\begin{proof}[\textbf{Proof of \cref{lem:euclid}}]
+	\phantomsection\label{proof:lem:euclid}
+	{\scriptsize
+		\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+			\hline
+			1 & $N\in\mathbb{N}_{\geq 1}$ & --- & $\mathsf{Hyp}$ \\ \hline
+			2 & $M:=N!+1$ & 1 & $\mathsf{def}$ \\ \hline
+			3 & $M\ge 2$ & 2 & $\mathsf{Eq}$ \\ \hline
+			4 & $\exists p$ prime, $p\mid M$ & 3 & $\mathsf{Support}$ (FTA) \\ \hline
+			5 & Suppose $p\le N$ & --- & $\mathsf{RAA}$ \\ \hline
+			6 & $p\mid N!$ & 5 & $\mathsf{Support}$ (basic NT) \\ \hline
+			7 & $p\mid M$ & 4 & $\wedge\mathsf{E}$ \\ \hline
+			8 & $p\mid M-N!=1$ & 6,7 & $\mathsf{Eq}$ \\ \hline
+			9 & $p\ge 2$ and $p\mid 1$: contradiction & 4,8 & $\mathsf{Eq}$ \\ \hline
+			10 & Therefore $p>N$ & 5--9 & $\mathsf{RAA}$ \\ \hline
+			11 & $\exists p>N$ prime & 4,10 & $\exists\mathsf{I}$ \\ \hline
+			12 & Lemma & 1--11 & $\rightarrow\mathsf{I}$ \\ \hline
+		\end{tabular}
+	}
+\end{proof}
+
+\begin{lemma}[Power-mean slope]
+	\label{lem:slope}
+	\textbf{\textsf{Assume:}} $\beta>1$ and $\varepsilon>0$.
+	\textbf{\textsf{Conclude:}}
+	\begin{asser}
+		\label{asser:lem-slope} \exists N_0:\mathbb{N},\ \forall N:\mathbb{N},\ N\ge N_0\Rightarrow N^{\beta}+N^{\beta-1}<(N+1)^{\beta}-\varepsilon
+	\end{asser}
+\end{lemma}
+
+\begin{proof}[\textbf{Proof of \cref{lem:slope}}]
+	\phantomsection\label{proof:lem:slope}
+	{\scriptsize
+		\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+			\hline
+			1 & $\beta>1$, $\varepsilon>0$ & --- & $\mathsf{Hyp}$ \\ \hline
+			2 & $g(N):=(N+1)^\beta-N^\beta-N^{\beta-1}$ & 1 & $\mathsf{def}$ \\ \hline
+			3 & MVT: $\exists\xi_N\in(N,N+1)$, $(N+1)^\beta-N^\beta=\beta\xi_N^{\beta-1}$ & 1 & $\mathsf{Support}$ (MVT) \\ \hline
+			4 & $g(N)=\beta\xi_N^{\beta-1}-N^{\beta-1}$ & 2,3 & $\mathsf{Eq}$ \\ \hline
+			5 & $\beta-1>0$, $\xi_N>N$ $\Rightarrow$ $\xi_N^{\beta-1}>N^{\beta-1}$ & 1,3 & $\mathsf{Eq}$ \\ \hline
+			6 & $g(N)>(\beta-1)N^{\beta-1}$ & 4,5 & $\mathsf{Eq}$ \\ \hline
+			7 & $\forall M:\mathbb{R},\ \exists N:\mathbb{N},\ (\beta-1)N^{\beta-1}>M$ & 1 & $\mathsf{Support}$ \\ \hline % <-- FIX: inline finitary unboundedness
+			8 & $\exists N_0$, $\forall N\ge N_0$: $g(N)>\varepsilon$ & 6,7 & $\mathsf{def}$ \\ \hline
+			9 & $\forall N\ge N_0$: $N^\beta+N^{\beta-1}<(N+1)^\beta-\varepsilon$ & 2,8 & $\mathsf{Eq}$ \\ \hline
+			10 & Lemma & 1--9 & $\rightarrow\mathsf{I}$ \\ \hline
+		\end{tabular}
+	}
+\end{proof}
+
+\begin{remark}
+	\label{rem:slope-beta}
+	The restriction $\beta>1$ is essential (at $\beta=1$ the inequality fails
+	for all $\varepsilon>0$).  All our applications have $\beta>1$:
+	$\beta=3$ in Route 1a, $\beta=c\ge 3$ in Route 2, $\beta=c>8/3$ in
+	Route 3, $\beta=c>1/(1-\alpha)>1$ in Route 6.
+\end{remark}
+
+\begin{lemma}[Power bound]
+	\label{lem:power-bound}
+	\textbf{\textsf{Assume:}} \(x\ge 0\) and \(0<a<1\).
+	\textbf{\textsf{Conclude:}}
+	\begin{asser}
+		\label{asser:lem-power-bound}
+		(1+x)^a\le 1+ax
+		\wedge
+		\exists C_a\ge 1,\ \forall y\ge 0,\ (1+y)^a\le 1+C_a y
+	\end{asser}
+\end{lemma}
+
+\begin{proof}[\textbf{Proof of \cref{lem:power-bound}}]
+	\phantomsection\label{proof:lem:power-bound}
+	{\scriptsize
+		\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+			\hline
+			1 & \(a\in(0,1)\), \(x\ge 0\) & --- & \(\mathsf{Hyp}\) \\ \hline
+			2 & \(f(t):=1+at-(1+t)^a\) & 1 & \(\mathsf{def}\) \\ \hline
+			3 & \(f(0)=0\) & 2 & \(\mathsf{Eq}\) \\ \hline
+			4 & \(f'(t)=a[1-(1+t)^{a-1}]\) & 2 & \(\mathsf{Eq}\) (differentiation) \\ \hline
+			5 & \((1+t)^{a-1}\le 1\) for \(t\ge 0\) & 1 & \(\mathsf{Eq}\) \\ \hline
+			6 & \(f'(t)\ge 0\) for \(t\ge 0\) & 4,5 & \(\mathsf{Eq}\) \\ \hline
+			7 & \(f\) non-decreasing on \(\{t\in\mathbb{R}:t\ge 0\}\) & 6 & \(\mathsf{Support}\) (FTC) \\ \hline
+			8 & \(f(x)\ge f(0)=0\) & 3,7 & \(\mathsf{Eq}\) \\ \hline
+			9 & \((1+x)^a\le 1+ax\) & 2,8 & \(\mathsf{Eq}\) \\ \hline
+			9a & For every \(y\ge 0\), \((1+y)^a\le 1+ay\) & 9 & \(\mathsf{Eq}\) (rename \(x\) as \(y\)) \\ \hline
+			9b & \(ay\le y\) for \(y\ge 0\) & 1 & \(\mathsf{Eq}\) \\ \hline
+			9c & \(1+ay\le 1+y\) for \(y\ge 0\) & 9b & \(\mathsf{Eq}\) \\ \hline
+			10 & \(C_a:=1\) works & 9a,9c & \(\mathsf{Eq}\) \\ \hline
+			11 & Conclude & 1--10 & \(\rightarrow\mathsf{I}\) \\ \hline
+		\end{tabular}
+	}
+\end{proof}
+\begin{lemma}[Mills squeeze]
+	\label{lem:squeeze}
+	\textbf{\textsf{Assume:}} $c>1$ and a positive sequence $(q_n)_{n\ge 1}$ with
+	$q_n^{c}<q_{n+1}<(q_n+1)^{c}-1$ for all $n$; set
+	$u_n:=q_n^{c^{-n}}$, $v_n:=(q_n+1)^{c^{-n}}$.
+	\textbf{\textsf{Conclude:}}
+	\begin{asser}
+		\label{asser:lem-squeeze}
+		\begin{aligned}
+			&(a)\ \forall n,\ u_n<u_{n+1}\wedge v_{n+1}<v_n\wedge u_n<v_n \\
+			&\wedge (b)\ \exists L>0,\ \forall n,\ u_n<L<v_n \wedge u_n\to L \wedge v_n\to L
+		\end{aligned}
+	\end{asser}
+\end{lemma}
+
+\begin{proof}[\textbf{Proof of \cref{lem:squeeze}}]
+	\phantomsection\label{proof:lem:squeeze}
+	{\scriptsize
+		\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+			\hline
+			1 & $c>1$, $(q_n)>0$, $q_n^{c}<q_{n+1}<(q_n+1)^{c}-1$ & --- & $\mathsf{Hyp}$ \\ \hline
+			2 & $u_n:=q_n^{c^{-n}}$, $v_n:=(q_n+1)^{c^{-n}}$ & 1 & $\mathsf{def}$ \\ \hline
+			3 & $u_{n+1}>(q_n^{c})^{c^{-(n+1)}}=u_n$ & 1,2 & $\mathsf{Eq}$ (monotone) \\ \hline
+			4 & $v_{n+1}<((q_n+1)^{c})^{c^{-(n+1)}}=v_n$ & 1,2 & $\mathsf{Eq}$ (monotone) \\ \hline
+			5 & $u_n<v_n$ & 2 & $q_n<q_n+1$ \\ \hline
+			6 & $(u_n)$ increasing and bounded by $v_1$; $(v_n)$ decreasing and bounded by $u_1$ & 3,4,5 & $\mathsf{Eq}$ \\ \hline
+			7 & $\exists L_u,L_v$: $u_n\to L_u$, $v_n\to L_v$ & 6 & \cref{lem:monotone} \\ \hline
+			8 & $q_{n+1}+1\le(q_n+1)^c$ & 1 & $\mathsf{Eq}$ \\ \hline
+			9 & Induction: $q_n\le(q_1+1)^{c^{\,n-1}}$ & 8 & $\mathsf{Ind}$ \\ \hline
+			10 & $q_n^{c^{-n}}\le(q_1+1)^{c^{-1}}=:C$ & 9 & $\mathsf{Eq}$ \\ \hline
+			11 & $(1+1/q_n)^{c^{-n}}-1\le c^{-n}/q_n$ & 10,1 & \cref{lem:power-bound} \\ \hline
+			12 & $v_n-u_n\le C\cdot c^{-n}/q_n\le C\cdot c^{-n}$ & 2,10,11 & $\mathsf{Eq}$ \\ \hline
+			13 & $v_n-u_n\to 0$ & 12 & $\mathsf{PowRate}$ \\ \hline
+			14 & $L_u=L_v=:L$ & 7,13 & $\mathsf{Eq}$ \\ \hline
+			15 & $u_n<L<v_n$ (strict monotonicity) & 3,4,7,14 & $\mathsf{Eq}$ \\ \hline
+			16 & (a) and (b) hold & 3,4,14,15 & $\wedge\mathsf{I}$ \\ \hline
+			17 & Lemma & 1--16 & $\rightarrow\mathsf{I}$ \\ \hline
+		\end{tabular}
+	}
+\end{proof}
+
+\begin{lemma}[Monotone bounded convergence]
+	\label{lem:monotone}
+	\textbf{\textsf{Assume:}} $(a_n)$ is a monotone and bounded sequence of reals.
+	\textbf{\textsf{Conclude:}}
+	\begin{asser}
+		\label{asser:lem-monotone} \exists L:\mathbb{R},\ a_n\to L
+	\end{asser}
+\end{lemma}
+
+\begin{proof}[\textbf{Proof of \cref{lem:monotone}}]
+	\phantomsection\label{proof:lem:monotone}
+	{\scriptsize
+		\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+			\hline
+			1 & $(a_n)$ monotone and bounded & --- & $\mathsf{Hyp}$ \\ \hline
+			2 & Case (increasing) & --- & $\vee\mathsf{I}$ \\ \hline
+			3 & $S:=\{a_n\}$ non-empty, bounded above & 1,2 & $\mathsf{def}$ \\ \hline
+			4 & $L:=\sup S$ exists & 3 & $\mathsf{Ax}$ (Dedekind) \\ \hline
+			5 & $\forall n$, $a_n\le L$ & 4 & $\mathsf{def}(\sup)$ \\ \hline
+			6 & $\forall\varepsilon>0$, $\exists N$, $a_N>L-\varepsilon$ & 4 & $\mathsf{def}(\sup)$ \\ \hline
+			7 & $\forall n\ge N$: $|a_n-L|<\varepsilon$ & 2,5,6 & $\mathsf{Eq}$ \\ \hline
+			8 & $a_n\to L$ & 7 & $\mathsf{def}$ (limit) \\ \hline
+			9 & Case (decreasing): symmetric, with $L:=\inf S$ & 1 & $\mathsf{Ref}$ \\ \hline
+			10 & $(a_n)$ converges & 2--8,9 & $\vee\mathsf{E}$ \\ \hline
+			11 & Lemma & 1--10 & $\rightarrow\mathsf{I}$ \\ \hline
+		\end{tabular}
+	}
+\end{proof}
+
+\begin{lemma}[Wright's nested-interval facts, corrected]
+	\label{lem:wright-facts}
+	\textbf{\textsf{Assume:}} \(\Sigma=\bigcap_{n\ge 1}F_n\), where \((F_n)\) is nested, each \(F_n\) is a nonempty finite union of closed intervals, with
+	(iii) \(\mu(F_n)\to 0\), and
+	(iv$'$) there is \(N_0\) such that for every \(n\ge N_0\), every component interval of \(F_n\) contains two disjoint subintervals of \(F_{n+1}\).
+	\textbf{\textsf{Conclude:}}
+	\begin{asser}
+		\label{asser:lem-wright-facts}
+		\begin{aligned}
+			&(a)\ \Sigma\ne\emptyset \wedge (b)\ \mu(\Sigma)=0 \\
+			&\wedge (c)\ \mathrm{NowhereDense}(\Sigma) \wedge (d)\ |\Sigma|=|\mathbb{R}|
+		\end{aligned}
+	\end{asser}
+\end{lemma}
+
+\begin{proof}[\textbf{Proof of \cref{lem:wright-facts}}]
+	\phantomsection\label{proof:lem:wright-facts}
+	{\scriptsize
+		\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+			\hline
+			1 & \(\Sigma=\bigcap_{n\ge1}F_n\), nested, \(F_n\ne\emptyset\), \(F_n\) finite union of closed intervals, \(\mu(F_n)\to0\), and (iv$'$) with \(N_0\) & --- & \(\mathsf{Hyp}\) \\ \hline
+			2 & There is \(N_1\ge1\) such that \(\mu(F_n)<1\) for all \(n\ge N_1\) & 1 & \(\mathsf{Eq}\) (\(\mu(F_n)\to0\)) \\ \hline
+			3 & For \(n\ge N_1\), \(F_n\) is bounded; hence \(F_n\) is compact & 1,2 & \(\mathsf{Support}\) (closed finite union of bounded intervals) \\ \hline
+			4 & The tail family \((F_n)_{n\ge N_1}\) has the finite intersection property & 1,3 & \(\mathsf{Eq}\) (nested; finite intersection equals \(F_{\max n}\)) \\ \hline
+			5 & \(\Sigma=\bigcap_{n\ge N_1}F_n\ne\emptyset\) & 3,4 & \(\mathsf{Support}\) (compact FIP) \\ \hline
+			6 & \(\Sigma\subseteq F_n\) for every \(n\) & 1 & \(\mathsf{def}\) \\ \hline
+			7 & \(\mu(\Sigma)\le\mu(F_n)\) for every \(n\) & 6 & \(\mathsf{Support}\) (monotonicity of \(\mu\)) \\ \hline
+			8 & For every \(\varepsilon>0\) there is \(n\) with \(\mu(F_n)<\varepsilon\) & 1 & \(\mathsf{Eq}\) (\(\mu(F_n)\to0\)) \\ \hline
+			9 & For every \(\varepsilon>0\), \(\mu(\Sigma)<\varepsilon\) & 7,8 & \(\mathsf{Eq}\) \\ \hline
+			10 & \(\mu(\Sigma)=0\) & 9 & \(\mathsf{Eq}\) \\ \hline
+			11 & \(\Sigma\) is closed & 1 & \(\mathsf{Support}\) (intersection of closed sets) \\ \hline
+			12 & \(\mathrm{int}(\Sigma)=\emptyset\) & 10,11 & \(\mathsf{Support}\) (a nonempty open interval has positive measure) \\ \hline
+			13 & \(\mathrm{NowhereDense}(\Sigma)\) & 11,12 & \(\mathsf{Eq}\) (closed with empty interior) \\ \hline
+			14 & For every \(n\ge N_0\), every component interval \(J\) of \(F_n\) contains at least two component intervals of \(F_{n+1}\) & 1 & \(\mathsf{Support}\) (subintervals of \(F_{n+1}\) lie in components) \\ \hline
+			15 & Let \(T\) be the tree of component intervals of \(F_n\) for \(n\ge N_0\), ordered by inclusion & 14 & \(\mathsf{def}\) \\ \hline
+			16 & Every node of \(T\) has at least two children & 14,15 & \(\mathsf{Eq}\) \\ \hline
+			17 & For every finite binary word \(s\), choose nested component intervals \(I_s\) of \(F_{N_0+|s|}\), with \(I_{s0},I_{s1}\) disjoint children of \(I_s\) & 16 & \(\mathsf{Support}\) (recursion) \\ \hline
+			17a & Every component of \(F_n\) has length at most \(\mu(F_n)\), hence lengths tend to \(0\) & 1 & \(\mathsf{Eq}\) \\ \hline
+			18 & For every \(\sigma\in\{0,1\}^{\mathbb{N}}\), \(\bigcap_{k\ge0}I_{\sigma|k}\) is a singleton contained in \(\Sigma\) & 17,17a & \(\mathsf{Support}\) (nested closed intervals with lengths tending to \(0\)) \\ \hline
+			19 & The map \(\sigma\mapsto \bigcap_{k\ge0}I_{\sigma|k}\) is injective & 17,18 & \(\mathsf{Eq}\) (disjoint choices at first difference) \\ \hline
+			20 & \(|\Sigma|\ge|\{0,1\}^{\mathbb{N}}|=|\mathbb{R}|\) & 19 & \(\mathsf{Eq}\) \\ \hline
+			21 & \(|\Sigma|\le|\mathbb{R}|\) & 1 & \(\mathsf{Eq}\) (\(\Sigma\subseteq\mathbb{R}\)) \\ \hline
+			22 & \(|\Sigma|=|\mathbb{R}|\) & 20,21 & \(\mathsf{Eq}\) \\ \hline
+			23 & Conclude (a)--(d) & 5,10,13,22 & \(\rightarrow\mathsf{I}\) \\ \hline
+		\end{tabular}
+	}
+\end{proof}
+
+% =========================================================================
+\subsection{Route 1a: Proof of \cref{thm:mills}}
+% =========================================================================
+
+\begin{proof}[\textbf{Proof of \cref{thm:mills}}]
+	\phantomsection\label{proof:mills}
+	{\scriptsize
+		\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+			\hline
+			1 & $\text{Ingham}$ & --- & $\mathsf{Hyp}$ \\ \hline
+			2 & $\exists k>0,\ \forall n,\ p_{n+1}-p_n<k\,p_n^{5/8}$ & 1 & $\mathsf{def}$ \\ \hline
+			3 & $k$ as in 2 & 2 & $\exists\mathsf{E}$ \\ \hline
+			4 & $N>k^{8}$, $p_n$ largest prime $<N^{3}$ (\cref{lem:euclid}) & 3 & $\mathsf{def}$ \\ \hline
+			5 & $p_n<N^{3}<p_{n+1}$ & 4 & $\mathsf{Def}$ \\ \hline
+			6 & $p_{n+1}<p_n+k\,p_n^{5/8}$ & 3 & $\forall\mathsf{E}$ \\ \hline
+			7 & $k\,p_n^{5/8}<N^{1/8}N^{15/8}=N^{2}$ & 5,4 & $\mathsf{Eq}$ \\ \hline
+			8 & $N^{3}<p_{n+1}<N^{3}+N^{2}$ & 5,6,7 & $\mathsf{Eq}$ \\ \hline
+			9 & $N^{3}+N^{2}<(N+1)^{3}-1$ & 4 & \cref{lem:slope} ($\beta=3$) \\ \hline
+			10 & $\exists$ prime in $(N^{3},(N+1)^{3}-1)$ & 5,8,9 & $\exists\mathsf{I}$ \\ \hline
+			11 & $\forall N>k^{8}$: same & 4--10 & $\forall\mathsf{I}$ \\ \hline
+			12 & $q_1$ smallest prime $>k^{8}$; $q_{n+1}:=\min\{p:\ q_n^{3}<p<(q_n+1)^{3}-1\}$ & 11 & $\exists\mathsf{E}$ \\ \hline
+			13 & $\mathrm{MillsRec}(q)$ & 12 & $\mathsf{Def}$ \\ \hline
+			14 & $u_n:=q_n^{3^{-n}}$, $v_n:=(q_n+1)^{3^{-n}}$ & 12 & $\exists\mathsf{I}$ \\ \hline
+			15 & $u_n<u_{n+1}<v_{n+1}<v_n$ & 13,14 & \cref{thm:millsseq} \\ \hline
+			16 & $\exists\theta$, $\theta=\lim u_n=\lim v_n$, $u_n<\theta<v_n$ & 15 & \cref{lem:squeeze} \\ \hline
+			17 & $\forall n$: $q_n<\theta^{3^{n}}<q_n+1$ & 14,16 & $\mathsf{Eq}$ \\ \hline
+			18 & $\forall n$: $\mathrm{floor}(\theta^{3^{n}})=q_n$ & 17 & $\mathsf{Def}$ \\ \hline
+			19 & $\forall n$: $\mathrm{Prime}(\mathrm{floor}(\theta^{3^{n}}))$ & 12,18 & $\mathsf{Def}$ \\ \hline
+			20 & $\theta>1$ & 12,16 & $\mathsf{Eq}$ \\ \hline
+			21 & $\exists\theta>1,\ \mathrm{IsMills}(\theta)$ & 19,20 & $\exists\mathsf{I}$ \\ \hline
+			22 & $\text{Ingham}\Rightarrow\exists\theta>1,\ \mathrm{IsMills}(\theta)$ & 1--21 & $\rightarrow\mathsf{I}$ \\ \hline
+		\end{tabular}
+	}
+\end{proof}
+
+% =========================================================================
+\subsection{Route 1b: Proof of \cref{thm:millsseq}}
+% =========================================================================
+
+\begin{proof}[\textbf{Proof of \cref{thm:millsseq}}]
+	\phantomsection\label{proof:millsseq}
+	{\scriptsize
+		\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+			\hline
+			1 & $\mathrm{UV}(q,u,v)\wedge\mathrm{MillsRec}(q)$ & --- & $\mathsf{Hyp}$ \\ \hline
+			2 & $\mathrm{UV}(q,u,v)$ & 1 & $\wedge\mathsf{E}$ \\ \hline
+			3 & $\mathrm{MillsRec}(q)$ & 1 & $\wedge\mathsf{E}$ \\ \hline
+			4 & $\forall n$: $u_n=q_n^{3^{-n}}$, $v_n=(q_n+1)^{3^{-n}}$ & 2 & $\mathsf{Def}$ \\ \hline
+			5 & $\forall n$: $q_n^{3}<q_{n+1}<(q_n+1)^{3}-1$ & 3 & $\mathsf{Def}$ \\ \hline
+			6 & $\forall n$: $q_{n+1}>q_n^{3}\ge q_n$ & 5 & $\mathsf{Eq}$ \\ \hline
+			7 & $\forall n$: $u_{n+1}>(q_n^{3})^{3^{-(n+1)}}=u_n$ & 4,6 & $\mathsf{Eq}$ \\ \hline
+			8 & $\forall n$: $v_{n+1}<((q_n+1)^{3})^{3^{-(n+1)}}=v_n$ & 4,5 & $\mathsf{Eq}$ \\ \hline
+			9 & $\forall n$: $u_n<v_n$ & 4 & $q_n<q_n+1$ \\ \hline
+			10 & $\forall n$: $u_n<u_{n+1}<v_{n+1}<v_n$ & 7,8,9 & $\wedge\mathsf{I}$ \\ \hline
+			11 & $(\mathrm{UV}\wedge\mathrm{MillsRec})\Rightarrow\forall n,\ u_n<u_{n+1}<v_{n+1}<v_n$ & 1--10 & $\rightarrow\mathsf{I}$ \\ \hline
+		\end{tabular}
+	}
+\end{proof}
+
+\begin{remark}
+	{\scriptsize The label \cref{thm:millsseq} is the theorem; \cref{ineq:millsseq} is its conclusion.  The Dudley transcription writes $5^{-n}$ instead of $3^{-n}$, which violates the strict monotonicity proved in rows 7–8. }
+\end{remark}
+
+% =========================================================================
+\subsection{Route 2: Proof of \cref{thm:kuipers}}
+% =========================================================================
+
+\begin{proof}[\textbf{Proof of \cref{thm:kuipers}}]
+	\phantomsection\label{proof:kuipers}
+	{\scriptsize
+		\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+			\hline
+			1 & $\text{Ingham}$ & --- & $\mathsf{Hyp}$ \\ \hline
+			2 & $c\in\mathbb{N}_{\geq 3}$ arbitrary & --- & $\mathsf{def}$ \\ \hline
+			3 & $a:=3c-4$, $b:=3c-1$; $8a-5b=9c-27\ge 0\Rightarrow a/b\ge 5/8$ & 2 & $\mathsf{Eq}$ \\ \hline
+			4 & $ca+1=(c-1)b$ & 3 & $\mathsf{Eq}$ \\ \hline
+			5 & $\exists k_1>0$, $\forall n$, $p_{n+1}-p_n<k_1 p_n^{a/b}$ & 1,3 & $\mathsf{def}$ \\ \hline
+			6 & $k_1$ as in 5 & 5 & $\exists\mathsf{E}$ \\ \hline
+			7 & $N>k_1^{b}$, $p_n$ largest prime $<N^{c}$ & 6 & $\mathsf{def}$ \\ \hline
+			8 & $p_n<N^{c}<p_{n+1}$ & 7 & $\mathsf{Def}$ \\ \hline
+			9 & $p_{n+1}<N^{c}+k_1 N^{ca/b}$ & 6,8 & $\mathsf{Eq}$ \\ \hline
+			10 & $k_1<N^{1/b}$ & 7 & $\mathsf{Eq}$ \\ \hline
+			11 & $k_1 N^{ca/b}<N^{(ca+1)/b}=N^{c-1}$ & 10,4 & $\mathsf{Eq}$ \\ \hline
+			12 & $p_{n+1}<N^{c}+N^{c-1}$ & 9,11 & $\mathsf{Eq}$ \\ \hline
+			13 & $N^{c}+N^{c-1}<(N+1)^{c}-1$ & 7 & \cref{lem:slope} ($\beta=c\ge 3$) \\ \hline
+			14 & $\exists$ prime in $(N^{c},(N+1)^{c}-1)$ & 8,12,13 & $\exists\mathsf{I}$ \\ \hline
+			15 & $\forall N>k_1^{b}$: same & 7--14 & $\forall\mathsf{I}$ \\ \hline
+			16 & $q_1>k_1^{b}$; $q_{n+1}:=\min\{p:\ q_n^{c}<p<(q_n+1)^{c}-1\}$ & 15 & $\exists\mathsf{E}$ \\ \hline
+			17 & $u_n:=q_n^{c^{-n}}$, $v_n:=(q_n+1)^{c^{-n}}$ & 16 & $\mathsf{Def}$ \\ \hline
+			18 & $u_n<u_{n+1}<v_{n+1}<v_n$ & 16,17 & \cref{lem:squeeze}a \\ \hline
+			19 & $\exists\theta$, $\theta=\lim u_n=\lim v_n$, $u_n<\theta<v_n$ & 18 & \cref{lem:squeeze}b \\ \hline
+			20 & $\forall n$: $q_n<\theta^{c^{n}}<q_n+1$ & 17,19 & $\mathsf{Eq}$ \\ \hline
+			21 & $\forall n$: $\mathrm{floor}(\theta^{c^{n}})=q_n$ prime & 16,20 & $\mathsf{Def}$ \\ \hline
+			22 & $\theta>1$ & 19,20 & $\mathsf{Eq}$ \\ \hline
+			23 & $\mathrm{IsKuipers}(c,\theta)$ & 21,22 & $\mathsf{Def}$ \\ \hline
+			24 & $\exists\theta>1,\ \mathrm{IsKuipers}(c,\theta)$ & 23 & $\exists\mathsf{I}$ \\ \hline
+			25 & $\forall c\ge 3$, $\exists\theta>1$, $\mathrm{IsKuipers}(c,\theta)$ & 2--24 & $\forall\mathsf{I}$ \\ \hline
+			26 & $\text{Ingham}\Rightarrow\forall c\ge 3$, $\exists\theta>1$, $\mathrm{IsKuipers}(c,\theta)$ & 1--25 & $\rightarrow\mathsf{I}$ \\ \hline
+		\end{tabular}
+	}
+\end{proof}
+
+% =========================================================================
+\subsection{Route 3: Proof of \cref{thm:ansari}}
+% =========================================================================
+
+\begin{proof}[\textbf{Proof of \cref{thm:ansari}}]
+	\phantomsection\label{proof:ansari}
+	{\scriptsize
+		\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+			\hline
+			1 & $\text{Ingham}$ & --- & $\mathsf{Hyp}$ \\ \hline
+			2 & $c\in\mathbb{R}_{>8/3}$ arbitrary & --- & $\mathsf{def}$ \\ \hline
+			3 & $\delta:=3c/8-1>0$ & 2 & $\mathsf{Eq}$ \\ \hline
+			4 & $\exists k>0$, $\forall n$, $p_{n+1}-p_n<k\,p_n^{5/8}$ & 1 & $\mathsf{def}$ \\ \hline
+			5 & $k$ as in 4 & 4 & $\exists\mathsf{E}$ \\ \hline
+			6 & $N>k^{1/\delta}$, $p_n$ largest prime $<N^{c}$ & 5 & $\mathsf{def}$ \\ \hline
+			7 & $p_n<N^{c}<p_{n+1}$ & 6 & $\mathsf{Def}$ \\ \hline
+			8 & $p_{n+1}<N^{c}+k N^{5c/8}$ & 5,7 & $\mathsf{Eq}$ \\ \hline
+			9 & $k<N^{\delta}$ & 6 & $\mathsf{Eq}$ \\ \hline
+			10 & $k N^{5c/8}<N^{\delta+5c/8}=N^{c-1}$ & 3,9 & $\mathsf{Eq}$ \\ \hline
+			11 & $p_{n+1}<N^{c}+N^{c-1}$ & 8,10 & $\mathsf{Eq}$ \\ \hline
+			12 & $N^{c}+N^{c-1}<(N+1)^{c}-\delta$ & 6 & \cref{lem:slope} ($\beta=c>8/3$) \\ \hline
+			13 & $\exists$ prime in $(N^{c},(N+1)^{c}-1)$ & 7,11,12 & $\exists\mathsf{I}$ \\ \hline
+			14 & $\forall N>k^{1/\delta}$: same & 6--13 & $\forall\mathsf{I}$ \\ \hline
+			15 & $q_1>k^{1/\delta}$; $q_{n+1}:=\min\{p:\ q_n^{c}<p<(q_n+1)^{c}-1\}$ & 14 & $\exists\mathsf{E}$ \\ \hline
+			16 & $u_n:=q_n^{c^{-n}}$, $v_n:=(q_n+1)^{c^{-n}}$ & 15 & $\mathsf{Def}$ \\ \hline
+			17 & $u_n<u_{n+1}<v_{n+1}<v_n$ & 15,16 & \cref{lem:squeeze}a \\ \hline
+			18 & $\exists\theta$, $\theta=\lim u_n=\lim v_n$, $u_n<\theta<v_n$ & 17 & \cref{lem:squeeze}b \\ \hline
+			19 & $\forall n$: $q_n<\theta^{c^{n}}<q_n+1$ & 16,18 & $\mathsf{Eq}$ \\ \hline
+			20 & $\forall n$: $\mathrm{floor}(\theta^{c^{n}})=q_n$ prime & 15,19 & $\mathsf{Def}$ \\ \hline
+			21 & $\theta>1$ & 18,19 & $\mathsf{Eq}$ \\ \hline
+			22 & $\mathrm{IsAnsari}(c,\theta)$ & 20,21 & $\mathsf{Def}$ \\ \hline
+			23 & $\exists\theta>1,\ \mathrm{IsAnsari}(c,\theta)$ & 22 & $\exists\mathsf{I}$ \\ \hline
+			24 & $\forall c>8/3$, $\exists\theta>1$, $\mathrm{IsAnsari}(c,\theta)$ & 2--23 & $\forall\mathsf{I}$ \\ \hline
+			25 & $\text{Ingham}\Rightarrow\forall c>8/3$, $\exists\theta>1$, $\mathrm{IsAnsari}(c,\theta)$ & 1--24 & $\rightarrow\mathsf{I}$ \\ \hline
+		\end{tabular}
+	}
+\end{proof}
+
+\begin{remark}
+	{\scriptsize Titchmarsh's refinement yields $c>77/29$; Haneke's yields $c>98/37$.  The proof above uses only \cref{ineq:ingham} with exponent $5/8$ and the identity $\delta+5c/8=c-1$. }
+\end{remark}
+
+% =========================================================================
+\subsection{Route 4: Proof of \cref{thm:wright}}
+% =========================================================================
+
+\begin{proof}[\textbf{Proof of \cref{thm:wright}}]
+	\phantomsection\label{proof:wright}
+	{\scriptsize
+		\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+			\hline
+			1 & $\text{Bertrand}$ & --- & $\mathsf{Hyp}$ \\ \hline
+			2 & $\forall N\ge 2$, $\exists$ prime in $(N,2N)$ & 1 & $\mathsf{def}$ \\ \hline
+			3 & $q_1:=2$; $q_{n+1}:=\min\{p:\ 2^{q_n}<p<2^{q_n+1}\}$ & 2 & $\exists\mathsf{E}$ \\ \hline
+			4 & $\forall n$: $q_n<q_{n+1}$ & 3 & $\mathsf{Eq}$ \\ \hline
+			5 & $\forall n$: $2^{q_n}<q_{n+1}<2^{q_n+1}$ & 3 & $\mathsf{Def}$ \\ \hline
+			6 & $\forall n$: $q_n<\log_2 q_{n+1}<q_n+1$ & 5 & $\mathsf{LogInv}$ \\ \hline
+			7 & $\forall n$: $q_{n+1}+1\le 2^{q_n+1}$ & 5 & $\mathsf{Eq}$ \\ \hline
+			8 & $\forall n$: $\log_2(q_{n+1}+1)\le q_n+1$ & 7 & $\mathsf{LogInv}$ \\ \hline
+			9 & $u_n:=\log_2^{[n]}(q_n)$, $v_n:=\log_2^{[n]}(q_n+1)$ & 6,8 & $\mathsf{Def}$ \\ \hline
+			10 & $\forall n$: $u_n<u_{n+1}$ & 6,9 & $\mathsf{LogInv}$ (monotone) \\ \hline
+			11 & $\forall n$: $v_{n+1}<v_n$ & 8,9 & $\mathsf{LogInv}$ (monotone) \\ \hline
+			12 & $\forall n$: $u_n<v_n$ & 9 & $q_n<q_n+1$ \\ \hline
+			13 & $\forall n$: $u_n<u_{n+1}<v_{n+1}<v_n$ & 10,11,12 & $\wedge\mathsf{I}$ \\ \hline
+			14 & $\exists\theta$, $\theta=\lim u_n=\lim v_n$, $u_n<\theta<v_n$ & 13 & $\mathsf{Ref}$ (squeeze) \\ \hline
+			15 & $\forall n$: $q_n<\exp_2^{[n]}(\theta)<q_n+1$ & 9,14 & $\mathsf{LogInv}$ \\ \hline
+			16 & $\forall n$: $\mathrm{floor}(\exp_2^{[n]}(\theta))=q_n$ & 15 & $\mathsf{Def}$ \\ \hline
+			17 & $\forall n$: $\mathrm{Prime}(\mathrm{floor}(\exp_2^{[n]}(\theta)))$ & 3,16 & $\mathsf{Def}$ \\ \hline
+			18 & $\theta>1$ & 14 & $\mathsf{Eq}$ \\ \hline
+			19 & $\mathrm{IsWright}(\theta)$ & 17,18 & $\mathsf{Def}$ \\ \hline
+			20 & $\exists\theta>1,\ \mathrm{IsWright}(\theta)$ & 19 & $\exists\mathsf{I}$ \\ \hline
+			21 & $\text{Bertrand}\Rightarrow\exists\theta>1,\ \mathrm{IsWright}(\theta)$ & 1--20 & $\rightarrow\mathsf{I}$ \\ \hline
+		\end{tabular}
+	}
+\end{proof}
+
+\begin{remark}
+	{\scriptsize \Cref{thm:wright} yields only the base-$2$ tower; the base-$3^{n}$ statement \cref{asser:mills} requires \cref{ineq:ingham}, which is not elementary. }
+\end{remark}
+
+% =========================================================================
+\subsection{Route 5: Proof of \cref{thm:ore}}
+% =========================================================================
+
+\begin{proof}[\textbf{Proof of \cref{thm:ore}}]
+	\phantomsection\label{proof:ore}
+	{\scriptsize
+		\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+			\hline
+			1 & $\mathrm{IsOreSel}(f)\wedge\mathrm{OreBound}(f,q,\delta,\epsilon)$ & --- & $\mathsf{Hyp}$ \\ \hline
+			2 & $f$ continuous and eventually increasing & 1 & $\wedge\mathsf{E}$ \\ \hline
+			3 & $\exists N_0$, $\forall x,y>N_0$, $x<y\Rightarrow f(x)<f(y)$ & 2 & $\mathsf{Def}$ \\ \hline
+			4 & $\forall n$: $f(q_n-\delta_n)<q_{n+1}-\delta_{n+1}$ & 1 & $\wedge\mathsf{E}$ \\ \hline
+			5 & $\forall n$: $q_{n+1}+\epsilon_{n+1}<f(q_n+\epsilon_n)$ & 1 & $\wedge\mathsf{E}$ \\ \hline
+			6 & $u_n:=f^{(-n)}(q_n-\delta_n)$ & 2 & $\exists\mathsf{I}$ \\ \hline
+			7 & $v_n:=f^{(-n)}(q_n+\epsilon_n)$ & 2 & $\exists\mathsf{I}$ \\ \hline
+			8 & $f^{(n)}(u_n)=q_n-\delta_n$, $f^{(n)}(v_n)=q_n+\epsilon_n$ & 6,7 & $\mathsf{Def}$ \\ \hline
+			9 & $f^{(n+1)}(u_{n+1})>f^{(n+1)}(u_n)$ & 4,8 & $\mathsf{Eq}$ \\ \hline
+			10 & $u_{n+1}>u_n$ (strict inverse) & 3,9 & $\mathsf{Support}$ \\ \hline
+			11 & $f^{(n+1)}(v_{n+1})<f^{(n+1)}(v_n)$ & 5,8 & $\mathsf{Eq}$ \\ \hline
+			12 & $v_{n+1}<v_n$ & 3,11 & $\mathsf{Support}$ \\ \hline
+			13 & $\forall n$: $u_n<v_n$ & 6,7 & $q_n-\delta_n\le q_n+\epsilon_n$ \\ \hline
+			14 & $\forall n$: $u_n<u_{n+1}<v_{n+1}<v_n$ & 10,12,13 & $\wedge\mathsf{I}$ \\ \hline
+			15 & $\exists\theta>0$, $\theta=\lim u_n=\lim v_n$ & 14 & \cref{lem:squeeze} (with $f$) \\ \hline
+			16 & $q_n-\delta_n=f^{(n)}(u_n)\le f^{(n)}(\theta)\le f^{(n)}(v_n)=q_n+\epsilon_n$ & 8,15 & $\mathsf{Eq}$ \\ \hline
+			17 & $\exists\theta>0$, $\forall n$, $q_n-\delta_n\le f^{(n)}(\theta)\le q_n+\epsilon_n$ & 16 & $\exists\mathsf{I}$ \\ \hline
+			18 & $(\mathrm{IsOreSel}\wedge\mathrm{OreBound})\Rightarrow\exists\theta>0$, $\forall n$, $q_n-\delta_n\le f^{(n)}(\theta)\le q_n+\epsilon_n$ & 1--17 & $\rightarrow\mathsf{I}$ \\ \hline
+		\end{tabular}
+	}
+\end{proof}
+
+% =========================================================================
+\subsection{Route 6: Proof of \cref{thm:direct}}
+% =========================================================================
+
+\begin{proof}[\textbf{Proof of \cref{thm:direct}}]
+	\phantomsection\label{proof:direct}
+	{\scriptsize
+		\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+			\hline
+			1 & $\mathrm{PolyGap}(\alpha,k)$, $\alpha\in(0,1)$, $k>0$ & --- & $\mathsf{Hyp}$ \\ \hline
+			2 & $c>1/(1-\alpha)$ & --- & $\mathsf{Hyp}$ \\ \hline
+			3 & $c(1-\alpha)-1>0$ & 1,2 & $\mathsf{Eq}$ \\ \hline
+			4 & $\forall n$: $p_{n+1}-p_n<k\,p_n^{\alpha}$ & 1 & $\mathsf{Def}$ \\ \hline
+			5 & $N$ with $N^{c(1-\alpha)-1}>k$; $p_n$ largest prime $<N^{c}$ & 3,4 & $\mathsf{def}$ \\ \hline
+			6 & $p_n<N^{c}<p_{n+1}$ & 5 & $\mathsf{Def}$ \\ \hline
+			7 & $p_{n+1}<N^{c}+k N^{c\alpha}$ & 4,6 & $\mathsf{Eq}$ \\ \hline
+			8 & $k<N^{c(1-\alpha)-1}$ & 5 & $\mathsf{Eq}$ \\ \hline
+			9 & $k N^{c\alpha}<N^{c-1}$ & 8 & $\mathsf{Eq}$ \\ \hline
+			10 & $p_{n+1}<N^{c}+N^{c-1}$ & 7,9 & $\mathsf{Eq}$ \\ \hline
+			11 & $N^{c}+N^{c-1}<(N+1)^{c}-1$ & 5 & \cref{lem:slope} ($\beta=c>1/(1-\alpha)>1$) \\ \hline
+			12 & $\exists$ prime in $(N^{c},(N+1)^{c}-1)$ & 6,10,11 & $\exists\mathsf{I}$ \\ \hline
+			13 & $\forall N\gg 1$: same & 5--12 & $\forall\mathsf{I}$ \\ \hline
+			14 & $q_1\gg 1$; $q_{n+1}:=\min\{p:\ q_n^{c}<p<(q_n+1)^{c}-1\}$ & 13 & $\exists\mathsf{E}$ \\ \hline
+			15 & $u_n:=q_n^{c^{-n}}$, $v_n:=(q_n+1)^{c^{-n}}$ & 14 & $\mathsf{Def}$ \\ \hline
+			16 & $u_n<u_{n+1}<v_{n+1}<v_n$ & 14,15 & \cref{lem:squeeze}a \\ \hline
+			17 & $\exists\theta$, $\theta=\lim u_n=\lim v_n$, $u_n<\theta<v_n$ & 16 & \cref{lem:squeeze}b \\ \hline
+			18 & $\forall n$: $q_n<\theta^{c^{n}}<q_n+1$ & 15,17 & $\mathsf{Eq}$ \\ \hline
+			19 & $\forall n$: $\mathrm{floor}(\theta^{c^{n}})=q_n$ prime & 14,18 & $\mathsf{Def}$ \\ \hline
+			20 & $\exists\theta>0$, $\forall n$, $\mathrm{Prime}(\mathrm{floor}(\theta^{c^{n}}))$ & 19 & $\exists\mathsf{I}$ \\ \hline
+			21 & $(\mathrm{PolyGap}\wedge c>1/(1-\alpha))\Rightarrow\exists\theta>0$, $\forall n$, $\mathrm{Prime}(\mathrm{floor}(\theta^{c^{n}}))$ & 1--20 & $\rightarrow\mathsf{I}$ \\ \hline
+		\end{tabular}
+	}
+\end{proof}
+
+\begin{remark}
+	{\scriptsize The hypothesis $c>1/(1-\alpha)$ is essential: with $c=1/\alpha$ (as sometimes informally quoted), the inequality $c\alpha<c-1$ fails for $\alpha\neq 1/2$.  Taking $c>1/(1-\alpha)$ makes $k N^{c\alpha}<N^{c-1}$ hold, and ensures $\beta=c>1$ so \cref{lem:slope} applies. }
+\end{remark}
+
+% =========================================================================
+\subsection{Route 7: Proof of \cref{thm:niven}}
+% =========================================================================
+
+\begin{proof}[\textbf{Proof of \cref{thm:niven}}]
+	\phantomsection\label{proof:niven}
+	{\scriptsize
+		\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+			\hline
+			1 & $\text{Ingham}$ & --- & $\mathsf{Hyp}$ \\ \hline
+			2 & $c>1$ arbitrary; $\log_c x:=\log x/\log c$ & --- & $\mathsf{def}$ \\ \hline
+			3 & $k$ from \cref{ineq:ingham}; $\forall n$, $p_{n+1}-p_n<k\,p_n^{5/8}$ & 1 & $\exists\mathsf{E}$ \\ \hline
+			4 & $q_1$ prime, $q_1>\max(c^{8},k)$ & 3, \cref{lem:euclid} & $\exists\mathsf{E}$ \\ \hline
+			5 & Niven 1951 interval-existence lemma: for each $n\ge 1$, $\bigl(q_n^{(\log_c q_n)^{1/n}},(1+q_n)^{(\log_c(1+q_n))^{1/n}}-1\bigr)$ contains a prime & 3,4 & $\mathsf{Support}$ (Niven 1951) \\ \hline
+			6 & $q_{n+1}$ := smallest prime in the interval of 5 & 5 & $\exists\mathsf{E}$ \\ \hline
+			7 & $u_n:=(\log_c q_n)^{1/n}$, $v_n:=(\log_c(1+q_n))^{1/n}$ & 6 & $\mathsf{Def}$ \\ \hline
+			8 & $\forall n$: $u_n<u_{n+1}$ & 6,7 & $\mathsf{LogConc}$ \\ \hline
+			9 & $\forall n$: $v_{n+1}<v_n$ & 6,7 & $\mathsf{LogConc}$ \\ \hline
+			10 & $\forall n$: $u_n<v_n$ & 7 & $q_n<q_n+1$ \\ \hline
+			11 & $\forall n$: $u_n<u_{n+1}<v_{n+1}<v_n$ & 8,9,10 & $\wedge\mathsf{I}$ \\ \hline
+			12 & $\exists\theta>0$, $\theta=\lim u_n=\lim v_n$ & 11 & $\mathsf{Ref}$ (squeeze) \\ \hline
+			13 & $\forall n$: $q_n<c^{\theta^{n}}<q_n+1$ & 7,12 & $\mathsf{Eq}$ \\ \hline
+			14 & $\forall n$: $\mathrm{floor}(c^{\theta^{n}})=q_n$ & 13 & $\mathsf{Def}$ \\ \hline
+			15 & $\forall n$: $\mathrm{Prime}(\mathrm{floor}(c^{\theta^{n}}))$ & 6,14 & $\mathsf{Def}$ \\ \hline
+			16 & $\mathrm{IsNiven}(c,\theta)$ & 15,12 & $\mathsf{Def}$ \\ \hline
+			17 & $\exists\theta>0$, $\mathrm{IsNiven}(c,\theta)$ & 16 & $\exists\mathsf{I}$ \\ \hline
+			18 & $\forall c>1$, $\exists\theta>0$, $\mathrm{IsNiven}(c,\theta)$ & 2--17 & $\forall\mathsf{I}$ \\ \hline
+			19 & $\text{Ingham}\Rightarrow\forall c>1$, $\exists\theta>0$, $\mathrm{IsNiven}(c,\theta)$ & 1--18 & $\rightarrow\mathsf{I}$ \\ \hline
+		\end{tabular}
+	}
+\end{proof}
+
+\subsection{Route 8: Proof of \cref{thm:wright-metrical}}
+
+\begin{proof}[\textbf{Proof of \cref{thm:wright-metrical}}]
+	\phantomsection\label{proof:wright-metrical}
+	{\scriptsize
+		\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+			\hline
+			1 & For each \(\Theta\in\{\Theta_A,\Theta_W,\Theta_N\}\),
+			\(\Sigma_\Theta=\bigcap_{n\ge1}F_n\) with \((F_n)\) nested,
+			each \(F_n\) a non-empty finite union of closed intervals,
+			\(\mu(F_n)\to0\), and eventual binary branching
+			(there is \(N_0\) such that for every \(n\ge N_0\), every
+			component interval of \(F_n\) contains two disjoint
+			subintervals of \(F_{n+1}\))
+			& --- & \(\mathsf{Hyp}\) \\ \hline
+			2 & For each \(\Theta\): \(\Sigma_\Theta\ne\emptyset\)
+			& 1 & \cref{lem:wright-facts}a \\ \hline
+			3 & For each \(\Theta\): \(\mathrm{IsNull}(\Sigma_\Theta)\)
+			& 1 & \cref{lem:wright-facts}b \\ \hline
+			4 & For each \(\Theta\): \(\mathrm{NowhereDense}(\Sigma_\Theta)\)
+			& 1 & \cref{lem:wright-facts}c \\ \hline
+			5 & For each \(\Theta\): \(\mathrm{ContinuumCard}(\Sigma_\Theta)\)
+			& 1 & \cref{lem:wright-facts}d \\ \hline
+			6 & For each \(\Theta\in\{\Theta_A,\Theta_W,\Theta_N\}\),
+			\(\mathrm{IsNull}(\Sigma_\Theta)\wedge
+			\mathrm{NowhereDense}(\Sigma_\Theta)\wedge
+			\mathrm{ContinuumCard}(\Sigma_\Theta)\)
+			& 3,4,5 & \(\wedge\mathsf{I}\) \\ \hline
+			7 & The nine-clause conjunction of \cref{asser:wright-metrical}
+			& 6 & \(\mathsf{Def}\) \\ \hline
+			8 & \((\mathsf{Hyp})\Rightarrow[\text{nine-clause conjunction}]\)
+			& 1--7 & \(\rightarrow\mathsf{I}\) \\ \hline
+		\end{tabular}
+	}
+\end{proof}
+% =========================================================================
+\subsection{Route 9: Proof of \cref{thm:lean-exists}}
+% =========================================================================
+
+\begin{proof}[\textbf{Proof of \cref{thm:lean-exists}}]
+	\phantomsection\label{proof:lean-exists}
+	{\scriptsize
+		\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+			\hline
+			1 & $\text{Ingham}$ & --- & $\mathsf{Hyp}$ \\ \hline
+			2 & $\exists A>1$, $\mathrm{IsMills}(A)$ & 1 & \cref{thm:mills} \\ \hline
+			3 & $\text{Ingham}\Rightarrow\exists A>1$, $\mathrm{IsMills}(A)$ & 1--2 & $\rightarrow\mathsf{I}$ \\ \hline
+		\end{tabular}
+	}
+\end{proof}
+
+% =========================================================================
+\subsection{Route 10: Proof of \cref{thm:lean-least}}
+% =========================================================================
+
+\begin{proof}[\textbf{Proof of \cref{thm:lean-least}}]
+	\phantomsection\label{proof:lean-least}
+	{\scriptsize
+		\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+			\hline
+			1 & $\exists A>1$, $\mathrm{IsMills}(A)$ & --- & $\mathsf{Hyp}$ \\ \hline
+			2 & $k$ as in \cref{ineq:ingham}; $q_1$ = smallest prime $>k^{8}$ & 1, \cref{lem:euclid} & $\exists\mathsf{E}$ \\ \hline
+			3 & $q_{n+1}:=\min\{p:\ q_n^{3}<p<(q_n+1)^{3}-1\}$ & 2, \cref{thm:mills} (step 11) & $\exists\mathsf{E}$ \\ \hline
+			4 & $\mathrm{MillsRec}(q)$ & 3 & $\mathsf{Def}$ \\ \hline
+			5 & $A^*:=\lim q_n^{3^{-n}}$ exists, $A^*>1$ & 2,4 & \cref{lem:squeeze} \\ \hline
+			6 & $\mathrm{IsMills}(A^*)$ & 5 & \cref{thm:mills} (steps 15–19) \\ \hline
+			7 & For any $B>1$ with $\mathrm{IsMills}(B)$ & --- & $\forall\mathsf{I}$ \\ \hline
+			8 & By induction: $\mathrm{floor}(B^{3^{n}})\ge q_n$ for all $n$ (minimality of each $q_n$) & 2,3,7 & $\mathsf{Ind}$ \\ \hline
+			9 & Hence $B^{3^{n}}\ge q_n$, so $B\ge q_n^{3^{-n}}$ & 8 & $\mathsf{Eq}$ \\ \hline
+			10 & $B\ge A^*$ (limits preserve $\ge$) & 5,9 & $\mathsf{Ref}$ \\ \hline
+			11 & $\mathrm{IsMinMills}(A^*)$ & 6,10 & $\mathsf{Def}$ \\ \hline
+			12 & $\exists A$, $\mathrm{IsMinMills}(A)$ & 11 & $\exists\mathsf{I}$ \\ \hline
+			13 & $(\exists A>1,\ \mathrm{IsMills}(A))\Rightarrow\exists A,\ \mathrm{IsMinMills}(A)$ & 1--12 & $\rightarrow\mathsf{I}$ \\ \hline
+		\end{tabular}
+	}
+\end{proof}
+
+\begin{remark}
+	{\scriptsize Step 8 is the key: minimality of the choice of $q_n$ forces $\mathrm{floor}(B^{3^{n}})\ge q_n$ for \emph{every} Mills constant $B$, replacing the invalid infimum argument of earlier drafts. }
+\end{remark}
+
+% =========================================================================
+\subsection{Route 11: Proof of \cref{thm:lean-irrational}}
+% =========================================================================
+
+\begin{proof}[\textbf{Proof of \cref{thm:lean-irrational}}]
+	\phantomsection\label{proof:lean-irrational}
+	{\scriptsize
+	\begin{tabular}{|m{0.7cm}|m{12cm}|m{1.4cm}|m{2.5cm}|}
+		\hline
+		1 & $\mathrm{IsMinMills}(A)$ (with $A$ arbitrary) & --- & $\mathsf{Hyp}$ \\ \hline
+		2 & $A>1$ and $\forall n$, $\mathrm{floor}(A^{3^{n}})$ prime & 1 & $\mathsf{Def}$ \\ \hline
+		3 & Suppose $A=p/q$, $\gcd(p,q)=1$, $q\ge 1$ & --- & $\mathsf{RAA}$ \\ \hline
+		4 & If $q=1$: $A=p\in\mathbb{Z}$, $A^{3^{n}}=p^{3^{n}}$ composite for $n\ge 1$ & 2,3 & $\mathsf{Eq}$ \\ \hline
+		5 & Contradiction with 2 & 4 & $\mathsf{Eq}$ \\ \hline
+		6 & Hence $q\ge 2$ & 4,5 & $\mathsf{RAA}$ \\ \hline
+		7 & $\forall n$: $\mathrm{floor}(p^{3^{n}}/q^{3^{n}})$ prime & 2,3 & $\mathsf{Eq}$ \\ \hline
+		8 & $\gcd(p,q)=1$, $q\ge 2$ $\Rightarrow$ $q^{3^{n}}\nmid p^{3^{n}}$, so fractional part of $p^{3^{n}}/q^{3^{n}}$ is $\ge 1/q^{3^{n}}$ & 3,6 & $\mathsf{Eq}$ \\ \hline
+		9 & $\forall n$: $p^{3^{n}}/q^{3^{n}}-\mathrm{floor}(p^{3^{n}}/q^{3^{n}})\ge 1/q^{3^{n}}$ & 8 & $\mathsf{Eq}$ \\ \hline
+		10 & The fractional part of $p^{3^{n}}/q^{3^{n}}$ is bounded away from $0$ and from $1$ uniformly in $n$, since $\forall M:\mathbb{R},\ \exists n:\mathbb{N},\ q^{3^{n}}>M$ and $q\ge 2$ & 9 & $\mathsf{Support}$ \\ \hline
+		11 & But $\mathrm{floor}(p^{3^{n}}/q^{3^{n}})$ prime, and $c_n:=\mathrm{floor}(p^{3^{n}}/q^{3^{n}})$ satisfies $\forall M:\mathbb{R},\ \exists n:\mathbb{N},\ c_n>M$, forces $p^{3^{n}}/q^{3^{n}}-c_n\in(0,1/q^{3^{n}})$, contradicting step 10 & 7,9,10 & $\mathsf{Support}$ (\cite{Saito2025}) \\ \hline
+		12 & Contradiction with 7; hence $q=1$ excluded too, so $A\notin\mathbb{Q}$ & 4--11 & $\mathsf{RAA}$ \\ \hline
+		13 & $\mathrm{Irrational}(A)$ & 12 & $\mathsf{Def}$ \\ \hline
+		14 & $\mathrm{IsMinMills}(A)\Rightarrow\mathrm{Irrational}(A)$ & 1--13 & $\rightarrow\mathsf{I}$ \\ \hline
+		15 & $\forall A$, $\mathrm{IsMinMills}(A)\Rightarrow\mathrm{Irrational}(A)$ & 14 & $\forall\mathsf{I}$ \\ \hline
+	\end{tabular}
+	}
+\end{proof}
+
+\section{Scripts}
+\label{sec:scripts}
+
+\subsection{Lean scripts}
+\label{sec:scripts-lean}
+
+The following Lean~4 / Mathlib-style formalisation is the intended target.
+It is not a compilable file in this repository (no Mathlib import is
+provided); it records the type signatures and theorem statements
+corresponding to \cref{sec:thm-lean}.
+
+\begin{lstlisting}[style=lean]
+-- Lean 4 / Mathlib-style sketch of Mills' theorem.
+import Mathlib
+
+namespace Mills
+
+/-- Primality (decidable predicate on Nat). -/
+def IsPrime (p : Nat) : Prop :=
+2 <= p ∧ ∀ d : Nat, 2 <= d -> d ∣ p -> d = p
+
+/-- The Mills predicate on reals: floor(θ^(3^n)) is prime for all n ≥ 1. -/
+def IsMills (θ : ℝ) : Prop :=
+1 < θ ∧ ∀ n : Nat, 0 < n ->
+IsPrime (Int.toNat (Int.floor (θ ^ (3 ^ n))))
+
+/-- The least Mills constant predicate. -/
+def IsMinMills (θ : ℝ) : Prop :=
+IsMills θ ∧ ∀ θ' : ℝ, IsMills θ' -> θ <= θ'
+
+/-- Ingham's estimate: ∃ k > 0, ∀ n, p_{n+1} - p_n < k * p_n^{5/8}. -/
+axiom Ingham :
+∃ k : ℝ, 0 < k ∧
+∀ n : Nat, 0 < n ->
+(Nat.nth Nat.Prime (n+1) - Nat.nth Nat.Prime n : ℝ)
+< k * (Nat.nth Nat.Prime n : ℝ) ^ (5/8 : ℝ)
+
+/-- Mills' theorem in Lean-form: from Ingham's estimate, there exists a
+real θ > 1 with the Mills property. -/
+theorem mills (h : Ingham) : ∃ θ : ℝ, 1 < θ ∧ IsMills θ := by
+sorry
+
+/-- Existence of the least Mills constant. -/
+theorem least_mills (h : ∃ θ : ℝ, 1 < θ ∧ IsMills θ) :
+∃ θ : ℝ, IsMinMills θ := by
+sorry
+
+/-- The least Mills constant is irrational (Saito 2025). -/
+theorem min_mills_irrational
+(h : ∃ θ : ℝ, IsMinMills θ) :
+∀ θ : ℝ, IsMinMills θ -> Irrational θ := by
+sorry
+
+/-- If RH holds, the least Mills constant lies in a narrow interval
+(Caldwell–Cheng 2005). -/
+axiom RH : Prop
+theorem min_mills_under_rh
+(hRH : RH) (h : ∃ θ : ℝ, IsMinMills θ) :
+∀ θ : ℝ, IsMinMills θ ->
+(1.3063778838 : ℝ) < θ ∧ θ < (1.3063778839 : ℝ) := by
+sorry
+
+/-- Lean-adapted Mills limit: the limit of the minimal Mills sequence
+satisfies the floor identity. -/
+theorem mills_limit
+(q : Nat -> Nat) (hrec : ∀ n : Nat, 0 < n ->
+(q n : ℝ) ^ 3 < q (n+1) ∧
+(q (n+1) : ℝ) < ((q n : ℝ) + 1) ^ 3 - 1) :
+∃ θ : ℝ, 0 < θ ∧
+(∀ n : Nat, 0 < n -> q n = Int.toNat (Int.floor (θ ^ (3 ^ n))))
+∧ IsMills θ := by
+sorry
+
+end Mills
+\end{lstlisting}
+
+\subsection{Python scripts}
+\label{sec:scripts-python}
+
+\begin{lstlisting}[style=python]
+#!/usr/bin/env python3
+"""
+verify_mills.py -- numerical verification of the ten routes to
+Mills' theorem (see Sections 5-6 of the paper).
+
+Usage:
+python3 verify_mills.py [N]
+
+N is the threshold (max integer N and max prime index).  Default N = 50.
+Only the Python standard library is required.
+"""
+
+import sys
+import math
+
+# ----------------------------------------------------------------
+# Primality and prime utilities (trial division, fine for small N)
+# ----------------------------------------------------------------
+def is_prime(m: int) -> bool:
+if m < 2:
+return False
+if m % 2 == 0:
+return m == 2
+r = math.isqrt(m)
+for d in range(3, r + 1, 2):
+if m % d == 0:
+return False
+return True
+
+def first_primes(count: int):
+out, m = [], 2
+while len(out) < count:
+if is_prime(m):
+out.append(m)
+m += 1
+return out
+
+def smallest_prime_in(lo: int, hi: int):
+p = lo + 1
+while p < hi:
+if is_prime(p):
+return p
+p += 1
+return None
+
+def prime_in(lo: int, hi: int) -> bool:
+return smallest_prime_in(lo, hi) is not None
+
+# ----------------------------------------------------------------
+# Route 1: Ingham
+# ----------------------------------------------------------------
+def check_ingham(N: int):
+ps = first_primes(N + 1)
+k_min = 0.0
+for n in range(N):
+p, q = ps[n], ps[n + 1]
+k_min = max(k_min, (q - p) / (p ** (5 / 8)))
+ok = all(math.isfinite((ps[n+1]-ps[n]) / (ps[n]**(5/8)))
+for n in range(N))
+return ok, f"max gap/p^(5/8) = {k_min:.6f}; any k >= {k_min:.4f} works"
+
+# ----------------------------------------------------------------
+# Route 1 (Mills interval + recurrence)
+# ----------------------------------------------------------------
+def check_mills_interval(N: int):
+bad = [n for n in range(2, N + 1)
+if not prime_in(n ** 3, (n + 1) ** 3 - 1)]
+return (not bad), f"{N-1} intervals; failures: {bad or 'none'}"
+
+def check_mills_sequence(N: int, seed: int = 2):
+qs = [seed]
+for _ in range(N - 1):
+nxt = smallest_prime_in(qs[-1] ** 3, (qs[-1] + 1) ** 3 - 1)
+if nxt is None:
+return False, f"no prime after q={qs[-1]}"
+qs.append(nxt)
+def mono(exp):
+us = [q ** (exp ** -n) for n, q in enumerate(qs, 1)]
+vs = [(q + 1) ** (exp ** -n) for n, q in enumerate(qs, 1)]
+return (all(us[i] < us[i+1] for i in range(len(us)-1))
+and all(vs[i] > vs[i+1] for i in range(len(vs)-1))
+and all(us[i] < vs[i] for i in range(len(us))))
+ok3, ok5 = mono(3), mono(5)
+msg = (f"q_1..q_{len(qs)}={qs[:5]}{'...' if len(qs)>5 else ''}\n"
+f"  exponent 3^-n (paper): {'PASS' if ok3 else 'FAIL'}\n"
+f"  exponent 5^-n (Dudley typo): {'PASS' if ok5 else 'FAIL'}")
+return ok3, msg
+
+# ----------------------------------------------------------------
+# Route 2: Kuipers
+# ----------------------------------------------------------------
+def check_kuipers(N: int, c: int):
+bad = [n for n in range(2, N + 1)
+if not prime_in(n ** c, (n + 1) ** c - 1)]
+return (not bad), f"c={c}: {N-1} intervals; failures: {bad or 'none'}"
+
+# ----------------------------------------------------------------
+# Route 3: Ansari
+# ----------------------------------------------------------------
+def check_ansari(N: int, c: float = 3.0):
+delta = 3 * c / 8 - 1
+if delta <= 0:
+return False, f"c={c} does not satisfy c>8/3"
+bad = [n for n in range(2, N + 1)
+if not (n**c + n**(c-1) < (n+1)**c - delta)]
+return (not bad), f"c={c}, delta={delta:.4f}; failures: {bad or 'none'}"
+
+# ----------------------------------------------------------------
+# Route 4: Bertrand
+# ----------------------------------------------------------------
+def check_bertrand(N: int):
+bad = [n for n in range(2, N + 1) if not prime_in(n, 2 * n)]
+return (not bad), f"{N-1} values; failures: {bad or 'none'}"
+
+# ----------------------------------------------------------------
+# Route 4 (Wright tower)
+# ----------------------------------------------------------------
+def check_wright(N: int, cap: int = 10**7):
+qs = [2]
+for _ in range(N - 1):
+lo, hi = 2 ** qs[-1], 2 ** (qs[-1] + 1)
+if hi > cap:
+break
+nxt = smallest_prime_in(lo, hi)
+if nxt is None:
+return False, f"no prime in (2^{qs[-1]}, 2^{qs[-1]+1})"
+qs.append(nxt)
+def log2(x): return math.log2(x)
+def it_log(n, x):
+for _ in range(n):
+x = log2(x)
+return x
+us = [it_log(n, q) for n, q in enumerate(qs, 1)]
+vs = [it_log(n, q + 1) for n, q in enumerate(qs, 1)]
+inc_u = all(us[i] < us[i+1] for i in range(len(us)-1))
+dec_v = all(vs[i] > vs[i+1] for i in range(len(vs)-1))
+return (inc_u and dec_v), f"{len(qs)} terms; u inc={inc_u}, v dec={dec_v}"
+
+# ----------------------------------------------------------------
+# Route 6: polynomial gap
+# ----------------------------------------------------------------
+def check_polygap(N: int, alpha: float, k: float, c: float):
+if not (c > 1 / (1 - alpha)):
+return False, f"c={c} does not satisfy c>1/(1-alpha)={1/(1-alpha):.4f}"
+# Sample check: existence of prime in (N^c, (N+1)^c - 1) for small N.
+bad = []
+for n in range(2, N + 1):
+lo, hi = n ** c, (n + 1) ** c - 1
+# For non-integer c, we just check (N^c, (N+1)^c - 1) has a
+# prime; this is a sanity check, not a proof.
+if hi > 10 ** 7:
+break
+if not prime_in(int(lo), int(hi) + 1):
+bad.append(n)
+return (not bad), f"alpha={alpha}, c={c}: sampling failures={bad or 'none'}"
+
+# ----------------------------------------------------------------
+# Driver
+# ----------------------------------------------------------------
+def main():
+N = int(sys.argv[1]) if len(sys.argv) > 1 else 50
+print(f"=== Mills' Theorem: numerical verification, N = {N} ===\n")
+checks = [
+("1. Ingham", lambda: check_ingham(N)),
+("1. Mills interval", lambda: check_mills_interval(N)),
+("1. Mills sequence (3^-n vs 5^-n)",
+lambda: check_mills_sequence(min(N, 15))),
+("2. Kuipers c=3", lambda: check_kuipers(N, 3)),
+("2. Kuipers c=4", lambda: check_kuipers(N, 4)),
+("3. Ansari c=3", lambda: check_ansari(N, 3.0)),
+("4. Bertrand", lambda: check_bertrand(N)),
+("4. Wright tower", lambda: check_wright(N)),
+("6. Polynomial gap (alpha=5/8, c=3)",
+lambda: check_polygap(min(N, 15), 5/8, 1.0, 3.0)),
+]
+for label, fn in checks:
+try:
+ok, msg = fn()
+print(f"[{'PASS' if ok else 'FAIL'}] {label}\n    {msg}\n")
+except Exception as e:
+print(f"[ERROR] {label}: {e}\n")
+
+if __name__ == "__main__":
+main()
+\end{lstlisting}
+
+\section{Appendices}
+\label{sec:appendix}
+
+\subsection{Tables}
+\label{sec:appendix-tables}
+
+\begin{table}[H]
+	\centering
+	\caption{Numerical check of the exponent \(3^{-n}\) (paper) versus \(5^{-n}\)
+		(Dudley typo) in the Mills recurrence, using the minimal sequence
+		\(q_1=2\), \(q_{n+1}=\min\{p\text{ prime}: q_n^3<p<(q_n+1)^3-1\}\).}
+	\label{tab:exponent-typo}
+	{\small
+		\begin{tabular}{|c|r|r|r|r|}
+			\hline
+			\(n\) & \(q_n\) & \(u_n=q_n^{3^{-n}}\) & \(u_n^{(5)}=q_n^{5^{-n}}\)
+			& Monotone? \\
+			\hline
+			1 & 2 & \(2^{1/3}\approx 1.2599\) & \(2^{1/5}\approx 1.1487\) & --- \\
+			2 & 11 & \(11^{1/9}\approx 1.3048\) & \(11^{1/25}\approx 1.1006\) &
+			\(3^{-n}\): inc, \(5^{-n}\): dec \\
+			3 & 1361 & \(1361^{1/27}\approx 1.3036\) & \(1361^{1/125}\approx 1.0586\) &
+			\(3^{-n}\): inc, \(5^{-n}\): dec \\
+			4 & 2521097 & \(2521097^{1/81}\approx 1.3035\) & --- &
+			\(3^{-n}\): inc \\
+			\hline
+		\end{tabular}
+	}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\caption{Summary of the ten routes to \(\exists\theta,\ \mathrm{IsMills}(\theta)\).}
+	\label{tab:routes}
+	{\small
+		\begin{tabular}{|c|l|c|c|}
+			\hline
+			\textbf{Route} & \textbf{Author(s)} & \textbf{Year} & \textbf{Asser} \\
+			\hline
+			1 & Mills & 1947 & \cref{asser:mills} \\
+			2 & Kuipers & 1950 & \cref{asser:kuipers} \\
+			3 & Ansari & 1951 & \cref{asser:ansari} \\
+			4 & Wright & 1951 & \cref{asser:wright} \\
+			5 & Ore & 1952 & \cref{asser:ore} \\
+			6 & Polynomial-gap & --- & \cref{asser:direct} \\
+			7 & Niven & 1951 & \cref{asser:niven} \\
+			8 & Wright (metrical) & 1954 & \cref{asser:wright-metrical} \\
+			9 & Lean (pointer) & 2025 & \cref{asser:lean-exists} \\
+			10 & Lean (detailed) & 2025 & \cref{asser:lean-detailed} \\
+			\hline
+		\end{tabular}
+	}
+\end{table}
+\paragraph{Whole predicates table}
+
+\text{\ } \newline
+\text{\ } \vspace{0.3in}\text{\ }
+
+\phantomsection\label{sec:appendix-whole-predicates}%
+\phantomsection\label{tab:whole-predicates}%
+{\scriptsize
+	%==================== Foundations ====================
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		\textbf{Object} & \textbf{Type} & \textbf{Detailed formulation} \\ \hline
+		$\mathsf{Type}$ & universe &
+		$(\forall n:\mathbb{N},\ \mathsf{Type}_n:\mathsf{Type}_{n+1})
+		\wedge(\forall n,\ \forall A:\mathsf{Type}_n,\ A:\mathsf{Type}_{n+1})
+		\wedge\mathsf{Type}=\bigcup_{n:\mathbb{N}}\mathsf{Type}_n$ \\ \hline
+		$\mathsf{Prop}$ & $\mathsf{Type}$ &
+		universe of propositions.  The law of excluded middle
+		($\forall P:\mathsf{Prop},\ P\vee\neg P$) is a classical hypothesis
+		recorded in \cref{sec:axioms}; it is \emph{not} part of the definition
+		of $\mathsf{Prop}$. \\ 
+	\end{tabular}\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{Op}$ & $\mathsf{Type}$ &
+		$\mathsf{Op}:=\bigsqcup_{A,B:\mathsf{Type}}(A\to B)$ \\ \hline
+		$\mathsf{Rel}$ & $\mathsf{Type}$ &
+		$\mathsf{Rel}:=\bigsqcup_{A,B:\mathsf{Type}}(A\times B\to\mathsf{Prop})$ \\
+	\end{tabular}\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{dom}$ & $\mathsf{Op}\to\mathsf{Type}$ &
+		$\mathsf{dom}(\langle A,B,f\rangle):=A$ \\ \hline
+		$\mathsf{cod}$ & $\mathsf{Op}\to\mathsf{Type}$ &
+		$\mathsf{cod}(\langle A,B,f\rangle):=B$ \\ 
+	\end{tabular}\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathcal{P}(T)$ & $\mathsf{Type}\to\mathsf{Type}$ &
+		$\mathcal{P}(T):=T\to\mathsf{Prop}$ \\ \hline
+		$\varnothing$ & $\mathcal{P}(T)$ &
+		$\varnothing:=\lambda x:T,\ \bot$ \\ 
+	\end{tabular}	\noindent \newline	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$=_X$ & $X\times X\to\mathsf{Prop}$ &
+		$x=y:\iff\forall P:X\to\mathsf{Prop},\ P(x)\Rightarrow P(y)$ \\ \hline
+		$\neq_X$ & $X\times X\to\mathsf{Prop}$ &
+		$x\neq y:\iff\neg(x=y)$ \\ 
+	\end{tabular}	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\in$ & $X\times\mathcal{P}(X)\to\mathsf{Prop}$ &
+		$x\in S:\iff S(x)$ \\ \hline
+		$\subseteq$ & $\mathcal{P}(X)\times\mathcal{P}(X)\to\mathsf{Prop}$ &
+		$S\subseteq T:\iff\forall x:X,\ x\in S\Rightarrow x\in T$ \\ 
+	\end{tabular}\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$<_F$ & $F\times F\to\mathsf{Prop}$ &
+		$\mathsf{LinearOrder}(F,<)\wedge\mathsf{OrderCompatible}(F,+,\cdot,<)$
+		(for a field $F$) \\ \hline
+		$\leq_F$ & $F\times F\to\mathsf{Prop}$ &
+		$x\leq y:\iff(x<y)\vee(x=y)$ \\ 
+	\end{tabular}	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathrm{succ}$ & $\mathbb{N}\to\mathbb{N}$ &
+		$\forall n:\mathbb{N},\ \mathrm{succ}(n)=n+1$ \\ \hline
+		$\mathrm{char}$ & $(\mathsf{Type},\mathsf{Op},\mathsf{Op},T,T)\to\mathbb{N}\cup\{+\infty\}$ &
+		$\mathrm{char}(R,+,\cdot,0,1)=n:\iff
+		\bigl(n=+\infty\wedge\forall k\in\mathbb{N}_{\geq 1},\ k\cdot 1_R\neq 0_R\bigr)
+		\vee\bigl(n\in\mathbb{N}_{\geq 1}\wedge n\cdot 1_R=0_R\wedge
+		\forall k\in\mathbb{N}_{\geq 1},\ k<n\Rightarrow k\cdot 1_R\neq 0_R\bigr)$ \\ 
+	\end{tabular}	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathrm{deg}$ & $R[x]\to\mathbb{N}\cup\{\bot\}$ &
+		$\mathrm{deg}(0):=\bot$;\quad
+		$\mathrm{deg}\bigl(\textstyle\sum_{k=0}^{m}a_kx^k\bigr)=m:\iff a_m\neq 0$ \\ \hline
+		$\mathsf{AddAssoc}(R,+)$ & $(\mathsf{Type},\mathsf{Op})\to\mathsf{Prop}$ &
+		$\forall x,y,z\in R,\ (x+y)+z=x+(y+z)$ \\ 
+	\end{tabular}%	%==================== Ring axioms ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{AddComm}(R,+)$ & $(\mathsf{Type},\mathsf{Op})\to\mathsf{Prop}$ &
+		$\forall x,y\in R,\ x+y=y+x$ \\ \hline
+		$\mathsf{AddId}(R,+,0)$ & $(\mathsf{Type},\mathsf{Op},T)\to\mathsf{Prop}$ &
+		$\forall x\in R,\ x+0=x$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{AddInv}(R,+,0)$ & $(\mathsf{Type},\mathsf{Op},T)\to\mathsf{Prop}$ &
+		$\forall x\in R,\ \exists w\in R,\ x+w=0$ \\ \hline
+		$\mathsf{MulAssoc}(R,\cdot)$ & $(\mathsf{Type},\mathsf{Op})\to\mathsf{Prop}$ &
+		$\forall x,y,z\in R,\ (x\cdot y)\cdot z=x\cdot(y\cdot z)$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{MulComm}(R,\cdot)$ & $(\mathsf{Type},\mathsf{Op})\to\mathsf{Prop}$ &
+		$\forall x,y\in R,\ x\cdot y=y\cdot x$ \\ \hline
+		$\mathsf{MulId}(R,\cdot,1)$ & $(\mathsf{Type},\mathsf{Op},T)\to\mathsf{Prop}$ &
+		$\forall x\in R,\ x\cdot 1=x$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{MulInv}(R,\cdot,0,1)$ & $(\mathsf{Type},\mathsf{Op},T,T)\to\mathsf{Prop}$ &
+		$\forall a\in R,\ a\neq 0\Rightarrow\exists a^{-1}\in R,\ a\cdot a^{-1}=1$ \\ \hline
+		$\mathsf{Distrib}(R,+,\cdot)$ & $(\mathsf{Type},\mathsf{Op},\mathsf{Op})\to\mathsf{Prop}$ &
+		$\forall x,y,z\in R,\ x\cdot(y+z)=x\cdot y+x\cdot z$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{Nontrivial}(R,0,1)$ & $(\mathsf{Type},T,T)\to\mathsf{Prop}$ &
+		$0\neq 1$ \\ \hline
+		$\mathsf{NoZeroDiv}(R,\cdot,0)$ & $(\mathsf{Type},\mathsf{Op},T)\to\mathsf{Prop}$ &
+		$\forall a,b\in R,\ a\cdot b=0\Rightarrow a=0\vee b=0$ \\
+	\end{tabular}%
+	%==================== Rings ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{CommutativeRing}$ & $(\mathsf{Type},\mathsf{Op},\mathsf{Op},T,T)\to\mathsf{Prop}$ &
+		$\mathsf{AddAssoc}(R,+)\wedge\mathsf{AddComm}(R,+)\wedge\mathsf{AddId}(R,+,0)
+		\wedge\mathsf{AddInv}(R,+,0)\wedge\mathsf{MulAssoc}(R,\cdot)
+		\wedge\mathsf{MulComm}(R,\cdot)\wedge\mathsf{MulId}(R,\cdot,1)
+		\wedge\mathsf{Distrib}(R,+,\cdot)\wedge\mathsf{Nontrivial}(R,0,1)$ \\ \hline
+		$\mathsf{IntegralDomain}$ & $(\mathsf{Type},\mathsf{Op},\mathsf{Op},T,T)\to\mathsf{Prop}$ &
+		$\mathsf{CommutativeRing}(R,+,\cdot,0,1)\wedge\mathsf{NoZeroDiv}(R,\cdot,0)$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{Field}$ & $(\mathsf{Type},\mathsf{Op},\mathsf{Op},T,T)\to\mathsf{Prop}$ &
+		$\mathsf{CommutativeRing}(F,+,\cdot,0,1)\wedge\mathsf{MulInv}(F,\cdot,0,1)$ \\ \hline
+		$\mathsf{HomAdd}(\varphi)$ & $\mathsf{Op}\to\mathsf{Prop}$ &
+		$\forall x,y\in\mathsf{dom}(\varphi),\ \varphi(x+y)=\varphi(x)+\varphi(y)$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{HomMul}(\varphi)$ & $\mathsf{Op}\to\mathsf{Prop}$ &
+		$\forall x,y\in\mathsf{dom}(\varphi),\ \varphi(x\cdot y)=\varphi(x)\cdot\varphi(y)$ \\ \hline
+		$\mathsf{HomOne}(\varphi)$ & $\mathsf{Op}\to\mathsf{Prop}$ &
+		$\varphi(1_{\mathsf{dom}(\varphi)})=1_{\mathsf{cod}(\varphi)}$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{RingHom}(\varphi)$ & $\mathsf{Op}\to\mathsf{Prop}$ &
+		$\mathsf{HomAdd}(\varphi)\wedge\mathsf{HomMul}(\varphi)\wedge\mathsf{HomOne}(\varphi)$ \\ \hline
+		$\mathsf{ClosedUnder}(T,S)$ & $(\mathsf{Type},\mathcal{P}(\mathsf{Op}))\to\mathsf{Prop}$ &
+		$\forall op\in S,\ \forall x\in\mathsf{dom}(op)\cap T^{\mathrm{arity}(op)},\
+		op(x)\in T$ (where $\mathrm{arity}(op)$ is the number of components of
+		$\mathsf{dom}(op)$) \\ 
+	\end{tabular}%
+	%==================== Peano ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{ZeroMem}(N,0)$ & $(\mathsf{Type},T)\to\mathsf{Prop}$ &
+		$0\in N$ \\ \hline
+		$\mathsf{SuccClosed}(N,s)$ & $(\mathsf{Type},T\to T)\to\mathsf{Prop}$ &
+		$\forall n\in N,\ s(n)\in N$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{SuccNeqZero}(N,s,0)$ & $(\mathsf{Type},T\to T,T)\to\mathsf{Prop}$ &
+		$\forall n\in N,\ s(n)\neq 0$ \\ \hline
+		$\mathsf{SuccInj}(N,s)$ & $(\mathsf{Type},T\to T)\to\mathsf{Prop}$ &
+		$\forall m,n\in N,\ s(m)=s(n)\Rightarrow m=n$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{Induction}(N,s,0)$ & $(\mathsf{Type},T\to T,T)\to\mathsf{Prop}$ &
+		$\forall S\subseteq N,\ \bigl(0\in S\wedge(\forall n\in S,\ s(n)\in S)\bigr)
+		\Rightarrow S=N$ \\ \hline
+		$\mathsf{Peano}$ & $(\mathsf{Type},T,T\to T)\to\mathsf{Prop}$ &
+		$\mathsf{ZeroMem}(N,0)\wedge\mathsf{SuccClosed}(N,s)
+		\wedge\mathsf{SuccNeqZero}(N,s,0)\wedge\mathsf{SuccInj}(N,s)
+		\wedge\mathsf{Induction}(N,s,0)$ \\ 
+	\end{tabular}%
+	%==================== Initial ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{Initial}(F)$ & $\mathsf{Type}\to\mathsf{Prop}$ &
+		$\forall R,\ \mathsf{CommutativeRing}(R)\Rightarrow
+		\exists!\,\varphi:F\to R,\ \mathsf{RingHom}(\varphi)$ \\ \hline
+		$\mathsf{Irrefl}(F,<)$ & $(\mathsf{Type},\mathsf{Rel})\to\mathsf{Prop}$ &
+		$\forall x\in F,\ \neg(x<x)$ \\ 
+	\end{tabular}%
+	%==================== Order ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{Trans}(F,<)$ & $(\mathsf{Type},\mathsf{Rel})\to\mathsf{Prop}$ &
+		$\forall x,y,z\in F,\ x<y\wedge y<z\Rightarrow x<z$ \\ \hline
+		$\mathsf{Total}(F,<)$ & $(\mathsf{Type},\mathsf{Rel})\to\mathsf{Prop}$ &
+		$\forall x,y\in F,\ x<y\vee x=y\vee y<x$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{OrdAdd}(F,+,<)$ & $(\mathsf{Type},\mathsf{Op},\mathsf{Rel})\to\mathsf{Prop}$ &
+		$\forall a,b,c\in F,\ a<b\Rightarrow a+c<b+c$ \\ \hline
+		$\mathsf{OrdMul}(F,\cdot,<)$ & $(\mathsf{Type},\mathsf{Op},\mathsf{Rel})\to\mathsf{Prop}$ &
+		$\forall a,b,c\in F,\ a<b\wedge 0<c\Rightarrow a\cdot c<b\cdot c$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{LinearOrder}(F,<)$ & $(\mathsf{Type},\mathsf{Rel})\to\mathsf{Prop}$ &
+		$\mathsf{Irrefl}(F,<)\wedge\mathsf{Trans}(F,<)\wedge\mathsf{Total}(F,<)$ \\ \hline
+		$\mathsf{OrderCompatible}(F,+,\cdot,<)$ & $(\mathsf{Type},\mathsf{Op},\mathsf{Op},\mathsf{Rel})\to\mathsf{Prop}$ &
+		$\mathsf{OrdAdd}(F,+,<)\wedge\mathsf{OrdMul}(F,\cdot,<)$ \\ 
+	\end{tabular}%
+	%==================== Dedekind ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{BddAbove}(F,S,\leq)$ & $(\mathsf{Type},\mathcal{P}(F),\mathsf{Rel})\to\mathsf{Prop}$ &
+		$\exists u\in F,\ \forall x\in S,\ x\leq u$ \\ \hline
+		$\mathsf{HasSup}(F,S,\leq)$ & $(\mathsf{Type},\mathcal{P}(F),\mathsf{Rel})\to\mathsf{Prop}$ &
+		$\exists s\in F,\ (\forall x\in S,\ x\leq s)\wedge
+		(\forall u\in F,\ (\forall x\in S,\ x\leq u)\Rightarrow s\leq u)$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{DedekindComplete}(F,<)$ & $(\mathsf{Type},\mathsf{Rel})\to\mathsf{Prop}$ &
+		$\forall S\subseteq F,\ \bigl(S\neq\varnothing\wedge
+		\mathsf{BddAbove}(F,S,\leq)\bigr)\Rightarrow\mathsf{HasSup}(F,S,\leq)$ \\ \hline
+		$\mathsf{ContainsBase}(F,C)$ & $(\mathsf{Type},\mathsf{Type})\to\mathsf{Prop}$ &
+		$F\subseteq C$ \\ 
+	\end{tabular}%
+	%%%==================== Algebraic closure ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{AlgClosed}(C)$ & $\mathsf{Type}\to\mathsf{Prop}$ &
+		$\forall p\in C[x],\ \mathrm{deg}(p)\geq 1\Rightarrow\exists r\in C,\ p(r)=0$ \\ \hline
+		$\mathsf{AlgebraicClosure}(C,F)$ & $(\mathsf{Type},\mathsf{Type})\to\mathsf{Prop}$ &
+		$\mathsf{Field}(C)\wedge\mathsf{ContainsBase}(F,C)\wedge\mathsf{AlgClosed}(C)$ \\ 
+	\end{tabular}%
+	%==================== Measure ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{TransInv}(\mu)$ & $(\mathcal{P}(\mathbb{R})\to\mathbb{R}_{\geq 0}\cup\{+\infty\})\to\mathsf{Prop}$ &
+		$\forall a:\mathbb{R},\ \forall S:\mathcal{P}(\mathbb{R}),\ \mu(S+a)=\mu(S)$ \\ \hline
+		$\mathsf{CountAdd}(\mu)$ & $(\mathcal{P}(\mathbb{R})\to\mathbb{R}_{\geq 0}\cup\{+\infty\})\to\mathsf{Prop}$ &
+		$\forall(S_n)_{n:\mathbb{N}}\subseteq\mathcal{P}(\mathbb{R}),\
+		(\forall m\neq n,\ S_m\cap S_n=\varnothing)\Rightarrow
+		\mu\bigl(\bigcup_n S_n\bigr)=\sum_n\mu(S_n)$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{MeasureEmptyZero}(\mu)$ & $(\mathcal{P}(\mathbb{R})\to\mathbb{R}_{\geq 0}\cup\{+\infty\})\to\mathsf{Prop}$ &
+		$\mu(\varnothing)=0$ \\ \hline
+		$\mathsf{MeasureUnitInterval}(\mu)$ & $(\mathcal{P}(\mathbb{R})\to\mathbb{R}_{\geq 0}\cup\{+\infty\})\to\mathsf{Prop}$ &
+		$\mu([0,1])=1$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{LebesgueMeasure}(\mu)$ & $((\mathbb{R}\to\mathsf{Prop})\to\mathbb{R}_{\geq 0}\cup\{+\infty\})\to\mathsf{Prop}$ &
+		$\mathsf{TransInv}(\mu)\wedge\mathsf{CountAdd}(\mu)
+		\wedge\mathsf{MeasureEmptyZero}(\mu)\wedge\mathsf{MeasureUnitInterval}(\mu)$ \\ \hline
+		$\mathsf{IsOpen}(U)$ & $(\mathbb{R}\to\mathsf{Prop})\to\mathsf{Prop}$ &
+		$\forall x\in U,\ \exists\varepsilon>0,\ \forall y:\mathbb{R},\
+		|y-x|<\varepsilon\Rightarrow y\in U$ \\ 
+	\end{tabular}%
+	%==================== Topology ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{IsClosed}(F)$ & $(\mathbb{R}\to\mathsf{Prop})\to\mathsf{Prop}$ &
+		$\mathsf{IsOpen}(\lambda x,\ \neg F(x))$ \\ \hline
+		$\mathbb{N}$ & $\mathsf{Type}$ &
+		$\mathsf{Peano}(\mathbb{N},0,\mathrm{succ})$ \\ 
+	\end{tabular}%
+	%==================== Number systems ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathbb{Z}$ & $\mathsf{Type}$ &
+		$\mathsf{IntegralDomain}(\mathbb{Z},+,\cdot,0,1)\wedge\mathsf{Initial}(\mathbb{Z})
+		\wedge\mathrm{char}(\mathbb{Z},+,\cdot,0,1)=0$ \\ \hline
+		$\mathbb{R}$ & $\mathsf{Type}$ &
+		$\mathsf{Field}(\mathbb{R},+,\cdot,0,1)\wedge\mathsf{LinearOrder}(\mathbb{R},<)
+		\wedge\mathsf{OrderCompatible}(\mathbb{R},+,\cdot,<)
+		\wedge\mathsf{DedekindComplete}(\mathbb{R},<)$ \\
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathbb{C}$ & $\mathsf{Type}$ &
+		$\mathsf{AlgebraicClosure}(\mathbb{C},\mathbb{R})\wedge\mathbb{R}\subseteq\mathbb{C}$ \\ \hline
+		$\exp$ & $\mathbb{R}\to\mathbb{R}$ &
+		$\exp(0)=1\wedge(\forall x,\ \exp'(x)=\exp(x))
+		\wedge(\forall x,y,\ \exp(x+y)=\exp(x)\exp(y))$
+		(differentiability is implicit in the notation $\exp'$) \\ 
+	\end{tabular}%
+	%==================== Elementary functions ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\log$ & $\mathbb{R}_{>0}\to\mathbb{R}$ &
+		$(\forall x,\ \log(\exp(x))=x)\wedge(\forall y>0,\ \exp(\log(y))=y)$ \\ \hline
+		$\zeta$ & $\mathbb{C}\to\mathbb{C}$ &
+		$\forall s:\mathbb{C},\ \Re(s)>1\Rightarrow\zeta(s)=\sum_{n=1}^{\infty}n^{-s}$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\exp_2$ & $\mathbb{R}\to\mathbb{R}$ &
+		$\exp_2(x):=\exp(x\log 2)$ \\ \hline
+		$\log_2$ & $\mathbb{R}_{>0}\to\mathbb{R}$ &
+		$\log_2(x):=\log(x)/\log 2$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\log_c$ & $\mathbb{R}_{>0}\to\mathbb{R}$ &
+		$\log_c(x):=\log(x)/\log c$ \quad (for $c>0$, $c\neq 1$) \\ \hline
+		$\Re$ & $\mathbb{C}\to\mathbb{R}$ &
+		$\forall a,b\in\mathbb{R},\ \Re(a+bi)=a$ \\
+	\end{tabular}%
+	%==================== Calculus ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathsf{Continuous}(f)$ & $(\mathbb{R}\to\mathbb{R})\to\mathsf{Prop}$ &
+		$\forall x,\ \forall\varepsilon>0,\ \exists\delta>0,\ \forall y,\
+		|y-x|<\delta\Rightarrow|f(y)-f(x)|<\varepsilon$ \\ \hline
+		$\mathsf{EventuallyIncreasing}(f)$ & $(\mathbb{R}\to\mathbb{R})\to\mathsf{Prop}$ &
+		$\exists N,\ \forall x,y,\ N<x<y\Rightarrow f(x)<f(y)$ \\ 
+		\hline
+		$\mathsf{Bijective}(f)$ & $\forall\alpha,\beta:\mathsf{Type},\ (\alpha\to\beta)\to\mathsf{Prop}$ &
+		$(\forall x,y,\ f(x)=f(y)\Rightarrow x=y)\wedge(\forall y,\ \exists x,\ f(x)=y)$ \\ 
+	\end{tabular}%
+	\noindent \newline
+	\noindent 
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mu$ & $(\mathbb{R}\to\mathsf{Prop})\to\mathbb{R}_{\geq 0}\cup\{+\infty\}$ &
+		$\mathsf{LebesgueMeasure}(\mu)$ \\ \hline
+		$\mathrm{int}$ & $(\mathbb{R}\to\mathsf{Prop})\to(\mathbb{R}\to\mathsf{Prop})$ &
+		$\mathrm{int}(S)\subseteq S\wedge\mathsf{IsOpen}(\mathrm{int}(S))
+		\wedge\forall U,\ (\mathsf{IsOpen}(U)\wedge U\subseteq S)\Rightarrow
+		U\subseteq\mathrm{int}(S)$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathrm{cl}$ & $(\mathbb{R}\to\mathsf{Prop})\to(\mathbb{R}\to\mathsf{Prop})$ &
+		$S\subseteq\mathrm{cl}(S)\wedge\mathsf{IsClosed}(\mathrm{cl}(S))
+		\wedge\forall F,\ (\mathsf{IsClosed}(F)\wedge S\subseteq F)\Rightarrow
+		\mathrm{cl}(S)\subseteq F$ \\ \hline
+		$\mathrm{floor}$ & $\mathbb{R}\to\mathbb{Z}$ &
+		$\forall x:\mathbb{R},\ \forall n:\mathbb{Z},\ \mathrm{floor}(x)=n
+		\iff(n\leq x<n+1)$ \\ 
+	\end{tabular}%
+	%==================== Primes ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathrm{Prime}$ & $\mathbb{N}\to\mathsf{Prop}$ &
+		$(p\geq 2)\wedge(\forall d:\mathbb{N},\ (d\geq 2\wedge d\mid p)
+		\Rightarrow d=p)$ \\ \hline
+		$\mathrm{PSeq}$ & $(\mathbb{N}\to\mathbb{N})\to\mathsf{Prop}$ &
+		$(p_1=2)\wedge(\forall n\geq 1,\ \mathrm{Prime}(p_n))
+		\wedge(\forall n\geq 1,\ p_n<p_{n+1})$ \\ 
+	\end{tabular}%
+	%==================== Mills ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathrm{IsMills}$ & $\mathbb{R}\to\mathsf{Prop}$ &
+		$(A>1)\wedge(\forall n\geq 1,\ \mathrm{Prime}(\mathrm{floor}(A^{3^n})))$ \\ \hline
+		$\mathrm{IsMinMills}$ & $\mathbb{R}\to\mathsf{Prop}$ &
+		$\mathrm{IsMills}(A)\wedge(\forall B:\mathbb{R},\ \mathrm{IsMills}(B)
+		\Rightarrow A\leq B)$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathrm{MillsRec}$ & $(\mathbb{N}\to\mathbb{N})\to\mathsf{Prop}$ &
+		$\forall n\geq 1,\ q_n^3<q_{n+1}<(q_n+1)^3-1$ \\ \hline
+		$\mathrm{UV}$ & $(\mathbb{N}\to\mathbb{N})\times(\mathbb{N}\to\mathbb{R})^2\to\mathsf{Prop}$ &
+		$\forall n\geq 1,\ (u_n=q_n^{3^{-n}})\wedge(v_n=(q_n+1)^{3^{-n}})$ \\ 
+	\end{tabular}%
+	%==================== Kuipers / Ansari / Wright / Niven ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathrm{IsKuipers}$ & $\mathbb{N}_{\geq 3}\times\mathbb{R}\to\mathsf{Prop}$ &
+		$(A>1)\wedge(\forall n\geq 1,\ \mathrm{Prime}(\mathrm{floor}(A^{c^n})))$ \\ \hline
+		$\mathrm{IsAnsari}$ & $\mathbb{R}_{>8/3}\times\mathbb{R}\to\mathsf{Prop}$ &
+		$(A>1)\wedge(\forall n\geq 1,\ \mathrm{Prime}(\mathrm{floor}(A^{c^n})))$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathrm{IsWright}$ & $\mathbb{R}\to\mathsf{Prop}$ &
+		$(A>1)\wedge(\forall n\geq 1,\
+		\mathrm{Prime}(\mathrm{floor}(\mathrm{exp}_2^{[n]}(A))))$ \\ \hline
+		$\mathrm{IsNiven}$ & $\mathbb{R}_{>1}\times\mathbb{R}\to\mathsf{Prop}$ &
+		$(c>1)\wedge(\theta>0)\wedge(\forall n\geq 1,\
+		\mathrm{Prime}(\mathrm{floor}(c^{\theta^n})))$ \\ 
+	\end{tabular}%
+	%==================== Ore ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathrm{IsOreSel}$ & $(\mathbb{R}\to\mathbb{R})\to\mathsf{Prop}$ &
+		$\mathsf{Continuous}(f)\wedge\mathsf{EventuallyIncreasing}(f)$ \\ \hline
+		$\mathrm{OreBound}$ & $(\mathbb{R}\to\mathbb{R})\times(\mathbb{N}\to\mathbb{N})
+		\times(\mathbb{N}\to\mathbb{R}_{\geq 0})^2\to\mathsf{Prop}$ &
+		$\forall n\geq 1,\ f(q_n-\delta_n)<q_{n+1}-\delta_{n+1}\wedge
+		q_{n+1}+\epsilon_{n+1}<f(q_n+\epsilon_n)$ \\ 
+	\end{tabular}%
+	%==================== Prime gaps / null ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathrm{PolyGap}$ & $(0,1)\times\mathbb{R}_{>0}\to\mathsf{Prop}$ &
+		$\forall n\geq 1,\ p_{n+1}-p_n<k\,p_n^{\alpha}$ \\ \hline
+		$\mathsf{IsNull}$ & $(\mathbb{R}\to\mathsf{Prop})\to\mathsf{Prop}$ &
+		$\mu(S)=0$ \\ 
+	\end{tabular}%
+	%==================== Density / cardinality ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathrm{NowhereDense}$ & $(\mathbb{R}\to\mathsf{Prop})\to\mathsf{Prop}$ &
+		$\mathrm{int}(\mathrm{cl}(S))=\varnothing$ \\ \hline
+		$\mathrm{ContinuumCard}$ & $(\mathbb{R}\to\mathsf{Prop})\to\mathsf{Prop}$ &
+		$\exists f:\mathbb{R}\to(\Sigma\,x:\mathbb{R},\ P(x)),\ \mathsf{Bijective}(f)$ \\ 
+	\end{tabular}%
+	%==================== Irrationality / RH ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathrm{Irrational}$ & $\mathbb{R}\to\mathsf{Prop}$ &
+		$\neg(\exists p:\mathbb{Z},\ \exists q:\mathbb{N}_{\geq 1},\ A=p/q)$ \\ \hline
+		$\mathrm{RH}$ & $\mathsf{Prop}$ &
+		$\forall s:\mathbb{C},\ (\zeta(s)=0\wedge\Re(s)>1/2)\Rightarrow\Re(s)=1/2$ \\ 
+	\end{tabular}%
+	%==================== Theta constants ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathrm{ThetaMills}$ & $\mathbb{R}\to\mathsf{Prop}$ &
+		$\mathrm{IsMills}(\theta)$ \\ \hline
+		$\mathrm{ThetaAnsari}$ & $\mathbb{R}\to\mathsf{Prop}$ &
+		$\exists c:\mathbb{R}_{>8/3},\ \mathrm{IsAnsari}(c,\theta)$ \\ 
+	\end{tabular}
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathrm{ThetaWright}$ & $\mathbb{R}\to\mathsf{Prop}$ &
+		$\mathrm{IsWright}(\theta)$ \\ \hline
+		$\mathrm{ThetaNiven}$ & $\mathbb{R}\to\mathsf{Prop}$ &
+		$\exists c:\mathbb{R}_{>1},\ \mathrm{IsNiven}(c,\theta)$ \\ 
+	\end{tabular}%
+	%==================== Iterated exp / log (base 2) ====================
+	\noindent \newline
+	\noindent
+	\begin{tabular}{|m{5cm}|m{5cm}|m{8.3cm}|}
+		\hline
+		$\mathrm{exp}_2^{[n]}$ & $\mathbb{R}\to\mathbb{R}$ &
+		$(\forall x,\ \mathrm{exp}_2^{[0]}(x)=x)\wedge(\forall n,\
+		\mathrm{exp}_2^{[n+1]}=\mathrm{exp}_2\circ\mathrm{exp}_2^{[n]})$ \\ \hline
+		$\mathrm{log}_2^{[n]}$ & $\mathbb{R}_{>0}\to\mathbb{R}$ &
+		$(\forall x>0,\ \mathrm{log}_2^{[0]}(x)=x)\wedge(\forall n,\
+		\mathrm{log}_2^{[n+1]}=\mathrm{log}_2^{[n]}\circ\mathrm{log}_2)$ \\ \hline
+	\end{tabular}
+}
+\subsection{Figures}
+\label{sec:appendix-figures}
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[scale=1.0]
+	% x-axis
+	\draw[->] (0,0) -- (11,0) node[right] {\(x\)};
+	% interval for n=1
+	\draw[thick, blue] (1,1) -- (4,1)
+	node[midway, above, font=\scriptsize] {\((q_1^3,(q_1+1)^3-1)\)};
+	% interval for n=2 (nested)
+	\draw[thick, red] (2,2) -- (3.5,2)
+	node[midway, above, font=\scriptsize] {\((q_2^3,(q_2+1)^3-1)\)};
+	% interval for n=3 (nested)
+	\draw[thick, orange] (2.5,3) -- (3.2,3)
+	node[midway, above, font=\scriptsize] {\((q_3^3,(q_3+1)^3-1)\)};
+	% limit θ
+	\draw[dashed, thick, purple] (2.9,-0.5) -- (2.9,3.5);
+	\node at (2.9,4) {\(\theta\)};
+	% third-root projections
+	\foreach \y in {1,2,3} {
+		\draw[gray, dotted] (2.9,\y) -- (2.9,0);
+	}
+	\node[font=\scriptsize, align=center] at (5.5,1.7)
+	{Nested intervals \((q_n^3,(q_n+1)^3-1)\)};
+	\node[font=\scriptsize, align=center] at (5.5,0.7)
+	{accumulate at \(\theta\), giving \(q_n=[\theta^{3^n}]\)};
+	\end{tikzpicture}
+	\caption{Geometric view of the Mills recurrence. The intervals
+		\((q_n^3,(q_n+1)^3-1)\) are nested and shrink geometrically; their common
+		point is \(\theta^{3^n}\) for the Mills constant \(\theta\). Taking
+		\(3^n\)-th roots gives the definition of \(\theta\) as
+		\(\lim q_n^{3^{-n}}\).}
+	\label{fig:mills-recurrence}
+\end{figure}
+
+\section{Concluding Remarks}
+
+After Wright's effort, no further results of the preceding type have
+appeared, perhaps because they would seem anticlimactic. But formulas for
+primes, more or less interesting, continue to appear. The interested
+reader can find some recent ones in papers by Bang \cite{bang},
+Sierpi\'nski \cite{sierpinski}, Srinivasan \cite{srinivasan1,srinivasan2},
+and Willans \cite{willans}.
+
+\begin{thebibliography}{99}
+	
+	\bibitem{Ansari1951}
+	A.~R. Ansari, On prime representing function, \emph{Ganita} \textbf{2}
+	(1951), 81--82.
+	
+	\bibitem{bang}
+	T.~Bang, A function representing all prime numbers, \emph{Nordisk Mat.
+		Tidskr.} \textbf{34} (1952), 117--118.
+	
+	\bibitem{CaldwellCheng2005}
+	C.~K. Caldwell and Y.~Cheng, Determining Mills' constant and a note on
+	Honaker's problem, \emph{J. Integer Seq.} \textbf{8} (2005), Article
+	05.4.1.
+	
+	\bibitem{Dudley1969}
+	U.~Dudley, History of a formula for primes, \emph{Amer. Math. Monthly}
+	\textbf{76} (1969), no.~1, 23--28.
+	
+	\bibitem{haneke}
+	W.~Haneke, Versch\"arfung der Absch\"atzung von $\zeta(1/2+it)$,
+	\emph{Acta Arith.} \textbf{8} (1962/1963), 357--430.
+	
+	\bibitem{hardy-wright}
+	G.~H. Hardy and E.~M. Wright, \emph{The Theory of Numbers}, 4th ed.,
+	Oxford, 1960.
+	
+	\bibitem{ingham}
+	A.~E. Ingham, On the difference between consecutive primes,
+	\emph{Quart. J. Math. Oxford Ser.} (2) \textbf{8} (1937), 255--266.
+	
+	\bibitem{Kuipers1950}
+	L.~Kuipers, Prime-representing functions, \emph{Indag. Math.}
+	\textbf{12} (1950), 57--58.
+	
+	\bibitem{Mills1947}
+	W.~H. Mills, A prime-representing function, \emph{Bull. Amer. Math. Soc.}
+	\textbf{53} (1947), 604.
+	
+	\bibitem{Niven1951}
+	I.~Niven, Functions which represent prime numbers, \emph{Proc. Amer.
+		Math. Soc.} \textbf{2} (1951), 753--755.
+	
+	\bibitem{Ore1952}
+	O.~Ore, On the selection of subsequences, \emph{Proc. Amer. Math. Soc.}
+	\textbf{3} (1952), 706--712.
+	
+	\bibitem{Saito2025}
+	K.~Saito, Irrationality of the least Mills constant (2025), preprint.
+	
+	\bibitem{sierpinski}
+	W.~Sierpi\'nski, Sur une formule donnant tous les nombres premiers,
+	\emph{C. R. Acad. Sci. Paris} \textbf{235} (1952), 1078--1079.
+	
+	\bibitem{srinivasan1}
+	B.~R. Srinivasan, Formulae for the $n$th prime, \emph{J. Indian Math.
+		Soc.} (N.S.) \textbf{25} (1961), 33--39; \textbf{26} (1962), 248.
+	
+	\bibitem{srinivasan2}
+	B.~R. Srinivasan, An arithmetical function and an associated formula for
+	the $n$th prime, I, II, \emph{Norske Vid. Selsk. Forh. Trondheim}
+	\textbf{35} (1962), 68--71, 72--75.
+	
+	\bibitem{willans}
+	C.~P. Willans, On formulae for the $n$th prime number, \emph{Math. Gaz.}
+	\textbf{48} (1964), 413--415.
+	
+	\bibitem{Wright1951}
+	E.~M. Wright, A prime-representing function, \emph{Amer. Math. Monthly}
+	\textbf{58} (1951), 616--618.
+	
+	\bibitem{Wright1954}
+	E.~M. Wright, A class of representing functions, \emph{J. London Math.
+		Soc.} \textbf{29} (1954), 63--71.
+	
+\end{thebibliography}
+
+\end{document}

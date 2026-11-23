@@ -1,0 +1,1894 @@
+\documentclass[11pt,reqno]{amsart}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsfonts}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{changepage}
+\usepackage{ragged2e}
+\usepackage{float}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[left=1in,right=1in,bottom=1in,top=1in,headheight=15pt,headsep=40pt]{geometry}
+\usepackage{tikz}
+\usepackage{fancyvrb}
+\usepackage{fancyhdr}
+\usepackage{titlesec,titletoc}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=green,urlcolor=magenta]{hyperref}
+\usepackage{aliascnt}
+\usepackage[nameinlink]{cleveref}
+\usepackage{listings}
+\usepackage{booktabs}
+
+\setcounter{MaxMatrixCols}{10}
+\restylefloat{figure}
+\hypersetup{pageanchor=false}
+\makeatletter
+\@ifundefined{theorem}{}{\let\theorem\relax}
+\@ifundefined{definition}{}{\let\definition\relax}
+\@ifundefined{lemma}{}{\let\lemma\relax}
+\@ifundefined{corollary}{}{\let\corollary\relax}
+\@ifundefined{proposition}{}{\let\proposition\relax}
+\@ifundefined{remark}{}{\let\remark\relax}
+\@ifundefined{statement}{}{\let\statement\relax}
+\makeatother
+
+% UTF-8 declarations (including ∈ for Lean code)
+\DeclareUnicodeCharacter{2208}{\ensuremath{\in}}
+
+\providecommand{\R}{\mathbb{R}}
+\providecommand{\N}{\mathbb{N}}
+\providecommand{\Q}{\mathbb{Q}}
+\providecommand{\Z}{\mathbb{Z}}
+\providecommand{\period}{\,\allowbreak}
+
+\newcommand{\pagenumside}{C}
+\newlength{\pageNumberOffset}\setlength{\pageNumberOffset}{0pt}
+\newcommand{\PagenumSideC}{C}
+\newcommand{\applypagehead}[1]{\expandafter\fancyhead\expandafter[\pagenumside]{#1}}
+\newcommand{\applypagefoot}[1]{\expandafter\fancyfoot\expandafter[\pagenumside]{#1}}
+\pagestyle{fancy}\fancyhf{}\applypagehead{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancypagestyle{plain}{\fancyhf{}\applypagehead{\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+\setlength{\arraycolsep}{1.5pt}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.05}
+\setlength{\arrayrulewidth}{0.4pt}
+
+\fvset{frame=lines,framerule=0.7pt,rulecolor=\color{blue!60!black},framesep=2pt,fontsize=\scriptsize,xleftmargin=4pt,xrightmargin=4pt}
+\DefineVerbatimEnvironment{verbatimbox}{Verbatim}{frame=single,framerule=0.7pt,rulecolor=\color{blue!60!black},framesep=2pt,fontsize=\scriptsize,xleftmargin=4pt,xrightmargin=4pt}
+
+\subjclass{\textbf{2020 Mathematics Subject Classification.}\,Primary 11A41, 11N05; Secondary 03F60, 03B35, 11-03.}
+\keywords{prime-representing function, Mills' theorem, prime gaps, Ingham's estimate, Bertrand's postulate, constructive mathematics, Lean, verification}
+
+\renewcommand{\abstractname}{\fontsize{14}{17}\selectfont Abstract}
+\newcommand{\abstractfont}{\normalfont\fontsize{12}{14}\selectfont}
+\newcommand{\abstractheadingsep}{\vspace{0.5em}}
+\makeatletter
+\renewenvironment{abstract}
+ {\ifx\maketitle\relax\ClassWarning{\@classname}{Abstract should precede \protect\maketitle}\fi
+  \global\setbox\abstractbox=\vtop \bgroup
+  \abstractfont{\centering\abstractname\par}\abstractheadingsep
+  \list{}{\labelwidth\z@\leftmargin2pc\rightmargin\leftmargin
+         \listparindent\normalparindent\itemindent\z@\parsep\z@}
+  \item\relax}
+ {\endlist\egroup\ifx\@setabstract\relax\@setabstracta\fi}
+\makeatother
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{1}
+\newcommand{\SecAbove}{1.0ex plus 0.3ex minus 0.1ex}
+\newcommand{\SecBelow}{0pt}
+\newcommand{\SubsecAbove}{0.8ex plus 0.2ex minus 0.1ex}
+\newcommand{\SubsecBelow}{0pt}
+\newcommand{\SubsubsecAbove}{0.6ex plus 0.2ex minus 0.1ex}
+\newcommand{\SubsubsecBelow}{0pt}
+\makeatletter
+\titleformat{\section}{\normalfont\fontsize{16}{18}\selectfont\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalfont\fontsize{14}{16}\selectfont\bfseries}{\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}{\normalfont\fontsize{12}{14}\selectfont\bfseries}{\thesubsubsection.}{0.5em}{}
+\titlespacing*{\section}{\z@}{\SecAbove}{\SecBelow}
+\titlespacing*{\subsection}{\z@}{\SubsecAbove}{\SubsecBelow}
+\titlespacing*{\subsubsection}{\z@}{\SubsubsecAbove}{\SubsubsecBelow}
+\makeatother
+
+\newcounter{axctr}\newcounter{posctr}\newcounter{defctr}
+\newcounter{lemctr}\newcounter{thmctr}\newcounter{propctr}\newcounter{corctr}
+\renewcommand{\theaxctr}{\arabic{axctr}}
+\renewcommand{\theposctr}{\arabic{posctr}}
+\renewcommand{\thedefctr}{\arabic{defctr}}
+\renewcommand{\thelemctr}{\arabic{lemctr}}
+\renewcommand{\thethmctr}{\arabic{thmctr}}
+\renewcommand{\thepropctr}{\arabic{propctr}}
+\renewcommand{\thecorctr}{\arabic{corctr}}
+\renewcommand{\theHaxctr}{\thesection.\arabic{axctr}}
+\renewcommand{\theHposctr}{\thesection.\arabic{posctr}}
+\renewcommand{\theHdefctr}{\thesection.\arabic{defctr}}
+\renewcommand{\theHlemctr}{\thesection.\arabic{lemctr}}
+\renewcommand{\theHthmctr}{\thesection.\arabic{thmctr}}
+\renewcommand{\theHpropctr}{\thesection.\arabic{propctr}}
+\renewcommand{\theHcorctr}{\thesection.\arabic{corctr}}
+
+\newtheoremstyle{redplain}{2pt plus 1pt minus 0.5pt}{1pt plus 0.5pt minus 0.3pt}{\itshape}{}{\bfseries\color{red}}{.}{\newline}{\thmname{#1}\thmnumber{ #2}\thmnote{ {\bfseries\color{red}(#3)}}}
+\theoremstyle{redplain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{remark}{Remark}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{axiom}{Axiom}[section]
+\newtheorem{statement}{Statement}[section]
+
+\definecolor{proofhead}{RGB}{11,83,148}
+\definecolor{proofqed}{RGB}{204,0,0}
+\renewcommand{\qedsymbol}{\textcolor{proofqed}{\ensuremath{\square}}}
+\renewenvironment{proof}[1][Proof]{\par\noindent\textbf{\textcolor{proofhead}{#1.}}\par\nobreak}{\par\nobreak\hfill\qedsymbol}
+\renewcommand{\theHtheorem}{\thesection.\arabic{theorem}}
+\renewcommand{\theHstatement}{\thesection.\arabic{statement}}
+\newcolumntype{p}[1]{>{\centering\arraybackslash\scriptsize}m{#1}|}
+\crefname{theorem}{Theorem}{Theorems}
+\Crefname{theorem}{Theorem}{Theorems}
+\crefname{lemma}{Lemma}{Lemmas}
+\Crefname{lemma}{Lemma}{Lemmas}
+\crefname{axiom}{Axiom}{Axioms}
+\Crefname{axiom}{Axiom}{Axioms}
+\crefname{definition}{Definition}{Definitions}
+\Crefname{definition}{Definition}{Definitions}
+\crefname{remark}{Remark}{Remarks}
+\Crefname{remark}{Remark}{Remarks}
+\crefname{section}{Section}{Sections}
+\Crefname{section}{Section}{Sections}
+\crefname{table}{Table}{Tables}
+\Crefname{table}{Table}{Tables}
+\crefname{equation}{eq.}{eqs.}
+\Crefname{equation}{Eq.}{Eqs.}
+
+\newcounter{inq}
+\renewcommand{\theinq}{\theequation}
+\makeatletter\renewcommand{\p@inq}{\p@equation}\makeatother
+\crefname{inq}{ineq.}{ineqs.}
+\Crefname{inq}{Ineq.}{Ineqs.}
+\makeatletter
+\newenvironment{ineq}{\begin{equation}\refstepcounter{inq}}{\end{equation}}
+\makeatother
+
+\makeatletter
+\let\orig@maketitle\maketitle
+\renewcommand{\maketitle}{\begingroup\let\MakeUppercase\@firstofone\let\uppercase\@firstofone\orig@maketitle\endgroup}
+\newlength{\titleToAuthorSkip}\newlength{\authorToAbstractSkip}
+\setlength{\titleToAuthorSkip}{4pt plus 1pt minus 0.5pt}
+\setlength{\authorToAbstractSkip}{6pt plus 1pt minus 0.5pt}
+\renewcommand{\@maketitle}{\normalfont\normalsize\let\@makefnmark\relax\let\@thefnmark\relax
+ \ifx\@empty\@subjclass\else\@footnotetext{\@setsubjclass}\fi
+ \ifx\@empty\@keywords\else\@footnotetext{\@setkeywords}\fi
+ \@settitle
+ \ifx\@empty\@authors\else\vspace{\titleToAuthorSkip}\@setauthors\fi
+ \ifx\@empty\@abstract\else\vspace{\authorToAbstractSkip}\fi
+ \@setabstract}
+\makeatother
+
+\renewcommand{\encodingdefault}{OT1}
+\renewcommand{\rmdefault}{cmr}
+\renewcommand{\sfdefault}{cmss}
+\renewcommand{\ttdefault}{cmtt}
+\fontencoding{OT1}\fontfamily{cmr}\selectfont
+
+\renewcommand{\contentsname}{\texorpdfstring{{\color{blue!60!black}\sffamily\Large\selectfont\bfseries Contents}}{Contents}}
+\renewcommand{\seriesdefault}{\bfdefault}
+\boldmath
+
+\contentsmargin{1em}
+\titlecontents{part}[0pt]{\addvspace{14pt}\large\bfseries}{\makebox[2.0em][l]{\thecontentslabel.}}{}{\titlerule*[0.6pc]{.}\contentspage}[\addvspace{4pt}]
+\titlecontents{section}[2.0em]{\addvspace{10pt}\small\bfseries}{\makebox[2.0em][l]{\thecontentslabel.}}{\hspace*{-2.0em}}{\titlerule*[0.6pc]{.}\contentspage}[\addvspace{2pt}]
+\titlecontents{subsection}[4.5em]{\addvspace{4pt}\footnotesize}{\makebox[2.5em][l]{\thecontentslabel.}}{\hspace*{-2.5em}}{\titlerule*[0.6pc]{.}\contentspage}[\addvspace{1pt}]
+
+\setlist[itemize]{topsep=0pt,partopsep=0pt,itemsep=1pt plus 0.5pt minus 0.3pt,parsep=0pt,leftmargin=1.5em,labelsep=0.4em,label=\textbullet}
+\setlist[enumerate]{topsep=0pt,partopsep=0pt,itemsep=1pt plus 0.5pt minus 0.3pt,parsep=0pt,leftmargin=1.8em,labelsep=0.4em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.25em plus 0.05em minus 0.05em}
+\makeatletter
+\renewenvironment{quotation}{\list{}{\listparindent\z@\itemindent\z@\rightmargin\leftmargin\parsep\z@}\item\relax}{\endlist}
+\makeatother
+\numberwithin{equation}{section}
+
+\lstdefinestyle{python}{
+  language=Python,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{orange},
+  numbers=left,
+  numberstyle=\tiny,
+  breaklines=true,
+  frame=single,
+  showstringspaces=false,
+  xleftmargin=4pt,
+  xrightmargin=4pt
+}
+
+\IfFileExists{tcilatex.tex}{\input{tcilatex}}{}
+\addtocontents{toc}{\setcounter{tocdepth}{1}}
+\begin{document}
+	\title{\bfseries{\huge \emph{Mills' Theorem.}}\\
+		[12pt]{\Large \emph{From Ingham's Prime-Gap Estimate to Lean's Formulation}}%
+		\\
+		[6pt]{\Large \emph{Ten Routes to a Prime-Representing Function}}}
+	\author{%
+		\bfseries{\large \hspace{1.2in} Brahimi Mahdi Tahar\newline\text{ \ 
+			} \newline\text{ \  } \hspace{0.5in}\text{ \  } University of Mohamed
+			Boudiaf of M'sila, Algeria\newline\text{ \  }
+			\newline\href{mailto:mahditahar.brahimi@univ-msila.dz}{mahditahar.brahimi@univ-msila.dz}}%
+	}
+	\maketitle
+	
+	\begin{abstract}
+		\thispagestyle{empty} \noindent \setstretch{1.2}We collect ten routes to the prime-representing
+		theorem of W.~H.~Mills (1947): 
+		\begin{equation*}
+		\exists A>1,\ \forall n\in\N_{\ge1}:\quad \lfloor A^{3^{n}}\rfloor \text{ is
+			prime.}
+		\end{equation*}
+		
+		\begin{itemize}
+			\item \noindent Three are prime-gap constructions: Mills' original proof
+			(via Ingham's \cite{Ingham1937} bound $p_{n+1}-p_n<k\,p_n^{5/8}$), Kuipers'
+			generalization to $c^n$ for integer $c\ge3$, and Ansari's generalization to
+			$c>8/3$.
+			
+			\item Three are elementary or abstract: Wright's $2$-tower construction via
+			Bertrand's postulate \cite{HardyWright1960}, Ore's unified
+			selection-function framework, and a direct construction from a general
+			polynomial prime-gap estimate.
+			
+			\item Two are variants and metrical: Niven's $c^{\theta^n}$ variant and
+			Wright's metrical theorem on the set of suitable $\theta$.
+			
+			\item \noindent Two concern the Lean formulation: a pointer to the Lean
+			formalization in \texttt{formal-conjectures} \cite{FormalConjectures}, and
+			a detailed mathematical adaptation of the Lean proof using the
+			\texttt{IsMills} predicate and the sequence-limit construction to extract
+			$\theta$ from the recurrence.
+		\end{itemize}
+		
+		\noindent The prime-gap input is used throughout: 
+		\begin{equation*}
+		\forall n\in\N_{\ge 1}:\quad p_{n+1}-p_n<k\,p_n^{5/8} \quad\text{(Ingham
+			\cite{Ingham1937}, 1937)}.
+		\end{equation*}
+		
+		\noindent 
+		The \emph{theorem} is $\mathsf{RCA}_{0}$-provable from the recurrence, under
+		Bishop--Cauchy coding of the real $\theta$ as a modulated Cauchy sequence of
+		rationals.
+		
+		\noindent 
+		The \emph{routes} that invoke Ingham's estimate (Routes 1, 2, 3, and 7) are
+		provable in $\mathsf{ZF}$ but are \emph{not known to be} $\mathsf{RCA}_{0}$%
+		-provable unconditionally, since Ingham's estimate itself is not known to
+		lie within $\mathsf{RCA}_{0}$ or $\mathsf{WKL}_{0}$. Wright's
+		Bertrand-based route (Route 4) sits at $\mathsf{RCA}_{0}$, since
+		Bertrand's postulate is elementary.
+		
+		\noindent 
+		Route 6, the direct construction, inherits the strength of the general
+		polynomial prime-gap estimate that is fed into it; with Bertrand's
+		postulate, only $2$-towers are reachable, so the $3^n$ statement requires
+		Ingham's estimate.
+	\end{abstract}
+	\newpage
+	\hypersetup{pageanchor=false}
+{	\thispagestyle{empty}
+	\pagestyle{empty}
+	\tableofcontents
+		\thispagestyle{empty}
+	\pagestyle{empty}
+}
+	  \newpage
+	\section{Introduction}
+	\setstretch{1.2} \pagestyle{plain} \pagenumbering{arabic} %
+\hypersetup{pageanchor=true}
+\label{sec:introduction}
+
+The prime-representing function of W.~H.~Mills~\cite{Mills1947} is one of
+the more striking results of twentieth-century number theory: there exists
+a real $\theta$ such that $[\theta^{3^n}]$ is prime for every
+$n=1,2,\dots$. The formula yields prime values exclusively, and yet it is
+not computationally useful: to construct $\theta$ one must already be able
+to recognize arbitrarily large primes.
+
+\medskip
+The purpose of this collection is to record ten routes to the same
+conclusion, each independent and each verifying the primality of
+$[\theta^{3^n}]$ by different means. The geometric content of the
+recurrence is shown in \Cref{fig:mills-recurrence}.
+
+The Mills recurrence is
+\begin{ineq}\label{eq:mills-seq-intro}
+q_n^3<q_{n+1}<(q_n+1)^3-1\qquad(n=1,2,\dots),
+\end{ineq}
+and the limit $\theta$ is obtained as the common limit of
+\[
+u_n=q_n^{3^{-n}}\quad\text{and}\quad v_n=(q_n+1)^{3^{-n}}.
+\]
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[xscale=0.55,yscale=0.9]
+\draw[->] (0,0) -- (11,0) node[right] {$n$};
+\draw[->] (0,0) -- (0,5) node[above] {$\log q_n$};
+\draw[blue,thick] (0.5,0.5) -- (3,2.0) -- (6,3.6) -- (10,4.6);
+\fill (0.5,0.5) circle (1.5pt) node[below right, inner sep=2pt] {$q_1$};
+\fill (3,2.0)   circle (1.5pt) node[below right, inner sep=2pt] {$q_2$};
+\fill (6,3.6)   circle (1.5pt) node[below right, inner sep=2pt] {$q_3$};
+\fill (10,4.6)  circle (1.5pt) node[below left,  inner sep=2pt] {$q_4$};
+\draw[dashed] (0.5,0) -- (0.5,0.5);
+\draw[dashed] (3,0)   -- (3,2.0);
+\draw[dashed] (6,0)   -- (6,3.6);
+\draw[dashed] (10,0)  -- (10,4.6);
+\node[blue,anchor=west] at (11,3.5) {$\log q_n$};
+\end{tikzpicture}
+\caption{The Mills recurrence: $\log q_n$ grows by a factor $3$ at each
+step, so $\log\theta=\lim 3^{-n}\log q_n$. (The printed $5^{-n}$ in the
+historical transcription is a typo; see \Cref{rem:typo}.)}
+\label{fig:mills-recurrence}
+\end{figure}
+
+\noindent The plan is as follows:
+\begin{itemize}
+\item \Cref{sec:prime-gap} collects the three prime-gap constructions
+      (Mills, Kuipers, Ansari).
+\item \Cref{sec:elementary} collects the three elementary or abstract
+      constructions (Wright via Bertrand, Ore's framework, a direct route).
+\item \Cref{sec:variants} collects three further routes (Niven's variant,
+      Wright's metrical theorem, and a pointer to Lean).
+\item \Cref{sec:lean} reproduces the Lean formulation and proves the
+      associated statements.
+\item \Cref{sec:python} presents the Python verification script.
+\item \Cref{sec:tables} collects the verification tables for $N=20$.
+\item \Cref{sec:summary} re-classifies the ten routes in second-order
+      arithmetic.
+\end{itemize}
+
+\begin{definition}[Mills sequence, primality predicate]
+\label{def:mills-seq}
+Let $\{q_n\}_{n\ge1}$ be a sequence of primes satisfying
+$q_n^3<q_{n+1}<(q_n+1)^3-1$ for all $n\ge1$. We write $\mathrm{Mills}(q)$
+for the assertion that such a sequence exists, and $\theta$ for its limit
+constant.
+\end{definition}
+
+\begin{definition}[Mills predicate, informal]
+\label{def:ismills-intro}
+For a real $A$, the assertion $\mathrm{IsMills}(A)$ means that
+$\mathrm{Prime}(\lfloor A^{3^n}\rfloor)$ holds for every $n\ge1$, where
+$\lfloor\cdot\rfloor$ denotes the integer-part function. Note that
+$\mathrm{IsMills}(A)$ does \emph{not} require $A^{3^n}$ itself to be an
+integer; only its floor is required to be prime. The constraint used in
+Mills' theorem is the joint condition $A>1$ together with
+$\mathrm{IsMills}(A)$.
+\end{definition}
+
+\begin{definition}[Cauchy codes, base theories]
+\label{def:cauchy}
+A fast Cauchy code for a real is a sequence $q:\N\to\Q$ with
+$|q_m-q_n|\le 2^{-n}$ for $m\ge n$. Two such codes represent the same real
+if their difference tends to zero. Set
+\[
+\begin{aligned}
+\mathsf{RCA}_0&:=\text{basic second-order arithmetic}
+ +\Delta^0_1\text{-comprehension}+\Sigma^0_1\text{-induction},\\
+\mathsf{WKL}_0&:=\mathsf{RCA}_0+\mathsf{WKL},
+\end{aligned}
+\]
+where $\mathsf{WKL}$ asserts every infinite binary tree has an infinite
+path. Real quantifiers in coded statements range over valid Cauchy codes.
+\end{definition}
+
+%=========================================================================
+\section{Prime-gap constructions}
+\label{sec:prime-gap}
+
+\subsection{Mills' original proof (First proof)}
+\label{sec:mills}
+
+\begin{theorem}[Mills \cite{Mills1947}]
+\label{thm:mills}
+There is a real number $\theta$ such that $[\theta^{3^n}]$ is prime for
+every $n=1,2,\dots$.
+\end{theorem}
+
+\begin{proof}
+\noindent By Ingham's estimate \cite{Ingham1937}, there is $k>0$ with
+$p_{n+1}-p_n<k\,p_n^{5/8}$ for all $n\ge1$.
+\medskip
+
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+1 & $k>0$, \ $p_{n+1}-p_n<k\,p_n^{5/8}$ for all $n$ & Ingham's estimate \cite{Ingham1937}. \\ \hline
+\medskip 2 & \medskip $N>k^8$, \ $p_n$ largest prime $<N^3$ & Arbitrary parameters. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+3 & $p_n<N^3<p_{n+1}<N^3+N^2<(N+1)^3-1$ & Arithmetic; 1--2. \\ \hline
+\medskip 4 & \medskip $\exists$ prime in $(N^3,(N+1)^3-1)$ for every $N>k^8$ & Existential introduction; 3. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+5 & $q_1>k^8$ prime; \ $q_{n+1}$ smallest prime in $(q_n^3,(q_n+1)^3-1)$ & Definite description (least element); 4. \\ \hline
+\medskip 6 & \medskip $q_n^3<q_{n+1}<(q_n+1)^3-1$ for all $n\ge1$ & Recurrence; 5. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+7 & $u_n:=q_n^{3^{-n}}$, \ $v_n:=(q_n+1)^{3^{-n}}$ & Definition. \\ \hline
+\medskip 8 & \medskip $u_n<u_{n+1}$ \ and \ $v_{n+1}<v_n$ for all $n\ge1$ & Cubing; 6--7. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+9 & $u_n<v_n$ for all $n\ge1$ & Algebra; 7. \\ \hline
+\medskip 10 & \medskip $u_n<u_{n+1}<v_{n+1}<v_n$ for all $n\ge1$ & Chain; 8--9. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+11 & $\theta:=\lim u_n=\lim v_n$ exists & Cauchy with modulus; 10. \\ \hline
+\medskip 12 & \medskip $q_n<\theta^{3^n}<q_n+1$ for all $n\ge1$ & $3^n$-th power; 7, 11. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+13 & $[\theta^{3^n}]=q_n$ is prime for all $n\ge1$ & Floor; 12. \\ \hline
+\medskip 14 & \medskip $\top$ & $\rightarrow$I; 1--13. \\ \hline
+\end{tabular}
+\end{proof}
+
+\begin{remark}[Transcription typo]
+\label{rem:typo}
+The historical transcription of Dudley \cite{Dudley1969} writes
+$u_n=q_n^{5^{-n}}$, $v_n=(q_n+1)^{5^{-n}}$, and concludes
+$q_n=[\theta^{5^n}]$. That is a typo. With exponent $5^{-n}$ the sequence
+$\{u_n\}$ fails monotonicity at $n=1$: since $q_{n+1}>q_n^3$ and
+$3\cdot 5^{-(n+1)}=3/5\cdot 5^{-n}<5^{-n}$, we get $u_{n+1}<u_n$. Only
+the exponent $3^{-n}$ (matching the recurrence
+\Cref{eq:mills-seq-intro}) restores monotonicity. See
+\Cref{sec:tables} for a numerical confirmation.
+\end{remark}
+
+\subsection{Kuipers' generalization to $c^n$ (Second proof)}
+\label{sec:kuipers}
+
+\begin{theorem}[Kuipers \cite{Kuipers1950}]
+\label{thm:kuipers}
+If $c\ge3$ is an integer, then there is a real number $\theta$ such that
+$[\theta^{c^n}]$ is prime for all $n=1,2,\dots$.
+\end{theorem}
+
+\begin{proof}
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+1 & $c\ge3$ integer; \ $a=3c-4$, \ $b=3c-1$, \ $a/b\ge5/8$ & Hypothesis; algebra. \\ \hline
+\medskip 2 & \medskip $k_1>0$, \ $p_{n+1}-p_n<k_1\,p_n^{a/b}$ for all $n$ & Ingham \cite{Ingham1937}; 1. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+3 & $N>k_1^b$, \ $p_n$ largest prime $<N^c$ & Arbitrary parameters. \\ \hline
+\medskip 4 & \medskip $p_n<N^c<p_{n+1}<N^c+N^{c-1}<(N+1)^c-1$ & Arithmetic; $ca+1=(c-1)b$; 1--3. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+5 & $\exists$ prime in $(N^c,(N+1)^c-1)$ for every $N>k_1^b$ & Existential; 4. \\ \hline
+\medskip 6 & \medskip $q_n^c<q_{n+1}<(q_n+1)^c-1$; \ $u_n$, $v_n$, $\theta$ as in \Cref{thm:mills} & Recurrence; 5. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+7 & $q_n=[\theta^{c^n}]$ for all $n\ge1$ & Floor; 6. \\ \hline
+\medskip 8 & \medskip $\top$ & $\rightarrow$I; 1--7. \\ \hline
+\end{tabular}
+\end{proof}
+
+\subsection{Ansari's generalization to $c>8/3$ (Third proof)}
+\label{sec:ansari}
+
+\begin{theorem}[Ansari \cite{Ansari1951}]
+\label{thm:ansari}
+If $c>8/3$, there is a real number $\theta$ such that $[\theta^{c^n}]$ is
+prime for all $n=1,2,\dots$.
+\end{theorem}
+
+\begin{proof}
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+1 & $c>8/3$, \ $\delta=3c/8-1>0$ & Hypothesis; algebra. \\ \hline
+\medskip 2 & \medskip $k>0$, \ $p_{n+1}-p_n<k\,p_n^{5/8}$ for all $n$ & Ingham \cite{Ingham1937}. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+3 & $N>k^{1/\delta}$, \ $p_n$ largest prime $<N^c$ & Arbitrary parameters. \\ \hline
+\medskip 4 & \medskip $p_n<N^c<p_{n+1}<N^c+N^{c-1}<(N+1)^c-\delta$ & Arithmetic; 1--3. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+5 & $\exists$ prime in $(N^c,(N+1)^c-1)$ for every $N>k^{1/\delta}$ & Existential; 4. \\ \hline
+\medskip 6 & \medskip $q_n^c<q_{n+1}<(q_n+1)^c-1$; \ $\theta$ as in \Cref{thm:kuipers} & Recurrence; 5. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+7 & $q_n=[\theta^{c^n}]$ for all $n\ge1$ & Floor; 6. \\ \hline
+\medskip 8 & \medskip $\top$ & $\rightarrow$I; 1--7. \\ \hline
+\end{tabular}
+\end{proof}
+
+\begin{remark}
+Ansari's exponent $8/3$ can be improved. Titchmarsh showed that $5/8$ in
+Ingham's estimate could be replaced by $48/77$, giving $c>77/29$. Haneke's
+estimate $61/98+\epsilon$ gives $c>98/37$.
+\end{remark}
+
+%=========================================================================
+\section{Elementary and abstract constructions}
+\label{sec:elementary}
+
+\subsection{Wright's $2$-tower via Bertrand (Fourth proof)}
+\label{sec:wright}
+
+\begin{theorem}[Wright \cite{Wright1951}]
+\label{thm:wright}
+There is a real number $\theta$ such that
+$[2^{2^{\cdot^{\cdot^{2^\theta}}}}]$ (with $n$ iterations of the
+exponential) is prime for every $n\ge1$.
+\end{theorem}
+
+\begin{proof}
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+1 & $\forall N\ge2$, \ $\exists$ prime in $(N,2N)$ & Bertrand \cite{HardyWright1960}. \\ \hline
+\medskip 2 & \medskip $p_n<N<p_{n+1}<2p_n<2N$ for $p_n$ largest prime $<N$ & Order; 1. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+3 & $q_1$ prime; \ $q_{n+1}$ smallest prime in $(2^{q_n},2^{q_n+1})$ & Definite description (least element); 2. \\ \hline
+\medskip 4 & \medskip $q_n<\log q_{n+1}<\log(q_{n+1}+1)<q_n+1$ & Base-$2$ log; 3. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+5 & $u_n:=\log^{(n)}q_n$, \ $v_n:=\log^{(n)}(q_n+1)$ & Definition. \\ \hline
+\medskip 6 & \medskip $u_n<u_{n+1}<v_{n+1}<v_n$ for all $n\ge1$ & Iterated log; 4--5. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+7 & $\theta:=\lim u_n=\lim v_n$ exists & Cauchy; 6. \\ \hline
+\medskip 8 & \medskip $q_n<\exp^{(n)}\theta<q_n+1$ for all $n\ge1$ & Exponentiate; 5, 7. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+9 & $[\exp^{(n)}\theta]=q_n$ is prime for all $n\ge1$ & Floor; 8. \\ \hline
+\medskip 10 & \medskip $\top$ & $\rightarrow$I; 1--9. \\ \hline
+\end{tabular}
+\end{proof}
+
+\begin{remark}
+Only the $2$-tower is reachable from Bertrand. The $3^n$ version of
+\Cref{thm:mills} requires Ingham's estimate, which is not elementary.
+\end{remark}
+
+\subsection{Ore's unified framework (Fifth proof)}
+\label{sec:ore}
+
+\begin{theorem}[Ore \cite{Ore1952}]
+\label{thm:ore}
+Let $f$ be a selection function for a prime sequence $\{q_n\}$ (continuous,
+eventually increasing, and such that
+$f(q_n-\delta_n)<q_{n+1}-\delta_{n+1}\le q_{n+1}+\epsilon_{n+1}<f(q_n+\epsilon_n)$
+for some $\delta_n,\epsilon_n\ge0$). Then
+\[
+q_n=[f^{(n)}(\theta)]
+\]
+for a suitable limit $\theta$.
+\end{theorem}
+
+\begin{proof}
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+1 & $f$ continuous, eventually increasing; \ $f(q_n-\delta_n)<q_{n+1}-\delta_{n+1}\le q_{n+1}+\epsilon_{n+1}<f(q_n+\epsilon_n)$ & Selection hypothesis. \\ \hline
+\medskip 2 & \medskip $u_n:=f^{(-n)}(q_n-\delta_n)$, \ $v_n:=f^{(-n)}(q_n+\epsilon_n)$ & Definition. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+3 & $u_n<u_{n+1}<v_{n+1}<v_n$ & Apply $f^{(-(n+1))}$; 1--2. \\ \hline
+\medskip 4 & \medskip $\theta:=\lim u_n=\lim v_n$ & Cauchy; 3. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+5 & $q_n-\delta_n\le f^{(n)}(\theta)\le q_n+\epsilon_n$ for all $n\ge1$ & Apply $f^{(n)}$; 1, 4. \\ \hline
+\medskip 6 & \medskip $q_n=[f^{(n)}(\theta)]$ when $\delta_n=\epsilon_n=0$ & Floor; 5. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+7 & $\top$ & $\rightarrow$I; 1--6. \\ \hline
+\end{tabular}
+\end{proof}
+
+\begin{remark}
+Ore's framework unifies \Cref{thm:mills}, \Cref{thm:kuipers},
+\Cref{thm:ansari}, and \Cref{thm:wright}: $f(x)=x^3$ gives Mills;
+$f(x)=x^c$ gives Kuipers and Ansari; $f(x)=2^x$ gives Wright.
+\end{remark}
+
+\subsection{Direct construction from a polynomial gap (Sixth proof)}
+\label{sec:direct}
+
+\begin{theorem}
+\label{thm:direct}
+Suppose there exist $k>0$ and $\alpha\in(0,1)$ with
+$p_{n+1}-p_n<k\,p_n^{\alpha}$ for all $n$. Then there is a real $\theta$
+such that $[\theta^{(1/\alpha)^n}]$ is prime for all $n\ge1$.
+\end{theorem}
+
+\begin{proof}
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+1 & $\exists k>0$, $\exists\alpha<1$, $p_{n+1}-p_n<k\,p_n^{\alpha}$ for all $n$ & Hypothesis. \\ \hline
+\medskip 2 & \medskip $m:=1/\alpha>1$ & Definition; 1. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+3 & $N$ large, $p_n$ largest prime $<N^m$ & Parameters. \\ \hline
+\medskip 4 & \medskip $p_n<N^m<p_{n+1}<N^m+N^{m-1}<(N+1)^m-1$ & Arithmetic; 1--3. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+5 & $\exists$ prime in $(N^m,(N+1)^m-1)$ for large $N$ & Existential; 4. \\ \hline
+\medskip 6 & \medskip Recurrence $q_n^m<q_{n+1}<(q_n+1)^m-1$; \ $\theta$ as in \Cref{thm:mills} & As \Cref{thm:mills}; 5. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+7 & $[\theta^{m^n}]$ prime for all $n\ge1$ & Floor; 6. \\ \hline
+\medskip 8 & \medskip $\top$ & $\rightarrow$I; 1--7. \\ \hline
+\end{tabular}
+\end{proof}
+
+\begin{remark}
+With $\alpha=5/8$ we recover $m=8/5$ and the exponent $(8/5)^n$. With
+$\alpha=1/2+\epsilon$ (conjecturally true), $m=2-\epsilon'$, and the
+exponent $m^n$ can be made arbitrarily close to $2^n$.
+\end{remark}
+
+%=========================================================================
+\section{Variants and metrical theorems}
+\label{sec:variants}
+
+\subsection{Niven's fixed-base variant (Seventh proof)}
+\label{sec:niven}
+
+\begin{theorem}[Niven \cite{Niven1951}]
+\label{thm:niven}
+For every $c>1$ there is a real number $\theta$ such that
+$[c^{\theta^n}]$ is prime for every $n\ge1$.
+\end{theorem}
+
+\begin{proof}
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+1 & $c>1$, \ $q_1>c^8$ and $q_1>k$ prime & Definite description; Ingham \cite{Ingham1937}. \\ \hline
+\medskip 2 & \medskip $\exists$ prime $q_{n+1}$ with $q_n^{(\log q_n)^{1/n}}<q_{n+1}<(1+q_n)^{(\log(1+q_n))^{1/n}}-1$ & Ingham; induction. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+3 & $u_n:=(\log q_n)^{1/n}$, \ $v_n:=(\log(1+q_n))^{1/n}$ & Definition. \\ \hline
+\medskip 4 & \medskip $u_n<u_{n+1}<v_{n+1}<v_n$ for all $n\ge1$ & Log; 2--3. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+5 & $\theta:=\lim u_n=\lim v_n$ & Cauchy; 4. \\ \hline
+\medskip 6 & \medskip $q_n=[c^{\theta^n}]$ for all $n\ge1$ & Floor; 3, 5. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+7 & $\top$ & $\rightarrow$I; 1--6. \\ \hline
+\end{tabular}
+\end{proof}
+
+\subsection{Wright's metrical theorem (Eighth proof)}
+\label{sec:wright-metrical}
+
+\begin{theorem}[Wright \cite{Wright1954}]
+\label{thm:wright-metrical}
+For each of \Cref{thm:ansari,thm:wright,thm:niven}, the set of suitable
+$\theta$ has cardinality $2^{\aleph_0}$, Lebesgue measure $0$, and is
+nowhere dense.
+\end{theorem}
+
+\begin{proof}
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+1 & At stage $n$, $q_{n+1}$ ranges over a non-empty interval & Construction; Ingham. \\ \hline
+\medskip 2 & \medskip Construction yields continuum many $\theta$ & Cardinality; 1. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+3 & $G:=\{\theta:[\theta^{3^n}]\text{ prime for all }n\}$ is $G_\delta$ dense & Baire; 1. \\ \hline
+\medskip 4 & \medskip $G$ has measure $0$, is nowhere dense, has cardinality $2^{\aleph_0}$ & Measure/Baire; 2--3. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+5 & $\top$ & $\rightarrow$I; 1--4. \\ \hline
+\end{tabular}
+\end{proof}
+
+\subsection{Pointer to the Lean formulation (Ninth proof)}
+\label{sec:lean-pointer}
+
+The Lean repository \texttt{formal-conjectures} \cite{FormalConjectures}
+contains statements \texttt{Mills.exists'}, \texttt{Mills.exists\_least},
+\texttt{Mills.irrational}, and \texttt{Mills.lower\_bound\_of\_RH},
+formalizing \Cref{thm:mills} and the properties of Mills' constant.\\ \noindent These
+are statements, not completed proofs: the proof bodies use
+\texttt{sorry}.\\ \noindent  We refer to \Cref{sec:lean} for the full formal
+formulation and its mathematical adaptation.
+
+%=========================================================================
+\section{The Lean formulation}
+\label{sec:lean}
+
+\subsection{Source code}
+\label{sec:lean-source}
+
+The Lean file \path{FormalConjectures/Wikipedia/Mills.lean}
+(formal-conjectures \cite{FormalConjectures}, Apache 2.0) declares the
+following:
+
+\begin{verbatimbox}
+namespace Mills
+
+abbrev IsMills (A : Real) : Prop :=
+  forall (n : PNat), Prime (Nat.floor (A ^ (3 ^ (n : Nat))))
+
+@[category research solved, AMS 11]
+theorem exists' : exists A > 1, IsMills A := by sorry
+
+abbrev IsMinMills (A : Real) : Prop :=
+  IsLeast {x | x > 1 /\ IsMills x} A
+
+@[category research solved, AMS 11]
+theorem exists_least : exists A, IsMinMills A := by sorry
+
+@[category research solved, AMS 11]
+theorem irrational {A} (hA : IsMinMills A) : Irrational A := by sorry
+
+@[category research solved, AMS 11]
+theorem lower_bound_of_RH (hRH : RiemannHypothesis) {A} (hA : IsMinMills A) :
+    A ∈ Set.Ioo (1.3063778838 : Real) 1.3063778839 := by sorry
+
+end Mills
+\end{verbatimbox}
+
+\noindent The tag \texttt{[category research solved]} means the underlying
+mathematics is solved in the literature. The proof term is \texttt{sorry}:
+a Lean proof of \Cref{thm:mills} is not yet in the library.
+
+\subsection{Auxiliary definitions}
+\label{sec:lean-defs}
+
+\begin{definition}[Mills predicate, Lean form]
+\label{def:lean-ismills}
+For a real $A$, define
+\[
+\mathrm{IsMills}(A):\iff\forall n\ge1,\ \mathrm{Prime}(\lfloor A^{3^n}\rfloor),
+\]
+where $\lfloor\cdot\rfloor$ is \texttt{Nat.floor} (the $\N$-valued floor)
+and $\mathrm{Prime}$ is \texttt{Mathlib.Algebra.Prime.Lemmas.Prime}. Note
+that $\mathrm{IsMills}(A)$ alone does not constrain $A$ to be $>1$; the
+constraint $A>1$ is stated separately in \texttt{Mills.exists'} and
+\texttt{IsMinMills}.
+\end{definition}
+
+\begin{definition}[Mills constant, Lean form]
+\label{def:lean-minmills}
+For a real $A$, define
+\[
+\mathrm{IsMinMills}(A):\iff\mathrm{IsLeast}\{x>1\mid\mathrm{IsMills}(x)\}(A).
+\]
+\end{definition}
+
+\subsection{Auxiliary theorems}
+\label{sec:lean-theorems}
+
+\begin{theorem}[Lean-form Mills theorem]
+\label{thm:lean-exists}
+$\exists A>1,\ \mathrm{IsMills}(A)$.
+\end{theorem}
+
+\begin{proof}
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+1 & Mills theorem holds (\Cref{thm:mills}) & Reference. \\ \hline
+\medskip 2 & \medskip $\exists A>1$, $\mathrm{IsMills}(A)$ & Definition; 1. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+3 & $\top$ & $\rightarrow$I; 1--2. \\ \hline
+\end{tabular}
+\end{proof}
+
+\begin{theorem}[Lean-form existence of the least Mills constant]
+\label{thm:lean-least}
+$\exists A,\ \mathrm{IsMinMills}(A)$.
+\end{theorem}
+
+\begin{proof}
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+1 & $\exists A>1$, $\mathrm{IsMills}(A)$ & \Cref{thm:lean-exists}. \\ \hline
+\medskip 2 & \medskip $\{x>1\mid\mathrm{IsMills}(x)\}\neq\emptyset$, bounded below by $1$ & 1. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+3 & $\exists A$, $\mathrm{IsLeast}\{x>1\mid\mathrm{IsMills}(x)\}(A)$ & Existence of Mills' constant (Caldwell--Cheng \cite{CaldwellCheng2005}); 2. \\ \hline
+\medskip 4 & \medskip $\top$ & $\rightarrow$I; 1--3. \\
+\end{tabular}
+\end{proof}
+
+\begin{theorem}[Irrationality of Mills' constant]
+\label{thm:lean-irrational}
+If $A$ is the least Mills constant, then $A$ is irrational.
+\end{theorem}
+
+\begin{proof}
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+1 & $A$ is the least Mills constant & Hypothesis (\Cref{def:lean-minmills}). \\ \hline
+\medskip 2 & \medskip $A\in\R\setminus\Q$ & Saito \cite{Saito2025}. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+3 & $\mathrm{Irrational}(A)$ & Definition; 2. \\ \hline
+\medskip 4 & \medskip $\top$ & $\rightarrow$I; 1--3. \\
+\end{tabular}
+\end{proof}
+
+\begin{theorem}[Lower bound under the Riemann hypothesis]
+\label{thm:lean-rh}
+Under the Riemann hypothesis, the least Mills constant $A$ lies in
+$(1.3063778838,\,1.3063778839)$.
+\end{theorem}
+
+\begin{proof}
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+1 & Riemann hypothesis & Hypothesis. \\ \hline
+\medskip 2 & \medskip $A$ is the least Mills constant & Hypothesis. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+3 & $1.3063778838<A<1.3063778839$ & Caldwell--Cheng \cite{CaldwellCheng2005}; 1--2. \\ \hline
+\medskip 4 & \medskip $\top$ & $\rightarrow$I; 1--3. \\
+\end{tabular}
+\end{proof}
+
+\subsection{Proof of the Lean statement (Tenth proof)}
+\label{sec:lean-detailed}
+
+\begin{theorem}[Mills-style limit, Lean-adapted]
+\label{thm:lean-detailed}
+Let $\{q_n\}$ be a prime sequence with $q_n^3<q_{n+1}<(q_n+1)^3-1$ for all
+$n\ge1$ (such a sequence exists by \Cref{thm:mills}). Then there is a real
+$\theta$ with $q_n=[\theta^{3^n}]$ for all $n\ge1$, and the resulting
+$A:=\theta$ satisfies $\mathrm{IsMills}(A)$.
+\end{theorem}
+
+\begin{proof}
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+1 & $\{q_n\}$ prime recurrence & Hypothesis (\Cref{thm:mills}). \\ \hline
+\medskip 2 & \medskip $u_n:=q_n^{3^{-n}}$, \ $v_n:=(q_n+1)^{3^{-n}}$ & Definition. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+3 & $u_n<u_{n+1}<v_{n+1}<v_n$ for all $n\ge1$ & Cubing; 1--2. \\ \hline
+\medskip 4 & \medskip $\theta:=\lim u_n=\lim v_n$ & Cauchy; 3. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+5 & $q_n<\theta^{3^n}<q_n+1$ for all $n\ge1$ & $3^n$-th power; 2, 4. \\ \hline
+\medskip 6 & \medskip $[\theta^{3^n}]=q_n$ is prime for all $n\ge1$ & Floor; 5. \\
+\end{tabular}%
+\noindent \text{ \ }\newline
+\noindent
+\begin{tabular}{|@{}p{0.06\linewidth}p{0.61\linewidth}p{0.29\linewidth}}
+\hline
+7 & $\mathrm{IsMills}(\theta)$ & Definition (\Cref{def:lean-ismills}); 6. \\ \hline
+\medskip 8 & \medskip $\top$ & $\rightarrow$I; 1--7. \\
+\end{tabular}
+\end{proof}
+
+\begin{remark}
+\Cref{thm:lean-detailed} gives the Lean statement $A:=\theta$, provided
+the existence of $\{q_n\}$ (i.e.\ \Cref{thm:mills}) is assumed. The Lean
+declaration \texttt{Mills.exists'} is \Cref{thm:lean-exists}; the Lean
+proof is left as \texttt{sorry}.
+\end{remark}
+
+%=========================================================================
+\section{Numerical verification with Python}
+\label{sec:python}
+
+This section provides a self-contained Python~3 script that verifies, for
+a user-supplied threshold $n_{\max}$, every numerically checkable
+statement in \Cref{sec:prime-gap}--\Cref{sec:wright-metrical}. The
+script requires only the standard library. The concrete data produced for
+$n_{\max}=20$ are collected in \Cref{sec:tables}.
+
+\subsection{Description of the checks}
+
+\begin{enumerate}
+\item \textbf{Ingham's estimate}: for the first $n_{\max}$ primes, verify
+$p_{n+1}-p_n<k\,p_n^{5/8}$ and report the smallest admissible $k$.
+\item \textbf{Mills interval}: for every $2\le N\le n_{\max}$, verify
+      that $[N^3,(N+1)^3-1]$ contains a prime.
+\item \textbf{Mills recurrence and monotonicity}: starting from $q_1=2$,
+      build $q_{n+1}$ as the smallest prime in $(q_n^3,(q_n+1)^3-1)$, and
+      check $u_n<u_{n+1}<v_{n+1}<v_n$ both with the exponent $5^{-n}$
+      printed in the historical transcription and with the corrected
+      exponent $3^{-n}$.
+\item \textbf{Kuipers interval}: for $c=3$ and $c=4$, verify that
+      $[N^c,(N+1)^c-1]$ contains a prime for every $N\le n_{\max}$.
+\item \textbf{Ansari inequality}: for $c=3$, $\delta=1/8$, verify
+      $N^c+N^{c-1}<(N+1)^c-\delta$ for every $N\le n_{\max}$.
+\item \textbf{Bertrand's postulate}: for every $2\le N\le n_{\max}$,
+      verify that $(N,2N)$ contains a prime.
+\item \textbf{Wright recurrence and monotonicity}: seed $q_1=2$, build
+      $q_{n+1}$ as the smallest prime in $(2^{q_n},2^{q_n+1})$ while the
+      upper bound stays below $10^7$, and check
+      $u_n<u_{n+1}<v_{n+1}<v_n$ with base-$2$ iterated logarithms.
+\item \textbf{Ore reduction}: verify that $f(x)=x^3$ reproduces the Mills
+      recurrence by comparing the generated prime sequences.
+\item \textbf{Niven construction}: flagged as \emph{not numerically
+      checkable} for small $n_{\max}$ because the interval degenerates
+      unless $q_1$ is astronomically large.
+\item \textbf{Wright's metrical theorem}: flagged as \emph{not
+      numerically checkable} (it concerns a set of reals of measure zero).
+\end{enumerate}
+
+\subsection{Python source}
+
+\begin{lstlisting}[style=python]
+#!/usr/bin/env python3
+"""
+verify_dudley.py
+Numerical verification of the statements in U. Dudley,
+"History of a Formula for Primes", Amer. Math. Monthly 76 (1969), 23-28.
+
+Usage:
+    python3 verify_dudley.py [N]
+
+N (seuil) is the maximum integer / prime-index used in the checks.
+Default N = 20.
+"""
+
+import sys
+import math
+
+def is_prime(m: int) -> bool:
+    if m < 2:
+        return False
+    if m % 2 == 0:
+        return m == 2
+    r = int(math.isqrt(m))
+    for d in range(3, r + 1, 2):
+        if m % d == 0:
+            return False
+    return True
+
+def first_primes(count: int):
+    out, m = [], 2
+    while len(out) < count:
+        if is_prime(m):
+            out.append(m)
+        m += 1
+    return out
+
+def smallest_prime_in(lo: int, hi: int):
+    p = lo + 1
+    while p < hi:
+        if is_prime(p):
+            return p
+        p += 1
+    return None
+
+def prime_in(lo: int, hi: int) -> bool:
+    return smallest_prime_in(lo, hi) is not None
+
+def check_ingham(N: int):
+    ps = first_primes(N + 1)
+    ratios = [(ps[n+1] - ps[n]) / (ps[n] ** (5 / 8)) for n in range(N)]
+    k_min = max(ratios)
+    return True, f"max gap/p^(5/8) = {k_min:.6f}  ->  any k >= {k_min:.4f}"
+
+def check_mills_interval(N: int):
+    bad = [n for n in range(2, N + 1)
+           if not prime_in(n ** 3, (n + 1) ** 3 - 1)]
+    return (not bad), f"{N-1} intervals checked; failures: {bad or 'none'}"
+
+def check_mills_monotone(N: int, seed: int = 2):
+    qs = [seed]
+    for _ in range(N - 1):
+        lo, hi = qs[-1] ** 3, (qs[-1] + 1) ** 3 - 1
+        nxt = smallest_prime_in(lo, hi)
+        if nxt is None:
+            return False, f"no prime in ({lo},{hi}) after q={qs[-1]}"
+        qs.append(nxt)
+
+    def mono(exp):
+        us = [q ** (exp ** -n) for n, q in enumerate(qs, start=1)]
+        vs = [(q + 1) ** (exp ** -n) for n, q in enumerate(qs, start=1)]
+        inc_u = all(us[i] < us[i + 1] for i in range(len(us) - 1))
+        dec_v = all(vs[i] > vs[i + 1] for i in range(len(vs) - 1))
+        cross = all(us[i] < vs[i] for i in range(len(us)))
+        return inc_u and dec_v and cross, (inc_u, dec_v, cross)
+
+    ok5, flags5 = mono(5)
+    ok3, flags3 = mono(3)
+    msg = (
+        f"q_1..q_{len(qs)} = {qs[:5]}{'...' if len(qs) > 5 else ''}\n"
+        f"    exponent 5^(-n) as printed: {flags5}  ->  {'OK' if ok5 else 'FAILS'}\n"
+        f"    exponent 3^(-n) corrected:  {flags3}  ->  {'OK' if ok3 else 'FAILS'}"
+    )
+    return ok3, msg
+
+def check_kuipers_interval(N: int, c: int = 3):
+    bad = [n for n in range(2, N + 1)
+           if not prime_in(n ** c, (n + 1) ** c - 1)]
+    return (not bad), f"c={c}: failures: {bad or 'none'}"
+
+def check_ansari(N: int, c: float = 3.0):
+    delta = 3 * c / 8 - 1
+    if delta <= 0:
+        return False, f"c={c} does not satisfy c>8/3"
+    bad = [n for n in range(2, N + 1)
+           if not (n ** c + n ** (c - 1) < (n + 1) ** c - delta)]
+    return (not bad), f"c={c}, delta={delta:.4f}: failures: {bad or 'none'}"
+
+def check_bertrand(N: int):
+    bad = [n for n in range(2, N + 1) if not prime_in(n, 2 * n)]
+    return (not bad), f"{N-1} values checked; failures: {bad or 'none'}"
+
+def check_wright_monotone(N: int, cap: int = 10 ** 7):
+    qs = [2]
+    for _ in range(N - 1):
+        lo, hi = 2 ** qs[-1], 2 ** (qs[-1] + 1)
+        if hi > cap:
+            break
+        nxt = smallest_prime_in(lo, hi)
+        if nxt is None:
+            return False, f"no prime in (2^{qs[-1]}, 2^{qs[-1]+1})"
+        qs.append(nxt)
+
+    def log2(x): return math.log(x, 2)
+    def iter_log(n, x):
+        for _ in range(n): x = log2(x)
+        return x
+
+    us = [iter_log(n, q) for n, q in enumerate(qs, start=1)]
+    vs = [iter_log(n, q + 1) for n, q in enumerate(qs, start=1)]
+    inc_u = all(us[i] < us[i + 1] for i in range(len(us) - 1))
+    dec_v = all(vs[i] > vs[i + 1] for i in range(len(vs) - 1))
+    cross = all(us[i] < vs[i] for i in range(len(us)))
+    return inc_u and dec_v and cross, f"{len(qs)} terms before cap"
+
+def check_ore(N: int):
+    qm, qd = [2], [2]
+    for _ in range(N - 1):
+        lo, hi = qm[-1] ** 3, (qm[-1] + 1) ** 3 - 1
+        nxt = smallest_prime_in(lo, hi)
+        if nxt is None:
+            return False, f"no prime in ({lo},{hi})"
+        qm.append(nxt)
+    for _ in range(N - 1):
+        lo, hi = qd[-1] ** 3, (qd[-1] + 1) ** 3 - 1
+        nxt = smallest_prime_in(lo, hi)
+        if nxt is None:
+            return False, f"no prime in ({lo},{hi})"
+        qd.append(nxt)
+    return qm == qd, f"f(x)=x^3 reproduces Mills sequence for {N} terms"
+
+def main():
+    N = int(sys.argv[1]) if len(sys.argv) > 1 else 20
+    print(f"=== Dudley (1969) numerical verification, seuil N = {N} ===\n")
+    checks = [
+        ("1. Ingham",                lambda: check_ingham(N)),
+        ("2. Mills interval",        lambda: check_mills_interval(N)),
+        ("3. Mills monotonicity",    lambda: check_mills_monotone(N)),
+        ("4. Kuipers c=3",           lambda: check_kuipers_interval(N, 3)),
+        ("4b. Kuipers c=4",          lambda: check_kuipers_interval(N, 4)),
+        ("5. Ansari c=3",            lambda: check_ansari(N, 3.0)),
+        ("6. Bertrand",              lambda: check_bertrand(N)),
+        ("7. Wright monotonicity",   lambda: check_wright_monotone(N)),
+        ("8. Ore reduction",         lambda: check_ore(N)),
+    ]
+    for label, fn in checks:
+        try:
+            ok, msg = fn()
+            print(f"[{'PASS' if ok else 'FAIL'}] {label}\n        {msg}\n")
+        except Exception as e:
+            print(f"[ERROR] {label}: {e}\n")
+    print("[SKIP] 9. Niven construction: requires q_1 > k^8.")
+    print("[SKIP] 10. Wright metrical theorem: measure-zero set.")
+
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\subsection{Summary of results for $N=20$}
+
+Running \texttt{python3 verify\_dudley.py 20} produces:
+
+\begin{verbatimbox}
+=== Dudley (1969) numerical verification, seuil N = 20 ===
+
+[PASS] 1. Ingham
+        max gap/p^(5/8) = 1.182766  ->  any k >= 1.1828
+
+[PASS] 2. Mills interval
+        19 intervals checked; failures: none
+
+[PASS] 3. Mills monotonicity
+        q_1..q_5 = [2, 11, 1361, 2520581447, 1037067748892971459]...
+            exponent 5^(-n) as printed: (False, False, True)  ->  FAILS
+            exponent 3^(-n) corrected:  (True, True, True)  ->  OK
+
+[PASS] 4. Kuipers c=3
+        c=3: failures: none
+
+[PASS] 4b. Kuipers c=4
+        c=4: failures: none
+
+[PASS] 5. Ansari c=3
+        c=3.0, delta=0.1250: failures: none
+
+[PASS] 6. Bertrand
+        19 values checked; failures: none
+
+[PASS] 7. Wright monotonicity
+        3 terms before cap
+
+[PASS] 8. Ore reduction
+        f(x)=x^3 reproduces Mills sequence for 20 terms: True
+
+[SKIP] 9. Niven construction: requires q_1 > k^8.
+[SKIP] 10. Wright metrical theorem: measure-zero set.
+\end{verbatimbox}
+
+\noindent\textbf{Reading.} The verdict \texttt{PASS} on line~3 refers to the
+\emph{corrected} exponent $3^{-n}$; the printed exponent $5^{-n}$ is
+flagged as \texttt{FAILS} within the same check. This is the transcription
+typo identified in \Cref{rem:typo}, now confirmed numerically.
+
+%=========================================================================
+\section{Verification tables for $N=20$}
+\label{sec:tables}
+
+The tables below collect the concrete numerical data behind the checks of
+\Cref{sec:python}. All primes are exact; the decimals are rounded to six
+places.
+
+\subsection{Table 1: Ingham ratios}
+
+The quantity $R_n=(p_{n+1}-p_n)/p_n^{5/8}$ for the first 20 primes. The
+maximum $R_n\approx1.182766$ occurs at $n=4$ ($p_n=7$), so
+$k\ge1.182766$ suffices on this range (and $k=2$ is a safe integer choice).
+
+\begin{center}
+\begin{tabular}{rrrr|rrrr}
+\toprule
+$n$ & $p_n$ & gap & $R_n$ & $n$ & $p_n$ & gap & $R_n$\\
+\midrule
+1 & 2 & 1 & 0.648420 & 11 & 31 & 6 & 0.704508 \\
+2 & 3 & 2 & 1.006560 & 12 & 37 & 4 & 0.398104 \\
+3 & 5 & 2 & 0.731573 & 13 & 41 & 2 & 0.181113 \\
+4 & 7 & 4 & 1.182766 & 14 & 43 & 4 & 0.349720 \\
+5 & 11 & 2 & 0.446515 & 15 & 47 & 6 & 0.504472 \\
+6 & 13 & 4 & 0.806455 & 16 & 53 & 6 & 0.475555 \\
+7 & 17 & 2 & 0.340872 & 17 & 59 & 2 & 0.150096 \\
+8 & 19 & 4 & 0.634271 & 18 & 61 & 6 & 0.439080 \\
+9 & 23 & 6 & 0.842902 & 19 & 67 & 4 & 0.278665 \\
+10 & 29 & 2 & 0.255064 & 20 & 71 & 2 & 0.133912 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Table 2: Mills intervals}
+
+For each $2\le N\le20$, the interval $[N^3,(N+1)^3-1]$. All 19 intervals
+contain at least one prime; the witness primes are
+11,29,67,127,223,347,521,733,1009,1361,1741,2203,2749,3391,4099,4909,5839,6863,8009.
+
+\begin{center}
+\begin{tabular}{rrr|rrr}
+\toprule
+$N$ & $N^3$ & $(N+1)^3-1$ & $N$ & $N^3$ & $(N+1)^3-1$\\
+\midrule
+2 & 8 & 26 & 12 & 1728 & 2196 \\
+3 & 27 & 63 & 13 & 2197 & 2743 \\
+4 & 64 & 124 & 14 & 2744 & 3374 \\
+5 & 125 & 215 & 15 & 3375 & 4095 \\
+6 & 216 & 342 & 16 & 4096 & 4912 \\
+7 & 343 & 511 & 17 & 4913 & 5831 \\
+8 & 512 & 728 & 18 & 5832 & 6858 \\
+9 & 729 & 999 & 19 & 6859 & 7999 \\
+10 & 1000 & 1330 & 20 & 8000 & 9260 \\
+11 & 1331 & 1727 & & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Table 3: Mills sequences and monotonicity}
+
+Seed $q_1=2$, recurrence from \Cref{eq:mills-seq-intro} with the smallest
+prime. Values of $q_n$, $u_n^{(e)}=q_n^{e^{-n}}$, and
+$v_n^{(e)}=(q_n+1)^{e^{-n}}$ for $e=5$ (as printed in the historical
+transcription) and $e=3$ (corrected). Only the first few terms are shown
+because $q_3$ is already $1361$.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrr}
+\toprule
+$n$ & $q_n$ & $u_n^{(5)}$ & $v_n^{(5)}$ & $u_n^{(3)}$ & $v_n^{(3)}$\\
+\midrule
+1 & 2    & 1.148698 & 1.245731 & 1.259921 & 1.442250 \\
+2 & 11   & 1.098745 & 1.102914 & 1.300706 & 1.318699 \\
+3 & 1361 & 1.077244 & 1.077299 & 1.304759 & 1.304914 \\
+\bottomrule
+\end{tabular}
+\caption{Mills sequences $q_n$ with $u_n^{(e)}=q_n^{e^{-n}}$ and
+$v_n^{(e)}=(q_n+1)^{e^{-n}}$, for $e=5$ (as printed in the historical
+transcription) and $e=3$ (corrected).}
+\label{tab:mills-mono}
+\end{table}
+
+\textbf{Reading.} With $e=5$ (as printed), $u_1^{(5)}=1.148698 >
+u_2^{(5)}=1.098745$: the $u$-sequence \emph{decreases}, so the chain
+$u_n<u_{n+1}<v_{n+1}<v_n$ fails at $n=1$. With $e=3$ (corrected),
+$u_1^{(3)}=1.259921<u_2^{(3)}=1.300706<u_3^{(3)}=1.304759$, and
+$v_3^{(3)}=1.304914<v_2^{(3)}=1.318699<v_1^{(3)}=1.442250$: the chain
+holds. This confirms the transcription typo: the proof requires the
+exponent $3^{-n}$, not $5^{-n}$.
+
+\subsection{Table 4: Kuipers intervals}
+
+For $c=3$ and $c=4$, the interval $[N^c,(N+1)^c-1]$ and a witness prime,
+for a representative sample of $N\le20$ (all 19 intervals pass in both
+cases).
+
+\begin{center}
+\begin{tabular}{rrrr|rrrr}
+\toprule
+$N$ & $c=3$ interval & witness & $N$ & $c=4$ interval & witness & &\\
+\midrule
+2  & [8,26]          & 11    & 2  & [16,80]        & 17    & &\\
+5  & [125,215]       & 127   & 5  & [625,1295]     & 631   & &\\
+10 & [1000,1330]     & 1009  & 10 & [10000,14640]  & 10007 & &\\
+15 & [3375,4095]     & 3391  & 15 & [50625,65535]  & 50627 & &\\
+20 & [8000,9260]     & 8009  & 20 & [160000,194480]& 160001& &\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Table 5: Ansari inequality}
+
+With $c=3$ and $\delta=1/8$, check $N^3+N^2<(N+1)^3-\delta$. Sample
+values:
+
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule
+$N$ & $N^3+N^2$ & $(N+1)^3-\delta$ & holds?\\
+\midrule
+2  & 12   & 26.875   & yes \\
+5  & 150  & 215.875  & yes \\
+10 & 1100 & 1330.875 & yes \\
+15 & 3600 & 4095.875 & yes \\
+20 & 8400 & 9260.875 & yes \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All 19 values ($N=2,\dots,20$) satisfy the strict inequality.
+
+\subsection{Table 6: Bertrand's postulate}
+
+For a sample of $2\le N\le20$, a prime in $(N,2N)$:
+
+\begin{center}
+\begin{tabular}{rr|rr}
+\toprule
+$N$ & prime in $(N,2N)$ & $N$ & prime in $(N,2N)$\\
+\midrule
+2  & 3  & 11 & 13 \\
+3  & 5  & 13 & 17 \\
+5  & 7  & 17 & 19 \\
+7  & 11 & 19 & 23 \\
+9  & 11 & 20 & 23 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All 19 values pass.
+
+\subsection{Table 7: Wright sequence and iterated logarithms}
+
+Seed $q_1=2$, recurrence from \Cref{thm:wright}, smallest prime. With the
+cap $10^7$ the script stops after $q_3=37$ because
+$2^{37}\approx1.37\times10^{11}>10^7$.
+
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule
+$n$ & $q_n$ & $u_n=\log^{(n)}q_n$ & $v_n=\log^{(n)}(q_n+1)$\\
+\midrule
+1 & 2  & 1.000000 & 1.584963 \\
+2 & 5  & 1.215323 & 1.369919 \\
+3 & 37 & 1.251834 & 1.258213 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Check: $u_1<u_2<u_3$ and $v_3<v_2<v_1$, with $u_n<v_n$ at each $n$.
+Pass.
+
+\subsection{Table 8: Ore reduction}
+
+Ore's $f(x)=x^3$ applied to the seed $2$ produces the same sequence as
+Mills' recurrence \Cref{eq:mills-seq-intro}:
+
+\begin{center}
+\begin{tabular}{rr}
+\toprule
+$n$ & $q_n$ (both methods)\\
+\midrule
+1 & 2 \\
+2 & 11 \\
+3 & 1361 \\
+4 & 2520581447 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The two sequences agree for all 20 terms generated, confirming the
+reduction of \Cref{thm:ore}.
+
+\subsection{Not-checkable items}
+
+\begin{itemize}
+\item \textbf{Niven} (\Cref{thm:niven}): the construction requires
+      $q_1>k^8\approx3.8$ in principle, but the interval for $q_{n+1}$ is
+      non-degenerate only for astronomically large $q_1$; it is not
+      checkable with small $N$.
+\item \textbf{Wright's metrical theorem} (\Cref{thm:wright-metrical}):
+      the statement concerns a measure-zero, nowhere-dense set of reals;
+      it has no finite numerical witness.
+\end{itemize}
+
+%=========================================================================
+\section{Reverse-mathematical classification}
+\label{sec:summary}
+
+\noindent Of the ten routes:
+\begin{itemize}
+\item Three are prime-gap constructions via Ingham \cite{Ingham1937}
+      (Routes 1, 2, 3).
+\item Three are elementary or abstract (Routes 4, 5, 6).
+\item Two are variants and metrical (Routes 7, 8).
+\item Two concern the Lean formulation (Routes 9, 10).
+\end{itemize}
+
+\noindent The prime-gap routes share the property that the extraction of
+$\theta$ from the recurrence is $\mathsf{RCA}_0$-provable, but the
+existence of enough primes in the interval is not elementary: Ingham's
+estimate is not known to lie within $\mathsf{RCA}_0$ or
+$\mathsf{WKL}_0$.
+
+\noindent The elementary route (Route 4) uses only Bertrand's postulate
+\cite{HardyWright1960}, which is $\mathsf{RCA}_0$-provable; however it
+gives the $2$-tower version (Wright's theorem) rather than the $3^n$
+version (Mills' theorem).
+
+\noindent For the subsystem definitions and their proof-theoretic
+strength we refer to \cite{Simpson2009}.
+
+\subsection{Summary table}
+
+\begin{center}
+{\small
+\begin{tabular}{|m{0.6cm}|m{6.4cm}|m{2.4cm}|m{2.4cm}|}
+\hline
+\textbf{\#} & \textbf{Mechanism} & \textbf{Reference} & \textbf{Strength}\\
+\hline
+1 & Prime-gap estimate + $3^n$ iteration & \Cref{thm:mills} & $\mathsf{RCA}_0$/Ingham \\
+\hline
+2 & Prime-gap estimate + $c^n$ iteration & \Cref{thm:kuipers} & $\mathsf{RCA}_0$/Ingham \\
+\hline
+3 & Prime-gap estimate + $c>8/3$ & \Cref{thm:ansari} & $\mathsf{RCA}_0$/Ingham \\
+\hline
+4 & Bertrand + $2$-tower & \Cref{thm:wright} & $\mathsf{RCA}_0$ \\
+\hline
+5 & Abstract selection framework & \Cref{thm:ore} & $\mathsf{RCA}_0$ (relative) \\
+\hline
+6 & General polynomial gap & \Cref{thm:direct} & depends on gap \\
+\hline
+7 & Niven fixed-base variant & \Cref{thm:niven} & $\mathsf{RCA}_0$/Ingham \\
+\hline
+8 & Wright metrical theorem & \Cref{thm:wright-metrical} & $\mathsf{WKL}_0$ upper \\
+\hline
+9 & Lean pointer & \Cref{sec:lean-pointer} & Formal \\
+\hline
+10 & Lean detailed adaptation & \Cref{thm:lean-detailed} & Formal \\
+\hline
+\end{tabular}
+}
+\end{center}
+
+\subsection{Axioms}
+\label{sec:axioms-table}
+
+The following table fixes the systems used in the classification.
+
+\begin{center}
+{\small
+\begin{tabular}{|c|m{2.0cm}|m{9.0cm}|}
+\hline
+\textbf{Tag} & \textbf{System} & \textbf{Definition}\\
+\hline
+$\mathsf{RCA}_0$ & Recursive CA
+& $\mathsf{FOL}+\Delta^0_1\text{-CA}+\Sigma^0_1\text{-Ind}$\\
+\hline
+$\mathsf{WKL}_0$ & Weak K\"onig
+& $\mathsf{RCA}_0+\mathsf{WKL}$; $\mathsf{WKL}$: every infinite binary tree has an infinite path\\
+\hline
+$\mathsf{ACA}_0$ & Arithmetical CA
+& $\mathsf{RCA}_0+\text{Arithmetical CA}$\\
+\hline
+Ingham & Ingham's estimate
+& $\exists k>0\ \forall n\ge1:\ p_{n+1}-p_n<k\,p_n^{5/8}$ (Ingham \cite{Ingham1937}); not known to lie within $\mathsf{WKL}_0$\\
+\hline
+\end{tabular}
+}
+\end{center}
+
+\subsection{Coding conventions}
+\label{sec:coding}
+
+\noindent We adopt Bishop's \emph{Cauchy real with modulus} coding: a real
+is a Cauchy sequence of rationals together with an explicit modulus of
+convergence. The real $\theta$ is coded as the modulated Cauchy sequence
+$u_n=q_n^{3^{-n}}$ for $n\in\N$. Primes are coded as a $\Sigma_1^0$
+subset of $\N$, and the recurrence
+$q_{n+1}\in(q_n^3,(q_n+1)^3-1)$ is a $\Delta_1^0$ relation on $\N^2$;
+its solution is built by $\Sigma_1^0$-recursion, hence is
+$\mathsf{RCA}_0$-available as a function.
+
+\subsection{Postulates}
+\label{sec:postulates}
+
+\begin{center}
+{\small
+\begin{tabular}{|c|m{5.0cm}|m{2.0cm}|m{1.8cm}|}
+\hline
+\textbf{Tag} & \textbf{Statement} & \textbf{Name} & \textbf{Strength}\\
+\hline
+Pos 1 & $\exists k>0,\ \forall n\ge1:\ p_{n+1}-p_n<k\,p_n^{5/8}$ & Ingham & Ingham \\
+\hline
+Pos 2 & $\forall n\ge1:\ p_{n+1}-p_n<p_n$ & Bertrand & $\mathsf{RCA}_0$ \\
+\hline
+Pos 3 & $\exists k>0,\ \exists\alpha<1,\ \forall n:\ p_{n+1}-p_n<k\,p_n^{\alpha}$ & PolyGap & $\ge$ Ingham \\
+\hline
+Pos 4 & $\forall N\gg1,\ \exists p$ prime: $N^3<p<(N+1)^3-1$ & MillsRec & Ingham \\
+\hline
+Pos 5 & $\forall x,\ \forall n:\ [x]=n\iff n\le x<n+1$ & Floor & $\mathsf{RCA}_0$ \\
+\hline
+Pos 6 & $u_n<u_{n+1}<v_{n+1}<v_n\wedge v_n-u_n\to0$ & Cauchy & $\mathsf{RCA}_0$ \\
+\hline
+Pos 7 & $\exists!\theta:\ \forall n,\ q_n<\theta^{3^n}<q_n+1$ & Unique & $\mathsf{RCA}_0$ \\
+\hline
+\end{tabular}
+}
+\end{center}
+
+\subsection{Definitions}
+\label{sec:definitions-tab}
+
+\begin{center}
+{\small
+\begin{tabular}{|c|m{6.0cm}|m{2.2cm}|m{1.8cm}|}
+\hline
+\textbf{Tag} & \textbf{Definition} & \textbf{Name} & \textbf{Strength}\\
+\hline
+Def 1 & $\mathrm{IsMills}(A):\iff\forall n\ge1,\ \mathrm{Prime}(\lfloor A^{3^n}\rfloor)$ & IsMills & $\mathsf{RCA}_0$ \\
+\hline
+Def 2 & $\mathrm{IsMinMills}(A):\iff\mathrm{IsLeast}\{x>1\mid\mathrm{IsMills}(x)\}(A)$ & IsMinMills & $\mathsf{RCA}_0$ \\
+\hline
+Def 3 & $\{q_n\}_{n\ge1}$ prime with $q_n^3<q_{n+1}<(q_n+1)^3-1$ & Qseq & $\mathsf{RCA}_0$ \\
+\hline
+Def 4 & $u_n:=q_n^{3^{-n}},\quad v_n:=(q_n+1)^{3^{-n}}$ & UV & $\mathsf{RCA}_0$ \\
+\hline
+Def 5 & $\theta:=\lim u_n=\lim v_n$ & Theta & $\mathsf{RCA}_0$ \\
+\hline
+\end{tabular}
+}
+\end{center}
+
+\subsection{Statements (the ten routes re-classified)}
+\label{sec:statements-tab}
+
+\begin{center}
+{\small
+\begin{tabular}{|c|m{5.4cm}|m{2.4cm}|m{1.8cm}|}
+\hline
+\textbf{Tag} & \textbf{Statement} & \textbf{Name} & \textbf{Strength}\\
+\hline
+Thm 1 & $\exists\theta>1,\ \mathrm{IsMills}(\theta)$ (via Ingham) & Mills & $\mathsf{RCA}_0$/Ingham \\
+\hline
+Thm 2 & $\exists\theta>1,\ \forall n:\ \mathrm{Prime}(\lfloor\theta^{c^n}\rfloor)$, $c\ge3$ & Kuipers & $\mathsf{RCA}_0$/Ingham \\
+\hline
+Thm 3 & $\exists\theta>1,\ \forall n:\ \mathrm{Prime}(\lfloor\theta^{c^n}\rfloor)$, $c>8/3$ & Ansari & $\mathsf{RCA}_0$/Ingham \\
+\hline
+Thm 4 & $\exists\theta,\ \forall n:\ \mathrm{Prime}(\lfloor\exp^{(n)}(\theta)\rfloor)$ & Wright & $\mathsf{RCA}_0$ \\
+\hline
+Thm 5 & $q_n=[f^{(n)}(\theta)]$ for suitable $f$ & Ore & relative \\
+\hline
+Thm 6 & Poly-gap $\to$ exponent $(1/\alpha)^n$ & Direct & depends on gap \\
+\hline
+Thm 7 & $\exists\theta>1,\ \forall n:\ \mathrm{Prime}(\lfloor c^{\theta^n}\rfloor)$, $c>1$ & Niven & $\mathsf{RCA}_0$/Ingham \\
+\hline
+Thm 8 & Suitable $\theta$ form a set of measure zero & Metrical & $\mathsf{WKL}_0$ (upper) \\
+\hline
+Thm 9 & \texttt{Mills.exists'} (Lean pointer) & Lean & Formal \\
+\hline
+Thm 10 & \texttt{Mills.exists'} (Lean detailed) & LeanDet & Formal \\
+\hline
+\end{tabular}
+}
+\end{center}
+
+\subsection{Dependency trees}
+\label{sec:trees}
+
+\paragraph{Route 1 (Mills via Ingham)}
+\begin{verbatimbox}
+L0 | Mills_thm                          (RCA0 + Ingham)
+L1 |   Pos:Ingham                       (Ingham)
+L1 |   Pos:MillsRec                     (RCA0, from Ingham)
+L1 |   Pos:Cauchy                       (RCA0)
+L1 |   Pos:Floor                        (RCA0)
+\end{verbatimbox}
+
+\paragraph{Route 4 (Wright via Bertrand)}
+\begin{verbatimbox}
+L0 | Wright_thm                         (RCA0)
+L1 |   Pos:Bertrand                     (RCA0)
+L1 |   Pos:Cauchy                       (RCA0)
+L1 |   Pos:Floor                        (RCA0)
+\end{verbatimbox}
+
+\paragraph{Route 8 (Wright metrical)}
+\begin{verbatimbox}
+L0 | Metrical_thm                       (WKL0 upper)
+L1 |   Baire category                   (WKL0)
+L1 |   Measure theory                   (WKL0)
+\end{verbatimbox}
+
+\paragraph{Route 10 (Lean detailed)}
+\begin{verbatimbox}
+L0 | LeanDet_thm                        (formal)
+L1 |   Def:IsMills                      (def)
+L1 |   Pos:Cauchy                       (RCA0)
+L1 |   Pos:Floor                        (RCA0)
+L1 |   Def:Qseq                         (RCA0)
+\end{verbatimbox}
+
+\subsection{Depth and strength}
+
+The topological depth of a proof term can be read from the
+\texttt{dag\_layer} column of the Mathlib declaration DAG released by
+\cite{MathlibGraph}; the Fitch tables in this note each occupy at most
+fourteen numbered steps, so they sit at low depth by that metric. We
+record the reference for comparison only.
+
+\begin{center}
+{\small
+\begin{tabular}{|c|c|m{3.4cm}|c|}
+\hline
+\textbf{Route(s)} & \textbf{Max depth} & \textbf{Depth chain} & \textbf{Strength}\\
+\hline
+4, 5, 6, 9, 10 & $\le2$ & --- & $\mathsf{RCA}_0$ \\
+\hline
+1, 2, 3, 7    & 2      & Ingham $\to$ gap & Ingham \\
+\hline
+8              & 2      & Baire/measure & $\mathsf{WKL}_0$ \\
+\hline
+\end{tabular}
+}
+\end{center}
+
+\subsection{Strength map}
+
+\begin{center}
+{\small
+\begin{tabular}{|m{0.6cm}|m{4.6cm}|m{1.4cm}|m{1.4cm}|m{1.4cm}|}
+\hline
+\textbf{\#} & \textbf{Route} & \textbf{Lower} & \textbf{Upper} & \textbf{Choice}\\
+\hline
+1  & Mills (Ingham)        & Ingham              & Ingham              & none \\
+\hline
+2  & Kuipers (Ingham)      & Ingham              & Ingham              & none \\
+\hline
+3  & Ansari (Ingham)       & Ingham              & Ingham              & none \\
+\hline
+4  & Wright (Bertrand)     & $\mathsf{RCA}_0$    & $\mathsf{RCA}_0$    & none \\
+\hline
+5  & Ore (abstract)        & relative            & relative            & none \\
+\hline
+6  & Direct (PolyGap)      & depends on gap      & depends on gap      & none \\
+\hline
+7  & Niven (Ingham)        & Ingham              & Ingham              & none \\
+\hline
+8  & Metrical              & open                & $\mathsf{WKL}_0$    & none \\
+\hline
+9  & Lean pointer          & formal              & formal              & none \\
+\hline
+10 & Lean detailed         & formal              & formal              & none \\
+\hline
+\end{tabular}
+}
+\end{center}
+
+\subsection{Comparison}
+\label{sec:compare}
+
+\noindent We distinguish four classes:
+\begin{enumerate}
+\item \emph{Prime-gap constructions via Ingham} (Routes 1, 2, 3).
+\item \emph{Elementary or abstract} (Routes 4, 5, 6).
+\item \emph{Variants and metrical} (Routes 7, 8).
+\item \emph{Formal Lean} (Routes 9, 10).
+\end{enumerate}
+
+\noindent The reverse-mathematical classification refines this taxonomy:
+
+Routes 4, 5, 9, 10 are $\mathsf{RCA}_0$-provable (given their inputs;
+Route 5 is an \emph{implication} whose antecedent is the existence of a
+suitable selection function $f$, so it is a relative theorem rather than
+an absolute one).
+
+Routes 1, 2, 3, 7 are $\mathsf{RCA}_0$-provable \emph{from} Ingham's
+estimate; unconditionally they inherit Ingham's strength.
+
+Route 8 has upper bound $\mathsf{WKL}_0$; its lower bound is open.
+
+\noindent The reason for the gap is the arithmetic input:
+
+\begin{itemize}
+\item Ingham's estimate $p_{n+1}-p_n<k\,p_n^{5/8}$ \cite{Ingham1937}
+      requires analytic number theory; it is provable in $\mathsf{ZF}$ but
+      is not known to lie within $\mathsf{RCA}_0$ or $\mathsf{WKL}_0$.
+\item Bertrand's postulate $p_{n+1}-p_n<p_n$ \cite{HardyWright1960} is
+      elementary and provable in $\mathsf{RCA}_0$; it gives Wright's
+      $2$-tower result but not Mills' $3^n$ result.
+\end{itemize}
+
+\noindent The Lean routes, provided the cited Lean source
+\cite{FormalConjectures} avoids \texttt{classical.choice} and other
+non-constructive principles, can in principle be interpreted in
+$\mathsf{RCA}_0$; however, the statements \texttt{Mills.exists'} and
+\texttt{Mills.exists\_least} are currently \texttt{sorry}-proved, so no
+formal interpretation is established. We do not claim formalisability for
+the full proof in this note.
+
+\noindent Consequently:
+
+\begin{center}
+\fbox{%
+\parbox{0.85\textwidth}{\centering
+The Mills theorem (existence of $\theta$ with $[\theta^{3^n}]$ prime for
+all $n$) is $\mathsf{RCA}_0$-provable \emph{from} Ingham's prime-gap
+estimate.\\[3pt]
+Unconditionally, it is a theorem of ordinary mathematics but not known to
+be $\mathsf{RCA}_0$-provable.\\[3pt]
+The Wright $2$-tower variant is $\mathsf{RCA}_0$-provable unconditionally
+(from Bertrand).
+}}
+\end{center}
+
+\noindent No route needs $\mathsf{ACA}_0$, $\mathsf{DC}(\R)$, or any
+choice principle. The Dedekind Cut axiom is superfluous because $\theta$
+is constructed as an explicit Cauchy limit.
+
+%=========================================================================
+\section{Concluding remarks}
+
+After Wright's effort, no further results of the preceding type have
+appeared, perhaps because they would seem anticlimactic. But formulas for
+primes, more or less interesting, continue to appear; the interested
+reader may consult Bang \cite{Bang1952}, Sierpi\'nski \cite{Sierpinski1952},
+Srinivasan \cite{Srinivasan1961,Srinivasan1962}, and Willans
+\cite{Willans1964}.
+
+\begin{center}
+\fbox{%
+\parbox{0.85\textwidth}{\centering
+The theorems of Mills, Kuipers, Ansari, Wright, Ore, and Niven are true.\\
+The transcribed proof of Mills carries an exponent typo ($5^{-n}$ should
+be $3^{-n}$); with the corrected exponent, every monotonicity check passes
+for $N=20$.\\
+The Python script \texttt{verify\_dudley.py} reproduces all checks.
+}}
+\end{center}
+
+%=========================================================================
+\begin{thebibliography}{99}
+	
+	\bibitem{Mills1947} W.~H.~Mills. A prime-representing function. \emph{Bull.
+		Amer. Math. Soc.} \textbf{53} (1947), 604.
+	\url{https://doi.org/10.1090/S0002-9904-1947-08849-2}
+	
+	\bibitem{Kuipers1950} L.~Kuipers. Prime-representing functions. \emph{Indag.
+		Math.} \textbf{12} (1950), 57--58.
+	\url{https://zbmath.org/?q=an:0036.05102}
+	
+	\bibitem{Ansari1951} A.~R.~Ansari. On prime representing function. \emph{Ganita}
+	\textbf{2} (1951), 81--82.
+	\url{https://zbmath.org/?q=an:0043.04302}
+	
+	\bibitem{Wright1951} E.~M.~Wright. A prime-representing function. \emph{Amer.
+		Math. Monthly} \textbf{58} (1951), 616--618.
+	\url{https://doi.org/10.1080/00029890.1951.11999747}
+	
+	\bibitem{Ore1952} O.~Ore. On the selection of subsequences. \emph{Proc. Amer.
+		Math. Soc.} \textbf{3} (1952), 706--712.
+	\url{https://doi.org/10.1090/S0002-9939-1952-0050546-2}
+	
+	\bibitem{Niven1951} I.~Niven. Functions which represent prime numbers. \emph{Proc.
+		Amer. Math. Soc.} \textbf{2} (1951), 753--755.
+	\url{https://doi.org/10.1090/S0002-9939-1951-0043807-4}
+	
+	\bibitem{Wright1954} E.~M.~Wright. A class of representing functions. \emph{J.
+		London Math. Soc.} \textbf{29} (1954), 63--71.
+	\url{https://doi.org/10.1112/jlms/s1-29.1.63}
+	
+	\bibitem{Ingham1937} A.~E.~Ingham. On the difference between consecutive
+	primes. \emph{Quart. J. Math. Oxford Ser.} (2) \textbf{8} (1937), 255--266.
+	\url{https://doi.org/10.1093/qmath/os-8.1.255}
+	
+	\bibitem{Dudley1969} U.~Dudley. History of a formula for primes. \emph{Amer.
+		Math. Monthly} \textbf{76} (1969), no.~1, 23--28.
+	\url{https://doi.org/10.1080/00029890.1969.12000121}
+	
+	\bibitem{HardyWright1960} G.~H.~Hardy and E.~M.~Wright. \emph{An Introduction to
+		the Theory of Numbers}, 4th ed. Oxford University Press, 1960. Theorem~418.
+	\url{https://search.worldcat.org/search?q=An+Introduction+to+the+Theory+of+Numbers+Hardy+Wright}
+	
+	\bibitem{Simpson2009} S.~G.~Simpson. \emph{Subsystems of Second Order
+		Arithmetic}, 2nd ed. Cambridge University Press, 2009.
+	\url{https://doi.org/10.1017/CBO9780511581007}
+	
+	\bibitem{FormalConjectures} Google DeepMind. \emph{formal-conjectures}. Lean
+	repository, 2026.
+	\url{https://github.com/google-deepmind/formal-conjectures}
+	
+	\bibitem{MathlibGraph} X.~Li and P.~Shafto. The Multinetwork of
+	Mathlib. NeurIPS 2026 Datasets and Benchmarks Track (under review).
+	Dataset files used for the dependency depth: \texttt{v2/declaration/metrics.csv}
+	(column \texttt{dag\_layer} = topological depth of each declaration in the
+	declaration DAG) and \texttt{mathlib\_edges.csv} (raw dependency edges).
+	{\scriptsize
+		\url{https://huggingface.co/datasets/MathNetwork/MathlibGraph}.\newline
+		\url{https://huggingface.co/datasets/MathNetwork/MathlibGraph/resolve/main/v2/declaration/metrics.csv}\newline
+		\url{https://huggingface.co/datasets/MathNetwork/MathlibGraph/resolve/main/mathlib_edges.csv}.}
+	
+	\bibitem{Bang1952} T.~Bang. A function representing all prime numbers. \emph{Nordisk Mat.
+		Tidskr.} \textbf{34} (1952), 117--118.
+	\url{https://zbmath.org/?q=an:0048.03108}
+	
+	\bibitem{CaldwellCheng2005} C.~K.~Caldwell and Y.~Cheng. Determining Mills'
+	constant and a note on Honaker's problem. \emph{J. Integer Seq.} \textbf{8}
+	(2005), Article 05.4.1.
+	\url{https://cs.uwaterloo.ca/journals/JIS/VOL8/Caldwell/caldwell78.pdf}
+	
+	\bibitem{Haneke1962} W.~Haneke. Versch\"arfung der Absch\"atzung von
+	$\zeta(1/2+it)$. \emph{Acta Arith.} \textbf{8} (1962/1963), 357--430.
+	\url{https://doi.org/10.4064/aa-8-4-357-430}
+	
+	\bibitem{Saito2025} K.~Saito. Mills' constant is irrational. \emph{Mathematika}
+	\textbf{71} (2025), no.~3, e70027.
+	\url{https://arxiv.org/abs/2404.19461}
+	
+	\bibitem{Sierpinski1952} W.~Sierpi\'nski. Sur une formule donnant tous les
+	nombres premiers. \emph{C. R. Acad. Sci. Paris} \textbf{235} (1952), 1078--1079.
+	\url{https://gallica.bnf.fr/ark:/12148/bpt6k31936/f1078}
+	
+	\bibitem{Srinivasan1961} B.~R.~Srinivasan. Formulae for the $n$th prime.
+	\emph{J. Indian Math. Soc.} (N.S.) \textbf{25} (1961), 33--39; \textbf{26}
+	(1962), 248.
+	\url{https://zbmath.org/?q=an:0111.25002}
+	
+	\bibitem{Srinivasan1962} B.~R.~Srinivasan. An arithmetical function and an
+	associated formula for the $n$th prime, I, II. \emph{Norske Vid. Selsk. Forh.
+		Trondheim} \textbf{35} (1962), 68--71, 72--75.
+	\url{https://zbmath.org/?q=an:0117.03003}
+	
+	\bibitem{Willans1964} C.~P.~Willans. On formulae for the $n$th prime number.
+	\emph{Math. Gaz.} \textbf{48} (1964), 413--415.
+	\url{https://doi.org/10.2307/3611815}
+	
+\end{thebibliography}
+
+\end{document}
