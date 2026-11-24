@@ -1,0 +1,835 @@
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amssymb}
+\usepackage{array}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.4}
+\newlength{\FTCOneColumnBody}
+\newlength{\FTCThreeColumnBody}
+\newlength{\FTCFourColumnBody}
+\AtBeginDocument{%
+\setlength{\FTCOneColumnBody}{\textwidth}%
+\addtolength{\FTCOneColumnBody}{-\tabcolsep}%
+\addtolength{\FTCOneColumnBody}{-2\arrayrulewidth}%
+\setlength{\FTCThreeColumnBody}{\textwidth}%
+\addtolength{\FTCThreeColumnBody}{-5\tabcolsep}%
+\addtolength{\FTCThreeColumnBody}{-4\arrayrulewidth}%
+\setlength{\FTCFourColumnBody}{\textwidth}%
+\addtolength{\FTCFourColumnBody}{-7\tabcolsep}%
+\addtolength{\FTCFourColumnBody}{-5\arrayrulewidth}%
+}
+\begin{document}
+\scriptsize
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Fatou}\ :\ \forall (X:\textsf{Type})\ (A:\textsf{Set}(\textsf{Set}(X)))\ (\mu:\textsf{Set}(X)\to\textsf{E})\ (f:\textsf{PosNat}\to X\to\textsf{E}),\ \allowbreak \textsf{MS}(A,\mu)\land(\forall n:\textsf{PosNat},\ \textsf{Measurable}(f_n))\ \Longrightarrow\ \allowbreak \int_X\sup_k\inf_{n\ge k}f_n\,d\mu\ \le\ \allowbreak \sup_k\inf_{n\ge k}\int_X f_n\,d\mu$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_0}:=$\par
+$\displaystyle X:\textsf{Type},\quad A:\textsf{Set}(\textsf{Set}(X)),$\par
+$\displaystyle \mu:\textsf{Set}(X)\to\textsf{ENNReal},\quad\textsf{MS}(A,\mu).$\\ \hline
+\end{tabular}%
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Definitions}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Kind}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Types}{$\displaystyle \textsf{Types}$} & $\displaystyle \textsf{E}:=\textsf{ENNReal},\quad\textsf{ENNReal}:=\textsf{WithTop}(\textsf{NNReal}),$\par
+$\displaystyle \textsf{PosNat}:=\{n:\textsf{Nat}\mid 0<n\},$\par
+$\displaystyle \textsf{F}:=X\to\textsf{E}.$\par
+$\displaystyle \textsf{NNReal}\hookrightarrow\textsf{E}.$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:MS}{$\displaystyle \textsf{MS}$} & $\displaystyle \textsf{MS}(A,\mu):\Longleftrightarrow$\par
+$\displaystyle \textsf{SigmaAlgebra}(A)\land\textsf{CountAdd}(A,\mu).$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Meas}{$\displaystyle \textsf{Meas}$} & $\displaystyle \forall h:\textsf{F},$\par
+$\displaystyle \textsf{Measurable}(h):\Longleftrightarrow$\par
+$\displaystyle \forall t:\textsf{NNReal},\ \{x:X\mid h(x)>t\}\in A.$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Part}{$\displaystyle \textsf{Part}$} & $\displaystyle r:\textsf{PosNat},\ P:\textsf{Fin}(r)\to\textsf{Set}(X),$\par
+$\displaystyle \textsf{Part}(P):\Longleftrightarrow$\par
+$\displaystyle (\forall i:\textsf{Fin}(r),\ P_i\in A)$\par
+$\displaystyle \land\ (\bigcup_{i<r}P_i=X)$\par
+$\displaystyle \land\ (\forall i,j:\textsf{Fin}(r),$\par
+$\displaystyle i\ne j\Rightarrow P_i\cap P_j=\varnothing).$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Rep}{$\displaystyle \textsf{Rep}$} & $\displaystyle s:\textsf{F},\quad r:\textsf{PosNat},$\par
+$\displaystyle a:\textsf{Fin}(r)\to\textsf{NNReal},\quad P:\textsf{Fin}(r)\to\textsf{Set}(X),$\par
+$\displaystyle \textsf{Rep}(s;r,a,P):\Longleftrightarrow$\par
+$\displaystyle \textsf{Part}(P)\land$\par
+$\displaystyle s=\lambda x:X,\ \sum_{i<r}a_i\mathbf1_{P_i}(x).$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Simple}{$\displaystyle \textsf{Simple}$} & $\displaystyle \textsf{Simple}(s):\Longleftrightarrow$\par
+$\displaystyle \exists r:\textsf{PosNat},\ \exists a:\textsf{Fin}(r)\to\textsf{NNReal},$\par
+$\displaystyle \exists P:\textsf{Fin}(r)\to\textsf{Set}(X),$\par
+$\displaystyle \textsf{Rep}(s;r,a,P).$\par
+$\displaystyle \textsf{S}_A:=\{s:\textsf{F}\mid\textsf{Simple}(s)\}.$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:J}{$\displaystyle \textsf{J}$} & $\displaystyle \textsf{Rep}(s;r,a,P)\ \Longrightarrow$\par
+$\displaystyle \textsf{J}(s):=\sum_{i<r}a_i\mu(P_i).$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:I}{$\displaystyle \textsf{I}$} & $\displaystyle \textsf{I}(h):=\sup\{\textsf{J}(s)\mid$\par
+$\displaystyle s:\textsf{S}_A,\ s\le h\},$\par
+$\displaystyle \int_Xh\,d\mu:=\textsf{I}(h),$\par
+$\displaystyle h\le v:\Longleftrightarrow\forall x:X,\ h(x)\le v(x).$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Up}{$\displaystyle \textsf{Up}$} & $\displaystyle Y:\textsf{Type},\quad[\textsf{CompleteLattice}(Y)],$\par
+$\displaystyle u:\textsf{PosNat}\to Y,\quad v:Y,$\par
+$\displaystyle \textsf{Mono}(u):\Longleftrightarrow$\par
+$\displaystyle \forall k:\textsf{PosNat},\ u_k\le u_{k+1},$\par
+$\displaystyle u\uparrow v:\Longleftrightarrow\textsf{Mono}(u)\land v=\sup_k u_k,$\par
+$\displaystyle E_k\uparrow E:\Longleftrightarrow$\par
+$\displaystyle (\forall k:\textsf{PosNat},\ E_k\subseteq E_{k+1})$\par
+$\displaystyle \land\ \bigcup_k E_k=E.$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Limit}{$\displaystyle \textsf{Limit}$} & $\displaystyle a:\textsf{PosNat}\to\textsf{E},\ L:\textsf{E},$\par
+$\displaystyle \textsf{Conv}(a,L):\Longleftrightarrow$\par
+$\displaystyle \bigl(L<\infty\Rightarrow$\par
+$\displaystyle \forall\varepsilon:\textsf{NNReal},\ \varepsilon>0\Rightarrow$\par
+$\displaystyle \exists K:\textsf{PosNat},\ \forall k\ge K,$\par
+$\displaystyle a_k<L+\varepsilon\land L<a_k+\varepsilon\bigr)$\par
+$\displaystyle \land\ \bigl(L=\infty\Rightarrow$\par
+$\displaystyle \forall R:\textsf{NNReal},\ \exists K:\textsf{PosNat},$\par
+$\displaystyle \forall k\ge K,\ R<a_k\bigr).$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Liminf}{$\displaystyle \textsf{Liminf}$} & $\displaystyle \textsf{liminf}(v):=\sup_k\inf_{n\ge k}v_n,$\par
+$\displaystyle \sup_nh_n:=\lambda x:X,\ \sup_nh_n(x),$\par
+$\displaystyle \inf_nh_n:=\lambda x:X,\ \inf_nh_n(x).$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Tail}{$\displaystyle \textsf{Tail}$} & $\displaystyle g_k:=\lambda x:X,\ \inf_{n\ge k}f_n(x),$\par
+$\displaystyle g:=\lambda x:X,\ \sup_k g_k(x).$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Axioms}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Kind}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{ax:Sigma}{$\displaystyle \textsf{Sigma}$} & $\displaystyle \textsf{SigmaAlgebra}(A):\Longleftrightarrow$\par
+$\displaystyle X\in A\ \land$\par
+$\displaystyle (\forall B:\textsf{Set}(X),\ B\in A\Rightarrow X\setminus B\in A)$\par
+$\displaystyle \land\ (\forall B:\textsf{PosNat}\to\textsf{Set}(X),$\par
+$\displaystyle (\forall n:\textsf{PosNat},\ B_n\in A)$\par
+$\displaystyle \Rightarrow\bigcup_n B_n\in A).$ & $\displaystyle \textsf{axiom}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{ax:Measure}{$\displaystyle \textsf{Measure}$} & $\displaystyle \textsf{CountAdd}(A,\mu):\Longleftrightarrow$\par
+$\displaystyle \mu(\varnothing)=0\ \land$\par
+$\displaystyle \forall B:\textsf{PosNat}\to\textsf{Set}(X),$\par
+$\displaystyle \bigl((\forall n:\textsf{PosNat},\ B_n\in A)$\par
+$\displaystyle \land\ (\forall i,j:\textsf{PosNat},$\par
+$\displaystyle i\ne j\Rightarrow B_i\cap B_j=\varnothing)\bigr)$\par
+$\displaystyle \Rightarrow\mu(\bigcup_n B_n)=\sum_{n\ge1}\mu(B_n).$ & $\displaystyle \textsf{axiom}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \textsf{LinearOrderedField}(\textsf{Real}),$\par
+$\displaystyle \textsf{Archimedean}(\textsf{Real}),$\par
+$\displaystyle \textsf{ConditionallyCompleteLinearOrder}(\textsf{Real}),$\par
+$\displaystyle \textsf{NNReal}=\{x:\textsf{Real}\mid0\le x\},$\par
+$\displaystyle \textsf{E}=\textsf{WithTop}(\textsf{NNReal}),$\par
+$\displaystyle \textsf{CompleteLinearOrder}(\textsf{E}),$\par
+$\displaystyle 0\cdot\infty=0,\quad\infty+z=\infty,$\par
+$\displaystyle \sum_{n\ge1}z_n:=\sup_k\sum_{n=1}^kz_n,$\par
+$\displaystyle \forall\varepsilon:\textsf{NNReal},\ \varepsilon>0\Rightarrow$\par
+$\displaystyle \exists j:\textsf{PosNat},\ 1/j<\varepsilon.$ & $\displaystyle \textsf{axiom}$\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Logic}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Symbol}$ & $\displaystyle \textsf{Formula}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:AllI}{$\displaystyle \textsf{AllI}$} & $\displaystyle \forall I$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash P(x)\quad x\notin\textsf{FV}(\Gamma)}{\Gamma\vdash\forall x\,P(x)}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:AllE}{$\displaystyle \textsf{AllE}$} & $\displaystyle \forall E$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash\forall x\,P(x)}{\Gamma\vdash P(a)}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:AndI}{$\displaystyle \textsf{AndI}$} & $\displaystyle \wedge I$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash P\quad\Gamma\vdash Q}{\Gamma\vdash P\land Q}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:AndE}{$\displaystyle \textsf{AndE}$} & $\displaystyle \wedge E$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash P\land Q}{\Gamma\vdash P}\quad\dfrac{\Gamma\vdash P\land Q}{\Gamma\vdash Q}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:ImpI}{$\displaystyle \textsf{ImpI}$} & $\displaystyle \to I$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma,P\vdash Q}{\Gamma\vdash P\to Q}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:MP}{$\displaystyle \textsf{MP}$} & $\displaystyle \to E$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash P\quad\Gamma\vdash P\to Q}{\Gamma\vdash Q}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:ExistsI}{$\displaystyle \textsf{ExistsI}$} & $\displaystyle \exists I$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash P(a)}{\Gamma\vdash\exists x\,P(x)}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:ExistsE}{$\displaystyle \textsf{ExistsE}$} & $\displaystyle \exists E$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash\exists xP(x)\quad\Gamma,P(y)\vdash Q}{\Gamma\vdash Q}$\par
+$\displaystyle y\notin\textsf{FV}(\Gamma,Q).$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:Eq}{$\displaystyle \textsf{Eq}$} & $\displaystyle =E$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash a=b\quad\Gamma\vdash P(a)}{\Gamma\vdash P(b)}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:Cases}{$\displaystyle \textsf{Cases}$} & $\displaystyle \vee E$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash P\lor Q\quad\Gamma,P\vdash R\quad\Gamma,Q\vdash R}{\Gamma\vdash R}$\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Lemmas}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Proof}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{lem:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \forall a:\textsf{PosNat}\to\textsf{E},$\par
+$\displaystyle \textsf{Mono}(a)\Rightarrow\textsf{Conv}(a,\sup_k a_k).$ & \hyperlink{proof:O4}{$\displaystyle \textsf{O4}$}\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{lem:Continuity}{$\displaystyle \textsf{Continuity}$} & $\displaystyle E_k\in A,\ E_k\uparrow E$\par
+$\displaystyle \Rightarrow\mu(E)=\sup_k\mu(E_k)$\par
+$\displaystyle \land\textsf{Conv}((\mu(E_k))_k,\mu(E)).$ & \hyperlink{proof:C6}{$\displaystyle \textsf{C6}$}\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{lem:Simple}{$\displaystyle \textsf{Simple}$} & $\displaystyle \textsf{Rep}(s;r,a,P)\land\textsf{Rep}(s;q,b,Q)$\par
+$\displaystyle \Rightarrow\sum_i a_i\mu(P_i)=\sum_j b_j\mu(Q_j),$\par
+$\displaystyle s,t:\textsf{S}_A,\ s\le t\Rightarrow\textsf{J}(s)\le\textsf{J}(t),$\par
+$\displaystyle c:\textsf{NNReal}\Rightarrow\textsf{J}(cs)=c\textsf{J}(s).$ & \hyperlink{proof:J5}{$\displaystyle \textsf{J5}$}\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{lem:Finite}{$\displaystyle \textsf{Finite}$} & $\displaystyle z_{ik}\uparrow z_i\ (i:\textsf{Fin}(r))$\par
+$\displaystyle \Rightarrow\sup_k\sum_{i<r}z_{ik}=\sum_{i<r}z_i.$ & \hyperlink{proof:D4}{$\displaystyle \textsf{D4}$}\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{lem:Integral}{$\displaystyle \textsf{Integral}$} & $\displaystyle h\le v\Rightarrow\textsf{I}(h)\le\textsf{I}(v),$\par
+$\displaystyle s:\textsf{S}_A\Rightarrow\textsf{I}(s)=\textsf{J}(s).$ & \hyperlink{proof:I3}{$\displaystyle \textsf{I3}$}\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{lem:Meas}{$\displaystyle \textsf{Meas}$} & $\displaystyle (\forall n:\textsf{PosNat},\ \textsf{Measurable}(h_n))$\par
+$\displaystyle \Rightarrow\textsf{Measurable}(\inf_n h_n)$\par
+$\displaystyle \land\textsf{Measurable}(\sup_n h_n).$ & \hyperlink{proof:P4}{$\displaystyle \textsf{P4}$}\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{lem:Restriction}{$\displaystyle \textsf{Restriction}$} & $\displaystyle E_k\in A,\ E_k\uparrow X,\ s:\textsf{S}_A$\par
+$\displaystyle \Rightarrow\sup_k\textsf{J}(s\mathbf1_{E_k})=\textsf{J}(s).$ & \hyperlink{proof:T2}{$\displaystyle \textsf{T2}$}\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{lem:Liminf}{$\displaystyle \textsf{Liminf}$} & $\displaystyle \textsf{Mono}(u)\land(\forall k,\ \textsf{Measurable}(u_k))$\par
+$\displaystyle \Rightarrow\textsf{Conv}((\textsf{I}(u_k))_k,\sup_k\textsf{I}(u_k)).$ & \hyperlink{proof:L3}{$\displaystyle \textsf{L3}$}\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{lem:MCT}{$\displaystyle \textsf{MCT}$} & $\displaystyle u_k\uparrow v\land(\forall k,\ \textsf{Measurable}(u_k))$\par
+$\displaystyle \Rightarrow\textsf{I}(v)=\sup_k\textsf{I}(u_k)$\par
+$\displaystyle \land\textsf{Conv}((\textsf{I}(u_k))_k,\textsf{I}(v)).$ & \hyperlink{proof:M13}{$\displaystyle \textsf{M13}$}\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Proofs}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Dependencies}$ & $\displaystyle \textsf{Rule}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_O}:=$\par
+$\displaystyle a:\textsf{PosNat}\to\textsf{E},\quad\textsf{Mono}(a).$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:O1}{$\displaystyle \textsf{O1}$} & $\displaystyle L:=\sup_{k\ge1}a_k\in\textsf{E},$\par
+$\displaystyle \forall k:\textsf{PosNat},\ a_k\le L.$ & \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \sup$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:O2}{$\displaystyle \textsf{O2}$} & $\displaystyle L<\infty,\quad0<\varepsilon:\textsf{NNReal},$\par
+$\displaystyle L<\varepsilon\Rightarrow L<a_1+\varepsilon,$\par
+$\displaystyle \varepsilon\le L\Rightarrow L-\varepsilon<L$\par
+$\displaystyle \Rightarrow\exists K:\textsf{PosNat},\ L-\varepsilon<a_K,$\par
+$\displaystyle \Rightarrow\exists K:\textsf{PosNat},\ \forall k\ge K,$\par
+$\displaystyle a_k<L+\varepsilon\land L<a_k+\varepsilon.$ & \hyperlink{proof:O1}{$\displaystyle \textsf{O1}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \sup$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:O3}{$\displaystyle \textsf{O3}$} & $\displaystyle L=\infty\Rightarrow\forall R:\textsf{NNReal},$\par
+$\displaystyle \exists K:\textsf{PosNat},\ R<a_K$\par
+$\displaystyle \Rightarrow\forall k\ge K,\ R<a_k.$ & \hyperlink{proof:O1}{$\displaystyle \textsf{O1}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \sup$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:O4}{$\displaystyle \textsf{O4}$} & $\displaystyle \textsf{Conv}(a,\sup_k a_k).$ & \hyperlink{proof:O2}{$\displaystyle \textsf{O2}$}, \hyperlink{proof:O3}{$\displaystyle \textsf{O3}$}, \hyperlink{def:Limit}{$\displaystyle \textsf{Limit}$} & $\displaystyle \lor E$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_C}:=$\par
+$\displaystyle E:\textsf{PosNat}\to\textsf{Set}(X),$\par
+$\displaystyle (\forall k:\textsf{PosNat},\ E_k\in A)$\par
+$\displaystyle \land(\forall k:\textsf{PosNat},\ E_k\subseteq E_{k+1}).$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:C1}{$\displaystyle \textsf{C1}$} & $\displaystyle B:\textsf{Fin}(r)\to\textsf{Set}(X),$\par
+$\displaystyle (\forall i<r,\ B_i\in A)\land$\par
+$\displaystyle (\forall i\ne j,\ B_i\cap B_j=\varnothing)$\par
+$\displaystyle \Rightarrow\mu(\bigcup_{i<r}B_i)=\sum_{i<r}\mu(B_i),$\par
+$\displaystyle B_n^\prime:=\textsf{if}\ n\le r\ \textsf{then}\ B_{n-1}$\par
+$\displaystyle \textsf{else}\ \varnothing,\quad\mu(\varnothing)=0.$ & \hyperlink{ax:Measure}{$\displaystyle \textsf{Measure}$} & $\displaystyle \sum$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:C2}{$\displaystyle \textsf{C2}$} & $\displaystyle U,V:\textsf{Set}(X),\ U,V\in A,\ U\subseteq V,$\par
+$\displaystyle V=U\mathbin{\dot\cup}(V\setminus U),$\par
+$\displaystyle \mu(V)=\mu(U)+\mu(V\setminus U)\ge\mu(U).$ & \hyperlink{proof:C1}{$\displaystyle \textsf{C1}$}, \hyperlink{ax:Sigma}{$\displaystyle \textsf{Sigma}$} & $\displaystyle \le$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:C3}{$\displaystyle \textsf{C3}$} & $\displaystyle B_1:=E_1,\quad B_{j+1}:=E_{j+1}\setminus E_j,$\par
+$\displaystyle \forall j:\textsf{PosNat},\ B_j\in A,$\par
+$\displaystyle \forall i,j:\textsf{PosNat},$\par
+$\displaystyle i\ne j\Rightarrow B_i\cap B_j=\varnothing.$ & \hyperlink{ax:Sigma}{$\displaystyle \textsf{Sigma}$} & $\displaystyle \setminus$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:C4}{$\displaystyle \textsf{C4}$} & $\displaystyle E_k=\mathop{\dot\bigcup}_{j=1}^kB_j,$\par
+$\displaystyle \mu(E_k)=\sum_{j=1}^k\mu(B_j).$ & \hyperlink{proof:C1}{$\displaystyle \textsf{C1}$}, \hyperlink{proof:C3}{$\displaystyle \textsf{C3}$} & $\displaystyle \sum$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:C5}{$\displaystyle \textsf{C5}$} & $\displaystyle \bigcup_kE_k=\mathop{\dot\bigcup}_{j\ge1}B_j,$\par
+$\displaystyle \mu(\bigcup_kE_k)=\sum_{j\ge1}\mu(B_j)$\par
+$\displaystyle {}=\sup_k\mu(E_k).$ & \hyperlink{proof:C3}{$\displaystyle \textsf{C3}$}, \hyperlink{proof:C4}{$\displaystyle \textsf{C4}$}, \hyperlink{ax:Measure}{$\displaystyle \textsf{Measure}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \sup$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:C6}{$\displaystyle \textsf{C6}$} & $\displaystyle \mu(E_k)\uparrow\mu(\bigcup_kE_k),$\par
+$\displaystyle \textsf{Conv}((\mu(E_k))_k,\mu(\bigcup_kE_k)).$ & \hyperlink{proof:C2}{$\displaystyle \textsf{C2}$}, \hyperlink{proof:C5}{$\displaystyle \textsf{C5}$}, \hyperlink{lem:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \land I$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_J}:=$\par
+$\displaystyle s,t:\textsf{S}_A,$\par
+$\displaystyle \textsf{Rep}(s;r,a,P),\quad\textsf{Rep}(t;q,b,Q).$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:J1}{$\displaystyle \textsf{J1}$} & $\displaystyle C_{ij}:=P_i\cap Q_j\in A,$\par
+$\displaystyle \sum_{i<r}a_i\mu(P_i)=\sum_{i<r}\sum_{j<q}a_i\mu(C_{ij}),$\par
+$\displaystyle \sum_{j<q}b_j\mu(Q_j)=\sum_{i<r}\sum_{j<q}b_j\mu(C_{ij}).$ & \hyperlink{def:Simple}{$\displaystyle \textsf{Simple}$}, \hyperlink{def:J}{$\displaystyle \textsf{J}$}, \hyperlink{proof:C1}{$\displaystyle \textsf{C1}$}, \hyperlink{ax:Sigma}{$\displaystyle \textsf{Sigma}$} & $\displaystyle \sum$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:J2}{$\displaystyle \textsf{J2}$} & $\displaystyle s=t\Rightarrow\forall i,j,$\par
+$\displaystyle C_{ij}\ne\varnothing\Rightarrow a_i=b_j,$\par
+$\displaystyle C_{ij}=\varnothing\Rightarrow$\par
+$\displaystyle a_i\mu(C_{ij})=0=b_j\mu(C_{ij}),$\par
+$\displaystyle \Rightarrow\sum_i a_i\mu(P_i)=\sum_j b_j\mu(Q_j).$ & \hyperlink{proof:J1}{$\displaystyle \textsf{J1}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle =E$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:J3}{$\displaystyle \textsf{J3}$} & $\displaystyle s\le t\Rightarrow\forall i,j,$\par
+$\displaystyle C_{ij}\ne\varnothing\Rightarrow a_i\le b_j,$\par
+$\displaystyle \Rightarrow a_i\mu(C_{ij})\le b_j\mu(C_{ij}),$\par
+$\displaystyle \Rightarrow\textsf{J}(s)\le\textsf{J}(t).$ & \hyperlink{proof:J1}{$\displaystyle \textsf{J1}$}, \hyperlink{proof:J2}{$\displaystyle \textsf{J2}$}, \hyperlink{ax:Measure}{$\displaystyle \textsf{Measure}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \le$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:J4}{$\displaystyle \textsf{J4}$} & $\displaystyle c:\textsf{NNReal},\quad\{s>c\}=\bigcup_{i:\ a_i>c}P_i\in A,$\par
+$\displaystyle \Rightarrow\textsf{Measurable}(s),\quad\forall x:X,\ s(x)<\infty,$\par
+$\displaystyle U\in A\Rightarrow s\mathbf1_U\in\textsf{S}_A,$\par
+$\displaystyle P_i=(P_i\cap U)\mathbin{\dot\cup}(P_i\setminus U).$ & \hyperlink{def:Simple}{$\displaystyle \textsf{Simple}$}, \hyperlink{def:Meas}{$\displaystyle \textsf{Meas}$}, \hyperlink{ax:Sigma}{$\displaystyle \textsf{Sigma}$} & $\displaystyle \cup$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:J5}{$\displaystyle \textsf{J5}$} & $\displaystyle c:\textsf{NNReal},$\par
+$\displaystyle \textsf{J}(cs)=\sum_i(ca_i)\mu(P_i)$\par
+$\displaystyle {}=c\sum_i a_i\mu(P_i)=c\textsf{J}(s),$\par
+$\displaystyle c=0\Rightarrow\textsf{J}(cs)=0,$\par
+$\displaystyle \forall s,t:\textsf{S}_A,\ s\le t\Rightarrow\textsf{J}(s)\le\textsf{J}(t),$\par
+$\displaystyle \forall s:\textsf{S}_A,\ \textsf{Measurable}(s).$ & \hyperlink{proof:J2}{$\displaystyle \textsf{J2}$}, \hyperlink{proof:J3}{$\displaystyle \textsf{J3}$}, \hyperlink{proof:J4}{$\displaystyle \textsf{J4}$}, \hyperlink{def:J}{$\displaystyle \textsf{J}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \sum$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_D}:=$\par
+$\displaystyle r:\textsf{PosNat},\quad z:\textsf{Fin}(r)\to\textsf{PosNat}\to\textsf{E},$\par
+$\displaystyle \forall i:\textsf{Fin}(r),\ z_{ik}\uparrow z_i.$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:D1}{$\displaystyle \textsf{D1}$} & $\displaystyle \sup_k\sum_{i<r}z_{ik}\le\sum_{i<r}z_i.$ & \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \le$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:D2}{$\displaystyle \textsf{D2}$} & $\displaystyle (\forall i<r,\ z_i<\infty),\quad0<\varepsilon:\textsf{NNReal},$\par
+$\displaystyle \forall i<r,\ \exists K_i:\textsf{PosNat},$\par
+$\displaystyle z_i<z_{iK_i}+\varepsilon/r,$\par
+$\displaystyle K:=\max_{i<r}K_i,$\par
+$\displaystyle \sum_{i<r}z_i<\sum_{i<r}z_{iK}+\varepsilon,$\par
+$\displaystyle \Rightarrow\sum_{i<r}z_i\le\sup_k\sum_{i<r}z_{ik}.$ & \hyperlink{proof:D1}{$\displaystyle \textsf{D1}$}, \hyperlink{lem:Order}{$\displaystyle \textsf{Order}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \varepsilon$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:D3}{$\displaystyle \textsf{D3}$} & $\displaystyle i:\textsf{Fin}(r),\ z_i=\infty\ \vdash$\par
+$\displaystyle \sup_k\sum_{j<r}z_{jk}\ge\sup_kz_{ik}=\infty,$\par
+$\displaystyle (\exists i:\textsf{Fin}(r),\ z_i=\infty)\Rightarrow$\par
+$\displaystyle \sup_k\sum_{i<r}z_{ik}=\infty=\sum_{i<r}z_i.$ & \hyperlink{proof:D1}{$\displaystyle \textsf{D1}$}, \hyperlink{lem:Order}{$\displaystyle \textsf{Order}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \infty$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:D4}{$\displaystyle \textsf{D4}$} & $\displaystyle \sup_k\sum_{i<r}z_{ik}=\sum_{i<r}z_i,$\par
+$\displaystyle c:\textsf{NNReal},\ b_k\uparrow b,\ V:=\sup_k cb_k,$\par
+$\displaystyle c=0\Rightarrow V=0=cb,$\par
+$\displaystyle c>0\Rightarrow V\le cb,$\par
+$\displaystyle V=\infty\Rightarrow cb\le V,$\par
+$\displaystyle c>0\land V<\infty\Rightarrow$\par
+$\displaystyle (\forall k,\ b_k\le V/c)\Rightarrow b\le V/c\Rightarrow cb\le V,$\par
+$\displaystyle \Rightarrow V=cb\land cb_k\uparrow cb.$ & \hyperlink{proof:D2}{$\displaystyle \textsf{D2}$}, \hyperlink{proof:D3}{$\displaystyle \textsf{D3}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \lor E$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_I}:=$\par
+$\displaystyle h,v:\textsf{F}.$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:I1}{$\displaystyle \textsf{I1}$} & $\displaystyle h\le v\Rightarrow$\par
+$\displaystyle \{s:\textsf{S}_A\mid s\le h\}\subseteq\{s:\textsf{S}_A\mid s\le v\}$\par
+$\displaystyle \Rightarrow\textsf{I}(h)\le\textsf{I}(v).$ & \hyperlink{def:I}{$\displaystyle \textsf{I}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \sup$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:I2}{$\displaystyle \textsf{I2}$} & $\displaystyle s:\textsf{S}_A,\quad s\le s,$\par
+$\displaystyle \textsf{J}(s)\le\textsf{I}(s),$\par
+$\displaystyle \forall t:\textsf{S}_A,\ t\le s\Rightarrow\textsf{J}(t)\le\textsf{J}(s),$\par
+$\displaystyle \Rightarrow\textsf{I}(s)\le\textsf{J}(s),$\par
+$\displaystyle \Rightarrow\textsf{I}(s)=\textsf{J}(s).$ & \hyperlink{def:I}{$\displaystyle \textsf{I}$}, \hyperlink{lem:Simple}{$\displaystyle \textsf{Simple}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \le$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:I3}{$\displaystyle \textsf{I3}$} & $\displaystyle (h\le v\Rightarrow\textsf{I}(h)\le\textsf{I}(v))$\par
+$\displaystyle \land\ (\forall s:\textsf{S}_A,\ \textsf{I}(s)=\textsf{J}(s)).$ & \hyperlink{proof:I1}{$\displaystyle \textsf{I1}$}, \hyperlink{proof:I2}{$\displaystyle \textsf{I2}$} & $\displaystyle \land I$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_P}:=$\par
+$\displaystyle h:\textsf{PosNat}\to\textsf{F},$\par
+$\displaystyle \forall n:\textsf{PosNat},\ \textsf{Measurable}(h_n).$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:P1}{$\displaystyle \textsf{P1}$} & $\displaystyle \textsf{Measurable}(v),\quad t:\textsf{NNReal},$\par
+$\displaystyle t=0\Rightarrow\{v\ge t\}=X\in A,$\par
+$\displaystyle t>0\Rightarrow\{v\ge t\}=$\par
+$\displaystyle \bigcap_{j\ge1}\{v>t-t/(j+1)\}\in A.$ & \hyperlink{def:Meas}{$\displaystyle \textsf{Meas}$}, \hyperlink{ax:Sigma}{$\displaystyle \textsf{Sigma}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \bigcap$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:P2}{$\displaystyle \textsf{P2}$} & $\displaystyle v:=\inf_n h_n,\quad t:\textsf{NNReal},$\par
+$\displaystyle \{v>t\}=\bigcup_{j\ge1}\bigcap_{n\ge1}\{h_n>t+1/j\},$\par
+$\displaystyle t<v<\infty\Rightarrow\exists j,\ 1/j<v-t,$\par
+$\displaystyle v=\infty\Rightarrow\forall n,\ h_n>t+1,$\par
+$\displaystyle (\forall n,\ h_n>t+1/j)\Rightarrow v\ge t+1/j>t,$\par
+$\displaystyle \Rightarrow\textsf{Measurable}(v).$ & \hyperlink{def:Meas}{$\displaystyle \textsf{Meas}$}, \hyperlink{ax:Sigma}{$\displaystyle \textsf{Sigma}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \bigcup\bigcap$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:P3}{$\displaystyle \textsf{P3}$} & $\displaystyle w:=\sup_nh_n,\quad t:\textsf{NNReal},$\par
+$\displaystyle \{w>t\}=\bigcup_n\{h_n>t\}\in A,$\par
+$\displaystyle \Rightarrow\textsf{Measurable}(w).$ & \hyperlink{def:Meas}{$\displaystyle \textsf{Meas}$}, \hyperlink{ax:Sigma}{$\displaystyle \textsf{Sigma}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \bigcup$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:P4}{$\displaystyle \textsf{P4}$} & $\displaystyle \textsf{Measurable}(\inf_nh_n)$\par
+$\displaystyle \land\textsf{Measurable}(\sup_nh_n),$\par
+$\displaystyle \forall k:\textsf{PosNat},$\par
+$\displaystyle \inf_{n\ge k}h_n=\inf_{j\ge1}h_{k+j-1}.$ & \hyperlink{proof:P1}{$\displaystyle \textsf{P1}$}, \hyperlink{proof:P2}{$\displaystyle \textsf{P2}$}, \hyperlink{proof:P3}{$\displaystyle \textsf{P3}$} & $\displaystyle \land I$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_T}:=$\par
+$\displaystyle s:\textsf{S}_A,\quad\textsf{Rep}(s;r,a,P),$\par
+$\displaystyle (\forall k,\ E_k\in A)\land E_k\uparrow X.$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:T1}{$\displaystyle \textsf{T1}$} & $\displaystyle \textsf{J}(s\mathbf1_{E_k})=\sum_{i<r}a_i\mu(P_i\cap E_k),$\par
+$\displaystyle P_i\cap E_k\uparrow P_i,$\par
+$\displaystyle \mu(P_i\cap E_k)\uparrow\mu(P_i).$ & \hyperlink{lem:Simple}{$\displaystyle \textsf{Simple}$}, \hyperlink{lem:Continuity}{$\displaystyle \textsf{Continuity}$}, \hyperlink{def:J}{$\displaystyle \textsf{J}$} & $\displaystyle \cap$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:T2}{$\displaystyle \textsf{T2}$} & $\displaystyle \sup_k\textsf{J}(s\mathbf1_{E_k})$\par
+$\displaystyle {}=\sum_{i<r}a_i\mu(P_i)=\textsf{J}(s).$ & \hyperlink{proof:T1}{$\displaystyle \textsf{T1}$}, \hyperlink{lem:Finite}{$\displaystyle \textsf{Finite}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \sum$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_L}:=$\par
+$\displaystyle u:\textsf{PosNat}\to\textsf{F},\quad\textsf{Mono}(u),$\par
+$\displaystyle \forall k:\textsf{PosNat},\ \textsf{Measurable}(u_k).$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:L1}{$\displaystyle \textsf{L1}$} & $\displaystyle a:=\lambda k:\textsf{PosNat},\ \textsf{I}(u_k).$ & \hyperlink{def:I}{$\displaystyle \textsf{I}$} & $\displaystyle :=$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:L2}{$\displaystyle \textsf{L2}$} & $\displaystyle a_k=\textsf{I}(u_k)\le\textsf{I}(u_{k+1})=a_{k+1}.$ & \hyperlink{proof:L1}{$\displaystyle \textsf{L1}$}, \hyperlink{lem:Integral}{$\displaystyle \textsf{Integral}$} & $\displaystyle \le$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:L3}{$\displaystyle \textsf{L3}$} & $\displaystyle \textsf{Conv}((\textsf{I}(u_k))_k,\sup_k\textsf{I}(u_k)).$ & \hyperlink{proof:L2}{$\displaystyle \textsf{L2}$}, \hyperlink{lem:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \vdash$\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{MCTProof}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Dependencies}$ & $\displaystyle \textsf{Rule}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_M}:=$\par
+$\displaystyle u:\textsf{PosNat}\to\textsf{F},\ v:\textsf{F},$\par
+$\displaystyle u_k\uparrow v,\quad\forall k:\textsf{PosNat},\ \textsf{Measurable}(u_k).$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:M1}{$\displaystyle \textsf{M1}$} & $\displaystyle v=\sup_k u_k,\quad\textsf{Measurable}(v),$\par
+$\displaystyle L:=\sup_k\textsf{I}(u_k).$ & \hyperlink{def:Up}{$\displaystyle \textsf{Up}$}, \hyperlink{def:I}{$\displaystyle \textsf{I}$}, \hyperlink{lem:Meas}{$\displaystyle \textsf{Meas}$} & $\displaystyle :=$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:M2}{$\displaystyle \textsf{M2}$} & $\displaystyle \forall k:\textsf{PosNat},\ \textsf{I}(u_k)\le\textsf{I}(v),$\par
+$\displaystyle L\le\textsf{I}(v).$ & \hyperlink{proof:M1}{$\displaystyle \textsf{M1}$}, \hyperlink{lem:Integral}{$\displaystyle \textsf{Integral}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \le$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:M3}{$\displaystyle \textsf{M3}$} & $\displaystyle s:\textsf{S}_A,\quad s\le v,\quad0<t<1,\quad t:\textsf{NNReal},$\par
+$\displaystyle \textsf{Rep}(s;r,a,P),$\par
+$\displaystyle E_k:=\{x:X\mid u_k(x)\ge ts(x)\}.$ & \hyperlink{proof:M1}{$\displaystyle \textsf{M1}$}, \hyperlink{def:Simple}{$\displaystyle \textsf{Simple}$}, \hyperlink{def:I}{$\displaystyle \textsf{I}$} & $\displaystyle :=$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:M4}{$\displaystyle \textsf{M4}$} & $\displaystyle E_k=\bigcup_{i<r}(P_i\cap\{u_k\ge ta_i\})\in A.$ & \hyperlink{proof:M3}{$\displaystyle \textsf{M3}$}, \hyperlink{lem:Meas}{$\displaystyle \textsf{Meas}$}, \hyperlink{ax:Sigma}{$\displaystyle \textsf{Sigma}$} & $\displaystyle \bigcup$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:M5}{$\displaystyle \textsf{M5}$} & $\displaystyle E_k\subseteq E_{k+1},\quad x:X,$\par
+$\displaystyle s(x)=0\Rightarrow\forall k,\ x\in E_k,$\par
+$\displaystyle s(x)>0\Rightarrow ts(x)<s(x)\le v(x)$\par
+$\displaystyle {}=\sup_k u_k(x)\Rightarrow\exists k,\ x\in E_k,$\par
+$\displaystyle \Rightarrow E_k\uparrow X.$ & \hyperlink{proof:M1}{$\displaystyle \textsf{M1}$}, \hyperlink{proof:M3}{$\displaystyle \textsf{M3}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \sup$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:M6}{$\displaystyle \textsf{M6}$} & $\displaystyle ts\mathbf1_{E_k}\in\textsf{S}_A,$\par
+$\displaystyle x\in E_k\Rightarrow ts(x)\le u_k(x),$\par
+$\displaystyle x\notin E_k\Rightarrow ts(x)\mathbf1_{E_k}(x)=0\le u_k(x),$\par
+$\displaystyle \Rightarrow ts\mathbf1_{E_k}\le u_k.$ & \hyperlink{proof:M3}{$\displaystyle \textsf{M3}$}, \hyperlink{proof:M4}{$\displaystyle \textsf{M4}$}, \hyperlink{lem:Simple}{$\displaystyle \textsf{Simple}$} & $\displaystyle \le$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:M7}{$\displaystyle \textsf{M7}$} & $\displaystyle t\textsf{J}(s\mathbf1_{E_k})=\textsf{I}(ts\mathbf1_{E_k})$\par
+$\displaystyle {}\le\textsf{I}(u_k)\le L.$ & \hyperlink{proof:M1}{$\displaystyle \textsf{M1}$}, \hyperlink{proof:M6}{$\displaystyle \textsf{M6}$}, \hyperlink{lem:Integral}{$\displaystyle \textsf{Integral}$}, \hyperlink{lem:Simple}{$\displaystyle \textsf{Simple}$} & $\displaystyle \le$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:M8}{$\displaystyle \textsf{M8}$} & $\displaystyle \sup_k\textsf{J}(s\mathbf1_{E_k})=\textsf{J}(s).$ & \hyperlink{proof:M4}{$\displaystyle \textsf{M4}$}, \hyperlink{proof:M5}{$\displaystyle \textsf{M5}$}, \hyperlink{lem:Restriction}{$\displaystyle \textsf{Restriction}$} & $\displaystyle \sup$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:M9}{$\displaystyle \textsf{M9}$} & $\displaystyle t\textsf{J}(s)=\sup_k t\textsf{J}(s\mathbf1_{E_k})\le L.$ & \hyperlink{proof:M7}{$\displaystyle \textsf{M7}$}, \hyperlink{proof:M8}{$\displaystyle \textsf{M8}$}, \hyperlink{lem:Finite}{$\displaystyle \textsf{Finite}$} & $\displaystyle \sup$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:M10}{$\displaystyle \textsf{M10}$} & $\displaystyle c:\textsf{E},\quad\forall t:\textsf{NNReal},$\par
+$\displaystyle 0<t<1\Rightarrow tc\le c,$\par
+$\displaystyle c=0\Rightarrow\sup_{0<t<1}tc=0,$\par
+$\displaystyle 0<c<\infty\Rightarrow\forall\varepsilon:\textsf{NNReal},\ \varepsilon>0\Rightarrow$\par
+$\displaystyle \exists t:\textsf{NNReal},\ 0<t<1\land1-\varepsilon/c<t$\par
+$\displaystyle \Rightarrow c<tc+\varepsilon,$\par
+$\displaystyle c=\infty\Rightarrow\tfrac12c=\infty,$\par
+$\displaystyle \Rightarrow\sup_{0<t<1}tc=c,$\par
+$\displaystyle \Rightarrow\textsf{J}(s)\le L.$ & \hyperlink{proof:M9}{$\displaystyle \textsf{M9}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \sup$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:M11}{$\displaystyle \textsf{M11}$} & $\displaystyle \forall s:\textsf{S}_A,\ s\le v\Rightarrow\textsf{J}(s)\le L.$ & \hyperlink{proof:M3}{$\displaystyle \textsf{M3}$}, \hyperlink{proof:M10}{$\displaystyle \textsf{M10}$} & $\displaystyle \forall I$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:M12}{$\displaystyle \textsf{M12}$} & $\displaystyle \textsf{I}(v)=\sup_{s:\textsf{S}_A,\ s\le v}\textsf{J}(s)\le L.$ & \hyperlink{proof:M11}{$\displaystyle \textsf{M11}$}, \hyperlink{def:I}{$\displaystyle \textsf{I}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \sup$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:M13}{$\displaystyle \textsf{M13}$} & $\displaystyle \textsf{I}(v)=L=\sup_k\textsf{I}(u_k),$\par
+$\displaystyle \textsf{Conv}((\textsf{I}(u_k))_k,\textsf{I}(v)).$ & \hyperlink{proof:M1}{$\displaystyle \textsf{M1}$}, \hyperlink{proof:M2}{$\displaystyle \textsf{M2}$}, \hyperlink{proof:M12}{$\displaystyle \textsf{M12}$}, \hyperlink{lem:Liminf}{$\displaystyle \textsf{Liminf}$} & $\displaystyle \land I$\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{FatouProof}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Dependencies}$ & $\displaystyle \textsf{Rule}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_F}:=$\par
+$\displaystyle X:\textsf{Type},\quad A:\textsf{Set}(\textsf{Set}(X)),$\par
+$\displaystyle \mu:\textsf{Set}(X)\to\textsf{E},\quad\textsf{MS}(A,\mu),$\par
+$\displaystyle f:\textsf{PosNat}\to\textsf{F},\quad\forall n,\ \textsf{Measurable}(f_n).$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:F1}{$\displaystyle \textsf{F1}$} & $\displaystyle \textsf{MS}(A,\mu)\land\forall n:\textsf{PosNat},\ \textsf{Measurable}(f_n).$ & \hyperlink{def:MS}{$\displaystyle \textsf{MS}$}, \hyperlink{def:Meas}{$\displaystyle \textsf{Meas}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \vdash$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:F2}{$\displaystyle \textsf{F2}$} & $\displaystyle g_k:=\lambda x:X,\ \inf_{n\ge k}f_n(x),$\par
+$\displaystyle g:=\lambda x:X,\ \sup_k g_k(x).$ & \hyperlink{proof:F1}{$\displaystyle \textsf{F1}$}, \hyperlink{def:Tail}{$\displaystyle \textsf{Tail}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle :=$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:F3}{$\displaystyle \textsf{F3}$} & $\displaystyle \forall k:\textsf{PosNat},\ 0\le g_k\land\textsf{Measurable}(g_k).$ & \hyperlink{proof:F1}{$\displaystyle \textsf{F1}$}, \hyperlink{proof:F2}{$\displaystyle \textsf{F2}$}, \hyperlink{lem:Meas}{$\displaystyle \textsf{Meas}$} & $\displaystyle \inf$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:F4}{$\displaystyle \textsf{F4}$} & $\displaystyle \{n:\textsf{PosNat}\mid n\ge k+1\}\subseteq\{n\mid n\ge k\},$\par
+$\displaystyle g_k\le g_{k+1},$\par
+$\displaystyle \forall n\ge k,\ g_k\le f_n.$ & \hyperlink{proof:F2}{$\displaystyle \textsf{F2}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \inf$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:F5}{$\displaystyle \textsf{F5}$} & $\displaystyle g_k\uparrow g=\textsf{liminf}(f),$\par
+$\displaystyle \textsf{Measurable}(g).$ & \hyperlink{proof:F2}{$\displaystyle \textsf{F2}$}, \hyperlink{proof:F3}{$\displaystyle \textsf{F3}$}, \hyperlink{proof:F4}{$\displaystyle \textsf{F4}$}, \hyperlink{def:Up}{$\displaystyle \textsf{Up}$}, \hyperlink{def:Liminf}{$\displaystyle \textsf{Liminf}$}, \hyperlink{lem:Meas}{$\displaystyle \textsf{Meas}$} & $\displaystyle \land I$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:F6}{$\displaystyle \textsf{F6}$} & $\displaystyle \textsf{I}(g)=\sup_k\textsf{I}(g_k),$\par
+$\displaystyle \textsf{Conv}((\textsf{I}(g_k))_k,\textsf{I}(g)).$ & \hyperlink{proof:F3}{$\displaystyle \textsf{F3}$}, \hyperlink{proof:F5}{$\displaystyle \textsf{F5}$}, \hyperlink{lem:MCT}{$\displaystyle \textsf{MCT}$}, \hyperlink{lem:Liminf}{$\displaystyle \textsf{Liminf}$} & $\displaystyle \vdash$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:F7}{$\displaystyle \textsf{F7}$} & $\displaystyle \forall k:\textsf{PosNat},\ \forall n\ge k,$\par
+$\displaystyle \textsf{I}(g_k)\le\textsf{I}(f_n).$ & \hyperlink{proof:F1}{$\displaystyle \textsf{F1}$}, \hyperlink{proof:F3}{$\displaystyle \textsf{F3}$}, \hyperlink{proof:F4}{$\displaystyle \textsf{F4}$}, \hyperlink{lem:Integral}{$\displaystyle \textsf{Integral}$} & $\displaystyle \le$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:F8}{$\displaystyle \textsf{F8}$} & $\displaystyle \forall k:\textsf{PosNat},$\par
+$\displaystyle \textsf{I}(g_k)\le\inf_{n\ge k}\textsf{I}(f_n).$ & \hyperlink{proof:F7}{$\displaystyle \textsf{F7}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \inf$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:F9}{$\displaystyle \textsf{F9}$} & $\displaystyle \sup_k\textsf{I}(g_k)$\par
+$\displaystyle {}\le\sup_k\inf_{n\ge k}\textsf{I}(f_n)$\par
+$\displaystyle {}=\textsf{liminf}((\textsf{I}(f_n))_n).$ & \hyperlink{proof:F8}{$\displaystyle \textsf{F8}$}, \hyperlink{def:Liminf}{$\displaystyle \textsf{Liminf}$}, \hyperlink{ax:Order}{$\displaystyle \textsf{Order}$} & $\displaystyle \sup$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:F10}{$\displaystyle \textsf{F10}$} & $\displaystyle \int_X\textsf{liminf}(f)\,d\mu$\par
+$\displaystyle {}\le\textsf{liminf}((\int_X f_n\,d\mu)_n).$ & \hyperlink{proof:F5}{$\displaystyle \textsf{F5}$}, \hyperlink{proof:F6}{$\displaystyle \textsf{F6}$}, \hyperlink{proof:F9}{$\displaystyle \textsf{F9}$}, \hyperlink{def:I}{$\displaystyle \textsf{I}$} & $\displaystyle =E$\\ \hline
+\end{tabular}%
+\par
+}
+
+\end{document}

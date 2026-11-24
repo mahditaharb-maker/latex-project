@@ -1,0 +1,1033 @@
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amssymb}
+\usepackage{array}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.4}
+\newlength{\FTCOneColumnBody}
+\newlength{\FTCThreeColumnBody}
+\newlength{\FTCFourColumnBody}
+\AtBeginDocument{%
+\setlength{\FTCOneColumnBody}{\textwidth}%
+\addtolength{\FTCOneColumnBody}{-\tabcolsep}%
+\addtolength{\FTCOneColumnBody}{-2\arrayrulewidth}%
+\setlength{\FTCThreeColumnBody}{\textwidth}%
+\addtolength{\FTCThreeColumnBody}{-5\tabcolsep}%
+\addtolength{\FTCThreeColumnBody}{-4\arrayrulewidth}%
+\setlength{\FTCFourColumnBody}{\textwidth}%
+\addtolength{\FTCFourColumnBody}{-7\tabcolsep}%
+\addtolength{\FTCFourColumnBody}{-5\arrayrulewidth}%
+}
+\begin{document}
+\scriptsize
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+\hypertarget{theorem:FTC}{$\displaystyle \textsf{FTC}:\ \forall(a,b:\textsf{Real})\ (f,H:\textsf{RF}),\ \allowbreak\textsf{H1}(f;a,b)\Rightarrow\allowbreak\textsf{Intg}(f;a,b)\land\textsf{Cont}(G_f;a,b)\land\allowbreak(\forall x:\textsf{Real},\ a<x<b\Rightarrow\textsf{Deriv}(G_f;x,f(x)))\land\allowbreak(\textsf{H2}(f,H;a,b)\Rightarrow\textsf{J}(f;a,b)=H(b)-H(a))$}\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_0}:=$\par
+$\displaystyle a,b:\textsf{Real},\quad\textsf{RF}:=\textsf{Real}\to\textsf{Real},$\par
+$\displaystyle f,H:\textsf{RF},\quad G_f:=\lambda x,\ \textsf{J}(f;a,x).$\\ \hline
+\end{tabular}%
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Foundations}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Kind}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \textsf{LinearOrderedField}(\textsf{Real}),$\par
+$\displaystyle \textsf{Archimedean}(\textsf{Real}),$\par
+$\displaystyle \forall c:\textsf{Real},\ \exists n:\textsf{Nat},\ c<n.$ & $\displaystyle \textsf{axiom}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{ax:Complete}{$\displaystyle \textsf{Complete}$} & $\displaystyle \textsf{sSup}:\textsf{Set}(\textsf{Real})\to\textsf{Real},$\par
+$\displaystyle \textsf{BA}(S):\Longleftrightarrow\exists M,\ \forall s\in S,\ s\le M,$\par
+$\displaystyle S\ne\varnothing\land\textsf{BA}(S)\Rightarrow$\par
+$\displaystyle (\forall s\in S,\ s\le\textsf{sSup}(S))$\par
+$\displaystyle \land(\forall U,\ (\forall s\in S,\ s\le U)\Rightarrow\textsf{sSup}(S)\le U),$\par
+$\displaystyle \neg(S\ne\varnothing\land\textsf{BA}(S))\Rightarrow\textsf{sSup}(S)=0,$\par
+$\displaystyle \sup S:=\textsf{sSup}(S),\quad\inf S:=-\textsf{sSup}(\{-s\mid s\in S\}).$ & $\displaystyle \textsf{axiom}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{ax:Nat}{$\displaystyle \textsf{Nat}$} & $\displaystyle \textsf{Induction}(\textsf{Nat})\land\textsf{Recursion}(\textsf{Nat}),$\par
+$\displaystyle (\exists n:\textsf{Nat},\ P(n))\Rightarrow$\par
+$\displaystyle \exists n,\ P(n)\land\forall j<n,\ \neg P(j),$\par
+$\displaystyle \textsf{Fin}(n):=\{i:\textsf{Nat}\mid i<n\}.$ & $\displaystyle \textsf{axiom}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{ax:Classical}{$\displaystyle \textsf{Classical}$} & $\displaystyle \forall P:\textsf{Prop},\ P\lor\neg P,$\par
+$\displaystyle P:\textsf{Nat}\to\textsf{Real}\to\textsf{Prop},$\par
+$\displaystyle (\forall n,\ \exists x,\ P(n,x))\Rightarrow$\par
+$\displaystyle \exists u:\textsf{Nat}\to\textsf{Real},\ \forall n,\ P(n,u_n).$ & $\displaystyle \textsf{axiom}$\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Definitions}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Kind}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Intervals}{$\displaystyle \textsf{Intervals}$} & $\displaystyle I(r,s):=\{x:\textsf{Real}\mid r\le x\le s\},$\par
+$\displaystyle I^\circ(r,s):=\{x:\textsf{Real}\mid r<x<s\},$\par
+$\displaystyle \textsf{PosNat}:=\{n:\textsf{Nat}\mid0<n\}.$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Conv}{$\displaystyle \textsf{Conv}$} & $\displaystyle u:\textsf{Nat}\to\textsf{Real},\quad\xi:\textsf{Real},$\par
+$\displaystyle \textsf{Conv}(u,\xi):\Longleftrightarrow$\par
+$\displaystyle \forall\varepsilon:\textsf{Real},\ \varepsilon>0\Rightarrow$\par
+$\displaystyle \exists N:\textsf{Nat},\ \forall n\ge N,\ |u_n-\xi|<\varepsilon.$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Cont}{$\displaystyle \textsf{Cont}$} & $\displaystyle \textsf{Cont}(f;r,s):\Longleftrightarrow$\par
+$\displaystyle \forall x\in I(r,s),\ \forall\varepsilon>0,\ \exists\delta>0,$\par
+$\displaystyle \forall t\in I(r,s),$\par
+$\displaystyle |t-x|<\delta\Rightarrow|f(t)-f(x)|<\varepsilon.$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Uniform}{$\displaystyle \textsf{Uniform}$} & $\displaystyle \textsf{UC}(f;r,s):\Longleftrightarrow$\par
+$\displaystyle \forall\varepsilon>0,\ \exists\delta>0,\ \forall x,t\in I(r,s),$\par
+$\displaystyle |t-x|<\delta\Rightarrow|f(t)-f(x)|<\varepsilon.$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Bdd}{$\displaystyle \textsf{Bdd}$} & $\displaystyle \textsf{Bdd}(f;r,s):\Longleftrightarrow$\par
+$\displaystyle \exists M:\textsf{Real},\ M\ge0$\par
+$\displaystyle \land\forall x\in I(r,s),\ |f(x)|\le M.$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:InfHits}{$\displaystyle \textsf{InfHits}$} & $\displaystyle u:\textsf{Nat}\to\textsf{Real},$\par
+$\displaystyle \textsf{IH}(u;r,s):\Longleftrightarrow$\par
+$\displaystyle \forall N:\textsf{Nat},\ \exists n\ge N,\ u_n\in I(r,s).$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Deriv}{$\displaystyle \textsf{Deriv}$} & $\displaystyle \textsf{Deriv}(H;x,d):\Longleftrightarrow$\par
+$\displaystyle \forall\varepsilon>0,\ \exists\delta>0,\ \forall h:\textsf{Real},$\par
+$\displaystyle 0<|h|<\delta\Rightarrow$\par
+$\displaystyle \left|\frac{H(x+h)-H(x)}h-d\right|<\varepsilon,$\par
+$\displaystyle \textsf{Diff}(H;r,s):\Longleftrightarrow$\par
+$\displaystyle \forall x\in I^\circ(r,s),\ \exists d,\ \textsf{Deriv}(H;x,d).$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Lists}{$\displaystyle \textsf{Lists}$} & $\displaystyle \textsf{List}(T):=\textsf{Sigma}(\lambda n:\textsf{Nat},\ \textsf{Fin}(n)\to T),$\par
+$\displaystyle \textsf{StrictSorted}(L):\Longleftrightarrow$\par
+$\displaystyle \forall i<j<|L|,\ L_i<L_j,$\par
+$\displaystyle |L\mathbin{+\!\!+}Q|:=|L|+|Q|,$\par
+$\displaystyle (L\mathbin{+\!\!+}Q)_i:=\textsf{if}\ i<|L|\ \textsf{then}\ L_i$\par
+$\displaystyle \textsf{else}\ Q_{i-|L|},\quad\textsf{tail}(z::L):=L.$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Part}{$\displaystyle \textsf{Part}$} & $\displaystyle P=(m,x),\quad m:\textsf{PosNat},$\par
+$\displaystyle x:\textsf{Fin}(m+1)\to\textsf{Real},$\par
+$\displaystyle P:\textsf{Part}(r,s):\Longleftrightarrow$\par
+$\displaystyle x_0=r\land x_m=s\land\forall i<m,\ x_i<x_{i+1},$\par
+$\displaystyle \Delta P_i:=x_{i+1}-x_i,\quad\textsf{nodes}(P):=[x_0,\ldots,x_m],$\par
+$\displaystyle P\preceq Q:\Longleftrightarrow\forall i\le m_P,\ \exists j\le m_Q,\ x_i=y_j.$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Darboux}{$\displaystyle \textsf{Darboux}$} & $\displaystyle \ell_i(f,P):=\inf\{f(t)\mid t\in I(x_i,x_{i+1})\},$\par
+$\displaystyle u_i(f,P):=\sup\{f(t)\mid t\in I(x_i,x_{i+1})\},$\par
+$\displaystyle \textsf{L}(f,P):=\sum_{i<m_P}\ell_i(f,P)\Delta P_i,$\par
+$\displaystyle \textsf{U}(f,P):=\sum_{i<m_P}u_i(f,P)\Delta P_i,$\par
+$\displaystyle D^-(f;r,s):=\sup_{P:\textsf{Part}(r,s)}\textsf{L}(f,P),$\par
+$\displaystyle D^+(f;r,s):=\inf_{P:\textsf{Part}(r,s)}\textsf{U}(f,P).$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Integral}{$\displaystyle \textsf{Integral}$} & $\displaystyle \alpha:=\min(r,s),\quad\beta:=\max(r,s),$\par
+$\displaystyle \textsf{Intg}(f;r,s):\Longleftrightarrow r=s\ \lor$\par
+$\displaystyle (\textsf{Bdd}(f;\alpha,\beta)\land D^-(f;\alpha,\beta)=D^+(f;\alpha,\beta)),$\par
+$\displaystyle \textsf{J}(f;r,s):=\textsf{if}\ r=s\ \textsf{then}\ 0$\par
+$\displaystyle \textsf{else\ if}\ \neg\textsf{Intg}(f;r,s)\ \textsf{then}\ 0$\par
+$\displaystyle \textsf{else\ if}\ r<s\ \textsf{then}\ D^-(f;r,s)$\par
+$\displaystyle \textsf{else}\ -D^-(f;s,r),$\par
+$\displaystyle \int_r^s f(t)\,dt:=\textsf{J}(f;r,s).$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{def:Hyp}{$\displaystyle \textsf{Hyp}$} & $\displaystyle \textsf{H1}(f;a,b):\Longleftrightarrow a<b\land\textsf{Cont}(f;a,b),$\par
+$\displaystyle \textsf{H2}(f,H;a,b):\Longleftrightarrow$\par
+$\displaystyle \textsf{H1}(f;a,b)\land\textsf{Cont}(H;a,b)$\par
+$\displaystyle \land\forall x\in I^\circ(a,b),\ \textsf{Deriv}(H;x,f(x)),$\par
+$\displaystyle G_f:=\lambda x:\textsf{Real},\ \textsf{J}(f;a,x).$ & $\displaystyle \textsf{def}$\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Logic}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Symbol}$ & $\displaystyle \textsf{Formula}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:AllI}{$\displaystyle \textsf{AllI}$} & $\displaystyle \forall I$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash P(x)\quad x\notin\textsf{FV}(\Gamma)}{\Gamma\vdash\forall x\,P(x)}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:AllE}{$\displaystyle \textsf{AllE}$} & $\displaystyle \forall E$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash\forall x\,P(x)}{\Gamma\vdash P(a)}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:AndI}{$\displaystyle \textsf{AndI}$} & $\displaystyle \wedge I$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash P\quad\Gamma\vdash Q}{\Gamma\vdash P\land Q}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:AndE}{$\displaystyle \textsf{AndE}$} & $\displaystyle \wedge E$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash P\land Q}{\Gamma\vdash P}\quad\dfrac{\Gamma\vdash P\land Q}{\Gamma\vdash Q}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:ImpI}{$\displaystyle \textsf{ImpI}$} & $\displaystyle \to I$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma,P\vdash Q}{\Gamma\vdash P\to Q}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:MP}{$\displaystyle \textsf{MP}$} & $\displaystyle \to E$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash P\quad\Gamma\vdash P\to Q}{\Gamma\vdash Q}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:ExistsI}{$\displaystyle \textsf{ExistsI}$} & $\displaystyle \exists I$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash P(a)}{\Gamma\vdash\exists x\,P(x)}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:ExistsE}{$\displaystyle \textsf{ExistsE}$} & $\displaystyle \exists E$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash\exists xP(x)\quad\Gamma,P(y)\vdash Q}{\Gamma\vdash Q}$\par
+$\displaystyle y\notin\textsf{FV}(\Gamma,Q).$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:Eq}{$\displaystyle \textsf{Eq}$} & $\displaystyle =E$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash a=b\quad\Gamma\vdash P(a)}{\Gamma\vdash P(b)}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:Cases}{$\displaystyle \textsf{Cases}$} & $\displaystyle \vee E$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash P\lor Q\quad\Gamma,P\vdash R\quad\Gamma,Q\vdash R}{\Gamma\vdash R}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:NotI}{$\displaystyle \textsf{NotI}$} & $\displaystyle \neg I$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma,P\vdash\bot}{\Gamma\vdash\neg P}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:FalseE}{$\displaystyle \textsf{FalseE}$} & $\displaystyle \bot E$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash\bot}{\Gamma\vdash P}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.176056\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.225352\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.598591\FTCThreeColumnBody}|}\hline
+\hypertarget{rule:Classical}{$\displaystyle \textsf{Classical}$} & $\displaystyle \neg\neg E$ & \rule[-3.3ex]{0pt}{7.8ex}$\displaystyle \dfrac{\Gamma\vdash\neg\neg P}{\Gamma\vdash P}$\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Lemmas}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Proof}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{lem:Subsequence}{$\displaystyle \textsf{Subsequence}$} & $\displaystyle a\le b,\quad\forall n,\ u_n\in I(a,b)\Rightarrow$\par
+$\displaystyle \exists\xi\in I(a,b),\ \exists\nu:\textsf{Nat}\to\textsf{Nat},$\par
+$\displaystyle (\forall k,\ \nu_{k+1}>\nu_k)\land\textsf{Conv}(u\circ\nu,\xi).$ & \hyperlink{proof:K5}{$\displaystyle \textsf{K5}$}\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{lem:CompactCont}{$\displaystyle \textsf{CompactCont}$} & $\displaystyle a\le b\land\textsf{Cont}(f;a,b)\Rightarrow$\par
+$\displaystyle \textsf{Bdd}(f;a,b)\land\textsf{UC}(f;a,b),$\par
+$\displaystyle \exists p,q\in I(a,b),\ \forall x\in I(a,b),\ f(p)\le f(x)\le f(q).$ & \hyperlink{proof:C7}{$\displaystyle \textsf{C7}$}\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{lem:Riemann}{$\displaystyle \textsf{Riemann}$} & $\displaystyle \textsf{H1}(f;a,b)\Rightarrow$\par
+$\displaystyle \forall r,s\in I(a,b),\ \textsf{Intg}(f;r,s).$ & \hyperlink{proof:P9}{$\displaystyle \textsf{P9}$}\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{lem:Increment}{$\displaystyle \textsf{Increment}$} & $\displaystyle \textsf{H1}(f;a,b)\Rightarrow$\par
+$\displaystyle \forall x,y\in I(a,b),$\par
+$\displaystyle G_f(y)-G_f(x)=\textsf{J}(f;x,y).$ & \hyperlink{proof:E6}{$\displaystyle \textsf{E6}$}\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{lem:Rolle}{$\displaystyle \textsf{Rolle}$} & $\displaystyle a<b\land\textsf{Cont}(H;a,b)\land\textsf{Diff}(H;a,b)$\par
+$\displaystyle \land H(a)=H(b)\Rightarrow$\par
+$\displaystyle \exists c\in I^\circ(a,b),\ \textsf{Deriv}(H;c,0).$ & \hyperlink{proof:R4}{$\displaystyle \textsf{R4}$}\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{lem:MVT}{$\displaystyle \textsf{MVT}$} & $\displaystyle a<b\land\textsf{Cont}(H;a,b)\land\textsf{Diff}(H;a,b)$\par
+$\displaystyle \Rightarrow\exists c\in I^\circ(a,b),$\par
+$\displaystyle \textsf{Deriv}(H;c,(H(b)-H(a))/(b-a)).$ & \hyperlink{proof:R6}{$\displaystyle \textsf{R6}$}\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.251968\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.590551\FTCThreeColumnBody}|>{\centering\arraybackslash}m{0.157480\FTCThreeColumnBody}|}\hline
+\hypertarget{lem:Const}{$\displaystyle \textsf{Const}$} & $\displaystyle a<b\land\textsf{Cont}(H;a,b)$\par
+$\displaystyle \land(\forall x\in I^\circ(a,b),\ \textsf{Deriv}(H;x,0))$\par
+$\displaystyle \Rightarrow\forall x,y\in I(a,b),\ H(x)=H(y).$ & \hyperlink{proof:R7}{$\displaystyle \textsf{R7}$}\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{SequenceEstimates}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Dependencies}$ & $\displaystyle \textsf{Rule}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_G}:=$\par
+$\displaystyle u,v:\textsf{Nat}\to\textsf{Real},\quad\xi,\eta:\textsf{Real}.$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:G1}{$\displaystyle \textsf{G1}$} & $\displaystyle 2^n\ge n+1\quad(n:\textsf{Nat}),$\par
+$\displaystyle L\ge0,\ \varepsilon>0\Rightarrow\exists N,\ L/(N+1)<\varepsilon,$\par
+$\displaystyle n\ge N\Rightarrow0\le L/2^n\le L/(n+1)<\varepsilon,$\par
+$\displaystyle \textsf{Conv}((L/2^n)_n,0),\quad\textsf{Conv}((1/(n+1))_n,0).$ & \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$}, \hyperlink{ax:Nat}{$\displaystyle \textsf{Nat}$}, \hyperlink{def:Conv}{$\displaystyle \textsf{Conv}$} & $\displaystyle \textsf{ind}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:G2}{$\displaystyle \textsf{G2}$} & $\displaystyle \textsf{Conv}(u,\xi)\land\textsf{Conv}(u,\eta),$\par
+$\displaystyle \varepsilon>0\Rightarrow\exists n,$\par
+$\displaystyle |\xi-\eta|\le|\xi-u_n|+|u_n-\eta|<\varepsilon,$\par
+$\displaystyle \Rightarrow\xi=\eta.$ & \hyperlink{def:Conv}{$\displaystyle \textsf{Conv}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \varepsilon$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:G3}{$\displaystyle \textsf{G3}$} & $\displaystyle \textsf{Conv}(u,\xi),\quad r_n\ge0,\quad\textsf{Conv}(r,0),$\par
+$\displaystyle |v_n-u_n|\le r_n,\quad\varepsilon>0,$\par
+$\displaystyle n\ge\max(N_u,N_r)\Rightarrow$\par
+$\displaystyle |v_n-\xi|\le r_n+|u_n-\xi|<\varepsilon/2+\varepsilon/2,$\par
+$\displaystyle \Rightarrow\textsf{Conv}(v,\xi).$ & \hyperlink{def:Conv}{$\displaystyle \textsf{Conv}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \varepsilon$\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{CompactIntervalSubsequences}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Dependencies}$ & $\displaystyle \textsf{Rule}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_K}:=$\par
+$\displaystyle a\le b,\quad u:\textsf{Nat}\to\textsf{Real},\quad\forall n,\ u_n\in I(a,b).$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:K1}{$\displaystyle \textsf{K1}$} & $\displaystyle \textsf{IH}(u;p,q),\quad m:=(p+q)/2,$\par
+$\displaystyle \neg\textsf{IH}(u;p,m)\land\neg\textsf{IH}(u;m,q)$\par
+$\displaystyle \Rightarrow\exists N_1,N_2,\ \forall n\ge\max(N_1,N_2),$\par
+$\displaystyle u_n\notin I(p,m)\cup I(m,q)=I(p,q),\quad\bot,$\par
+$\displaystyle \Rightarrow\textsf{IH}(u;p,m)\lor\textsf{IH}(u;m,q).$ & \hyperlink{def:InfHits}{$\displaystyle \textsf{InfHits}$}, \hyperlink{ax:Classical}{$\displaystyle \textsf{Classical}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \lor$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:K2}{$\displaystyle \textsf{K2}$} & $\displaystyle p_0:=a,\quad q_0:=b,\quad m_k:=(p_k+q_k)/2,$\par
+$\displaystyle (p_{k+1},q_{k+1}):=$\par
+$\displaystyle \textsf{if}\ \textsf{IH}(u;p_k,m_k)\ \textsf{then}\ (p_k,m_k)$\par
+$\displaystyle \textsf{else}\ (m_k,q_k),$\par
+$\displaystyle \textsf{IH}(u;p_k,q_k),\quad p_k\le p_{k+1}\le q_{k+1}\le q_k,$\par
+$\displaystyle q_k-p_k=(b-a)/2^k.$ & \hyperlink{proof:K1}{$\displaystyle \textsf{K1}$}, \hyperlink{ax:Nat}{$\displaystyle \textsf{Nat}$}, \hyperlink{ax:Classical}{$\displaystyle \textsf{Classical}$}, \hyperlink{def:InfHits}{$\displaystyle \textsf{InfHits}$} & $\displaystyle \textsf{rec}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:K3}{$\displaystyle \textsf{K3}$} & $\displaystyle \xi:=\sup\{p_k\mid k:\textsf{Nat}\},$\par
+$\displaystyle \forall j,k,\ p_j\le q_k,\quad p_k\le\xi\le q_k,$\par
+$\displaystyle \xi\in I(a,b),$\par
+$\displaystyle z\in I(p_k,q_k)\Rightarrow|z-\xi|\le(b-a)/2^k.$ & \hyperlink{proof:K2}{$\displaystyle \textsf{K2}$}, \hyperlink{ax:Complete}{$\displaystyle \textsf{Complete}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \sup$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:K4}{$\displaystyle \textsf{K4}$} & $\displaystyle \nu_0:=0,$\par
+$\displaystyle \nu_{k+1}:=\min\{n>\nu_k\mid u_n\in I(p_{k+1},q_{k+1})\},$\par
+$\displaystyle \nu_{k+1}>\nu_k,\quad\nu_k\ge k,$\par
+$\displaystyle u_{\nu_k}\in I(p_k,q_k).$ & \hyperlink{proof:K2}{$\displaystyle \textsf{K2}$}, \hyperlink{def:InfHits}{$\displaystyle \textsf{InfHits}$}, \hyperlink{ax:Nat}{$\displaystyle \textsf{Nat}$} & $\displaystyle \min$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:K5}{$\displaystyle \textsf{K5}$} & $\displaystyle |u_{\nu_k}-\xi|\le(b-a)/2^k,$\par
+$\displaystyle \textsf{Conv}(u\circ\nu,\xi),\quad\xi\in I(a,b),$\par
+$\displaystyle \exists\xi,\nu,\ \xi\in I(a,b)\land(\forall k,\ \nu_{k+1}>\nu_k)$\par
+$\displaystyle \land\textsf{Conv}(u\circ\nu,\xi).$ & \hyperlink{proof:K3}{$\displaystyle \textsf{K3}$}, \hyperlink{proof:K4}{$\displaystyle \textsf{K4}$}, \hyperlink{proof:G1}{$\displaystyle \textsf{G1}$}, \hyperlink{def:Conv}{$\displaystyle \textsf{Conv}$} & $\displaystyle \exists I$\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{ContinuousFunctionsOnClosedIntervals}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Dependencies}$ & $\displaystyle \textsf{Rule}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_C}:=$\par
+$\displaystyle a\le b,\quad\textsf{Cont}(f;a,b).$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:C0}{$\displaystyle \textsf{C0}$} & $\displaystyle \textsf{Cont}(u;a,b)\land\textsf{Cont}(v;a,b),$\par
+$\displaystyle \delta:=\min(\delta_u(\varepsilon/2),\delta_v(\varepsilon/2)),$\par
+$\displaystyle |(u-v)(t)-(u-v)(x)|$\par
+$\displaystyle {}\le|u(t)-u(x)|+|v(t)-v(x)|<\varepsilon,$\par
+$\displaystyle \textsf{Cont}(u-v;a,b),\quad\textsf{Cont}(-u;a,b),$\par
+$\displaystyle \delta:=\varepsilon/(|c|+1)\Rightarrow\textsf{Cont}(\lambda t,ct+d;a,b),$\par
+$\displaystyle I(r,s)\subseteq I(a,b)\Rightarrow\textsf{Cont}(f;r,s).$ & \hyperlink{def:Cont}{$\displaystyle \textsf{Cont}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \varepsilon$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:C1}{$\displaystyle \textsf{C1}$} & $\displaystyle \forall n,\ u_n\in I(a,b),\quad\xi\in I(a,b),\quad\textsf{Conv}(u,\xi),$\par
+$\displaystyle \varepsilon>0\Rightarrow\exists\delta>0,\ \exists N,\ \forall n\ge N,$\par
+$\displaystyle |u_n-\xi|<\delta\Rightarrow|f(u_n)-f(\xi)|<\varepsilon,$\par
+$\displaystyle \Rightarrow\textsf{Conv}(f\circ u,f(\xi)).$ & \hyperlink{def:Cont}{$\displaystyle \textsf{Cont}$}, \hyperlink{def:Conv}{$\displaystyle \textsf{Conv}$} & $\displaystyle \varepsilon$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:C2}{$\displaystyle \textsf{C2}$} & $\displaystyle \neg\textsf{Bdd}(f;a,b)\Rightarrow$\par
+$\displaystyle \exists u,\ \forall n,\ u_n\in I(a,b)\land|f(u_n)|>n,$\par
+$\displaystyle \exists\xi,\nu,\ \textsf{Conv}(u\circ\nu,\xi),\quad\nu_k\ge k,$\par
+$\displaystyle \exists K,\ \forall k\ge K,\ |f(u_{\nu_k})|<|f(\xi)|+1,$\par
+$\displaystyle k\ge K,\ k>|f(\xi)|+1\Rightarrow\bot,$\par
+$\displaystyle \Rightarrow\textsf{Bdd}(f;a,b).$ & \hyperlink{def:Bdd}{$\displaystyle \textsf{Bdd}$}, \hyperlink{ax:Classical}{$\displaystyle \textsf{Classical}$}, \hyperlink{proof:K5}{$\displaystyle \textsf{K5}$}, \hyperlink{proof:C1}{$\displaystyle \textsf{C1}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \neg\neg E$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:C3}{$\displaystyle \textsf{C3}$} & $\displaystyle S:=\sup\{f(x)\mid x\in I(a,b)\},$\par
+$\displaystyle \exists u,\ \forall n,\ u_n\in I(a,b)$\par
+$\displaystyle \land S-1/(n+1)<f(u_n)\le S,$\par
+$\displaystyle \exists q,\nu,\ q\in I(a,b)\land\textsf{Conv}(u\circ\nu,q),$\par
+$\displaystyle |f(u_{\nu_k})-S|\le1/(k+1),$\par
+$\displaystyle \textsf{Conv}(f\circ u\circ\nu,S)\land\textsf{Conv}(f\circ u\circ\nu,f(q)),$\par
+$\displaystyle \Rightarrow f(q)=S,\quad\forall x\in I(a,b),\ f(x)\le f(q).$ & \hyperlink{proof:C2}{$\displaystyle \textsf{C2}$}, \hyperlink{ax:Complete}{$\displaystyle \textsf{Complete}$}, \hyperlink{ax:Classical}{$\displaystyle \textsf{Classical}$}, \hyperlink{proof:K5}{$\displaystyle \textsf{K5}$}, \hyperlink{proof:C1}{$\displaystyle \textsf{C1}$}, \hyperlink{proof:G1}{$\displaystyle \textsf{G1}$}, \hyperlink{proof:G2}{$\displaystyle \textsf{G2}$}, \hyperlink{proof:G3}{$\displaystyle \textsf{G3}$} & $\displaystyle \sup$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:C4}{$\displaystyle \textsf{C4}$} & $\displaystyle \textsf{Cont}(-f;a,b)\Rightarrow$\par
+$\displaystyle \exists p\in I(a,b),\ \forall x\in I(a,b),\ -f(x)\le-f(p),$\par
+$\displaystyle \Rightarrow\forall x\in I(a,b),\ f(p)\le f(x).$ & \hyperlink{proof:C0}{$\displaystyle \textsf{C0}$}, \hyperlink{proof:C3}{$\displaystyle \textsf{C3}$} & $\displaystyle \exists E$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:C5}{$\displaystyle \textsf{C5}$} & $\displaystyle \neg\textsf{UC}(f;a,b)\Rightarrow\exists\varepsilon_0>0,\ \exists u,v,$\par
+$\displaystyle \forall n,\ u_n,v_n\in I(a,b),$\par
+$\displaystyle |u_n-v_n|<1/(n+1),\quad|f(u_n)-f(v_n)|\ge\varepsilon_0,$\par
+$\displaystyle \exists\xi,\nu,\ \textsf{Conv}(u\circ\nu,\xi),\quad\nu_k\ge k,$\par
+$\displaystyle |v_{\nu_k}-u_{\nu_k}|\le1/(k+1),$\par
+$\displaystyle \Rightarrow\textsf{Conv}(v\circ\nu,\xi).$ & \hyperlink{def:Uniform}{$\displaystyle \textsf{Uniform}$}, \hyperlink{ax:Classical}{$\displaystyle \textsf{Classical}$}, \hyperlink{proof:K5}{$\displaystyle \textsf{K5}$}, \hyperlink{proof:G1}{$\displaystyle \textsf{G1}$}, \hyperlink{proof:G3}{$\displaystyle \textsf{G3}$} & $\displaystyle \exists E$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:C6}{$\displaystyle \textsf{C6}$} & $\displaystyle \exists K,\ \forall k\ge K,$\par
+$\displaystyle |f(u_{\nu_k})-f(\xi)|<\varepsilon_0/2,$\par
+$\displaystyle |f(v_{\nu_k})-f(\xi)|<\varepsilon_0/2,$\par
+$\displaystyle \varepsilon_0\le|f(u_{\nu_k})-f(v_{\nu_k})|<\varepsilon_0,\quad\bot,$\par
+$\displaystyle \Rightarrow\textsf{UC}(f;a,b).$ & \hyperlink{proof:C5}{$\displaystyle \textsf{C5}$}, \hyperlink{proof:C1}{$\displaystyle \textsf{C1}$}, \hyperlink{def:Conv}{$\displaystyle \textsf{Conv}$}, \hyperlink{ax:Classical}{$\displaystyle \textsf{Classical}$} & $\displaystyle \neg\neg E$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:C7}{$\displaystyle \textsf{C7}$} & $\displaystyle \textsf{Bdd}(f;a,b)\land\textsf{UC}(f;a,b),$\par
+$\displaystyle \exists p,q\in I(a,b),\ \forall x\in I(a,b),$\par
+$\displaystyle f(p)\le f(x)\le f(q).$ & \hyperlink{proof:C2}{$\displaystyle \textsf{C2}$}, \hyperlink{proof:C3}{$\displaystyle \textsf{C3}$}, \hyperlink{proof:C4}{$\displaystyle \textsf{C4}$}, \hyperlink{proof:C6}{$\displaystyle \textsf{C6}$} & $\displaystyle \land I$\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{DarbouxConstruction}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Dependencies}$ & $\displaystyle \textsf{Rule}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_P}:=$\par
+$\displaystyle a<b,\quad\textsf{Bdd}(f;a,b),$\par
+$\displaystyle M\ge0,\quad\forall x\in I(a,b),\ |f(x)|\le M.$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:P1}{$\displaystyle \textsf{P1}$} & $\displaystyle \textsf{ins}(t,[]):=[t],$\par
+$\displaystyle \textsf{ins}(t,z::L):=\textsf{if}\ t<z\ \textsf{then}\ t::z::L$\par
+$\displaystyle \textsf{else\ if}\ t=z\ \textsf{then}\ z::L$\par
+$\displaystyle \textsf{else}\ z::\textsf{ins}(t,L),$\par
+$\displaystyle \textsf{StrictSorted}(L)\Rightarrow\textsf{StrictSorted}(\textsf{ins}(t,L)),$\par
+$\displaystyle \{z\mid z\in\textsf{ins}(t,L)\}=\{t\}\cup\{z\mid z\in L\},$\par
+$\displaystyle P,Q:\textsf{Part}(a,b)\Rightarrow\exists R,\ P\preceq R\land Q\preceq R.$ & \hyperlink{ax:Nat}{$\displaystyle \textsf{Nat}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$}, \hyperlink{def:Part}{$\displaystyle \textsf{Part}$}, \hyperlink{def:Lists}{$\displaystyle \textsf{Lists}$} & $\displaystyle \textsf{ind}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:P2}{$\displaystyle \textsf{P2}$} & $\displaystyle P_0:=(1,(a,b)):\textsf{Part}(a,b),$\par
+$\displaystyle |f|\le M\Rightarrow -M\le\ell_i(f,P)\le u_i(f,P)\le M,$\par
+$\displaystyle \forall t\in I(x_i,x_{i+1}),\ \ell_i(f,P)\le f(t)\le u_i(f,P),$\par
+$\displaystyle \sum_{i<m_P}\Delta P_i=b-a,$\par
+$\displaystyle -M(b-a)\le\textsf{L}(f,P)\le\textsf{U}(f,P)\le M(b-a).$ & \hyperlink{def:Part}{$\displaystyle \textsf{Part}$}, \hyperlink{def:Darboux}{$\displaystyle \textsf{Darboux}$}, \hyperlink{def:Bdd}{$\displaystyle \textsf{Bdd}$}, \hyperlink{ax:Complete}{$\displaystyle \textsf{Complete}$}, \hyperlink{ax:Nat}{$\displaystyle \textsf{Nat}$} & $\displaystyle \sum$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:P3}{$\displaystyle \textsf{P3}$} & $\displaystyle P\preceq Q,\quad\mathcal J_i:=\{j\mid x_i\le y_j<y_{j+1}\le x_{i+1}\},$\par
+$\displaystyle j\in\mathcal J_i\Rightarrow\ell_i(f,P)\le\ell_j(f,Q)$\par
+$\displaystyle {}\le u_j(f,Q)\le u_i(f,P),$\par
+$\displaystyle \sum_{j\in\mathcal J_i}\Delta Q_j=\Delta P_i,$\par
+$\displaystyle \textsf{L}(f,P)\le\textsf{L}(f,Q)\le\textsf{U}(f,Q)\le\textsf{U}(f,P).$ & \hyperlink{proof:P2}{$\displaystyle \textsf{P2}$}, \hyperlink{def:Part}{$\displaystyle \textsf{Part}$}, \hyperlink{def:Darboux}{$\displaystyle \textsf{Darboux}$}, \hyperlink{ax:Nat}{$\displaystyle \textsf{Nat}$} & $\displaystyle \sum$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:P4}{$\displaystyle \textsf{P4}$} & $\displaystyle P,Q:\textsf{Part}(a,b),\quad P\preceq R,\ Q\preceq R,$\par
+$\displaystyle \textsf{L}(f,P)\le\textsf{L}(f,R)\le\textsf{U}(f,R)\le\textsf{U}(f,Q),$\par
+$\displaystyle \Rightarrow\forall P,Q,\ \textsf{L}(f,P)\le\textsf{U}(f,Q).$ & \hyperlink{proof:P1}{$\displaystyle \textsf{P1}$}, \hyperlink{proof:P3}{$\displaystyle \textsf{P3}$} & $\displaystyle \le$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:P5}{$\displaystyle \textsf{P5}$} & $\displaystyle D^-:=D^-(f;a,b),\quad D^+:=D^+(f;a,b),$\par
+$\displaystyle -M(b-a)\le D^-\le D^+\le M(b-a),$\par
+$\displaystyle \forall P,\ \textsf{L}(f,P)\le D^-\le D^+\le\textsf{U}(f,P).$ & \hyperlink{proof:P2}{$\displaystyle \textsf{P2}$}, \hyperlink{proof:P4}{$\displaystyle \textsf{P4}$}, \hyperlink{ax:Complete}{$\displaystyle \textsf{Complete}$}, \hyperlink{def:Darboux}{$\displaystyle \textsf{Darboux}$} & $\displaystyle \sup\inf$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:P6}{$\displaystyle \textsf{P6}$} & $\displaystyle (\forall\varepsilon>0,\ \exists P,\ \textsf{U}(f,P)-\textsf{L}(f,P)<\varepsilon)$\par
+$\displaystyle \Rightarrow\forall\varepsilon>0,\ 0\le D^+-D^-<\varepsilon,$\par
+$\displaystyle \Rightarrow D^-=D^+\Rightarrow\textsf{Intg}(f;a,b).$ & \hyperlink{proof:P5}{$\displaystyle \textsf{P5}$}, \hyperlink{def:Integral}{$\displaystyle \textsf{Integral}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \varepsilon$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:P7}{$\displaystyle \textsf{P7}$} & $\displaystyle \textsf{Cont}(f;a,b),\quad\varepsilon>0,\quad\eta:=\varepsilon/(2(b-a)),$\par
+$\displaystyle \exists\delta>0,\ \forall s,t\in I(a,b),$\par
+$\displaystyle |s-t|<\delta\Rightarrow|f(s)-f(t)|<\eta,$\par
+$\displaystyle N:\textsf{PosNat},\quad(b-a)/N<\delta,\quad x_i:=a+i(b-a)/N,$\par
+$\displaystyle P:=(N,x),\quad u_i(f,P)-\ell_i(f,P)\le\eta,$\par
+$\displaystyle \textsf{U}(f,P)-\textsf{L}(f,P)\le\eta(b-a)=\varepsilon/2<\varepsilon,$\par
+$\displaystyle \Rightarrow\textsf{Intg}(f;a,b).$ & \hyperlink{proof:C2}{$\displaystyle \textsf{C2}$}, \hyperlink{proof:C6}{$\displaystyle \textsf{C6}$}, \hyperlink{proof:C0}{$\displaystyle \textsf{C0}$}, \hyperlink{proof:C3}{$\displaystyle \textsf{C3}$}, \hyperlink{proof:C4}{$\displaystyle \textsf{C4}$}, \hyperlink{proof:P6}{$\displaystyle \textsf{P6}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$}, \hyperlink{def:Darboux}{$\displaystyle \textsf{Darboux}$} & $\displaystyle \varepsilon$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:P8}{$\displaystyle \textsf{P8}$} & $\displaystyle \textsf{Intg}(f;a,b),\quad J:=D^-=D^+,\quad\eta>0,$\par
+$\displaystyle \exists P,Q,\ J-\eta/2<\textsf{L}(f,P),$\par
+$\displaystyle \textsf{U}(f,Q)<J+\eta/2,$\par
+$\displaystyle P\preceq R,\ Q\preceq R\Rightarrow$\par
+$\displaystyle \textsf{U}(f,R)-\textsf{L}(f,R)<\eta.$ & \hyperlink{proof:P1}{$\displaystyle \textsf{P1}$}, \hyperlink{proof:P3}{$\displaystyle \textsf{P3}$}, \hyperlink{proof:P5}{$\displaystyle \textsf{P5}$}, \hyperlink{ax:Complete}{$\displaystyle \textsf{Complete}$}, \hyperlink{def:Integral}{$\displaystyle \textsf{Integral}$} & $\displaystyle \sup\inf$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:P9}{$\displaystyle \textsf{P9}$} & $\displaystyle \textsf{H1}(f;a,b),\quad r,s\in I(a,b),$\par
+$\displaystyle r<s\Rightarrow\textsf{Cont}(f;r,s)\Rightarrow\textsf{Intg}(f;r,s),$\par
+$\displaystyle s<r\Rightarrow\textsf{Intg}(f;s,r)\Rightarrow\textsf{Intg}(f;r,s),$\par
+$\displaystyle r=s\Rightarrow\textsf{Intg}(f;r,s),$\par
+$\displaystyle \Rightarrow\forall r,s\in I(a,b),\ \textsf{Intg}(f;r,s).$ & \hyperlink{proof:C0}{$\displaystyle \textsf{C0}$}, \hyperlink{proof:C2}{$\displaystyle \textsf{C2}$}, \hyperlink{proof:P7}{$\displaystyle \textsf{P7}$}, \hyperlink{def:Integral}{$\displaystyle \textsf{Integral}$}, \hyperlink{def:Hyp}{$\displaystyle \textsf{Hyp}$} & $\displaystyle \lor E$\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{IntegralBoundsAndIncrements}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Dependencies}$ & $\displaystyle \textsf{Rule}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_E}:=$\par
+$\displaystyle \textsf{H1}(f;a,b),\quad r,s,t,x,y\in I(a,b).$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:E1}{$\displaystyle \textsf{E1}$} & $\displaystyle r<s,\quad\forall z\in I(r,s),\ c\le f(z)\le d,$\par
+$\displaystyle c(s-r)\le\textsf{L}(f,P)\le\textsf{J}(f;r,s)$\par
+$\displaystyle {}\le\textsf{U}(f,P)\le d(s-r),$\par
+$\displaystyle \Rightarrow c(s-r)\le\textsf{J}(f;r,s)\le d(s-r).$ & \hyperlink{proof:P2}{$\displaystyle \textsf{P2}$}, \hyperlink{proof:P5}{$\displaystyle \textsf{P5}$}, \hyperlink{proof:P9}{$\displaystyle \textsf{P9}$}, \hyperlink{def:Integral}{$\displaystyle \textsf{Integral}$} & $\displaystyle \le$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:E2}{$\displaystyle \textsf{E2}$} & $\displaystyle M\ge0,\quad\forall z\in I(a,b),\ |f(z)|\le M,$\par
+$\displaystyle r<s\Rightarrow-M(s-r)\le\textsf{J}(f;r,s)\le M(s-r),$\par
+$\displaystyle r>s\Rightarrow\textsf{J}(f;r,s)=-\textsf{J}(f;s,r),$\par
+$\displaystyle r=s\Rightarrow\textsf{J}(f;r,s)=0,$\par
+$\displaystyle \Rightarrow|\textsf{J}(f;r,s)|\le M|s-r|.$ & \hyperlink{proof:E1}{$\displaystyle \textsf{E1}$}, \hyperlink{proof:P9}{$\displaystyle \textsf{P9}$}, \hyperlink{def:Integral}{$\displaystyle \textsf{Integral}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \lor E$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:E3}{$\displaystyle \textsf{E3}$} & $\displaystyle r<t<s,\quad P:\textsf{Part}(r,t),\quad Q:\textsf{Part}(t,s),$\par
+$\displaystyle z:=\textsf{nodes}(P)\mathbin{+\!\!+}\textsf{tail}(\textsf{nodes}(Q)),$\par
+$\displaystyle R:=(m_P+m_Q,(z_i)_i):\textsf{Part}(r,s),$\par
+$\displaystyle \textsf{L}(f,R)=\textsf{L}(f,P)+\textsf{L}(f,Q),$\par
+$\displaystyle \textsf{U}(f,R)=\textsf{U}(f,P)+\textsf{U}(f,Q).$ & \hyperlink{def:Part}{$\displaystyle \textsf{Part}$}, \hyperlink{def:Lists}{$\displaystyle \textsf{Lists}$}, \hyperlink{def:Darboux}{$\displaystyle \textsf{Darboux}$}, \hyperlink{ax:Nat}{$\displaystyle \textsf{Nat}$} & $\displaystyle \sum$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:E4}{$\displaystyle \textsf{E4}$} & $\displaystyle r<t<s,\quad\varepsilon>0,$\par
+$\displaystyle \exists P,Q,\ \textsf{U}(f,P)-\textsf{L}(f,P)<\varepsilon/2,$\par
+$\displaystyle \textsf{U}(f,Q)-\textsf{L}(f,Q)<\varepsilon/2,$\par
+$\displaystyle A:=\textsf{L}(f,P)+\textsf{L}(f,Q),$\par
+$\displaystyle B:=\textsf{U}(f,P)+\textsf{U}(f,Q),$\par
+$\displaystyle \textsf{J}(f;r,s),\ \textsf{J}(f;r,t)+\textsf{J}(f;t,s)\in I(A,B),$\par
+$\displaystyle |\textsf{J}(f;r,s)-\textsf{J}(f;r,t)-\textsf{J}(f;t,s)|\le B-A<\varepsilon,$\par
+$\displaystyle \Rightarrow\forall r,t,s\in I(a,b),\ r\le t\le s\Rightarrow$\par
+$\displaystyle \textsf{J}(f;r,s)=\textsf{J}(f;r,t)+\textsf{J}(f;t,s).$ & \hyperlink{proof:P8}{$\displaystyle \textsf{P8}$}, \hyperlink{proof:P9}{$\displaystyle \textsf{P9}$}, \hyperlink{proof:P5}{$\displaystyle \textsf{P5}$}, \hyperlink{proof:E3}{$\displaystyle \textsf{E3}$}, \hyperlink{def:Integral}{$\displaystyle \textsf{Integral}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \varepsilon$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:E5}{$\displaystyle \textsf{E5}$} & $\displaystyle \textsf{J}(f;r,r)=0,\quad\textsf{J}(f;r,s)=-\textsf{J}(f;s,r).$ & \hyperlink{proof:P9}{$\displaystyle \textsf{P9}$}, \hyperlink{def:Integral}{$\displaystyle \textsf{Integral}$} & $\displaystyle =$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:E6}{$\displaystyle \textsf{E6}$} & $\displaystyle x\le y\Rightarrow G_f(y)=G_f(x)+\textsf{J}(f;x,y),$\par
+$\displaystyle y<x\Rightarrow G_f(x)=G_f(y)+\textsf{J}(f;y,x),$\par
+$\displaystyle \Rightarrow G_f(y)-G_f(x)=\textsf{J}(f;x,y).$ & \hyperlink{proof:E4}{$\displaystyle \textsf{E4}$}, \hyperlink{proof:E5}{$\displaystyle \textsf{E5}$}, \hyperlink{def:Hyp}{$\displaystyle \textsf{Hyp}$} & $\displaystyle =$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:E7}{$\displaystyle \textsf{E7}$} & $\displaystyle \exists M\ge0,\ \forall z\in I(a,b),\ |f(z)|\le M,$\par
+$\displaystyle |G_f(y)-G_f(x)|\le M|y-x|,$\par
+$\displaystyle \varepsilon>0,\quad\delta:=\varepsilon/(M+1)>0,$\par
+$\displaystyle |y-x|<\delta\Rightarrow|G_f(y)-G_f(x)|<\varepsilon,$\par
+$\displaystyle \Rightarrow\textsf{Cont}(G_f;a,b),\quad G_f(a)=0.$ & \hyperlink{proof:C2}{$\displaystyle \textsf{C2}$}, \hyperlink{proof:E2}{$\displaystyle \textsf{E2}$}, \hyperlink{proof:E6}{$\displaystyle \textsf{E6}$}, \hyperlink{proof:E5}{$\displaystyle \textsf{E5}$}, \hyperlink{def:Cont}{$\displaystyle \textsf{Cont}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \varepsilon$\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{FTC1Proof}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Dependencies}$ & $\displaystyle \textsf{Rule}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_F}:=$\par
+$\displaystyle \textsf{H1}(f;a,b),\quad x\in I^\circ(a,b).$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:F1}{$\displaystyle \textsf{F1}$} & $\displaystyle \varepsilon>0,\quad c:=f(x),\quad\eta:=\varepsilon/2,$\par
+$\displaystyle \exists\rho>0,\ \forall t\in I(a,b),$\par
+$\displaystyle |t-x|<\rho\Rightarrow|f(t)-c|<\eta,$\par
+$\displaystyle \delta:=\min(\rho/2,\min((x-a)/2,(b-x)/2))>0.$ & \hyperlink{def:Hyp}{$\displaystyle \textsf{Hyp}$}, \hyperlink{def:Cont}{$\displaystyle \textsf{Cont}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \exists E$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:F2}{$\displaystyle \textsf{F2}$} & $\displaystyle 0<|h|<\delta\Rightarrow x+h\in I(a,b),$\par
+$\displaystyle t\in I(\min(x,x+h),\max(x,x+h))\Rightarrow$\par
+$\displaystyle |t-x|\le|h|<\rho,\quad c-\eta\le f(t)\le c+\eta,$\par
+$\displaystyle G_f(x+h)-G_f(x)=\textsf{J}(f;x,x+h).$ & \hyperlink{proof:F1}{$\displaystyle \textsf{F1}$}, \hyperlink{proof:E6}{$\displaystyle \textsf{E6}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \le$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:F3}{$\displaystyle \textsf{F3}$} & $\displaystyle 0<h<\delta\Rightarrow$\par
+$\displaystyle (c-\eta)h\le\textsf{J}(f;x,x+h)\le(c+\eta)h,$\par
+$\displaystyle c-\eta\le\frac{G_f(x+h)-G_f(x)}h\le c+\eta.$ & \hyperlink{proof:F2}{$\displaystyle \textsf{F2}$}, \hyperlink{proof:E1}{$\displaystyle \textsf{E1}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \le$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:F4}{$\displaystyle \textsf{F4}$} & $\displaystyle -\delta<h<0\Rightarrow$\par
+$\displaystyle (c-\eta)(-h)\le\textsf{J}(f;x+h,x)\le(c+\eta)(-h),$\par
+$\displaystyle \frac{G_f(x+h)-G_f(x)}h=\frac{\textsf{J}(f;x+h,x)}{-h},$\par
+$\displaystyle c-\eta\le\frac{G_f(x+h)-G_f(x)}h\le c+\eta.$ & \hyperlink{proof:F2}{$\displaystyle \textsf{F2}$}, \hyperlink{proof:E1}{$\displaystyle \textsf{E1}$}, \hyperlink{proof:E5}{$\displaystyle \textsf{E5}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \le$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:F5}{$\displaystyle \textsf{F5}$} & $\displaystyle 0<|h|<\delta\Rightarrow$\par
+$\displaystyle \left|\frac{G_f(x+h)-G_f(x)}h-f(x)\right|\le\varepsilon/2<\varepsilon,$\par
+$\displaystyle \textsf{H1}(f;a,b)\Rightarrow\textsf{Intg}(f;a,b)$\par
+$\displaystyle \land\textsf{Cont}(G_f;a,b)$\par
+$\displaystyle \land\forall x\in I^\circ(a,b),\ \textsf{Deriv}(G_f;x,f(x)).$ & \hyperlink{proof:F1}{$\displaystyle \textsf{F1}$}, \hyperlink{proof:F3}{$\displaystyle \textsf{F3}$}, \hyperlink{proof:F4}{$\displaystyle \textsf{F4}$}, \hyperlink{proof:P9}{$\displaystyle \textsf{P9}$}, \hyperlink{proof:E7}{$\displaystyle \textsf{E7}$}, \hyperlink{def:Deriv}{$\displaystyle \textsf{Deriv}$} & $\displaystyle \forall I$\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{DerivativeAlgebraAndExtrema}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Dependencies}$ & $\displaystyle \textsf{Rule}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_T}:=$\par
+$\displaystyle u,v,H:\textsf{RF},\quad x,p,q,c,d:\textsf{Real}.$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:T0}{$\displaystyle \textsf{T0}$} & $\displaystyle \textsf{Deriv}(H;x,p)\land\textsf{Deriv}(H;x,q),$\par
+$\displaystyle \varepsilon>0,\quad\delta:=\min(\delta_p(\varepsilon/2),\delta_q(\varepsilon/2))>0,$\par
+$\displaystyle h:=\delta/2>0,$\par
+$\displaystyle |p-q|\le\left|p-\frac{H(x+h)-H(x)}h\right|$\par
+$\displaystyle {}+\left|\frac{H(x+h)-H(x)}h-q\right|<\varepsilon,$\par
+$\displaystyle \Rightarrow p=q.$ & \hyperlink{def:Deriv}{$\displaystyle \textsf{Deriv}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \varepsilon$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:T1}{$\displaystyle \textsf{T1}$} & $\displaystyle h\ne0\Rightarrow\frac{c(x+h)+d-(cx+d)}h=c,$\par
+$\displaystyle \Rightarrow\textsf{Deriv}(\lambda t,ct+d;x,c).$ & \hyperlink{def:Deriv}{$\displaystyle \textsf{Deriv}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle =$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:T2}{$\displaystyle \textsf{T2}$} & $\displaystyle \textsf{Deriv}(u;x,p)\land\textsf{Deriv}(v;x,q),$\par
+$\displaystyle \delta:=\min(\delta_u(\varepsilon/2),\delta_v(\varepsilon/2)),$\par
+$\displaystyle 0<|h|<\delta\Rightarrow$\par
+$\displaystyle \left|\frac{(u-v)(x+h)-(u-v)(x)}h-(p-q)\right|$\par
+$\displaystyle {}\le\left|\frac{u(x+h)-u(x)}h-p\right|$\par
+$\displaystyle {}+\left|\frac{v(x+h)-v(x)}h-q\right|<\varepsilon,$\par
+$\displaystyle \Rightarrow\textsf{Deriv}(u-v;x,p-q).$ & \hyperlink{def:Deriv}{$\displaystyle \textsf{Deriv}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \varepsilon$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:T3}{$\displaystyle \textsf{T3}$} & $\displaystyle a<c<b,\quad\textsf{Deriv}(H;c,d),$\par
+$\displaystyle \forall t\in I(a,b),\ H(t)\le H(c),$\par
+$\displaystyle \rho:=\min(c-a,b-c)/2>0,\quad\varepsilon>0,$\par
+$\displaystyle h_+:=\min(\rho,\delta(\varepsilon))/2>0,\quad h_-:=-h_+,$\par
+$\displaystyle Q_+:=(H(c+h_+)-H(c))/h_+\le0,$\par
+$\displaystyle Q_-:=(H(c+h_-)-H(c))/h_-\ge0,$\par
+$\displaystyle -\varepsilon\le Q_--\varepsilon<d<Q_++\varepsilon\le\varepsilon,$\par
+$\displaystyle \Rightarrow d=0.$ & \hyperlink{def:Deriv}{$\displaystyle \textsf{Deriv}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \varepsilon$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:T4}{$\displaystyle \textsf{T4}$} & $\displaystyle a<c<b,\quad\textsf{Deriv}(H;c,d),$\par
+$\displaystyle \forall t\in I(a,b),\ H(c)\le H(t),$\par
+$\displaystyle \textsf{Deriv}(-H;c,-d),\quad\forall t\in I(a,b),\ -H(t)\le-H(c),$\par
+$\displaystyle \Rightarrow-d=0\Rightarrow d=0.$ & \hyperlink{proof:T1}{$\displaystyle \textsf{T1}$}, \hyperlink{proof:T2}{$\displaystyle \textsf{T2}$}, \hyperlink{proof:T3}{$\displaystyle \textsf{T3}$} & $\displaystyle =$\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{RolleAndMeanValueProofs}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Dependencies}$ & $\displaystyle \textsf{Rule}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_Rolle}:=$\par
+$\displaystyle a<b,\quad\textsf{Cont}(H;a,b),\quad\textsf{Diff}(H;a,b),$\par
+$\displaystyle H(a)=H(b).$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:R1}{$\displaystyle \textsf{R1}$} & $\displaystyle \exists p,q\in I(a,b),\ \forall t\in I(a,b),$\par
+$\displaystyle H(p)\le H(t)\le H(q).$ & \hyperlink{proof:C3}{$\displaystyle \textsf{C3}$}, \hyperlink{proof:C4}{$\displaystyle \textsf{C4}$} & $\displaystyle \exists E$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:R2}{$\displaystyle \textsf{R2}$} & $\displaystyle (\forall t\in I(a,b),\ H(t)=H(a)),$\par
+$\displaystyle c:=(a+b)/2\in I^\circ(a,b),$\par
+$\displaystyle \exists d,\ \textsf{Deriv}(H;c,d),\quad H(c)=H(q),$\par
+$\displaystyle \Rightarrow d=0\Rightarrow\textsf{Deriv}(H;c,0).$ & \hyperlink{proof:R1}{$\displaystyle \textsf{R1}$}, \hyperlink{def:Deriv}{$\displaystyle \textsf{Deriv}$}, \hyperlink{proof:T3}{$\displaystyle \textsf{T3}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \exists I$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:R3}{$\displaystyle \textsf{R3}$} & $\displaystyle \exists t\in I(a,b),\ H(t)\ne H(a),$\par
+$\displaystyle H(t)>H(a)\Rightarrow H(q)>H(a)=H(b)$\par
+$\displaystyle \Rightarrow q\in I^\circ(a,b)\Rightarrow\textsf{Deriv}(H;q,0),$\par
+$\displaystyle H(t)<H(a)\Rightarrow H(p)<H(a)=H(b)$\par
+$\displaystyle \Rightarrow p\in I^\circ(a,b)\Rightarrow\textsf{Deriv}(H;p,0).$ & \hyperlink{proof:R1}{$\displaystyle \textsf{R1}$}, \hyperlink{def:Deriv}{$\displaystyle \textsf{Deriv}$}, \hyperlink{proof:T3}{$\displaystyle \textsf{T3}$}, \hyperlink{proof:T4}{$\displaystyle \textsf{T4}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \lor E$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:R4}{$\displaystyle \textsf{R4}$} & $\displaystyle \exists c\in I^\circ(a,b),\ \textsf{Deriv}(H;c,0).$ & \hyperlink{proof:R2}{$\displaystyle \textsf{R2}$}, \hyperlink{proof:R3}{$\displaystyle \textsf{R3}$}, \hyperlink{ax:Classical}{$\displaystyle \textsf{Classical}$} & $\displaystyle \exists I$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_MVT}:=$\par
+$\displaystyle a<b,\quad\textsf{Cont}(H;a,b),\quad\textsf{Diff}(H;a,b).$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:R5}{$\displaystyle \textsf{R5}$} & $\displaystyle q:=(H(b)-H(a))/(b-a),\quad K:=\lambda t,\ H(t)-qt,$\par
+$\displaystyle \textsf{Cont}(K;a,b),\quad K(a)=K(b),$\par
+$\displaystyle \forall x\in I^\circ(a,b),\ \exists d,\ \textsf{Deriv}(H;x,d)$\par
+$\displaystyle \land\textsf{Deriv}(K;x,d-q),$\par
+$\displaystyle \Rightarrow\textsf{Diff}(K;a,b).$ & \hyperlink{proof:C0}{$\displaystyle \textsf{C0}$}, \hyperlink{proof:T1}{$\displaystyle \textsf{T1}$}, \hyperlink{proof:T2}{$\displaystyle \textsf{T2}$}, \hyperlink{def:Deriv}{$\displaystyle \textsf{Deriv}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle =$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:R6}{$\displaystyle \textsf{R6}$} & $\displaystyle \exists c\in I^\circ(a,b),\ \textsf{Deriv}(K;c,0),$\par
+$\displaystyle \exists d,\ \textsf{Deriv}(H;c,d)\land\textsf{Deriv}(K;c,d-q),$\par
+$\displaystyle d-q=0\Rightarrow\textsf{Deriv}(H;c,q),$\par
+$\displaystyle \Rightarrow\exists c\in I^\circ(a,b),$\par
+$\displaystyle \textsf{Deriv}(H;c,(H(b)-H(a))/(b-a)).$ & \hyperlink{proof:R5}{$\displaystyle \textsf{R5}$}, \hyperlink{proof:R4}{$\displaystyle \textsf{R4}$}, \hyperlink{proof:T0}{$\displaystyle \textsf{T0}$} & $\displaystyle \exists E$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_ZeroDerivative}:=$\par
+$\displaystyle a<b,\quad\textsf{Cont}(H;a,b),$\par
+$\displaystyle \forall x\in I^\circ(a,b),\ \textsf{Deriv}(H;x,0).$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:R7}{$\displaystyle \textsf{R7}$} & $\displaystyle r,s\in I(a,b),\quad r<s\Rightarrow$\par
+$\displaystyle \exists c\in I^\circ(r,s),\ \textsf{Deriv}(H;c,(H(s)-H(r))/(s-r)),$\par
+$\displaystyle \textsf{Deriv}(H;c,0)\Rightarrow(H(s)-H(r))/(s-r)=0,$\par
+$\displaystyle \Rightarrow H(s)=H(r),$\par
+$\displaystyle r=s\lor s<r\Rightarrow H(s)=H(r),$\par
+$\displaystyle \Rightarrow\forall r,s\in I(a,b),\ H(r)=H(s).$ & \hyperlink{proof:R6}{$\displaystyle \textsf{R6}$}, \hyperlink{proof:C0}{$\displaystyle \textsf{C0}$}, \hyperlink{proof:T0}{$\displaystyle \textsf{T0}$}, \hyperlink{ax:Real}{$\displaystyle \textsf{Real}$} & $\displaystyle \lor E$\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{FTC2Proof}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Dependencies}$ & $\displaystyle \textsf{Rule}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_N}:=$\par
+$\displaystyle \textsf{H2}(f,H;a,b).$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:N1}{$\displaystyle \textsf{N1}$} & $\displaystyle \textsf{Intg}(f;a,b),\quad\textsf{Cont}(G_f;a,b),\quad G_f(a)=0,$\par
+$\displaystyle \forall x\in I^\circ(a,b),\ \textsf{Deriv}(G_f;x,f(x)).$ & \hyperlink{proof:F5}{$\displaystyle \textsf{F5}$}, \hyperlink{proof:E7}{$\displaystyle \textsf{E7}$}, \hyperlink{def:Hyp}{$\displaystyle \textsf{Hyp}$} & $\displaystyle \land E$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:N2}{$\displaystyle \textsf{N2}$} & $\displaystyle K:=H-G_f,\quad\textsf{Cont}(K;a,b),$\par
+$\displaystyle \forall x\in I^\circ(a,b),$\par
+$\displaystyle \textsf{Deriv}(K;x,f(x)-f(x)),\quad f(x)-f(x)=0,$\par
+$\displaystyle \Rightarrow\textsf{Deriv}(K;x,0).$ & \hyperlink{proof:N1}{$\displaystyle \textsf{N1}$}, \hyperlink{proof:C0}{$\displaystyle \textsf{C0}$}, \hyperlink{proof:T2}{$\displaystyle \textsf{T2}$}, \hyperlink{def:Hyp}{$\displaystyle \textsf{Hyp}$} & $\displaystyle =$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:N3}{$\displaystyle \textsf{N3}$} & $\displaystyle \forall r,s\in I(a,b),\ K(r)=K(s),$\par
+$\displaystyle H(b)-G_f(b)=H(a)-G_f(a),$\par
+$\displaystyle G_f(a)=0,\quad G_f(b)=\textsf{J}(f;a,b),$\par
+$\displaystyle \Rightarrow\textsf{J}(f;a,b)=H(b)-H(a).$ & \hyperlink{proof:N2}{$\displaystyle \textsf{N2}$}, \hyperlink{proof:N1}{$\displaystyle \textsf{N1}$}, \hyperlink{proof:R7}{$\displaystyle \textsf{R7}$}, \hyperlink{def:Hyp}{$\displaystyle \textsf{Hyp}$} & $\displaystyle =$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:N4}{$\displaystyle \textsf{N4}$} & $\displaystyle \textsf{H2}(f,H;a,b)\Rightarrow$\par
+$\displaystyle \int_a^b f(t)\,dt=H(b)-H(a).$ & \hyperlink{proof:N3}{$\displaystyle \textsf{N3}$}, \hyperlink{def:Integral}{$\displaystyle \textsf{Integral}$} & $\displaystyle \to I$\\ \hline
+\end{tabular}%
+\par
+}
+
+{\centering
+\renewcommand{\arraystretch}{1.4}
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Conclusion}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+$\displaystyle \textsf{Id}$ & $\displaystyle \textsf{Formula}$ & $\displaystyle \textsf{Dependencies}$ & $\displaystyle \textsf{Rule}$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{\FTCOneColumnBody}|}\hline
+$\displaystyle \textsf{Context\_Final}:=$\par
+$\displaystyle a,b:\textsf{Real},\quad f,H:\textsf{RF}.$\\ \hline
+\end{tabular}%
+\par\setlength{\parskip}{0pt}\nointerlineskip
+\noindent
+\begin{tabular}{|@{}>{\centering\arraybackslash}m{0.078431\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.535947\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.281045\FTCFourColumnBody}|>{\centering\arraybackslash}m{0.104575\FTCFourColumnBody}|}\hline
+\hypertarget{proof:Z1}{$\displaystyle \textsf{Z1}$} & $\displaystyle \textsf{H1}(f;a,b)\Rightarrow\textsf{Intg}(f;a,b)$\par
+$\displaystyle \land\textsf{Cont}(G_f;a,b)$\par
+$\displaystyle \land(\forall x\in I^\circ(a,b),\ \textsf{Deriv}(G_f;x,f(x)))$\par
+$\displaystyle \land(\textsf{H2}(f,H;a,b)\Rightarrow\textsf{J}(f;a,b)=H(b)-H(a)).$ & \hyperlink{proof:F5}{$\displaystyle \textsf{F5}$}, \hyperlink{proof:N4}{$\displaystyle \textsf{N4}$} & $\displaystyle \land I$\\ \hline
+\end{tabular}%
+\par
+}
+
+\end{document}
